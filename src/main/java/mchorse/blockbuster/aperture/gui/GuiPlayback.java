@@ -11,6 +11,7 @@ import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
@@ -49,8 +50,7 @@ public class GuiPlayback extends GuiBase
 
     private String profile;
     private CameraProfile dummy = new CameraProfile(null);
-    private String scene;
-    private BlockPos director;
+    private SceneLocation location;
 
     private boolean aperture;
 
@@ -155,7 +155,7 @@ public class GuiPlayback extends GuiBase
     @Optional.Method(modid = Aperture.MOD_ID)
     private void sendPlaybackButton()
     {
-        Dispatcher.sendToServer(new PacketPlaybackButton(this.cameraMode.getValue(), this.getSelected(), this.scene, this.director));
+        Dispatcher.sendToServer(new PacketPlaybackButton(this.location, this.cameraMode.getValue(), this.getSelected()));
     }
 
     @Optional.Method(modid = Aperture.MOD_ID)
@@ -179,16 +179,9 @@ public class GuiPlayback extends GuiBase
 
     /* Remaining methods */
 
-    public GuiPlayback setScene(String scene)
+    public GuiPlayback setLocation(SceneLocation location)
     {
-        this.scene = scene;
-
-        return this;
-    }
-
-    public GuiPlayback setDirector(BlockPos pos)
-    {
-        this.director = pos;
+        this.location = location;
 
         return this;
     }
@@ -224,7 +217,7 @@ public class GuiPlayback extends GuiBase
         }
         else
         {
-            Dispatcher.sendToServer(new PacketPlaybackButton(0, "", this.scene, this.director));
+            Dispatcher.sendToServer(new PacketPlaybackButton(this.location, 0, ""));
         }
 
         this.mc.displayGuiScreen(null);

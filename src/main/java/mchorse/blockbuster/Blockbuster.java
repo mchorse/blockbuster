@@ -1,12 +1,10 @@
 package mchorse.blockbuster;
 
 import mchorse.blockbuster.commands.CommandAction;
-import mchorse.blockbuster.commands.CommandDirector;
 import mchorse.blockbuster.commands.CommandOnHead;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.commands.CommandScene;
 import mchorse.blockbuster.commands.CommandSpectate;
-import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.utils.mclib.ValueAudioButtons;
 import mchorse.blockbuster.utils.mclib.ValueMainButtons;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
@@ -144,7 +142,6 @@ public class Blockbuster
 
     /* Configuration */
     public static ValueBoolean generalFirstTime;
-    public static ValueBoolean disableTPPlaybackButton;
     public static ValueBoolean debugPlaybackTicks;
     public static ValueBoolean chromaSky;
     public static ValueInt chromaSkyColor;
@@ -213,7 +210,6 @@ public class Blockbuster
         builder.category("general").register(new ValueMainButtons("buttons"));
 
         generalFirstTime = builder.getBoolean("show_first_time_modal", true);
-        disableTPPlaybackButton = builder.getBoolean("disable_teleport_playback_button", false);
         debugPlaybackTicks = builder.getBoolean("debug_playback_ticks", false);
         chromaSky = builder.getBoolean("green_screen_sky", false);
         chromaSkyColor = builder.getInt("green_screen_sky_color", 0xff00ff00).colorAlpha();
@@ -292,13 +288,11 @@ public class Blockbuster
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
-        TileEntityDirector.playing = 0;
         StructureMorph.STRUCTURE_CACHE.clear();
         proxy.loadModels(false);
 
         /* Register commands */
         event.registerServerCommand(new CommandAction());
-        event.registerServerCommand(new CommandDirector());
         event.registerServerCommand(new CommandRecord());
         event.registerServerCommand(new CommandOnHead());
         event.registerServerCommand(new CommandSpectate());

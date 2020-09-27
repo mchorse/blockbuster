@@ -29,7 +29,6 @@ public class GuiHandler implements IGuiHandler
     /* GUI ids */
     public static final int PLAYBACK = 0;
     public static final int ACTOR = 1;
-    public static final int DIRECTOR = 2;
     public static final int MODEL_BLOCK = 3;
 
     /**
@@ -62,10 +61,6 @@ public class GuiHandler implements IGuiHandler
         else if (ID == ACTOR && entity instanceof EntityActor)
         {
             return new GuiActor(Minecraft.getMinecraft(), (EntityActor) entity);
-        }
-        else if (ID == DIRECTOR)
-        {
-            return null;
         }
         else if (ID == MODEL_BLOCK)
         {

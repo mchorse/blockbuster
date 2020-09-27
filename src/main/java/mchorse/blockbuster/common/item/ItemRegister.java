@@ -1,27 +1,28 @@
 package mchorse.blockbuster.common.item;
 
-import java.util.List;
-
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.common.tileentity.TileEntityDirector;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+
 /**
  * Register item
  *
- * Used to register an actor to director block (a scene)
+ * Used to register an actor to director block (a scene) and
+ * open a director block remotely
  */
 public class ItemRegister extends Item
 {
@@ -33,34 +34,11 @@ public class ItemRegister extends Item
         this.setCreativeTab(Blockbuster.blockbusterTab);
     }
 
-    /**
-     * Register a director block to a stack of register item
-     */
-    public void registerStack(ItemStack stack, BlockPos pos)
-    {
-        ItemPlayback.saveBlockPos("Dir", stack, pos);
-    }
-
-    /**
-     * Get block position out of item stack's NBT tag
-     */
-    public BlockPos getBlockPos(ItemStack stack)
-    {
-        return ItemPlayback.getBlockPos("Dir", stack);
-    }
-
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
         tooltip.add(I18n.format("blockbuster.info.register"));
-
-        BlockPos pos = ItemPlayback.getBlockPos("Dir", stack);
-
-        if (pos != null)
-        {
-            tooltip.add(I18n.format("blockbuster.info.playback_director", pos.getX(), pos.getY(), pos.getZ()));
-        }
     }
 
     /**
@@ -70,24 +48,11 @@ public class ItemRegister extends Item
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
     {
-        ItemStack stack = player.getHeldItem(hand);
-        BlockPos pos = this.getBlockPos(stack);
-
-        if (pos != null)
+        if (!world.isRemote)
         {
-            if (!world.isRemote)
-            {
-                TileEntity tile = world.getTileEntity(pos);
-
-                if (tile instanceof TileEntityDirector)
-                {
-                    ((TileEntityDirector) tile).open(player, pos);
-                }
-            }
-
-            return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+            EntityUtils.sendStatusMessage((EntityPlayerMP) player, new TextComponentString("Director blocks are now deprecated. This item is now useless..."));
         }
 
-        return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
+        return new ActionResult<ItemStack>(EnumActionResult.PASS, player.getHeldItem(hand));
     }
 }

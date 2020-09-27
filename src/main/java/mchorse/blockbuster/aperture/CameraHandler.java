@@ -45,7 +45,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
@@ -171,15 +170,7 @@ public class CameraHandler
     {
         GuiPlayback playback = new GuiPlayback();
 
-        if (location.isDirector())
-        {
-            playback.setDirector(location.getPosition());
-        }
-        else if (location.isScene())
-        {
-            playback.setScene(location.getFilename());
-        }
-
+        playback.setLocation(location);
         Minecraft.getMinecraft().displayGuiScreen(playback);
 	}
 
@@ -382,18 +373,9 @@ public class CameraHandler
     {
         ItemStack right = Minecraft.getMinecraft().player.getHeldItemMainhand();
 
-        if (right != null && right.getItem() instanceof ItemPlayback)
+        if (right.getItem() instanceof ItemPlayback && right.getTagCompound() != null && right.getTagCompound().hasKey("Scene"))
         {
-            BlockPos pos = ItemPlayback.getBlockPos("Dir", right);
-
-            if (pos != null)
-            {
-                return new SceneLocation(pos);
-            }
-            else if (right.getTagCompound() != null && right.getTagCompound().hasKey("Scene"))
-            {
-                return new SceneLocation(right.getTagCompound().getString("Scene"));
-            }
+            return new SceneLocation(right.getTagCompound().getString("Scene"));
         }
 
         return location;

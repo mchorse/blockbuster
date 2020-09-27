@@ -22,7 +22,6 @@ import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadRecordings;
 import mchorse.blockbuster.network.client.recording.actions.ClientHandlerActionList;
 import mchorse.blockbuster.network.client.recording.actions.ClientHandlerActions;
-import mchorse.blockbuster.network.client.scene.ClientHandlerConfirmBreak;
 import mchorse.blockbuster.network.client.scene.ClientHandlerSceneCast;
 import mchorse.blockbuster.network.client.scene.ClientHandlerSceneManage;
 import mchorse.blockbuster.network.client.scene.ClientHandlerScenes;
@@ -54,7 +53,6 @@ import mchorse.blockbuster.network.common.recording.actions.PacketActionList;
 import mchorse.blockbuster.network.common.recording.actions.PacketActions;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
-import mchorse.blockbuster.network.common.scene.PacketConfirmBreak;
 import mchorse.blockbuster.network.common.scene.PacketRequestScenes;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
 import mchorse.blockbuster.network.common.scene.PacketSceneManage;
@@ -86,7 +84,6 @@ import mchorse.blockbuster.network.server.recording.ServerHandlerUpdatePlayerDat
 import mchorse.blockbuster.network.server.recording.actions.ServerHandlerAction;
 import mchorse.blockbuster.network.server.recording.actions.ServerHandlerRequestAction;
 import mchorse.blockbuster.network.server.recording.actions.ServerHandlerRequestActions;
-import mchorse.blockbuster.network.server.scene.ServerHandlerConfirmBreak;
 import mchorse.blockbuster.network.server.scene.ServerHandlerRequestScenes;
 import mchorse.blockbuster.network.server.scene.ServerHandlerSceneCast;
 import mchorse.blockbuster.network.server.scene.ServerHandlerSceneManage;
@@ -153,8 +150,6 @@ public class Dispatcher
             register(PacketSceneManage.class, ClientHandlerSceneManage.class, Side.SERVER);
             register(PacketSceneManage.class, ServerHandlerSceneManage.class, Side.SERVER);
 
-            register(PacketConfirmBreak.class, ClientHandlerConfirmBreak.class, Side.CLIENT);
-            register(PacketConfirmBreak.class, ServerHandlerConfirmBreak.class, Side.SERVER);
             register(PacketUpdatePlayerData.class, ServerHandlerUpdatePlayerData.class, Side.SERVER);
 
             /* Director block syncing */

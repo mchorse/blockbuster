@@ -90,7 +90,6 @@ public class GuiBlockbusterPanels
     public void onUnregister(RemoveDashboardPanels event)
     {
         GuiModelBlockPanel.lastBlocks.clear();
-        GuiDirectorPanel.lastBlocks.clear();
         ClientProxy.audio.reset();
 
         this.directorPanel = null;

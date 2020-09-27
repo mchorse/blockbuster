@@ -1,7 +1,6 @@
 package mchorse.blockbuster.recording.scene;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.Objects;
@@ -14,27 +13,15 @@ import java.util.Objects;
 public class SceneLocation
 {
 	private Scene scene;
-	private BlockPos position;
 	private String filename;
 
 	public SceneLocation()
 	{}
 
-	public SceneLocation(Director scene, BlockPos position)
-	{
-		this.scene = scene;
-		this.position = position;
-	}
-
 	public SceneLocation(Scene scene)
 	{
 		this.scene = scene;
 		this.filename = scene.getId();
-	}
-
-	public SceneLocation(BlockPos position)
-	{
-		this.position = position;
 	}
 
 	public SceneLocation(String filename)
@@ -47,16 +34,6 @@ public class SceneLocation
 		return this.scene;
 	}
 
-	public Director getDirector()
-	{
-		return this.isDirector() ? (Director) this.scene : null;
-	}
-
-	public BlockPos getPosition()
-	{
-		return this.position;
-	}
-
 	public String getFilename()
 	{
 		return this.filename;
@@ -64,22 +41,17 @@ public class SceneLocation
 
 	public int getType()
 	{
-		return this.isEmpty() ? 0 : (this.isDirector() ? 1 : 2);
+		return this.isEmpty() ? 0 : 1;
 	}
 
 	public boolean isEmpty()
 	{
-		return this.scene == null;
+		return !this.isScene();
 	}
 
 	public boolean isScene()
 	{
 		return this.filename != null && !this.filename.isEmpty();
-	}
-
-	public boolean isDirector()
-	{
-		return this.position != null;
 	}
 
 	@Override
@@ -91,18 +63,7 @@ public class SceneLocation
 
 			if (this.getType() == location.getType())
 			{
-				if (this.isDirector())
-				{
-					return Objects.equals(this.position, location.position);
-				}
-				else if (this.isScene())
-				{
-					return Objects.equals(this.filename, location.filename);
-				}
-				else
-				{
-					return true;
-				}
+				return Objects.equals(this.filename, location.filename);
 			}
 		}
 
@@ -111,11 +72,7 @@ public class SceneLocation
 
 	public SceneLocation copyEmpty()
 	{
-		if (this.isDirector())
-		{
-			return new SceneLocation(this.getPosition());
-		}
-		else if (this.isScene())
+		if (this.isScene())
 		{
 			return new SceneLocation(this.getFilename());
 		}
@@ -125,13 +82,7 @@ public class SceneLocation
 
 	public void fromByteBuf(ByteBuf buf)
 	{
-		this.position = null;
 		this.filename = null;
-
-		if (buf.readBoolean())
-		{
-			this.position = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
-		}
 
 		if (buf.readBoolean())
 		{
@@ -140,7 +91,7 @@ public class SceneLocation
 
 		if (buf.readBoolean())
 		{
-			this.scene = this.isDirector() ? new Director(null) : (this.isScene() ? new Scene() : null);
+			this.scene = this.isScene() ? new Scene() : null;
 
 			if (this.scene != null)
 			{
@@ -151,15 +102,6 @@ public class SceneLocation
 
 	public void toByteBuf(ByteBuf buf)
 	{
-		buf.writeBoolean(this.position != null);
-
-		if (this.position != null)
-		{
-			buf.writeInt(this.position.getX());
-			buf.writeInt(this.position.getY());
-			buf.writeInt(this.position.getZ());
-		}
-
 		buf.writeBoolean(this.filename != null);
 
 		if (this.filename != null)

@@ -2,12 +2,9 @@ package mchorse.blockbuster.network.server.scene;
 
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.Recording;
-import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
-import mchorse.blockbuster.recording.scene.Director;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.tileentity.TileEntity;
 
 public class ServerHandlerSceneCast extends ServerMessageHandler<PacketSceneCast>
 {
@@ -19,29 +16,14 @@ public class ServerHandlerSceneCast extends ServerMessageHandler<PacketSceneCast
             return;
         }
 
-        if (message.location.isDirector())
+        try
         {
-            TileEntity tile = this.getTE(player, message.location.getPosition());
-
-            if (tile instanceof TileEntityDirector)
-            {
-                ((TileEntityDirector) tile).director.copy(message.location.getDirector());
-                tile.markDirty();
-            }
-
-            Recording.get(player).setLastScene("");
+            CommonProxy.scenes.save(message.location.getFilename(), message.location.getScene());
+            Recording.get(player).setLastScene(message.location.getFilename());
         }
-        else if (message.location.isScene())
+        catch (Exception e)
         {
-            try
-            {
-                CommonProxy.scenes.save(message.location.getFilename(), message.location.getScene());
-                Recording.get(player).setLastScene(message.location.getFilename());
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
         }
     }
 }

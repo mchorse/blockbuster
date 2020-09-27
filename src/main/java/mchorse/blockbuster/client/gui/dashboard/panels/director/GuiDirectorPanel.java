@@ -4,7 +4,6 @@ import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.common.item.ItemPlayback;
-import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.network.common.recording.PacketUpdatePlayerData;
@@ -12,7 +11,6 @@ import mchorse.blockbuster.network.common.scene.PacketSceneCast;
 import mchorse.blockbuster.network.common.scene.PacketScenePause;
 import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
-import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
 import mchorse.blockbuster.network.common.scene.PacketSceneTeleport;
 import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.blockbuster.recording.scene.Scene;
@@ -46,8 +44,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -56,14 +52,11 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import org.lwjgl.input.Keyboard;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 public class GuiDirectorPanel extends GuiBlockbusterPanel
 {
-    public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
-
     private GuiElement subChildren;
     private GuiDelegateElement<GuiElement> mainView;
     private GuiElement replays;
@@ -76,8 +69,6 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     public GuiTextElement startCommand;
     public GuiTextElement stopCommand;
     public GuiToggleElement loops;
-    public GuiToggleElement disableStates;
-    public GuiToggleElement hide;
 
     public GuiStringListElement audio;
     public GuiTrackpadElement audioShift;
@@ -106,22 +97,6 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
 
     private SceneLocation location = new SceneLocation();
     private Replay replay;
-
-    /**
-     * Try adding a block position, if it doesn't exist in list already 
-     */
-    public static void tryAddingBlock(BlockPos pos)
-    {
-        for (BlockPos stored : lastBlocks)
-        {
-            if (pos.equals(stored))
-            {
-                return;
-            }
-        }
-
-        lastBlocks.add(pos);
-    }
 
     public GuiDirectorPanel(Minecraft mc, GuiDashboard dashboard)
     {
@@ -153,8 +128,6 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.startCommand = new GuiTextElement(mc, 10000, (str) -> this.location.getScene().startCommand = str);
         this.stopCommand = new GuiTextElement(mc, 10000, (str) -> this.location.getScene().stopCommand = str);
         this.loops = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.loops"), false, (b) -> this.location.getScene().loops = b.isToggled());
-        this.disableStates = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.disable_states"), false, (b) -> this.location.getDirector().disableStates = b.isToggled());
-        this.hide = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.hide"), false, (b) -> this.location.getDirector().hide = b.isToggled());
 
         this.audio = new GuiStringListElement(mc, (value) -> this.location.getScene().audio = value.get(0).contains("(") ? "" : value.get(0));
         this.audio.background(0x88000000).tooltip(IKey.lang("blockbuster.gui.director.audio_tooltip"), Direction.RIGHT);
@@ -171,12 +144,10 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.audioShift.flex().relative(this.audio).y(1F, 5).w(1F);
         this.openAudioFolder.flex().relative(this.audio).x(1F, -16).y(-16).wh(16, 16);
 
-        GuiElement row = Elements.row(mc, 5, 0, 20, this.loops, this.disableStates, this.hide);
+        GuiElement row = Elements.row(mc, 5, 0, 20, this.loops);
 
         row.flex().relative(this.stopCommand).y(25).w(1F);
         this.loops.flex().h(20);
-        this.disableStates.flex().h(20);
-        this.hide.flex().h(20);
 
         this.configOptions.add(this.title, this.startCommand, this.stopCommand, row, this.audio, this.audioShift, this.openAudioFolder);
 
@@ -298,20 +269,8 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         return this.getLocation().getScene().replays;
     }
 
-    public void pickDirector(BlockPos pos)
-    {
-        this.close();
-
-        Dispatcher.sendToServer(new PacketSceneRequestCast(new SceneLocation(pos)));
-    }
-
     public GuiDirectorPanel openScene(SceneLocation location)
     {
-        if (location.isDirector())
-        {
-            tryAddingBlock(location.getPosition());
-        }
-
         this.scenes.setVisible(false);
 
         return this.setScene(location);
@@ -321,11 +280,8 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     {
         this.location = location == null ? new SceneLocation() : location;
 
-        this.updateList();
         this.subChildren.setVisible(!location.isEmpty());
         this.replayEditor.setVisible(!location.isEmpty());
-        this.hide.setVisible(this.location.isDirector());
-        this.disableStates.setVisible(this.location.isDirector());
 
         if (location.isEmpty())
         {
@@ -355,7 +311,6 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     public GuiDirectorPanel set(SceneLocation location)
     {
         this.location = location;
-        this.updateList();
 
         return this;
     }
@@ -381,13 +336,6 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.setScene(this.location);
         this.scenes.setScene(this.location.getScene());
         this.scenes.updateSceneList();
-
-        /* Resetting the current scene block, if it was removed from the
-         * world */
-        if (this.location.isDirector() && this.mc.world.getTileEntity(this.location.getPosition()) == null)
-        {
-            this.setScene(new SceneLocation());
-        }
     }
 
     @Override
@@ -400,18 +348,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
                 ClientProxy.panels.morphs.finish();
             }
 
-            if (this.location.isDirector())
-            {
-                TileEntity te = this.mc.world.getTileEntity(this.location.getPosition());
-
-                if (te instanceof TileEntityDirector)
-                {
-                    ((TileEntityDirector) te).director.copy(this.location.getDirector());
-                }
-
-                Dispatcher.sendToServer(new PacketSceneCast(this.location));
-            }
-            else if (this.location.isScene())
+            if (this.location.isScene())
             {
                 Dispatcher.sendToServer(new PacketSceneCast(this.location));
             }
@@ -456,12 +393,6 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
             ItemStack stack = this.mc.player.getHeldItemMainhand();
 
             this.attach.setEnabled(!this.location.isEmpty() && stack.getItem() instanceof ItemPlayback);
-        }
-
-        if (this.location.isDirector())
-        {
-            this.disableStates.toggled(this.location.getDirector().disableStates);
-            this.hide.toggled(this.location.getDirector().hide);
         }
     }
 
@@ -554,12 +485,6 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.pickMorph.setMorph(morph);
     }
 
-    private void updateList()
-    {
-        this.scenes.setScene(this.location.getScene());
-        this.scenes.updateList(lastBlocks);
-    }
-
     private void updateLabel()
     {
         boolean error = this.replay != null && this.replay.id.isEmpty();
@@ -581,20 +506,9 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
             return;
         }
 
-        String command;
-
-        if (this.location.isScene())
-        {
-            command = "/action record " + this.replay.id + " " + this.location.getFilename();
-        }
-        else
-        {
-            BlockPos pos = this.location.getPosition();
-
-            command = "/action record " + this.replay.id + " " + pos.getX() + " " + pos.getY() + " " + pos.getZ();
-        }
-
+        String command = "/action record " + this.replay.id + " " + this.location.getFilename();
         ITextComponent component = new TextComponentString(I18n.format("blockbuster.info.recording.clickhere"));
+
         component.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
         component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)));
         component.getStyle().setColor(TextFormatting.GRAY).setUnderlined(true);
@@ -621,7 +535,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         }
         else
         {
-            Dispatcher.sendToServer(new PacketPlaybackButton(0, "", this.location.getFilename(), this.location.getPosition()));
+            Dispatcher.sendToServer(new PacketPlaybackButton(this.location, 0, ""));
 
             this.mc.displayGuiScreen(null);
         }
@@ -730,7 +644,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
 
     public void plause()
     {
-        if (this.location.isDirector() || this.location.isScene())
+        if (this.location.isScene())
         {
             Dispatcher.sendToServer(new PacketScenePlayback(this.location));
         }
@@ -740,22 +654,15 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     {
         Replay replay = this.replay;
 
-        if (replay != null && !replay.id.isEmpty())
+        if (replay != null && !replay.id.isEmpty() && this.location.isScene())
         {
-            if (this.location.isDirector())
-            {
-                Dispatcher.sendToServer(new PacketSceneRecord(this.location, replay.id));
-            }
-            else if (this.location.isScene())
-            {
-                Dispatcher.sendToServer(new PacketSceneRecord(this.location, replay.id));
-            }
+            Dispatcher.sendToServer(new PacketSceneRecord(this.location, replay.id));
         }
     }
 
 	public void pause()
     {
-        if (this.location.isDirector() || this.location.isScene())
+        if (this.location.isScene())
         {
             Dispatcher.sendToServer(new PacketScenePause(this.location));
         }

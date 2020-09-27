@@ -27,6 +27,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -146,72 +147,12 @@ public class BlockDirector extends Block implements ITileEntityProvider
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-        ItemStack item = playerIn.getHeldItemMainhand();
-
-        if (item != null && this.handleItem(item, worldIn, pos, playerIn))
-        {
-            return true;
-        }
-
         if (!worldIn.isRemote)
         {
-            this.displayCast(playerIn, worldIn, pos);
+            EntityUtils.sendStatusMessage((EntityPlayerMP) playerIn, new TextComponentString("Director blocks are now deprecated. The data that was stored inside of this block was converted to a scene."));
         }
 
         return true;
-    }
-
-    /* Item handling */
-
-    protected boolean handleItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
-    {
-        return this.handlePlaybackItem(item, world, pos, player) || this.handleRegisterItem(item, world, pos, player);
-    }
-
-    private boolean handleRegisterItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
-    {
-        if (item.getItem() instanceof ItemRegister && !world.isRemote)
-        {
-            ((ItemRegister) item.getItem()).registerStack(item, pos);
-            EntityUtils.sendStatusMessage((EntityPlayerMP) player, new TextComponentTranslation("blockbuster.success.director.attached_device"));
-
-            return true;
-        }
-
-        return world.isRemote;
-    }
-
-    /**
-     * Attach recording item to current director block
-     */
-    protected boolean handlePlaybackItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
-    {
-        if (!(item.getItem() instanceof ItemPlayback))
-        {
-            return false;
-        }
-
-        ItemPlayback.saveBlockPos("Dir", item, pos);
-
-        if (!world.isRemote)
-        {
-            EntityUtils.sendStatusMessage((EntityPlayerMP) player, new TextComponentTranslation("blockbuster.success.director.attached_button"));
-        }
-
-        if (CameraHandler.isApertureLoaded())
-        {
-            GuiHandler.open(player, GuiHandler.PLAYBACK, 0, 0, 0);
-        }
-
-        return true;
-    }
-
-    /**
-     * Display director block GUI to the player 
-     */
-    protected void displayCast(EntityPlayer player, World worldIn, BlockPos pos)
-    {
-        ((TileEntityDirector) worldIn.getTileEntity(pos)).open(player, pos);
     }
 
     @Override

@@ -8,7 +8,6 @@ import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingStorage;
 import mchorse.blockbuster.client.particles.BedrockLibrary;
 import mchorse.blockbuster.common.BlockbusterTab;
-import mchorse.blockbuster.common.EventHandler;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.block.BlockDimGreen;
 import mchorse.blockbuster.common.block.BlockDirector;
@@ -114,8 +113,6 @@ public class CommonProxy
         /* Configuration */
         configFile = new File(event.getModConfigurationDirectory(), "blockbuster");
         this.particles = new BedrockLibrary(new File(configFile, "models/particles"));
-
-        MinecraftForge.EVENT_BUS.register(new EventHandler());
 
         /* Creative tab */
         Blockbuster.blockbusterTab = new BlockbusterTab();
