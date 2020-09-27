@@ -15,7 +15,6 @@ blockbuster.gui:
     duplicate: Duplicate
     search: Search
     cancel: Cancel
-    break: Break
     select: Select
     ok: Ok
     billboard: Look at player
@@ -34,13 +33,9 @@ blockbuster.gui:
         reset: Reset pose
         create: Create pose
     
-    confirm:
-        title: Confirm Breaking Director Block
-        description: Director block at ({7}%s{f}, {7}%s{f}, {7}%s{f}) contains total of {7}%s{f} replays. Are you sure you want to destroy this director block? Those replays will be {c}removed{r} {l}permanently{r}.
-    
     dashboard: 
         main: Dashboard
-        director: Director block
+        director: Scene
         model: Model block
         model_editor: Model editor
         player_recording: Player recording editor
@@ -60,21 +55,16 @@ blockbuster.gui:
         
         options: Options
     
-    # Director block GUI strings
+    # Scenes GUI strings
     director:
-        title: Director blocks
         config: General options
-        convert: Convert director block to a scene
-        convert_modal: "Type a name for a scene:"
-        not_selected: Select a director block...
+        not_selected: Select a scene...
         no_replays: Create a replay...
     
         display_title: Display title
         start_command: On start command
         stop_command: On stop command
         loops: Loops
-        disable_states: Disable states
-        hide: Hide during playback
 
         audio: Audio track
         audio_tooltip: Pick an audio track which will be used for syncing of the audio with this scene
@@ -98,7 +88,7 @@ blockbuster.gui:
         rename_prefix_popup: "Enter a new prefix:"
 
         attach: Attach
-        attach_tooltip: Attach this director block/scene to playback button
+        attach_tooltip: Attach this scene to currently held playback button
 
         camera: Edit camera
         tp: Teleport
@@ -575,7 +565,7 @@ blockbuster.gui:
 
     aperture:
         config:
-            title: Director
+            title: Scene
 
             detach: Detach scene
             reload: Reload actors

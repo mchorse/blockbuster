@@ -2,7 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard;
 
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiTextureManagerPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.scene.GuiScenePanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlockPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 @SideOnly(Side.CLIENT)
 public class GuiBlockbusterPanels
 {
-    public GuiDirectorPanel directorPanel;
+    public GuiScenePanel directorPanel;
     public GuiModelBlockPanel modelPanel;
     public GuiModelEditorPanel modelEditorPanel;
     public GuiRecordingEditorPanel recordingEditorPanel;
@@ -69,7 +69,7 @@ public class GuiBlockbusterPanels
     {
         Minecraft mc = Minecraft.getMinecraft();
 
-        this.directorPanel = new GuiDirectorPanel(mc, event.dashboard);
+        this.directorPanel = new GuiScenePanel(mc, event.dashboard);
         this.modelPanel = new GuiModelBlockPanel(mc, event.dashboard);
         this.modelEditorPanel = new GuiModelEditorPanel(mc, event.dashboard);
         this.recordingEditorPanel = new GuiRecordingEditorPanel(mc, event.dashboard);

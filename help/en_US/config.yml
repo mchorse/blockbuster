@@ -7,7 +7,6 @@ blockbuster.config:
         tooltip: General config options of Blockbuster mod
 
         show_first_time_modal: Show first time modal
-        disable_teleport_playback_button: Disable playback button teleport
         extra_wubs: Extra Wubs
         auto_refresh_models: Refresh models and skins
         debug_playback_ticks: Debug ticks

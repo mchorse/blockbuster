@@ -11,6 +11,9 @@ blockbuster:
     morph_error: No model found
     start_recording: "Starting recording {7}%s{r} in {7}%s{r}"
 
+    bye_director_block: Director blocks are now deprecated. The data that was stored inside of this block was converted to a scene.
+    bye_register_item: Director blocks are now deprecated. This item is now useless...
+
 # Metamorph
 morph.section.blockbuster: Blockbuster models
 

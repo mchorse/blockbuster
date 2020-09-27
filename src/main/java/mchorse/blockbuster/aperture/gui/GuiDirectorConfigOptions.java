@@ -5,7 +5,7 @@ import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.client.gui.config.GuiAbstractConfigOptions;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.aperture.network.common.PacketAudioShift;
-import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.scene.GuiScenePanel;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
 import mchorse.blockbuster.recording.scene.SceneLocation;
@@ -76,7 +76,7 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
             {
                 Dispatcher.sendToServer(new PacketAudioShift(location, value.intValue()));
 
-                GuiDirectorPanel panel = mchorse.blockbuster.ClientProxy.panels.directorPanel;
+                GuiScenePanel panel = mchorse.blockbuster.ClientProxy.panels.directorPanel;
 
                 if (panel.getLocation().equals(location))
                 {

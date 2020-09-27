@@ -1,10 +1,9 @@
 blockbuster.config.comments:
     general:
         show_first_time_modal: Whether first time modal should be shown in the dashboard
-        disable_teleport_playback_button: Is teleport feature disabled when you sneak and using the playback button?
         extra_wubs: This option does literally nothing. Or maybe it does...?
         auto_refresh_models: Refresh models and skins when entering in Metamorph or Blockbuster GUIs?
-        debug_playback_ticks: Write ticks in the log during director block recording
+        debug_playback_ticks: Write ticks in the log during scene playback
         green_screen_sky: Makes the sky solid color for chroma keying purposes
         green_screen_sky_color: Specifies the sky color for chroma sky feature
         url_skins_sync_download: Synchronous downloading of URL skins. It makes it work URL skins with 3D outer layers at cost of freezing the game to download a skin

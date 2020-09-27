@@ -4,7 +4,7 @@ key:
         # Categories
         category: Blockbuster
         
-        plause_director: Play/stop director
-        record_director: Record director replay
-        pause_director: Pause director replay
+        plause_director: Play/stop scene
+        record_director: Record scene replay
+        pause_director: Pause scene replay
         open_gun: Configure gun

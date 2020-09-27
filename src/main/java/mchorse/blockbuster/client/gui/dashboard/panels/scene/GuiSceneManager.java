@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.gui.dashboard.panels.director;
+package mchorse.blockbuster.client.gui.dashboard.panels.scene;
 
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.PacketRequestScenes;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class GuiSceneManager extends GuiElement
 {
-	public GuiDirectorPanel parent;
+	public GuiScenePanel parent;
 	public GuiStringListElement sceneList;
 
 	/* Elements for scene manager */
@@ -36,7 +36,7 @@ public class GuiSceneManager extends GuiElement
 	public GuiIconElement rename;
 	public GuiIconElement remove;
 
-	public GuiSceneManager(Minecraft mc, GuiDirectorPanel parent)
+	public GuiSceneManager(Minecraft mc, GuiScenePanel parent)
 	{
 		super(mc);
 
@@ -169,10 +169,7 @@ public class GuiSceneManager extends GuiElement
 
 	public void setScene(Scene scene)
 	{
-		if (scene != null)
-		{
-			this.sceneList.setCurrent(scene.getId());
-		}
+		this.sceneList.setCurrent(scene == null ? "" : scene.getId());
 	}
 
 	public void updateSceneList()

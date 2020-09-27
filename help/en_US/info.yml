@@ -1,14 +1,6 @@
 blockbuster.info:
     actor:
         playing: "{f}This actor already plays!"
-    
-    director:
-        already_registered: "{f}This actor is already registered by this director block!"
-        looped: "{f}Given director block is looped!"
-        unlooped: "{f}Given director block is unlooped!"
-        
-        enabled_state: "{f}Given director block now can change the state of the block!"
-        disabled_state: "{f}Given director block now can't change the state of the block!"
 
     scene:
         looped: "{f}Given scene is looped now!"

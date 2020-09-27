@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.gui.dashboard.panels.director;
+package mchorse.blockbuster.client.gui.dashboard.panels.scene;
 
 import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.blockbuster.utils.mclib.BBIcons;

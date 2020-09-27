@@ -24,15 +24,6 @@ blockbuster.error:
         convert_skin_size: "{f}The skin's size is %s{f}x%s{f}, while must be power of two with 1:1 or 2:1 aspect ratio!"
 
         item_nbt_empty: "You don't hold any item in your hand..."
-    
-    # Director block error strings
-    director:
-        playing: "{f}Director block at (%s{f}, %s{f}, %s{f}) is playing!"
-        stopped: "{f}Director block at (%s{f}, %s{f}, %s{f}) is stopped!"
-        
-        missing: "{f}There is no director block at (%s{f}, %s{f}, %s{f})!"
-        no_director: "{f}No director block exists at (%s{f}, %s{f}, %s{f})."
-        empty_filename: "{f}Director block has a replay with empty {7}Recording ID{f} field. Please fill empty {7}Recording ID{f}."
 
     scene:
         playing: "{f}Scene by name %s{f} is playing!"

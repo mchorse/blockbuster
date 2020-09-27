@@ -12,6 +12,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -50,7 +51,7 @@ public class ItemRegister extends Item
     {
         if (!world.isRemote)
         {
-            EntityUtils.sendStatusMessage((EntityPlayerMP) player, new TextComponentString("Director blocks are now deprecated. This item is now useless..."));
+            EntityUtils.sendStatusMessage((EntityPlayerMP) player, new TextComponentTranslation("blockbuster.bye_register_item"));
         }
 
         return new ActionResult<ItemStack>(EnumActionResult.PASS, player.getHeldItem(hand));

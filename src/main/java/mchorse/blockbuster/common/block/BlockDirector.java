@@ -149,7 +149,7 @@ public class BlockDirector extends Block implements ITileEntityProvider
     {
         if (!worldIn.isRemote)
         {
-            EntityUtils.sendStatusMessage((EntityPlayerMP) playerIn, new TextComponentString("Director blocks are now deprecated. The data that was stored inside of this block was converted to a scene."));
+            EntityUtils.sendStatusMessage((EntityPlayerMP) playerIn, new TextComponentTranslation("blockbuster.bye_director_block"));
         }
 
         return true;

@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.gui.dashboard.panels.director;
+package mchorse.blockbuster.client.gui.dashboard.panels.scene;
 
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
@@ -55,7 +55,7 @@ import org.lwjgl.input.Keyboard;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class GuiDirectorPanel extends GuiBlockbusterPanel
+public class GuiScenePanel extends GuiBlockbusterPanel
 {
     private GuiElement subChildren;
     private GuiDelegateElement<GuiElement> mainView;
@@ -98,7 +98,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     private SceneLocation location = new SceneLocation();
     private Replay replay;
 
-    public GuiDirectorPanel(Minecraft mc, GuiDashboard dashboard)
+    public GuiScenePanel(Minecraft mc, GuiDashboard dashboard)
     {
         super(mc, dashboard);
 
@@ -269,19 +269,20 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         return this.getLocation().getScene().replays;
     }
 
-    public GuiDirectorPanel openScene(SceneLocation location)
+    public GuiScenePanel openScene(SceneLocation location)
     {
         this.scenes.setVisible(false);
 
         return this.setScene(location);
     }
 
-    public GuiDirectorPanel setScene(SceneLocation location)
+    public GuiScenePanel setScene(SceneLocation location)
     {
         this.location = location == null ? new SceneLocation() : location;
 
         this.subChildren.setVisible(!location.isEmpty());
         this.replayEditor.setVisible(!location.isEmpty());
+        this.scenes.setScene(location.getScene());
 
         if (location.isEmpty())
         {
@@ -308,9 +309,10 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         return this;
     }
 
-    public GuiDirectorPanel set(SceneLocation location)
+    public GuiScenePanel set(SceneLocation location)
     {
         this.location = location;
+        this.scenes.setScene(location.getScene());
 
         return this;
     }
@@ -605,7 +607,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
             Gui.drawRect(this.selector.area.x, this.selector.area.y, this.selector.area.ex() + 20, this.selector.area.ey(), 0x88000000);
             this.drawGradientRect(this.selector.area.x, this.selector.area.y - 16, this.selector.area.ex() + 20, this.selector.area.y, 0x00000000, 0x88000000);
 
-            this.font.drawStringWithShadow(this.location.isScene() ? I18n.format("blockbuster.gui.scenes.title") : I18n.format("blockbuster.gui.director.title"), this.area.x + 10, this.area.y + 10, 0xffffff);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.scenes.title"), this.area.x + 10, this.area.y + 10, 0xffffff);
 
             if (this.replay != null)
             {

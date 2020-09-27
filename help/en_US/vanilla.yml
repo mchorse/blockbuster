@@ -1,15 +1,14 @@
 # Item tooltips
 blockbuster:
     info:
-        playback_button: Toggles director block
-        playback_director: Attached to ({r}%d{7}, {r}%d{7}, {r}%d{7})
+        playback_button: Toggles playback of a scene
         playback_profile: Plays profile "{f}{o}%s{r}{7}"
         playback_play: Plays camera
         playback_scene: Attached to scene {f}%s{r}
 
-        actor_config: Use on actor
-        register: Ties actors to director block
-        director_block: Manages actors and replays
+        actor_config: Use it on an actor
+        register: It used to tie actors to director block. A relic of the past...
+        director_block: It used to be scenes before scenes. A relic of the past...
         model_block: Allows to place morphs as static models
         green_block: "%s chroma block. Can be used for chroma keying."
         dim_green_block: "Doesn't glow."
