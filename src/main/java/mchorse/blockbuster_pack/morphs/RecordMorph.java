@@ -10,10 +10,13 @@ import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.api.morphs.utils.Animation;
+import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
@@ -29,7 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class RecordMorph extends AbstractMorph // implements ISyncableMorph
+public class RecordMorph extends AbstractMorph implements ISyncableMorph
 {
     /**
      * Record morph's icon in GUI 
@@ -62,8 +65,8 @@ public class RecordMorph extends AbstractMorph // implements ISyncableMorph
     public int randomSkip;
 
     private boolean initiate;
-
-    // private PausedMorph pause = new PausedMorph();
+    private Animation animation = new Animation();
+    private Replay replay = new Replay();
 
     public RecordMorph()
     {
@@ -78,22 +81,23 @@ public class RecordMorph extends AbstractMorph // implements ISyncableMorph
         this.reload = true;
     }
 
-//    @Override
-//    public void pause(AbstractMorph previous, int offset)
-//    {
-//        this.pause.set(previous, offset);
-//    }
-//
-//    @Override
-//    public boolean isPaused()
-//    {
-//        return false; // return this.pause.isPaused();
-//    }
+    @Override
+    public void pause(AbstractMorph previous, int offset)
+    {
+        this.animation.pause(offset);
+        this.replay.morph = this.initial;
+    }
+
+    @Override
+    public boolean isPaused()
+    {
+        return this.animation.paused;
+}
 
     @SideOnly(Side.CLIENT)
     private void previewActor(Record record)
     {
-        int tick = 0; // this.pause.offset % record.getLength();
+        int tick = this.animation.progress % record.getLength();
         Frame frame = record.getFrame(tick);
 
         if (frame == null)
@@ -208,10 +212,11 @@ public class RecordMorph extends AbstractMorph // implements ISyncableMorph
             {
                 Dispatcher.sendToServer(new PacketRequestRecording(this.record));
             }
-//            else if (this.isPaused() && record != null)
-//            {
-//                this.previewActor(record);
-//            }
+            else if (this.isPaused() && record != null)
+            {
+                this.previewActor(record);
+                record.applyPreviousMorph(this.actor, this.replay, this.animation.progress, true);
+            }
         }
     }
 
@@ -251,16 +256,17 @@ public class RecordMorph extends AbstractMorph // implements ISyncableMorph
             }
             else
             {
-//                if (this.isPaused() && this.actor.playback.record != null)
-//                {
-//                    this.previewActor(this.actor.playback.record);
-//                }
-//                else
+                if (this.isPaused() && this.actor.playback.record != null)
+                {
+                    this.previewActor(this.actor.playback.record);
+                    this.actor.playback.record.applyPreviousMorph(this.actor, this.replay, this.animation.progress, true);
+                }
+                else
                 {
                     this.actor.onUpdate();
                 }
 
-                if (/* !this.isPaused() && */this.actor.playback.isFinished() && this.loop)
+                if (!this.isPaused() && this.actor.playback.isFinished() && this.loop)
                 {
                     this.actor.playback.record.reset(this.actor);
                     this.actor.playback.tick = (int) (this.randomSkip * Math.random());

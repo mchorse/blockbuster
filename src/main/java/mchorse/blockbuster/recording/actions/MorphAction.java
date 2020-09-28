@@ -60,8 +60,15 @@ public class MorphAction extends Action
         {
             EntityActor act = (EntityActor) actor;
 
-            act.morphPause(morph, offset, previous, previousOffset);
-            act.notifyPlayers();
+            if (act.world.isRemote)
+            {
+                act.applyPause(MorphUtils.copy(morph), offset, MorphUtils.copy(previous), previousOffset);
+            }
+            else
+            {
+                act.morphPause(morph, offset, previous, previousOffset);
+                act.notifyPlayers();
+            }
         }
     }
 

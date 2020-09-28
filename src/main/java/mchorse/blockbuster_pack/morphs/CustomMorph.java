@@ -152,9 +152,9 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             {
                 this.animation.last = pose;
             }
-
-            this.parts.pause(previous, offset);
         }
+
+        this.parts.pause(previous, offset);
     }
 
     @Override
