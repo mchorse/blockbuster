@@ -5,6 +5,7 @@ import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.audio.AudioRenderer;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
+import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
@@ -270,6 +271,8 @@ public class RenderingHandler
     @SubscribeEvent
     public void onRenderLast(RenderWorldLastEvent event)
     {
+        ModelExtrudedLayer.tickCache();
+
         for (GifTexture texture : gifs.values())
         {
             texture.tick();

@@ -2,7 +2,9 @@ package mchorse.blockbuster.client.model.parsing;
 
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
+import mchorse.mclib.McLib;
 import mchorse.mclib.utils.MathUtils;
+import mchorse.mclib.utils.resources.MultiResourceLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
@@ -67,19 +69,16 @@ public class ModelExtrudedLayer
             layers.put(renderer, map);
         }
 
-        if (map != null)
+        if (!map.containsKey(texture))
         {
-            if (!map.containsKey(texture))
-            {
-                generateLayer(renderer, texture, map);
-            }
+            generateLayer(renderer, texture, map);
+        }
 
-            Integer callId = map.get(texture);
+        Integer callId = map.get(texture);
 
-            if (callId != null)
-            {
-                id = callId.intValue();
-            }
+        if (callId != null)
+        {
+            id = callId;
         }
 
         if (id != -1)
@@ -90,7 +89,13 @@ public class ModelExtrudedLayer
             // GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
             // GlStateManager.enableTexture2D();
         }
+    }
 
+    /**
+     * Tick the cache to clean up the data
+     */
+    public static void tickCache()
+    {
         /* Clean up cache */
         if (!images.isEmpty())
         {
@@ -125,8 +130,16 @@ public class ModelExtrudedLayer
 
             if (image == null)
             {
-                image = new CachedImage(ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(texture).getInputStream()));
-                images.put(texture, image);
+                /* Multi-threaded multi-skins freak out when gerResource(ResourceLocation) gets called */
+                if (texture instanceof MultiResourceLocation && McLib.multiskinMultiThreaded.get())
+                {
+                    return;
+                }
+                else
+                {
+                    image = new CachedImage(ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(texture).getInputStream()));
+                    images.put(texture, image);
+                }
             }
 
             Chunk chunk = fillChunk(image.image, renderer);
@@ -533,7 +546,10 @@ public class ModelExtrudedLayer
         {
             for (Integer i : map.values())
             {
-                GL11.glDeleteLists(i.intValue(), 1);
+                if (i != -1)
+                {
+                    GL11.glDeleteLists(i, 1);
+                }
             }
         }
 
@@ -549,7 +565,12 @@ public class ModelExtrudedLayer
         {
             if (map.containsKey(texture))
             {
-                GL11.glDeleteLists(map.remove(texture).intValue(), 1);
+                int i = map.remove(texture);
+
+                if (i != -1)
+                {
+                    GL11.glDeleteLists(i, 1);
+                }
             }
         }
     }
