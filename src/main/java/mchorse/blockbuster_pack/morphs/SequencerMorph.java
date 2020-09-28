@@ -98,27 +98,13 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         {
             AbstractMorph prevMorph = MorphUtils.copy(found.getPreviousMorph());
 
-            if (prevMorph instanceof ISyncableMorph)
-            {
-                ((ISyncableMorph) prevMorph).pause(previous, (int) found.getPreviousDuration());
-            }
-            else if (prevMorph instanceof IBodyPartProvider)
-            {
-                ((IBodyPartProvider) prevMorph).getBodyPart().pause(previous, (int) found.getPreviousDuration());
-            }
-
+            MorphUtils.pause(prevMorph, previous, (int) found.getPreviousDuration());
             found.applyPrevious(prevMorph);
+
             previous = prevMorph;
         }
 
-        if (morph instanceof ISyncableMorph)
-        {
-            ((ISyncableMorph) morph).pause(previous, (int) (offset - found.lastDuration));
-        }
-        else if (morph instanceof IBodyPartProvider)
-        {
-            ((IBodyPartProvider) morph).getBodyPart().pause(previous, (int) (offset - found.lastDuration));
-        }
+        MorphUtils.pause(morph, previous, (int) (offset - found.lastDuration));
 
         found.applyCurrent(morph);
         this.currentMorph.setDirect(morph);

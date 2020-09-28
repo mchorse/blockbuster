@@ -44,6 +44,7 @@ import java.util.Map;
 public class Record
 {
     public static final FoundAction ACTION = new FoundAction();
+    public static final MorphAction MORPH = new MorphAction();
 
     /**
      * Signature of the recording. If the first short of the record file isn't
@@ -331,7 +332,15 @@ public class Record
         }
         else if (replay != null)
         {
-            replay.apply(actor);
+            if (pause && replay.morph != null)
+            {
+                MORPH.morph = replay.morph;
+                MORPH.applyWithOffset(actor, tick, null, 0);
+            }
+            else
+            {
+                replay.apply(actor);
+            }
         }
     }
 

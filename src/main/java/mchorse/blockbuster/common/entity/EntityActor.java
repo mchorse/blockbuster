@@ -18,8 +18,6 @@ import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.api.morphs.utils.IFlattenableMorph;
-import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityBodyHelper;
@@ -500,15 +498,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         this.morphPause(morph, offset, previous, previousOffset);
 
-        if (previous instanceof ISyncableMorph)
-        {
-            ((ISyncableMorph) previous).pause(null, previousOffset);
-        }
-
-        if (morph instanceof ISyncableMorph)
-        {
-            ((ISyncableMorph) morph).pause(previous, offset);
-        }
+        MorphUtils.pause(previous, null, previousOffset);
+        MorphUtils.pause(morph, previous, offset);
     }
 
     /**
