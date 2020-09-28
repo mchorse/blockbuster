@@ -1,6 +1,5 @@
 package mchorse.blockbuster_pack.morphs;
 
-import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.mclib.utils.Color;
@@ -119,8 +118,7 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
     @Override
     public void pause(AbstractMorph previous, int offset)
     {
-        this.animation.pause();
-        this.animation.progress = offset;
+        this.animation.pause(offset);
 
         if (previous instanceof ImageMorph)
         {

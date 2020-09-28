@@ -18,6 +18,7 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
+import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.Minecraft;
@@ -131,15 +132,19 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     @Override
     public void pause(AbstractMorph previous, int offset)
     {
-        this.animation.pause();
-        this.animation.progress = offset;
+        this.animation.pause(offset);
+
+        if (previous instanceof IMorphProvider)
+        {
+            previous = ((IMorphProvider) previous).getMorph();
+        }
 
         if (previous instanceof CustomMorph)
         {
             CustomMorph custom = (CustomMorph) previous;
             ModelPose pose = custom.getCurrentPose();
 
-            if (this.animation.isInProgress() && pose != null)
+            if (custom.animation.isInProgress() && pose != null)
             {
                 this.animation.last = custom.animation.calculatePose(pose, 1).clone();
             }
@@ -147,6 +152,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             {
                 this.animation.last = pose;
             }
+
+            this.parts.pause(previous, offset);
         }
     }
 

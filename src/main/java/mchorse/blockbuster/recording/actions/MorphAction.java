@@ -6,7 +6,6 @@ import mchorse.metamorph.api.MorphAPI;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,7 +32,7 @@ public class MorphAction extends Action
     @Override
     public void apply(EntityLivingBase actor)
     {
-        AbstractMorph morph = mchorse.metamorph.api.MorphUtils.copy(this.morph);
+        AbstractMorph morph = MorphUtils.copy(this.morph);
 
         if (actor instanceof EntityPlayer)
         {
@@ -50,7 +49,7 @@ public class MorphAction extends Action
 
     public void applyWithOffset(EntityLivingBase actor, int offset, AbstractMorph previous, int previousOffset)
     {
-        AbstractMorph morph = mchorse.metamorph.api.MorphUtils.copy(this.morph);
+        AbstractMorph morph = MorphUtils.copy(this.morph);
 
         /* Sorry, fake players can't be synced */
         if (actor instanceof EntityPlayer)

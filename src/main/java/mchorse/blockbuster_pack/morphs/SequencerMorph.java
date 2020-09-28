@@ -7,7 +7,10 @@ import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
+import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
+import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,7 +33,7 @@ import java.util.Random;
  * Next big thing since S&B, allows creating animated morphs with 
  * variable delays between changes
  */
-public class SequencerMorph extends AbstractMorph implements IMorphProvider
+public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISyncableMorph
 {
     /**
      * List of sequence entries (morph and their delay) 
@@ -67,6 +70,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
      */
     public boolean isRandom;
 
+    private Animation animation = new Animation();
     private Random random = new Random();
 
     public SequencerMorph()
@@ -76,66 +80,60 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
         this.name = "sequencer";
     }
 
-    private Random getRandomSeed(float duration)
+    @Override
+    public void pause(AbstractMorph previous, int offset)
     {
-        this.random.setSeed((long) (duration * 100000L));
+        this.animation.pause(offset);
 
-        return this.random;
+        FoundMorph found = this.getMorphAt(offset);
+
+        if (found == null)
+        {
+            return;
+        }
+
+        AbstractMorph morph = MorphUtils.copy(found.getCurrentMorph());
+
+        if (found.previous != null)
+        {
+            AbstractMorph prevMorph = MorphUtils.copy(found.getPreviousMorph());
+
+            if (prevMorph instanceof ISyncableMorph)
+            {
+                ((ISyncableMorph) prevMorph).pause(previous, (int) found.getPreviousDuration());
+            }
+            else if (prevMorph instanceof IBodyPartProvider)
+            {
+                ((IBodyPartProvider) prevMorph).getBodyPart().pause(previous, (int) found.getPreviousDuration());
+            }
+
+            found.applyPrevious(prevMorph);
+            previous = prevMorph;
+        }
+
+        if (morph instanceof ISyncableMorph)
+        {
+            ((ISyncableMorph) morph).pause(previous, (int) (offset - found.lastDuration));
+        }
+        else if (morph instanceof IBodyPartProvider)
+        {
+            ((IBodyPartProvider) morph).getBodyPart().pause(previous, (int) (offset - found.lastDuration));
+        }
+
+        found.applyCurrent(morph);
+        this.currentMorph.setDirect(morph);
+    }
+
+    @Override
+    public boolean isPaused()
+    {
+        return this.animation.paused;
     }
 
     @Override
     public AbstractMorph getMorph()
     {
         return this.currentMorph.get();
-    }
-
-    public FoundMorph getMorphAt(int tick)
-    {
-        if (this.morphs.isEmpty())
-        {
-            return null;
-        }
-
-        float duration = 0;
-        int size = this.morphs.size();
-
-        for (SequenceEntry entry : this.morphs)
-        {
-            duration += entry.getDuration(this.getRandomSeed(duration));
-        }
-
-        if (duration <= 0)
-        {
-            return new FoundMorph(this.morphs.get(size - 1).morph, size == 1 ? null : this.morphs.get(size - 2).morph, 0, 0);
-        }
-
-        duration = 0;
-
-        SequenceEntry entry = null;
-        SequenceEntry lastEntry = null;
-        int i = this.reverse ? size - 1 : 0;
-        float lastDuration = 0;
-
-        while (duration < tick)
-        {
-            lastDuration = duration;
-            lastEntry = entry;
-
-            entry = this.morphs.get(i);
-
-            if (this.isRandom)
-            {
-                i = this.getRandomIndex(duration);
-            }
-            else
-            {
-                i = MathUtils.cycler(i + (this.reverse ? -1 : 1), 0, size - 1);
-            }
-
-            duration += entry.getDuration(this.getRandomSeed(duration));
-        }
-
-        return entry == null ? null : new FoundMorph(entry.morph, lastEntry == null ? null : lastEntry.morph, duration, lastDuration);
     }
 
     @Override
@@ -169,7 +167,10 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        this.updateMorph(this.timer + partialTicks);
+        if (!this.isPaused())
+        {
+            this.updateMorph(this.timer + partialTicks);
+        }
 
         AbstractMorph morph = this.currentMorph.get();
 
@@ -193,6 +194,95 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
         return false;
     }
 
+    /* Random stuff */
+
+    private Random getRandomSeed(float duration)
+    {
+        this.random.setSeed((long) (duration * 100000L));
+
+        return this.random;
+    }
+
+    public AbstractMorph getRandom()
+    {
+        if (this.morphs.isEmpty())
+        {
+            return null;
+        }
+
+        return this.get((int) (this.random.nextDouble() * this.morphs.size()));
+    }
+
+    public int getRandomIndex(float duration)
+    {
+        return (int) (this.getRandomSeed(duration * 2 + 5).nextFloat() * this.morphs.size());
+    }
+
+    public AbstractMorph get(int index)
+    {
+        if (index >= this.morphs.size() || index < 0)
+        {
+            return null;
+        }
+
+        return this.morphs.get(index).morph;
+    }
+
+    /* Search */
+
+    public FoundMorph getMorphAt(int tick)
+    {
+        /* There is no found morph if there are no sequences or tick is negative */
+        if (this.morphs.isEmpty() || tick < 0)
+        {
+            return null;
+        }
+
+        float duration = 0;
+        int size = this.morphs.size();
+
+        for (SequenceEntry entry : this.morphs)
+        {
+            duration += entry.getDuration(this.getRandomSeed(duration));
+        }
+
+        /* A shortcut in case the durations of every sequence is zero */
+        if (duration <= 0)
+        {
+            return new FoundMorph(this.morphs.get(size - 1), size == 1 ? null : this.morphs.get(size - 2), 0, 0, 0);
+        }
+
+        /* Now the main fun part */
+        SequenceEntry entry = null;
+        SequenceEntry lastEntry = null;
+        int i = this.reverse ? size - 1 : 0;
+        float lastDuration = 0;
+        float prevLastDuration = 0;
+        duration = 0;
+
+        while (duration <= tick)
+        {
+            prevLastDuration = lastDuration;
+            lastDuration = duration;
+            lastEntry = entry;
+
+            entry = this.morphs.get(i);
+
+            if (this.isRandom)
+            {
+                i = this.getRandomIndex(duration);
+            }
+            else
+            {
+                i = MathUtils.cycler(i + (this.reverse ? -1 : 1), 0, size - 1);
+            }
+
+            duration += entry.getDuration(this.getRandomSeed(duration));
+        }
+
+        return entry == null ? null : new FoundMorph(entry, lastEntry, duration, lastDuration, prevLastDuration);
+    }
+
     @Override
     public void update(EntityLivingBase target)
     {
@@ -211,6 +301,11 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
      */
     protected void updateCycle()
     {
+        if (this.isPaused())
+        {
+            return;
+        }
+
         this.updateMorph(this.timer);
         this.timer++;
     }
@@ -362,6 +457,8 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
         super.afterMerge(morph);
         this.currentMorph.setDirect(morph);
         this.current = -1;
+        this.duration = 0;
+        this.timer = 0;
     }
 
     @Override
@@ -527,44 +624,61 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
         }
     }
 
-    public AbstractMorph getRandom()
-    {
-        if (this.morphs.isEmpty())
-        {
-            return null;
-        }
-
-        return this.get((int) (this.random.nextDouble() * this.morphs.size()));
-    }
-
-    public int getRandomIndex(float duration)
-    {
-        return (int) (this.getRandomSeed(duration * 2 + 5).nextFloat() * this.morphs.size());
-    }
-
-    public AbstractMorph get(int index)
-    {
-        if (index >= this.morphs.size() || index < 0)
-        {
-            return null;
-        }
-
-        return this.morphs.get(index).morph;
-    }
-
+    /**
+     * Data class that is responsible for storing found morph(s)
+     * when doing search for specific morph at given tick
+     */
     public static class FoundMorph
     {
-        public AbstractMorph morph;
-        public AbstractMorph previous;
-        public int totalDuration;
-        public int lastDuration;
+        public SequenceEntry current;
+        public SequenceEntry previous;
+        public float totalDuration;
+        public float lastDuration;
+        public float prevLastDuration;
 
-        public FoundMorph(AbstractMorph morph, AbstractMorph previous, float totalDuration, float lastDuration)
+        public FoundMorph(SequenceEntry current, SequenceEntry previous, float totalDuration, float lastDuration, float prevLastDuration)
         {
-            this.morph = morph;
+            this.current = current;
             this.previous = previous;
-            this.totalDuration = (int) totalDuration;
-            this.lastDuration = (int) lastDuration;
+            this.totalDuration = totalDuration;
+            this.lastDuration = lastDuration;
+            this.prevLastDuration = prevLastDuration;
+        }
+
+        public AbstractMorph getCurrentMorph()
+        {
+            return this.current == null ? null : this.current.morph;
+        }
+
+        public AbstractMorph getPreviousMorph()
+        {
+            return this.previous == null ? null : this.previous.morph;
+        }
+
+        public float getCurrentDuration()
+        {
+            return this.totalDuration - this.lastDuration;
+        }
+
+        public float getPreviousDuration()
+        {
+            return this.lastDuration - this.prevLastDuration;
+        }
+
+        public void applyCurrent(AbstractMorph morph)
+        {
+            if (this.current.setDuration && morph instanceof IAnimationProvider)
+            {
+                ((IAnimationProvider) morph).getAnimation().duration = (int) this.getCurrentDuration();
+            }
+        }
+
+        public void applyPrevious(AbstractMorph morph)
+        {
+            if (this.previous.setDuration && morph instanceof IAnimationProvider)
+            {
+                ((IAnimationProvider) morph).getAnimation().duration = (int) this.getPreviousDuration();
+            }
         }
     }
 }
