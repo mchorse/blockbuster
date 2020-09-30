@@ -127,6 +127,11 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
             this.animation.last = new ImageMorph.ImageProperties();
             this.animation.last.from(image);
         }
+        else
+        {
+            this.animation.last = new ImageMorph.ImageProperties();
+            this.animation.last.from(this);
+        }
     }
 
     @Override
