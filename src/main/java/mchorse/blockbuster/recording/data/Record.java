@@ -309,11 +309,12 @@ public class Record
             try
             {
                 MorphAction action = found.action;
-                int foundTick = found.tick;
-                int offset = tick - foundTick;
 
-                if (pause)
+                if (pause && Blockbuster.recordPausePreview.get())
                 {
+                    int foundTick = found.tick;
+                    int offset = tick - foundTick;
+
                     found = this.seekMorphAction(foundTick - 1);
                     AbstractMorph previous = found == null ? replayMorph : found.action.morph;
                     int previousOffset = foundTick - (found == null ? 0 : found.tick);

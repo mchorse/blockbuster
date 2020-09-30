@@ -35,6 +35,7 @@ blockbuster.config:
         record_attack_on_swipe: Attack on swipe
         record_commands: Record commands
         record_chat_prefix: Chat action prefix
+        record_pause_preview: Better preview
     
     actor:
         title: Actor
