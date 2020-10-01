@@ -280,23 +280,31 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             this.distanceWalkedOnStepModified = this.distanceWalkedOnStepModified + MathHelper.sqrt(dx * dx + dy * dy + dz * dz) * 0.32F;
         }
 
-        double posX = this.posX;
-        double posY = this.posY;
-        double posZ = this.posZ;
-        double prevPosX = this.prevPosX;
-        double prevPosY = this.prevPosY;
-        double prevPosZ = this.prevPosZ;
+        if (this.playback != null)
+        {
+            double posX = this.posX;
+            double posY = this.posY;
+            double posZ = this.posZ;
+            double prevPosX = this.prevPosX;
+            double prevPosY = this.prevPosY;
+            double prevPosZ = this.prevPosZ;
 
-        /* Trigger pressure playback */
-        this.travel(this.moveStrafing, this.moveVertical, this.moveForward);
+            /* Trigger pressure playback */
+            this.travel(this.moveStrafing, this.moveVertical, this.moveForward);
 
-        /* Restore the position from the playback which fixes weird sliding */
-        this.posX = posX;
-        this.posY = posY;
-        this.posZ = posZ;
-        this.prevPosX = prevPosX;
-        this.prevPosY = prevPosY;
-        this.prevPosZ = prevPosZ;
+            /* Restore the position from the playback which fixes weird sliding */
+            this.posX = posX;
+            this.posY = posY;
+            this.posZ = posZ;
+            this.prevPosX = prevPosX;
+            this.prevPosY = prevPosY;
+            this.prevPosZ = prevPosZ;
+        }
+        else
+        {
+            /* Trigger pressure playback */
+            this.travel(this.moveStrafing, this.moveVertical, this.moveForward);
+        }
     }
 
     /**
