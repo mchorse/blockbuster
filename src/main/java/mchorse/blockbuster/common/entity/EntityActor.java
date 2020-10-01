@@ -512,6 +512,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         this.pauseOffset = offset;
         this.pausePreviousMorph = previous;
         this.pausePreviousOffset = previousOffset;
+        this.forceMorph = false;
 
         this.morph.setDirect(morph);
     }

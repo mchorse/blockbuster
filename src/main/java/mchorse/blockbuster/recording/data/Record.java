@@ -301,6 +301,7 @@ public class Record
             return;
         }
 
+        boolean pause = type == MorphType.PAUSE && Blockbuster.recordPausePreview.get();
         AbstractMorph replayMorph = replay == null ? null : replay.morph;
         FoundAction found = this.seekMorphAction(tick);
 
@@ -310,7 +311,7 @@ public class Record
             {
                 MorphAction action = found.action;
 
-                if (type == MorphType.PAUSE && Blockbuster.recordPausePreview.get() && action.morph instanceof ISyncableMorph)
+                if (pause && action.morph instanceof ISyncableMorph)
                 {
                     int foundTick = found.tick;
                     int offset = tick - foundTick;
@@ -337,7 +338,7 @@ public class Record
         }
         else if (replay != null)
         {
-            if (type == MorphType.PAUSE && replay.morph != null)
+            if (pause && replay.morph != null)
             {
                 MORPH.morph = replay.morph;
                 MORPH.applyWithOffset(actor, tick, null, 0);

@@ -69,7 +69,7 @@ public class Replay
     {
         actor.setCustomNameTag(this.name);
         actor.setEntityInvulnerable(this.invincible);
-        actor.morph.set(mchorse.metamorph.api.MorphUtils.copy(this.morph));
+        actor.morph(mchorse.metamorph.api.MorphUtils.copy(this.morph), false);
         actor.invisible = this.invisible;
         actor.setHealth(this.health);
         actor.notifyPlayers();
