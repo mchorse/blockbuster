@@ -10,6 +10,7 @@ import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.RecordRecorder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -20,6 +21,7 @@ import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -56,7 +58,9 @@ public class RenderingHandler
     /**
      * Bedrock particle emitters
      */
-    private static final List<BedrockEmitter> emitters = new ArrayList<>();
+    private static final List<BedrockEmitter> emitters = new ArrayList<BedrockEmitter>();
+
+    private static final List<Entity> lastRenderedEntities = new ArrayList<Entity>();
 
     private GuiRecordingOverlay overlay;
 
@@ -194,6 +198,43 @@ public class RenderingHandler
                 emitter.added = false;
             }
         }
+    }
+
+    /**
+     * Called by ASM
+     */
+    public static void addRenderActor(Entity entity)
+    {
+        if (entity instanceof EntityActor)
+        {
+            lastRenderedEntities.add(entity);
+        }
+    }
+
+    /**
+     * Called by ASM
+     */
+    public static void renderActors()
+    {
+        if (!Blockbuster.actorAlwaysRender.get())
+        {
+            lastRenderedEntities.clear();
+
+            return;
+        }
+
+        Minecraft mc = Minecraft.getMinecraft();
+        List<EntityActor> actors = mc.world.getEntities(EntityActor.class, EntitySelectors.IS_ALIVE);
+
+        for (EntityActor actor : actors)
+        {
+            if (!lastRenderedEntities.contains(actor))
+            {
+                mc.getRenderManager().renderEntityStatic(actor, mc.getRenderPartialTicks(), false);
+            }
+        }
+
+        lastRenderedEntities.clear();
     }
 
     public RenderingHandler(GuiRecordingOverlay overlay)
