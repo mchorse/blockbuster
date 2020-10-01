@@ -15,6 +15,7 @@ public class PacketModifyActor implements IMessage
     public int offset;
     public AbstractMorph previous;
     public int previousOffset;
+    public boolean forceMorph;
 
     public PacketModifyActor()
     {}
@@ -28,6 +29,7 @@ public class PacketModifyActor implements IMessage
         this.offset = actor.pauseOffset;
         this.previous = actor.pausePreviousMorph;
         this.previousOffset = actor.pausePreviousOffset;
+        this.forceMorph = actor.forceMorph;
     }
 
     @Override
@@ -45,6 +47,7 @@ public class PacketModifyActor implements IMessage
         }
 
         this.previousOffset = buf.readInt();
+        this.forceMorph = buf.readBoolean();
     }
 
     @Override
@@ -63,5 +66,6 @@ public class PacketModifyActor implements IMessage
         }
 
         buf.writeInt(this.previousOffset);
+        buf.writeBoolean(this.forceMorph);
     }
 }

@@ -215,7 +215,7 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
             else if (this.isPaused() && record != null)
             {
                 this.previewActor(record);
-                record.applyPreviousMorph(this.actor, this.replay, this.animation.progress, true);
+                record.applyPreviousMorph(this.actor, this.replay, this.animation.progress, Record.MorphType.PAUSE);
             }
         }
     }
@@ -259,7 +259,7 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
                 if (this.isPaused() && this.actor.playback.record != null)
                 {
                     this.previewActor(this.actor.playback.record);
-                    this.actor.playback.record.applyPreviousMorph(this.actor, this.replay, this.animation.progress, true);
+                    this.actor.playback.record.applyPreviousMorph(this.actor, this.replay, this.animation.progress, Record.MorphType.PAUSE);
                 }
                 else
                 {

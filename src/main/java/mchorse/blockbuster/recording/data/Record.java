@@ -294,7 +294,7 @@ public class Record
     /**
      * Apply previous morph
      */
-    public void applyPreviousMorph(EntityLivingBase actor, Replay replay, int tick, boolean pause)
+    public void applyPreviousMorph(EntityLivingBase actor, Replay replay, int tick, MorphType type)
     {
         if (tick >= this.actions.size())
         {
@@ -310,7 +310,7 @@ public class Record
             {
                 MorphAction action = found.action;
 
-                if (pause && Blockbuster.recordPausePreview.get())
+                if (type == MorphType.PAUSE && Blockbuster.recordPausePreview.get() && action.morph instanceof ISyncableMorph)
                 {
                     int foundTick = found.tick;
                     int offset = tick - foundTick;
@@ -320,6 +320,10 @@ public class Record
                     int previousOffset = foundTick - (found == null ? 0 : found.tick);
 
                     action.applyWithOffset(actor, offset, previous, previousOffset);
+                }
+                else if (type == MorphType.FORCE)
+                {
+                    action.applyWithForce(actor);
                 }
                 else
                 {
@@ -333,10 +337,15 @@ public class Record
         }
         else if (replay != null)
         {
-            if (pause && replay.morph != null)
+            if (type == MorphType.PAUSE && replay.morph != null)
             {
                 MORPH.morph = replay.morph;
                 MORPH.applyWithOffset(actor, tick, null, 0);
+            }
+            else if (type == MorphType.FORCE && replay.morph != null)
+            {
+                MORPH.morph = replay.morph;
+                MORPH.applyWithForce(actor);
             }
             else
             {
@@ -825,5 +834,10 @@ public class Record
             this.tick = tick;
             this.action = action;
         }
+    }
+
+    public static enum MorphType
+    {
+        REGULAR, PAUSE, FORCE
     }
 }

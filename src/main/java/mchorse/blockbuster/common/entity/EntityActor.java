@@ -103,6 +103,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     public int pauseOffset = -1;
     public AbstractMorph pausePreviousMorph;
     public int pausePreviousOffset = -1;
+    public boolean forceMorph = false;
 
     public EntityActor(World worldIn)
     {
@@ -450,6 +451,21 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
     /* Public API */
 
+    public void applyModifyPacket(PacketModifyActor message)
+    {
+        this.forceMorph = message.forceMorph;
+
+        if (message.offset >= 0)
+        {
+            this.invisible = message.invisible;
+            this.applyPause(message.morph, message.offset, message.previous, message.previousOffset);
+        }
+        else
+        {
+            this.modify(message.morph, message.invisible, false);
+        }
+    }
+
     /**
      * Configure this actor
      *
@@ -458,7 +474,15 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     public void modify(AbstractMorph morph, boolean invisible, boolean notify)
     {
-        this.morph.set(morph);
+        if (this.forceMorph)
+        {
+            this.morph.setDirect(morph);
+        }
+        else
+        {
+            this.morph.set(morph);
+        }
+
         this.invisible = invisible;
 
         if (!this.world.isRemote && notify)
@@ -470,11 +494,12 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     /**
      * Morph this actor into given morph (used on the server side)
      */
-    public void morph(AbstractMorph morph)
+    public void morph(AbstractMorph morph, boolean force)
     {
         this.pauseOffset = -1;
         this.pausePreviousMorph = null;
         this.pausePreviousOffset = -1;
+        this.forceMorph = force;
 
         this.morph.set(morph);
     }

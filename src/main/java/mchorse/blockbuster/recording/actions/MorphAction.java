@@ -21,6 +21,8 @@ public class MorphAction extends Action
 {
     public AbstractMorph morph;
 
+    private boolean force;
+
     public MorphAction()
     {}
 
@@ -42,7 +44,25 @@ public class MorphAction extends Action
         {
             EntityActor act = (EntityActor) actor;
 
-            act.morph(morph);
+            act.morph(morph, false);
+            act.notifyPlayers();
+        }
+    }
+
+    @Override
+    public void applyWithForce(EntityLivingBase actor)
+    {
+        AbstractMorph morph = MorphUtils.copy(this.morph);
+
+        if (actor instanceof EntityPlayer)
+        {
+            MorphAPI.morph((EntityPlayer) actor, morph, true);
+        }
+        else if (actor instanceof EntityActor)
+        {
+            EntityActor act = (EntityActor) actor;
+
+            act.morph(morph, true);
             act.notifyPlayers();
         }
     }

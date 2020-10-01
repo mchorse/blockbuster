@@ -24,6 +24,11 @@ public abstract class Action
     public void apply(EntityLivingBase actor)
     {}
 
+    public void applyWithForce(EntityLivingBase actor)
+    {
+        this.apply(actor);
+    }
+
     public void changeOrigin(double rotation, double newX, double newY, double newZ, double firstX, double firstY, double firstZ)
     {}
 

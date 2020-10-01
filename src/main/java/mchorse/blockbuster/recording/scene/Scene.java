@@ -429,7 +429,7 @@ public class Scene
 				actor.record.applyAction(i - actor.record.preDelay, actor.actor);
 			}
 
-			actor.record.applyPreviousMorph(actor.actor, replay, tick, true);
+			actor.record.applyPreviousMorph(actor.actor, replay, tick, Record.MorphType.PAUSE);
 
 			j++;
 		}

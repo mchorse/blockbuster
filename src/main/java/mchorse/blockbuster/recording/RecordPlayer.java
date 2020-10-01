@@ -170,7 +170,7 @@ public class RecordPlayer
 
         if (this.actor.isServerWorld())
         {
-            this.record.applyPreviousMorph(this.actor, this.replay, this.tick, true);
+            this.record.applyPreviousMorph(this.actor, this.replay, this.tick, Record.MorphType.PAUSE);
 
             Dispatcher.sendToTracked(this.actor, new PacketActorPause(this.actor.getEntityId(), true, this.tick));
         }
@@ -196,7 +196,7 @@ public class RecordPlayer
 
         if (this.actor.isServerWorld())
         {
-            this.record.applyPreviousMorph(this.actor, this.replay, tick, false);
+            this.record.applyPreviousMorph(this.actor, this.replay, tick, Record.MorphType.FORCE);
 
             Dispatcher.sendToTracked(this.actor, new PacketActorPause(this.actor.getEntityId(), false, this.tick));
         }
@@ -238,7 +238,7 @@ public class RecordPlayer
 
             if (this.replay != null)
             {
-                this.record.applyPreviousMorph(this.actor, this.replay, tick, true);
+                this.record.applyPreviousMorph(this.actor, this.replay, tick, Record.MorphType.PAUSE);
             }
         }
 
