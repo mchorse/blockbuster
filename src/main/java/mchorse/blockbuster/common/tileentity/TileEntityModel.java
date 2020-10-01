@@ -3,6 +3,8 @@ package mchorse.blockbuster.common.tileentity;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -16,8 +18,10 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,6 +33,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class TileEntityModel extends TileEntity implements ITickable
 {
+    public static long lastUpdate;
+
     public AbstractMorph morph;
     public EntityLivingBase entity;
     public ItemStack[] slots = new ItemStack[] {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY};
@@ -59,6 +65,8 @@ public class TileEntityModel extends TileEntity implements ITickable
     public boolean global = false;
     public boolean enabled = true;
 
+    private long lastModelUpdate;
+
     public TileEntityModel()
     {
         NBTTagCompound tag = new NBTTagCompound();
@@ -66,6 +74,7 @@ public class TileEntityModel extends TileEntity implements ITickable
         tag.setString("Name", "blockbuster.fred");
 
         this.morph = MorphManager.INSTANCE.morphFromNBT(tag);
+        this.lastModelUpdate = lastUpdate;
     }
 
     public TileEntityModel(float yaw)
@@ -124,6 +133,17 @@ public class TileEntityModel extends TileEntity implements ITickable
             {
                 this.morph.update(this.entity);
             }
+        }
+
+        if (this.lastModelUpdate < lastUpdate)
+        {
+            BlockPos pos = this.pos;
+            PacketModifyModelBlock message = new PacketModifyModelBlock(pos, this);
+            NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64);
+
+            Dispatcher.DISPATCHER.get().sendToAllAround(message, point);
+
+            this.lastModelUpdate = lastUpdate;
         }
     }
 

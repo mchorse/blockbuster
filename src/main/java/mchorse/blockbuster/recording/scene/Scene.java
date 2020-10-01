@@ -7,6 +7,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.audio.AudioState;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.audio.PacketAudio;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
@@ -588,6 +589,11 @@ public class Scene
 				replay.apply(actor);
 				this.actors.put(replay, player);
 			}
+		}
+
+		if (Blockbuster.modelBlockResetOnPlayback.get())
+		{
+			TileEntityModel.lastUpdate = System.currentTimeMillis();
 		}
 	}
 

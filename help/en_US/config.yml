@@ -22,6 +22,7 @@ blockbuster.config:
         model_block_disable_rendering: Disable model block rendering
         model_block_disable_item_rendering: Disable item rendering
         restore: Restore model blocks
+        reset_on_playback: Reset on playback
     
     recording:
         title: Recording
