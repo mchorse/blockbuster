@@ -129,7 +129,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         options.flex().relative(this).x(1F, -130).y(1F).w(130).anchorY(1F).column(5).vertical().stretch().height(20).padding(10);
         options.add(this.model, this.scale, this.scaleGui);
 
-        this.add(this.reset, this.create, this.poseOnSneak, this.list, this.animation, options, this.transforms, this.models, this.animation.interpolations);
+        this.add(this.reset, this.create, this.poseOnSneak, this.list, options, this.transforms, this.models, this.animation);
     }
 
     @Override

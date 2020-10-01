@@ -167,7 +167,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.animation = new GuiAnimation(mc, true);
             this.animation.flex().relative(this).x(1F, -130).w(130);
 
-            this.add(this.pose, column, this.animation, this.animation.interpolations);
+            this.add(this.pose, column, this.animation);
         }
 
         @Override
