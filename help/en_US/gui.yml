@@ -263,11 +263,6 @@ blockbuster.gui:
         limbs: Limbs
         body_parts: Body parts
         use_target: Use target
-        
-        animates: Animates
-        ignored: Ignored
-        animation_duration: Duration
-        pick_interpolation: Pick interpolation
 
     image:
         crop: Crop
