@@ -23,8 +23,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -60,7 +62,7 @@ public class RenderingHandler
      */
     private static final List<BedrockEmitter> emitters = new ArrayList<BedrockEmitter>();
 
-    private static final List<Entity> lastRenderedEntities = new ArrayList<Entity>();
+    private static final List<EntityActor> lastRenderedEntities = new ArrayList<EntityActor>();
 
     private GuiRecordingOverlay overlay;
 
@@ -207,7 +209,7 @@ public class RenderingHandler
     {
         if (entity instanceof EntityActor)
         {
-            lastRenderedEntities.add(entity);
+            lastRenderedEntities.add((EntityActor) entity);
         }
     }
 
@@ -216,7 +218,7 @@ public class RenderingHandler
      */
     public static void renderActors()
     {
-        if (!Blockbuster.actorAlwaysRender.get())
+        if (!Blockbuster.actorAlwaysRender.get() || MinecraftForgeClient.getRenderPass() != 0)
         {
             lastRenderedEntities.clear();
 

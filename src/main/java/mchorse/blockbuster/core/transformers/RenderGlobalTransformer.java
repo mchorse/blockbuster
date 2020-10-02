@@ -9,6 +9,7 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
@@ -136,11 +137,25 @@ public class RenderGlobalTransformer extends ClassTransformer
 
         if (renderEntityLabel != null && releaseLabel != null)
         {
+            /* In non-Optifine Minecraft, the index of the entity variable is 27,
+             * however due to Optifine modifications, it's another index, but it
+             * should be the last local variable... */
+            final String entity = CoreClassTransformer.obfuscated ? "Lvg;" : "Lnet/minecraft/entity/Entity;";
+            int localIndex = 0;
+
+            for (LocalVariableNode var : method.localVariables)
+            {
+                if (var.desc.equals(entity))
+                {
+                    localIndex = Math.max(localIndex, var.index);
+                }
+            }
+
             /* Add render entity */
             InsnList list = new InsnList();
 
-            list.add(new VarInsnNode(Opcodes.ALOAD, 27));
-            list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/blockbuster/client/RenderingHandler", "addRenderActor", CoreClassTransformer.obfuscated ? "(Lvg;)V" : "(Lnet/minecraft/entity/Entity;)V", false));
+            list.add(new VarInsnNode(Opcodes.ALOAD, localIndex));
+            list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/blockbuster/client/RenderingHandler", "addRenderActor", CoreClassTransformer.obfuscated ? "(" + entity + ")V" : "(" + entity + ")V", false));
 
             method.instructions.insert(renderEntityLabel, list);
 
