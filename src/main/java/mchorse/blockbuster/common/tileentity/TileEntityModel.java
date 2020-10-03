@@ -137,7 +137,7 @@ public class TileEntityModel extends TileEntity implements ITickable
 
         if (this.lastModelUpdate < lastUpdate)
         {
-            if (!this.world.isRemote)
+            if (this.world != null && !this.world.isRemote)
             {
                 BlockPos pos = this.pos;
                 PacketModifyModelBlock message = new PacketModifyModelBlock(pos, this);
