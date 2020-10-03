@@ -137,11 +137,14 @@ public class TileEntityModel extends TileEntity implements ITickable
 
         if (this.lastModelUpdate < lastUpdate)
         {
-            BlockPos pos = this.pos;
-            PacketModifyModelBlock message = new PacketModifyModelBlock(pos, this);
-            NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64);
+            if (!this.world.isRemote)
+            {
+                BlockPos pos = this.pos;
+                PacketModifyModelBlock message = new PacketModifyModelBlock(pos, this);
+                NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64);
 
-            Dispatcher.DISPATCHER.get().sendToAllAround(message, point);
+                Dispatcher.DISPATCHER.get().sendToAllAround(message, point);
+            }
 
             this.lastModelUpdate = lastUpdate;
         }
