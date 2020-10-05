@@ -20,9 +20,9 @@ blockbuster:
 
             calculate_body_yaw:
                 |
-                    {l}{6}/{r}record {8}calculate_body_yaw{r}
+                    {l}{6}/{r}record {8}calculate_body_yaw{r} {7}<filename>{r}
 
-                    {r}Automatically calculates body yaw for old player recordings{r}.
+                    {r}Automatically calculates body yaw for given player recording{r}.
 
             clean:
                 |
@@ -83,6 +83,12 @@ blockbuster:
                     {l}{6}/{r}record {8}remove{r} {7}<filename> <tick> [index]{r}
                     
                     {r}Removes all actions on {7}<tick>{r} in player recording by {7}<filename>{r}. If you'll specify {7}[index]{r}, command will remove only one action in {7}<tick>{r} at {7}[index]{r}.
+
+            remove_body_yaw:
+                |
+                    {l}{6}/{r}record {8}remove_body_yaw{r} {7}<filename>{r}
+
+                    {r}Removes body yaw properties from given player recording.
 
             restore:
                 |

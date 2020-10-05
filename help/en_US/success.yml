@@ -35,3 +35,4 @@ blockbuster.success:
         erase: "{f}Successfully erased %s{f} frames at %s{f} tick in %s{f} player recording (final length is %s{f} ticks)!"
         process: "{f}Player recording %s{f}'s %s{f} property was successfully processed between %s{f} to %s{f}!"
         calculate_body_yaw: "{f}Player recording %s{f}'s body yaw was successfully auto calculated!"
+        remove_body_yaw: "{f}Player recording %s{f}'s body yaw was remove!"
