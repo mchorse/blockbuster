@@ -1,10 +1,12 @@
 package mchorse.blockbuster.recording.capturing;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.client.RenderingHandler;
+import mchorse.blockbuster.client.SkinHandler;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer.GunEntry;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
@@ -89,6 +91,7 @@ public class ActionHandler
     public static TileEntity lastTE;
 
     private int timer;
+    private int skinsTimer;
 
     /**
      * Adds a world event listener  
@@ -531,6 +534,12 @@ public class ActionHandler
         for (GunEntry model : TileEntityGunItemStackRenderer.models.values())
         {
             model.props.update();
+        }
+
+        if (this.skinsTimer++ >= 30)
+        {
+            SkinHandler.checkSkinsFolder();
+            this.skinsTimer = 0;
         }
 
         RenderingHandler.updateEmitters();

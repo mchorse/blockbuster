@@ -37,7 +37,7 @@ public class ModelHandler
         pack.reload();
 
         /* Load user provided models */
-        for (Map.Entry<String, IModelLazyLoader> entry : (force ? pack.models.entrySet() : pack.changed.entrySet()))
+        for (Map.Entry<String, IModelLazyLoader> entry : (force ? pack.models : pack.changed).entrySet())
         {
             IModelLazyLoader loader = entry.getValue();
 

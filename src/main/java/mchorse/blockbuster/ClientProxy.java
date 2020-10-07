@@ -79,6 +79,8 @@ public class ClientProxy extends CommonProxy
     public static BlockbusterTree tree;
     public static AudioLibrary audio;
 
+    public static File skinsFolder;
+
     /**
      * Register mod items, blocks, tile entites and entities, load item,
      * block models and register entity renderer.
@@ -123,6 +125,8 @@ public class ClientProxy extends CommonProxy
         StructureMorph.STRUCTURES = new HashMap<String, StructureRenderer>();
 
         audio = new AudioLibrary(new File(CommonProxy.configFile, "audio"));
+        skinsFolder = new File(configFile, "skins");
+        skinsFolder.mkdirs();
     }
 
     /**
