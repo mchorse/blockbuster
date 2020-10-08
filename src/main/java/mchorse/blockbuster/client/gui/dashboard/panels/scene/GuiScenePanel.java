@@ -171,7 +171,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         left.add(this.recordingId, this.id);
         left.add(Elements.label(IKey.lang("blockbuster.gui.director.name")).color(0xcccccc), this.name);
         left.add(Elements.label(IKey.lang("blockbuster.gui.director.health")).color(0xcccccc), this.health, this.invincible, this.invisible, this.enabled, this.fake, this.teleportBack);
-        this.replays.add(this.replayEditor, this.selector);
+        this.replays.add(this.selector, this.replayEditor);
 
         /* Toggle view button */
         GuiIconElement toggle = new GuiIconElement(mc, Icons.GEAR, (b) ->
