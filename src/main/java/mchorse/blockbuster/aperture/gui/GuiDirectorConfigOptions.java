@@ -12,6 +12,7 @@ import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
+import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
@@ -84,9 +85,10 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
                 }
             }
         });
-        this.audioShift.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.director.audio_shift"));
+        this.audioShift.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.director.audio_shift_tooltip"));
 
-        this.add(this.detachScene, this.reload, this.actions, this.reloadScene, this.audioShift);
+        this.add(this.detachScene, this.reload, this.actions, this.reloadScene);
+        this.add(Elements.label(IKey.lang("blockbuster.gui.director.audio_shift")).background(0x88000000), this.audioShift);
 
         instance = this;
     }
