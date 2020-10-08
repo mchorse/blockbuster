@@ -18,9 +18,11 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiDrawable;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.Label;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
 import mchorse.mclib.utils.files.entries.FileEntry;
 import mchorse.mclib.utils.files.entries.FolderEntry;
+import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
@@ -228,7 +230,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
 
             Consumer<ResourceLocation> skin = (rl) ->
             {
-                this.morph.skin = rl;
+                this.morph.skin = RLUtils.clone(rl);
                 this.editor.updateModelRenderer();
             };
 
@@ -256,7 +258,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.materials = new GuiStringListElement(mc, (str) -> this.materials.setCurrent(str.get(0)));
             this.materials.background();
             this.keying = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.image.keying"), false, (b) -> this.morph.keying = b.isToggled());
-            this.keying.tooltip(IKey.lang("blockbuster.gui.image.keying_tooltip"));
+            this.keying.tooltip(IKey.lang("blockbuster.gui.image.keying_tooltip"), Direction.TOP);
             this.picker = new GuiTexturePicker(mc, skin);
 
             this.skin.flex().relative(this).set(10, 10, 110, 20);
