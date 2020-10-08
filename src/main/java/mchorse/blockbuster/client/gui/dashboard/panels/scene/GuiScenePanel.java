@@ -464,11 +464,12 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         }
 
         Scene scene = this.location.getScene();
+        int index = this.selector.getIndex();
 
         scene.replays.remove(this.replay);
 
         int size = scene.replays.size();
-        int index = MathHelper.clamp(this.selector.getIndex(), 0, size - 1);
+        index = MathHelper.clamp(index, 0, size - 1);
 
         this.setReplay(size == 0 ? null : scene.replays.get(index));
         this.selector.update();
