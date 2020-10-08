@@ -62,18 +62,19 @@ public class SkinHandler
 						int w = reader.getWidth(0);
 						int h = reader.getHeight(0);
 						reader.dispose();
-						in.close();
 						stream.close();
 
+						reader = null;
 						tryMovingSkin(file, w, h);
 					}
 					finally
 					{
-						reader.dispose();
+						if (reader != null)
+						{
+							reader.dispose();
+							stream.close();
+						}
 					}
-
-					in.close();
-					stream.close();
 				}
 			}
 		}
@@ -108,21 +109,19 @@ public class SkinHandler
 		String name = input.getName();
 		File file = new File(CommonProxy.configFile, "models/" + folder + "/skins/" + name);
 
-		for (int i = 0; file.exists() && i < 1000; i++)
+		for (int i = 1; file.exists() && i < 1000; i++)
 		{
-			file = new File(CommonProxy.configFile, "models/" + folder + "/skins/" + FilenameUtils.getBaseName(name) + "_" + i + FilenameUtils.getExtension(name));
-
-			if (i >= 1000)
-			{
-				return;
-			}
-
-			i++;
+			file = new File(CommonProxy.configFile, "models/" + folder + "/skins/" + FilenameUtils.getBaseName(name) + "_" + i + "." + FilenameUtils.getExtension(name));
 		}
 
-		if (!file.exists() && input.renameTo(file))
+		if (!file.exists())
 		{
-			L10n.success(Minecraft.getMinecraft().player, "model.skin_moved", name, "blockbuster." + folder);
+			boolean moved = input.renameTo(file);
+
+			if (moved)
+			{
+				L10n.success(Minecraft.getMinecraft().player, "model.skin_moved", name, "blockbuster." + folder, file.getName());
+			}
 		}
 	}
 }
