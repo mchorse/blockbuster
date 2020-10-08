@@ -323,6 +323,7 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
             result = result && Objects.equals(record.record, this.record);
             result = result && Objects.equals(record.initial, this.initial);
             result = result && record.loop == this.loop;
+            result = result && record.randomSkip == this.randomSkip;
         }
 
         return result;
