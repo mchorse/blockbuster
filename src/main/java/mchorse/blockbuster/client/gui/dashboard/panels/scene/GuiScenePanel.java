@@ -98,6 +98,8 @@ public class GuiScenePanel extends GuiBlockbusterPanel
     private SceneLocation location = new SceneLocation();
     private Replay replay;
 
+    private IKey noneAudioTrack = IKey.lang("blockbuster.gui.director.none");
+
     public GuiScenePanel(Minecraft mc, GuiDashboard dashboard)
     {
         super(mc, dashboard);
@@ -129,7 +131,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.stopCommand = new GuiTextElement(mc, 10000, (str) -> this.location.getScene().stopCommand = str);
         this.loops = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.loops"), false, (b) -> this.location.getScene().loops = b.isToggled());
 
-        this.audio = new GuiStringListElement(mc, (value) -> this.location.getScene().audio = value.get(0).contains("(") ? "" : value.get(0));
+        this.audio = new GuiStringListElement(mc, (value) -> this.location.getScene().audio = value.get(0).equals(this.noneAudioTrack.get()) ? "" : value.get(0));
         this.audio.background(0x88000000).tooltip(IKey.lang("blockbuster.gui.director.audio_tooltip"), Direction.RIGHT);
         this.audioShift = new GuiTrackpadElement(mc, (value) -> this.location.getScene().audioShift = value.intValue());
         this.audioShift.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.director.audio_shift_tooltip"));
@@ -193,9 +195,9 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         GuiIconElement dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.dupeReplay());
         GuiIconElement remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeReplay());
 
-        add.tooltip(IKey.lang("blockbuster.gui.add"), Direction.LEFT);
-        dupe.tooltip(IKey.lang("blockbuster.gui.duplicate"), Direction.LEFT);
-        remove.tooltip(IKey.lang("blockbuster.gui.remove"), Direction.LEFT);
+        add.tooltip(IKey.lang("blockbuster.gui.director.add_replay"), Direction.LEFT);
+        dupe.tooltip(IKey.lang("blockbuster.gui.director.dupe_replay"), Direction.LEFT);
+        remove.tooltip(IKey.lang("blockbuster.gui.director.remove_replay"), Direction.LEFT);
 
         add.flex().set(0, 0, 20, 20).relative(this.selector.resizer()).x(1F);
         dupe.flex().set(0, 20, 20, 20).relative(this.selector.resizer()).x(1F);
@@ -377,13 +379,13 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.attach.setEnabled(false);
 
         this.audio.clear();
-        this.audio.add("(none)");
+        this.audio.add(this.noneAudioTrack.get());
         this.audio.add(ClientProxy.audio.getFileNames());
         this.audio.sort();
 
         String audio = this.location.getScene().audio;
 
-        this.audio.setCurrent(audio == null || audio.isEmpty() ? "(none)" : audio);
+        this.audio.setCurrent(audio == null || audio.isEmpty() ? this.noneAudioTrack.get() : audio);
 
         this.audioShift.setValue(this.location.getScene().audioShift);
 
@@ -595,9 +597,6 @@ public class GuiScenePanel extends GuiBlockbusterPanel
 
             Gui.drawRect(x, y, x + 20, y + 20, 0x88000000);
         }
-
-        Gui.drawRect(this.area.x, this.area.y, this.area.ex(), this.area.y + 24, 0x88000000);
-        this.drawGradientRect(this.area.x, this.area.y + 24, this.area.ex(), this.area.y + 32, 0x88000000, 0x00000000);
 
         /* Draw additional stuff */
         if (this.mainView.delegate == this.replays)

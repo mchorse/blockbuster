@@ -45,9 +45,13 @@ public class GuiSceneManager extends GuiElement
 		/* Scene manager elements */
 		this.sceneList = new GuiStringListElement(mc, (scene) -> this.switchScene(scene.get(0)));
 		this.add = new GuiIconElement(mc, Icons.ADD, (b) -> this.addScene());
+		this.add.tooltip(IKey.lang("blockbuster.gui.scenes.add_scene"));
 		this.dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.dupeScene());
+		this.dupe.tooltip(IKey.lang("blockbuster.gui.scenes.dupe_scene"));
 		this.rename = new GuiIconElement(mc, Icons.EDIT, (b) -> this.renameScene());
+			this.rename.tooltip(IKey.lang("blockbuster.gui.scenes.rename_scene"));
 		this.remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeScene());
+		this.remove.tooltip(IKey.lang("blockbuster.gui.scenes.remove_scene"));
 
 		this.sceneList.flex().relative(this.area).set(0, 20, 0, 0).w(1, 0).h(1, -20);
 		this.add.flex().relative(this.area).set(0, 2, 16, 16).x(1, -78);
@@ -57,6 +61,7 @@ public class GuiSceneManager extends GuiElement
 
 		/* Add children */
 		this.add(this.sceneList, this.add, this.dupe, this.rename, this.remove);
+		this.hideTooltip();
 	}
 
 	/* Popup callbacks */

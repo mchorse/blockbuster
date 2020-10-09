@@ -61,7 +61,11 @@ blockbuster.gui:
         config: General options
         not_selected: Select a scene...
         no_replays: Create a replay...
-    
+
+        add_replay: Add a replay
+        dupe_replay: Duplicate selected replay
+        remove_replay: Remove selected replay
+
         display_title: Display title
         start_command: On start command
         stop_command: On stop command
@@ -96,6 +100,8 @@ blockbuster.gui:
         tp: Teleport
         tp_tooltip: Teleport yourself to the replay's starting position
 
+        none: "(none)"
+
         keys:
             category: Scenes
 
@@ -104,6 +110,11 @@ blockbuster.gui:
 
     scenes:
         title: Scenes
+
+        add_scene: "Add a scene..."
+        dupe_scene: "Duplicate selected scene..."
+        rename_scene: "Rename selected scene..."
+        remove_scene: "Remove selected scene..."
 
         add_modal: "Enter a name for a new scene:"
         dupe_modal: "Enter a name for duplicated scene:"
