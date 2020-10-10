@@ -4,8 +4,10 @@ import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelLimb.ArmorSlot;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
@@ -13,6 +15,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Actor's armor layer
@@ -55,14 +58,14 @@ public class LayerActorArmor extends LayerArmorBase<ModelBiped>
 
                     if (item.getEquipmentSlot() == limb.limb.slot.slot)
                     {
-                        this.renderArmorSlot(entity, stack, item, limb, limb.limb.slot.slot, scale);
+                        this.renderArmorSlot(entity, stack, item, limb, limb.limb.slot.slot, partialTicks, scale);
                     }
                 }
             }
         }
     }
 
-    private void renderArmorSlot(EntityLivingBase entity, ItemStack stack, ItemArmor item, ModelCustomRenderer limb, EntityEquipmentSlot slot, float scale)
+    private void renderArmorSlot(EntityLivingBase entity, ItemStack stack, ItemArmor item, ModelCustomRenderer limb, EntityEquipmentSlot slot, float partialTicks, float scale)
     {
         ModelBiped model = this.getModelFromSlot(slot);
         model = this.getArmorModelHook(entity, stack, slot, model);
@@ -72,50 +75,83 @@ public class LayerActorArmor extends LayerArmorBase<ModelBiped>
             return;
         }
 
+        GlStateManager.pushMatrix();
+
         model.setModelAttributes(this.renderer.getMainModel());
         this.renderer.bindTexture(this.getArmorResource(entity, stack, slot, null));
-
-        GlStateManager.pushMatrix();
         limb.postRender(scale);
-        this.setModelSlotVisible(model, limb.limb, limb.limb.slot);
 
-        GlStateManager.enableRescaleNormal();
+        ModelRenderer renderer = this.setModelSlotVisible(model, limb.limb, limb.limb.slot);
 
-        if (item.hasOverlay(stack))
+        if (renderer != null)
         {
-            int i = item.getColor(stack);
-            float f = (float) (i >> 16 & 255) / 255.0F;
-            float f1 = (float) (i >> 8 & 255) / 255.0F;
-            float f2 = (float) (i & 255) / 255.0F;
+            GlStateManager.enableRescaleNormal();
 
-            GlStateManager.color(f, f1, f2, 1);
-            model.bipedHead.render(scale);
-            model.bipedBody.render(scale);
-            model.bipedRightArm.render(scale);
-            model.bipedLeftArm.render(scale);
-            model.bipedRightLeg.render(scale);
-            model.bipedLeftLeg.render(scale);
-            this.renderer.bindTexture(this.getArmorResource(entity, stack, slot, "overlay"));
+            if (item.hasOverlay(stack))
+            {
+                int i = item.getColor(stack);
+                float r = (float) (i >> 16 & 255) / 255F;
+                float g = (float) (i >> 8 & 255) / 255F;
+                float b = (float) (i & 255) / 255F;
+
+                GlStateManager.color(r, g, b, 1);
+                renderer.render(scale);
+                this.renderer.bindTexture(this.getArmorResource(entity, stack, slot, "overlay"));
+            }
+
+            GlStateManager.color(1, 1, 1, 1);
+            renderer.render(scale);
+
+            GlStateManager.disableRescaleNormal();
+
+            if (stack.hasEffect())
+            {
+                this.renderMyEnchantedGlint(this.renderer, entity, renderer, partialTicks, scale);
+            }
         }
-
-        GlStateManager.color(1, 1, 1, 1);
-        model.bipedHead.render(scale);
-        model.bipedBody.render(scale);
-        model.bipedRightArm.render(scale);
-        model.bipedLeftArm.render(scale);
-        model.bipedRightLeg.render(scale);
-        model.bipedLeftLeg.render(scale);
 
         GlStateManager.popMatrix();
-        GlStateManager.disableRescaleNormal();
-
-        if (stack.hasEffect())
-        {
-            // renderEnchantedGlint(this.renderer, entity, model, 0, 0, 0, 0, 0, 0, scale);
-        }
     }
 
-    protected void setModelSlotVisible(ModelBiped model, ModelLimb limb, ArmorSlot slot)
+    private void renderMyEnchantedGlint(RenderLivingBase<?> layer, EntityLivingBase entity, ModelRenderer renderer, float partialTicks, float p_188364_9_)
+    {
+        float timer = entity.ticksExisted + partialTicks;
+
+        layer.bindTexture(ENCHANTED_ITEM_GLINT_RES);
+        Minecraft.getMinecraft().entityRenderer.setupFogColor(true);
+
+        GlStateManager.enableBlend();
+        GlStateManager.depthFunc(GL11.GL_EQUAL);
+        GlStateManager.depthMask(false);
+        GlStateManager.color(0.5F, 0.5F, 0.5F, 1.0F);
+
+        for (int iter = 0; iter < 2; ++iter)
+        {
+            GlStateManager.disableLighting();
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE);
+            GlStateManager.color(0.38F, 0.19F, 0.608F, 1.0F);
+            GlStateManager.matrixMode(5890);
+            GlStateManager.loadIdentity();
+            GlStateManager.scale(0.33333334F, 0.33333334F, 0.33333334F);
+            GlStateManager.rotate(30.0F - iter * 60.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.translate(0.0F, timer * (0.001F + iter * 0.003F) * 20.0F, 0.0F);
+            GlStateManager.matrixMode(5888);
+            renderer.render(p_188364_9_);
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        }
+
+        GlStateManager.matrixMode(5890);
+        GlStateManager.loadIdentity();
+        GlStateManager.matrixMode(5888);
+        GlStateManager.enableLighting();
+        GlStateManager.depthMask(true);
+        GlStateManager.depthFunc(GL11.GL_LEQUAL);
+        GlStateManager.disableBlend();
+
+        Minecraft.getMinecraft().entityRenderer.setupFogColor(false);
+    }
+
+    protected ModelRenderer setModelSlotVisible(ModelBiped model, ModelLimb limb, ArmorSlot slot)
     {
         model.bipedBody.setRotationPoint(0, 0, 0);
         model.bipedHead.setRotationPoint(0, 0, 0);
@@ -130,10 +166,6 @@ public class LayerActorArmor extends LayerArmorBase<ModelBiped>
         int w = limb.size[0];
         int h = limb.size[1];
         int d = limb.size[2];
-
-        float ax = limb.anchor[0];
-        float ay = limb.anchor[1];
-        float az = limb.anchor[2];
 
         float ww = w / 8F;
         float hh = h / 8F;
@@ -150,55 +182,75 @@ public class LayerActorArmor extends LayerArmorBase<ModelBiped>
             GlStateManager.scale(w / 8F, h / 8F, d / 8F);
             model.bipedHead.showModel = true;
             model.bipedHead.setRotationPoint(0, 4, 0);
+
+            return model.bipedHead;
         }
         else if (slot == ArmorSlot.CHEST)
         {
             GlStateManager.scale(w / 8F, h / 12F, d / 4F);
             model.bipedBody.showModel = true;
             model.bipedBody.setRotationPoint(0, -6, 0);
+
+            return model.bipedBody;
         }
         else if (slot == ArmorSlot.LEFT_SHOULDER)
         {
             GlStateManager.scale(w / 4F, h / 12F, d / 4F);
             model.bipedLeftArm.showModel = true;
             model.bipedLeftArm.setRotationPoint(-1, -4, 0);
+
+            return model.bipedLeftArm;
         }
         else if (slot == ArmorSlot.RIGHT_SHOULDER)
         {
             GlStateManager.scale(w / 4F, h / 12F, d / 4F);
             model.bipedRightArm.showModel = true;
             model.bipedRightArm.setRotationPoint(1, -4, 0);
+
+            return model.bipedRightArm;
         }
         else if (slot == ArmorSlot.LEGGINGS)
         {
             GlStateManager.scale(w / 8F, h / 12F, d / 4F);
             model.bipedBody.showModel = true;
             model.bipedBody.setRotationPoint(0, -6, 0);
+
+            return model.bipedBody;
         }
         else if (slot == ArmorSlot.LEFT_LEG)
         {
             GlStateManager.scale(w / 4F, h / 12F, d / 4F);
             model.bipedLeftLeg.showModel = true;
             model.bipedLeftLeg.setRotationPoint(0, -6, 0);
+
+            return model.bipedLeftLeg;
         }
         else if (slot == ArmorSlot.RIGHT_LEG)
         {
             GlStateManager.scale(w / 4F, h / 12F, d / 4F);
             model.bipedRightLeg.showModel = true;
             model.bipedRightLeg.setRotationPoint(0, -6, 0);
+
+            return model.bipedRightLeg;
         }
         else if (slot == ArmorSlot.LEFT_FOOT)
         {
             GlStateManager.scale(w / 4F, h / 12F, d / 4F);
             model.bipedLeftLeg.showModel = true;
             model.bipedLeftLeg.setRotationPoint(0, -6, 0);
+
+            return model.bipedLeftLeg;
         }
         else if (slot == ArmorSlot.RIGHT_FOOT)
         {
             GlStateManager.scale(w / 4F, h / 12F, d / 4F);
             model.bipedRightLeg.showModel = true;
             model.bipedRightLeg.setRotationPoint(0, -6, 0);
+
+            return model.bipedRightLeg;
         }
+
+        return null;
     }
 
     @Override
