@@ -25,18 +25,23 @@ public class ChatAction extends Action
         this.message = message;
     }
 
-    @Override
-    public void apply(EntityLivingBase actor)
+    public String getMessage(EntityLivingBase actor)
     {
-        String message = this.message.replace('[', '§');
+        String message = this.message;
         String prefix = Blockbuster.recordChatPrefix.get();
 
         if (!prefix.isEmpty())
         {
-            message = prefix.replace("%NAME%", actor.getName()) + message;
+            message = prefix.replace("%NAME%", actor == null ? "Player" : actor.getName()) + message;
         }
 
-        RecordUtils.broadcastMessage(message);
+        return message.replace('[', '§');
+    }
+
+    @Override
+    public void apply(EntityLivingBase actor)
+    {
+        RecordUtils.broadcastMessage(this.getMessage(actor));
     }
 
     @Override
