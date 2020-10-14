@@ -313,7 +313,7 @@ public class GuiRecordSelector extends GuiElement
             }
         }
 
-        for (int i = index, c = i + this.area.w / w + 2; i < c; i++)
+        for (int i = index, c = i + this.area.w / w + 2 + diff; i < c; i++)
         {
             if (i % 5 == 0 && i < count && i != this.cursor)
             {
@@ -404,7 +404,7 @@ public class GuiRecordSelector extends GuiElement
             if (ticks > 1)
             {
                 ticks -= 1;
-                
+
                 int offset = x + this.scroll.scrollItemSize;
 
                 Gui.drawRect(offset, y + 8, offset + ticks * this.scroll.scrollItemSize, y + 12, selected ? 0xffffffff : color + 0x33000000);
