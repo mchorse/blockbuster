@@ -1,42 +1,39 @@
 blockbuster.success:
     commands:
-        mipmaped_texture: "{f}材质 %s{f} 已成功 Mipmap 化!"
-        demipmaped_texture: "{f}材质的 Mipmap %s{f} 已删除!"
+        mipmaped_texture: "{f}材质 %s{f} 已成功 Mipmap 化！"
+        demipmaped_texture: "{f}材质的 Mipmap %s{f} 已删除！"
         
-        texture_filter_linear: "{f}材质的过滤器已变更为线性!"
-        texture_filter_nearest: "{f}材质的过滤器已变更为最近的临近物!"
+        texture_filter_linear: "{f}材质的过滤器已变更为线性！"
+        texture_filter_nearest: "{f}材质的过滤器已变更为最近的临近物！"
         
-        convert_skin: "{f}成功转换 %s{r}/%s{r} 皮肤!"
-        
-    director:
-        play: "{f}在 (%s{f}, %s{f}, %s{f}) 的导演方块已开始播放!"
-        stop: "{f}在 (%s{f}, %s{f}, %s{f}) 的导演方块已停止播放!"
-        
-        was_registered: "{f}该演员已经链接到导演方块!"
-        attached_device: "{f}该激活设备已经链接到导演方块!"
-        attached_button: "{f}该播放按钮已经链接到导演方块!"
-    
+        convert_skin: "{f}成功转换 %s{r}/%s{r} 皮肤！"
+
+        item_nbt: "所持物品的 NBT 数据已复制到剪贴板！"
+
     scene:
-        play: "{f}场景 %s{f} 已开始播放!"
-        stop: "{f场景 %s{f} 已停止播放!"
+        play: "{f}场景 %s{f} 已开始播放！"
+        stop: "{f场景 %s{f} 已停止播放！"
 
     model:
         export:
             saved: "{f}实体模型 %s{f} 已经保存在 %s{f}。"
-            obj: "{f}已成功导出 %s{f} 模型到 OBJ!"
+            obj: "{f}已成功导出 %s{f} 模型到 OBJ！"
         
-        reload: "{f}服务器已重载模型!"
-        
+        reload: "{f}服务器已重载模型！"
+        skin_moved: "{f}皮肤 %s{f} 已移动至 %s{f} 模型的皮肤文件夹，文件名为 %s{f}！"
+
     record:
-        changed_origin: "{f}玩家回放的来源已经成功从 %s{f} 从 (%s{f}, %s{f}, %s{f}) 更换为 (%s{f}, %s{f}, %s{f})!"
-        duped: "{f}玩家回放 %s{f} 已被成功复制到 %s{f}!"
-        clean: "{f}玩家回放 %s{f} 的属性 %s{f} 已成功从 %s{f} 到 %s{f} 清除!"
+        changed_origin: "{f}玩家回放的来源已经成功从 %s{f} 从（%s{f}, %s{f}, %s{f}）更换为（%s{f}, %s{f}, %s{f}）！"
+        duped: "{f}玩家回放 %s{f} 已被成功复制到 %s{f}！"
+        clean: "{f}玩家回放 %s{f} 的属性 %s{f} 已成功从 %s{f} 到 %s{f} 清除！"
         prolonged: "{f}已在玩家回放 %s{f} 设定延迟。其播放前、后延迟分别是：%s{f} 和 %s{f}。"
         faded: "{f}玩家回放 %s{f} 的最后 %s{f} 帧会用于拖至起点。"
-        flipped: "{f}已在玩家回放 %s{f} 以 %s{f} 轴, 在 %s{f} 坐标翻转!"
+        flipped: "{f}已在玩家回放 %s{f} 以 %s{f} 轴，在 %s{f} 坐标翻转！"
         cut: "{f}玩家回放 %s{f} 已裁剪。留下了 %s{f} 帧 和 %s{f} 帧之间的内容。"
-        restored: "{f}已恢复到玩家回放 %s{f} 的第 %s{f} 版本!"
-        reversed: "{f}已翻转玩家回放 %s{f}!"
-        fill: "{f}成功填充 %s{f} 帧到 %s{f} Tick 处的 %s{f} 玩家回放 (最终长度为 %s{f} Tick)!"
-        erase: "{f}成功抹去 %s{f} 帧到 %s{f} Tick 处的 %s{f} 玩家回放 (最终长度为 %s{f} Tick)!"
-        process: "{f}玩家回放 %s{f} 的 %s{f} 属性中的 %s{f} 至 %s{f} 部分已处理成功!" 
+        restored: "{f}已恢复到玩家回放 %s{f} 的第 %s{f} 版本！"
+        reversed: "{f}已翻转玩家回放 %s{f}！"
+        fill: "{f}成功填充 %s{f} 帧到 %s{f} Tick 处的 %s{f} 玩家回放（最终长度为 %s{f} Tick）！"
+        erase: "{f}成功抹去 %s{f} 帧到 %s{f} Tick 处的 %s{f} 玩家回放（最终长度为 %s{f} Tick）！"
+        process: "{f}玩家回放 %s{f} 的 %s{f} 属性中的 %s{f} 至 %s{f} 部分已处理成功！"
+        calculate_body_yaw: "{f}玩家回放 %s{f} 的身体偏航已被成功自动计算！"
+        remove_body_yaw: "{f}玩家回放 %s{f} 的身体偏航已被移除！"

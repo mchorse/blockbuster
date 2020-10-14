@@ -63,7 +63,7 @@ blockbuster.gui.me:
         export: 从生物中新建模型
         name: "为模型命名："
         pick: "选择您想从中导出肢体的生物："
-        error: "糟糕, 由于一个错误, 导致无法新建模型：%s"
+        error: "糟糕，由于一个错误，导致无法新建模型：%s"
     
     options:
         name: 显示名称
@@ -72,6 +72,9 @@ blockbuster.gui.me:
         scale_gui: GUI 缩放
         default: 默认材质
         skins: 皮肤文件夹
+        extrusion: 3D 挤压
+        extrude_max_factor: 3D 挤压的最大系数。该选项可用于在高清皮肤中使用更多的像素进行挤压。数值越高，挤压出体素块的数量越多。
+        extrude_inwards: 向内挤压系数。该选项可以控制高清皮肤的体素块会向内挤压多少，因为最大系数越高，体素块越薄。
         provides_obj: 提供 OBJ
         provides_mtl: 提供 MTL
         default_texture: 选择默认材质

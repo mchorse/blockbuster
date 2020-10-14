@@ -7,7 +7,6 @@ blockbuster.config:
         tooltip: Blockbuster mod 的常規選項
 
         show_first_time_modal: 展示首次使用提示
-        disable_teleport_playback_button: 禁用播放後瞬移功能
         extra_wubs: 附加的雜物
         auto_refresh_models: 刷新模型和皮膚
         debug_playback_ticks: 調試 Ticks
@@ -23,6 +22,7 @@ blockbuster.config:
         model_block_disable_rendering: 禁用模型方塊渲染
         model_block_disable_item_rendering: 禁用物品欄渲染
         restore: 恢復模型方塊
+        reset_on_playback: 回放時重置
 
     recording:
         title: 錄制與回放
@@ -36,10 +36,11 @@ blockbuster.config:
         record_attack_on_swipe: 揮手攻擊
         record_commands: 錄制命令
         record_chat_prefix: 聊天動作前綴
+        record_pause_preview: 更好的預覽
         
     actor:
         title: 演員
-        tooltip: 演員實體配置選項 (與假玩家無關)
+        tooltip: 演員實體配置選項（與假玩家無關）
 
         actor_fall_damage: 演員跌落傷害
         actor_tracking_range: 演員跟蹤範圍
@@ -49,10 +50,33 @@ blockbuster.config:
         actor_swish_swipe: 手臂劃動刷刷聲
         actor_y: 修復 Y 軸運動
         actor_disable_riding: 禁用騎乘
+        actor_playback_body_yaw: 回放身體偏航
 
     damage_control:
         title: 破壞控制
-        tooltip: 破壞控制是指在演員被錄制或場景完成回放後, 恢復方塊的系統
+        tooltip: 破壞控制是指在演員被錄制或場景完成回放後，恢復方塊的系統
 
         damage_control: 破壞控制
         damage_control_distance: 破壞距離
+
+    model_folders:
+        title: 模型文件夾
+        tooltip: 添加附加的模型文件夾
+
+        path: 附加文件夾
+
+    snowstorm:
+        title: Snowstorm
+        tooltip: Snowstorm 是壹個可以創建相當復雜的粒子的例子系統，在這裏妳可以找到與該粒子系統相關的全局選項
+
+        depth_sorting: 粒子按深度排序
+
+    audio:
+        title: 音頻
+        tooltip: 遊戲內音頻同步功能相關的選項
+
+        waveform_visible: 音頻條可見
+        waveform_density: 波形密度
+        waveform_width: 音頻條寬度
+        waveform_height: 音頻條高度
+        waveform_filename: 顯示音頻條的文件名

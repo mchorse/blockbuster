@@ -1,40 +1,55 @@
 blockbuster.config.comments:
     general:
         show_first_time_modal: 是否展示首次使用提示
-        disable_teleport_playback_button: 当您蹲着使用播放按钮的时候, 是否禁用传送功能?
-        extra_wubs: 这个选项可能没有作用。也许有点儿用吧...?
-        auto_refresh_models: 进入 Metamorph 或 Blockbuster 的 GUI 时, 是否自动刷新模型和皮肤?
-        debug_playback_ticks: 当导演方块录制时, 将 Tick 时间写入日志文件
-        green_screen_sky: 将天空变为纯色, 实现用于色键的目的
-        green_screen_sky_color: 指定天空颜色, 用于色度天空功能
-        url_skins_sync_download: 同步下载来自 URL 的皮肤。这能让 URL 皮肤也能够实现 3D 外层功能, 代价是冻结游戏进程 (假死) 进行下载。
-        add_utility_blocks: 在 Blockbuster 的创造模式选项卡中添加命令和结构块等方块, 以简化获取这些物品的过程
+        extra_wubs: 这个选项可能没有作用。也许有点儿用吧...？
+        auto_refresh_models: 进入 Metamorph 或 Blockbuster 的 GUI 时，是否自动刷新模型和皮肤？
+        debug_playback_ticks: 当场景播放时，将 Tick 时间写入日志文件
+        green_screen_sky: 将天空变为纯色，实现用于色键的目的
+        green_screen_sky_color: 指定天空颜色，用于色度天空功能
+        url_skins_sync_download: 同步下载来自 URL 的皮肤。这能让 URL 皮肤也能够实现 3D 外层功能，代价是冻结游戏进程（假死）进行下载。
+        add_utility_blocks: 在 Blockbuster 的创造模式选项卡中添加命令和结构块等方块，以简化获取这些物品的过程
 
     model_block:
         model_block_disable_rendering: 是否渲染模型方块
-        model_block_disable_item_rendering: 是否关闭模型方块的物品渲染 (有人想要关掉吗?)
-        restore: 该选项可恢复旧版的一个 BUG, 从而能够恢复不小心被拆掉的模型方块。
+        model_block_disable_item_rendering: 是否关闭模型方块的物品渲染（有人想要关掉吗？）
+        restore: 该选项可恢复旧版的一个 BUG，从而能够恢复不小心被拆掉的模型方块。
+        reset_on_playback: 启用后，当场景开始播放所以回放时，所有的模型方块就会自动复位
 
     recording:
-        recording_countdown: 录制倒计时 (秒)
+        recording_countdown: 录制倒计时（秒）
         recording_delay: 录制的帧延迟
-        record_unload_time: 卸载一个回放需要多久 (Tick)
-        record_unload: 启用自动卸载回放?
-        record_sync_rate: 与服务器同步一个回放的频率是?
-        record_attack_on_swipe: 是否录制挥手时对实体造成到的伤害?
-        record_commands: 是否录制玩家输入命令的动作?
-        record_chat_prefix: 将会在确切要执行的命令之前预先用的前缀 (%%NAME%% 通配符可用于指向演员的名称)
+        record_unload_time: 卸载一个回放需要多久（Tick）
+        record_unload: 启用自动卸载回放？
+        record_sync_rate: 与服务器同步一个回放的频率是？
+        record_attack_on_swipe: 是否录制挥手时对实体造成到的伤害？
+        record_commands: 是否录制玩家输入命令的动作？
+        record_chat_prefix: 将会在确切要执行的命令之前预先用的前缀（%%NAME%% 通配符可用于指向演员的名称）
+        record_pause_preview: 该选项启用了包含动画的伪装预览功能，例如图像伪装的动画，回放伪装以及序列。这会影响服务端的性能。
 
     actor:
-        actor_fall_damage: 演员是否会受到跌落伤害?
-        actor_tracking_range: 演员跟踪会多远? 需要重启游戏。
-        actor_rendering_range: 演员多远可见?
-        actor_always_render: 让演员始终被渲染, 不论演员在哪里、碰撞箱有多大
+        actor_fall_damage: 演员是否会受到跌落伤害？
+        actor_tracking_range: 演员跟踪会多远？ 需要重启游戏。
+        actor_rendering_range: 演员多远可见？
+        actor_always_render: 让演员始终被渲染，不论演员在哪里、碰撞箱有多大
         actor_always_render_names: 启用无条件渲染演员名称
-        actor_swish_swipe: 当演员挥手时是否产生刷刷声?
-        actor_y: 让演员使用正确的 Y 坐标值 (可修复飞行时和跳跃时的问题, 但会导致在 Y 轴上的运动不平滑)
+        actor_swish_swipe: 当演员挥手时是否产生刷刷声？
+        actor_y: 让演员使用正确的 Y 坐标值（可修复飞行时和跳跃时的问题，但会导致在 Y 轴上的运动不平滑）
         actor_disable_riding: 禁用右键演员时骑乘演员的选项
+        actor_playback_body_yaw: 是否需要在演员身上播放单独录制的水平身体旋转信息（这保证了录制时身体旋转方式的一致性，仅对 Blockbuster 2.1+ 录制的新回放有效）
 
     damage_control:
         damage_control: 破坏控制是否启用
         damage_control_distance: 破坏控制效果的半径范围
+
+    model_folders:
+        path: 附加模型文件夹的绝对路径（Windows 用户请加上盘符）
+
+    snowstorm:
+        depth_sorting: 启用后，可以修复在其他半透明粒子后面看到粒子的问题。该选项非常消耗性能，请考虑仅在渲染视频素材时使用它。
+
+    audio:
+        waveform_visible: 音频条是否会在回放时显示
+        waveform_density: 每秒钟会显示多少像素的音频波形
+        waveform_width: 音频条的宽度，以浮点百分比表示（0 和 1 之间）
+        waveform_height: 音频条的高度，单位为像素
+        waveform_filename: 音频中播放的音频的文件名是否显示
