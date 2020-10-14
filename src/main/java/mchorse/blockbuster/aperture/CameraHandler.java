@@ -211,8 +211,8 @@ public class CameraHandler
         {
             ScrollArea scroll = dashboard.recordingEditorPanel.selector.scroll;
 
-            scroll.scroll = scroll.scrollItemSize * (event.position - dashboard.recordingEditorPanel.record.preDelay);
-            scroll.clamp();
+            scroll.scrollIntoView(scroll.scrollItemSize * (event.position - dashboard.recordingEditorPanel.record.preDelay), 2);
+            dashboard.recordingEditorPanel.selector.cursor = event.position;
         }
     }
 
@@ -298,8 +298,8 @@ public class CameraHandler
                 {
                     ScrollArea scroll = panels.recordingEditorPanel.selector.scroll;
 
-                    scroll.scroll = scroll.scrollItemSize * (int) (editor.getRunner().ticks - panels.recordingEditorPanel.record.preDelay);
-                    scroll.clamp();
+                    scroll.scrollIntoView(scroll.scrollItemSize * (int) (editor.getRunner().ticks - panels.recordingEditorPanel.record.preDelay), 2);
+                    panels.recordingEditorPanel.selector.cursor = (int) editor.getRunner().ticks;
                 }
 
                 super.draw(context);
