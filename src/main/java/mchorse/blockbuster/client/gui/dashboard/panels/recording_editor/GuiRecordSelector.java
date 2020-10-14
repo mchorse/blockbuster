@@ -49,9 +49,7 @@ public class GuiRecordSelector extends GuiElement
     }
 
     public void reset()
-    {
-        this.scroll.scrollItemSize = 34;
-    }
+    {}
 
     @Override
     public void resize()
