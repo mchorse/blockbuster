@@ -39,6 +39,7 @@ public class GuiRecordSelector extends GuiElement
 
     public boolean dragging;
     public boolean moving;
+    public int cursor = -1;
 
     private int adaptiveMaxIndex;
 
@@ -314,7 +315,7 @@ public class GuiRecordSelector extends GuiElement
 
         for (int i = index, c = i + this.area.w / w + 2; i < c; i++)
         {
-            if (i % 5 == 0 && i < count)
+            if (i % 5 == 0 && i < count && i != this.cursor)
             {
                 int x = this.scroll.x - this.scroll.scroll + i * w;
                 int y = this.scroll.ey() - 12;
@@ -328,6 +329,28 @@ public class GuiRecordSelector extends GuiElement
 
         this.scroll.drawScrollbar();
         this.vertical.drawScrollbar();
+
+        /* Draw cursor (tick indicator) */
+        if (this.cursor >= 0 && this.cursor < this.panel.record.actions.size())
+        {
+            int x = this.scroll.x - this.scroll.scroll + this.cursor * w;
+            int cursorX = x + 2;
+
+            String label = this.cursor + "/" + this.panel.record.actions.size();
+            int width = this.font.getStringWidth(label);
+            int height = 2 + this.font.FONT_HEIGHT;
+            int offsetY = this.scroll.ey() - height;
+
+            if (cursorX + width + 4 > this.scroll.ex())
+            {
+                cursorX -= width + 4 + 2;
+            }
+
+            Gui.drawRect(x, this.scroll.y, x + 2, this.scroll.ey(), 0xff57f52a);
+            Gui.drawRect(cursorX, offsetY, cursorX + width + 4, offsetY + height, 0xaa57f52a);
+
+            this.font.drawStringWithShadow(label, cursorX + 2, offsetY + 2, 0xffffff);
+        }
 
         String label = this.panel.record.filename;
 
@@ -351,6 +374,8 @@ public class GuiRecordSelector extends GuiElement
         }
 
         super.draw(context);
+
+        this.cursor = -1;
     }
 
     private void drawAnimationLength(Action action, int x, int y, int color, boolean selected)
