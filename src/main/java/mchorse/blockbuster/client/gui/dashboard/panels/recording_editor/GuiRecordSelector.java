@@ -401,11 +401,14 @@ public class GuiRecordSelector extends GuiElement
                 ticks = (int) morph.getDuration();
             }
 
-            if (ticks > 0)
+            if (ticks > 1)
             {
+                ticks -= 1;
+                
                 int offset = x + this.scroll.scrollItemSize;
 
                 Gui.drawRect(offset, y + 8, offset + ticks * this.scroll.scrollItemSize, y + 12, selected ? 0xffffffff : color + 0x33000000);
+                Gui.drawRect(offset + ticks * this.scroll.scrollItemSize - 1, y, offset + ticks * this.scroll.scrollItemSize, y + 20, selected ? 0xffffffff : 0xff000000 + color);
             }
 
             this.adaptiveMaxIndex = Math.max(ticks, this.adaptiveMaxIndex);
