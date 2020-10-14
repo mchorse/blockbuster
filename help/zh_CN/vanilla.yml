@@ -1,15 +1,14 @@
 # Item tooltips
 blockbuster:
     info:
-        playback_button: 切换导演方块
-        playback_director: 链接到 ({r}%d{7}, {r}%d{7}, {r}%d{7})
+        playback_button: 开关场景的回放
         playback_profile: 回放配置文件 "{f}{o}%s{r}{7}"
         playback_play: 回放摄像机
         playback_scene: 已绑定在场景 {f}%s{r}
 
         actor_config: 在演员上使用
-        register: 关联演员到导演方块
-        director_block: 管理回放和演员的方块
+        register: 它用于将演员关联至导演方块。昔日的遗物...
+        director_block: 它是场景出现之前的场景。昔日的遗物...
         model_block: 以静态方式放置伪装实体
         green_block: "%s 色度方块。可以用来抠像。"
         dim_green_block: "不发光。"

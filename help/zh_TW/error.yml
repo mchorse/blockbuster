@@ -6,71 +6,64 @@
 blockbuster.error:
     # Actor error strings
     actor:
-        not_attached: "{f}該激活工具還未鏈接到導演方塊上!"
+        not_attached: "{f}該激活工具還未鏈接到導演方塊上！"
     
     # General command errors
     commands:
-        load_chunks: 無法加載渲染範圍裏所有已創建的區塊! 請參閱日誌了解詳細的錯誤信息。
+        load_chunks: 無法加載渲染範圍裏所有已創建的區塊！請參閱日誌了解詳細的錯誤信息。
         
-        restore_texture: "{f}材質 %s{f} 無法被恢復, 因為它沒有被該命令更改過。"
-        replace_texture: "{f}材質 %s{f} 和 %s{f} 未被加載!"
-        replace_texture_one: "{f}材質 %s{f} 未被加載!"
+        restore_texture: "{f}材質 %s{f} 無法被恢復，因為它沒有被該命令更改過。"
+        replace_texture: "{f}材質 %s{f} 和 %s{f} 未被加載！"
+        replace_texture_one: "{f}材質 %s{f} 未被加載！"
         
-        no_player: "{f}無法找到玩家 %s{f}!"
-        no_entity: "{f}無法找到目標選擇器所指定的實體 %s{f}!"
+        no_player: "{f}無法找到玩家 %s{f}！"
+        no_entity: "{f}無法找到目標選擇器所指定的實體 %s{f}！"
         
-        convert_model: "{f}指定了錯誤的模型 %s{f}! 它必須要是 {7}steve{f} 或是 {7}fred{f}。"
-        convert_skin: "{f}在轉換 %s{f}/%s{f} 皮膚過程中,出現了錯誤：%s{f}"
-        convert_skin_size: "{f}皮膚的大小為 %s{f}x%s{f}, 且/皮膚的比例必須為 1:1 或 2:1!"
-    
-    # Director block error strings
-    director:
-        playing: "{f}在 (%s{f}, %s{f}, %s{f}) 的導演方塊正在播放!"
-        stopped: "{f}在 (%s{f}, %s{f}, %s{f}) 的導演方塊已停止播放!"
-        
-        missing: "{f}在 (%s{f}, %s{f}, %s{f}) 不存在導演方塊!"
-        no_director: "{f}(%s{f}, %s{f}, %s{f})的導演方塊不存在。"
-        empty_filename: "{f}導演方塊存在空白的{7}回放 ID{f}。 請填寫空白的{7}回放 ID{f}."
+        convert_model: "{f}指定了錯誤的模型 %s{f}！它必須要是 {7}steve{f} 或是 {7}fred{f}。"
+        convert_skin: "{f}在轉換 %s{f}/%s{f} 皮膚過程中，出現了錯誤：%s{f}"
+        convert_skin_size: "{f}皮膚的大小為 %s{f}x%s{f}，且/皮膚的比例必須為 1:1 或 2:1！"
+
+        item_nbt_empty: "妳的手裏沒有拿著任何東西..."
 
     scene:
-        playing: "{f}場景 %s{f} 正在播放!"
-        stopped: "{f}場景 %s{f} 已停止播放!"
+        playing: "{f}場景 %s{f} 正在播放！"
+        stopped: "{f}場景 %s{f} 已停止播放！"
 
         no_scene: "{f}不存在名為 %s{f} 的場景。"
     
     # Errors for /model export
     model:
         export:
-            error_save: "{f}無法保存導出的模型!"
-            wrong_type: "{f}無法以 %s{f} 的形式導出模型 (因為它沒有渲染器, 或為非活動的實體渲染器)。"
-            no_model: "{f}無法將模型 %s{f} 導出為 OBJ, 因為無法找到該模型!"
-            obj: "{f}無法導出模型 %s{f}!"
+            error_save: "{f}無法保存導出的模型！"
+            wrong_type: "{f}無法以 %s{f} 的形式導出模型（因為它沒有渲染器，或為非活動的實體渲染器）。"
+            no_model: "{f}無法將模型 %s{f} 導出為 OBJ，因為無法找到該模型！"
+            obj: "{f}無法導出模型 %s{f}！"
         
-        reload: 您需要成為 OP 用戶才能重載模型!
+        reload: 您需要成為 OP 用戶才能重載模型！
     
     # Record command errors
     record:
-        no_action: "{f}文件名為 %s{f} 的玩家回放內容在 %s{f} Tick 時沒有動作!"
-        not_exist: "{f}文件名為 %s{f} 的玩家回放內容不存在!"
-        tick_out_range: "{f}在 tick %s{f} 的內容不存在! 範圍應在 {7}0{r} 和 %s{r} 之間。"
-        index_out_range: "{f}索引 %s{f} 超出範圍! 範圍應在 {7}0{r} 和 %s{r} 之間。"
-        already_empty: "{f}玩家回放 %s{r} 中, 索引 %s{r} 處沒有動作!"
-        wrong_action: "{f}動作類別 %s{f} 不存在!"
+        no_action: "{f}文件名為 %s{f} 的玩家回放內容在 %s{f} Tick 時沒有動作！"
+        not_exist: "{f}文件名為 %s{f} 的玩家回放內容不存在！"
+        tick_out_range: "{f}在 tick %s{f} 的內容不存在！範圍應在 {7}0{r} 和 %s{r} 之間。"
+        index_out_range: "{f}索引 %s{f} 超出範圍！範圍應在 {7}0{r} 和 %s{r} 之間。"
+        already_empty: "{f}玩家回放 %s{r} 中，索引 %s{r} 處沒有動作！"
+        wrong_action: "{f}動作類別 %s{f} 不存在！"
         add: "{f}動作類別 %s{f} 由於以下錯誤而無法添加：%s"
-        already_exists: "{f}名為 %s{f} 的玩家回放已經存在了!"
-        couldnt_save: "{f}無法以 %s{f} 的文件名保存玩家回放!"
-        wrong_clean_property: "{f}給出清除的屬性 %s{f} 錯誤!"
-        empty_record: "{f}給出的玩家回放 %s{f} 為空!"
-        not_exist_iteration: "{f}給出的玩家回放 %s{f} 的第 %s{f} 版本不存在!"
-        cant_restore: "{f}無法回退壹個版本, 因為臨時文件現在不應該存在..."
-        wrong_axis: "{f}給定的 \"%s{f}\" 不是合法的軸。軸應該為 {7}x{r} 或者 {7}z{r}!"
-        invalid_math_expression: "給定的數學表達式 \"%s{r}\" 不是有效的數學表達式!"
+        already_exists: "{f}名為 %s{f} 的玩家回放已經存在了！"
+        couldnt_save: "{f}無法以 %s{f} 的文件名保存玩家回放！"
+        wrong_clean_property: "{f}給出清除的屬性 %s{f} 錯誤！"
+        empty_record: "{f}給出的玩家回放 %s{f} 為空！"
+        not_exist_iteration: "{f}給出的玩家回放 %s{f} 的第 %s{f} 版本不存在！"
+        cant_restore: "{f}無法回退壹個版本，因為臨時文件現在不應該存在..."
+        wrong_axis: "{f}給定的 \"%s{f}\" 不是合法的軸。軸應該為 {7}x{r} 或者 {7}z{r}！"
+        invalid_math_expression: "給定的數學表達式 \"%s{r}\" 不是有效的數學表達式！"
 
     # Recording errors
     recording:
-        read: "{f}名為 %s{f} 的回放文件不適合播放 ({7}舊版文件{f}, {7}已損壞{f}, 或不是{7}回放文件{f})。"
-        logout: "{f}已停止錄制 %s{f}, 因為已玩家登出!"
-        not_found: "{f}無法找到 %s{f} 回放文件!"
-        fill_filename: "{f}請填寫{7}回放 ID{f}框!"
+        read: "{f}名為 %s{f} 的回放文件不適合播放 ({7}舊版文件{f}，{7}已損壞{f}，或不是{7}回放文件{f})。"
+        logout: "{f}已停止錄制 %s{f}，因為已玩家登出！"
+        not_found: "{f}無法找到 %s{f} 回放文件！"
+        fill_filename: "{f}請填寫{7}回放 ID{f}框！"
         empty_filename: "{f}無法在{7}回放 ID{f}為空的情況下錄制玩家回放."
-        empty_record: "{f}無法播放回放 %s{f}, 因為是空的!"
+        empty_record: "{f}無法播放回放 %s{f}，因為是空的！"

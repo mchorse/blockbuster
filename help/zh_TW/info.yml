@@ -1,18 +1,10 @@
 blockbuster.info:
     actor:
-        playing: "{f}該演員正在播放!"
-
-    director:
-        already_registered: "{f}該演員已經被鏈接到了這個導演方塊上!"
-        looped: "{f}指定的導演方塊現已啟用循環播放!"
-        unlooped: "{f}指定的導演方塊現已禁用循環播放!"
-        
-        enabled_state: "{f}指定的導演方塊現在已經可以改變其狀態!"
-        disabled_state: "{f}指定的導演方塊現在無法改變其狀態!"
+        playing: "{f}該演員正在播放！"
 
     scene:
-        looped: "{f}指定的場景現已啟用循環播放!"
-        unlooped: "{f}指定的場景現已禁用循環播放!"
+        looped: "{f}指定的場景現已啟用循環播放！"
+        unlooped: "{f}指定的場景現已禁用循環播放！"
 
     # General command infos
     commands:
@@ -26,11 +18,11 @@ blockbuster.info:
     models.loaded: "{f}已從服務器收到 %s{f} 個自定義模型和 %s{f} 個皮膚。"
 
     record:
-        action: "{f}在 %s{f} Tick 的動作是 %s{f} , 且在索引 %s{f} 處, 數據為：%s"
+        action: "{f}在 %s{f} Tick 的動作是 %s{f} ，且在索引 %s{f} 處，數據為：%s"
 
         info:
             |
-                {f}關於名為 %s{f} 的玩家回放的信息 (時間單位均為 Tick)：
+                {f}關於名為 %s{f} 的玩家回放的信息（時間單位均為 Tick）：
 
                 {7}*{f} 回放版本：%s
                 {7}*{f} 回放的時長：%s
@@ -38,12 +30,12 @@ blockbuster.info:
                 {7}*{f} 卸載前的時長：%s
 
         search_type: "{f}以類型 %s{f} 搜索動作："
-        search_action: "{f}在 %s{f} Tick 找到動作, 位於索引 %s{f} 處。"
-        search_action_data: "{f}在 %s{f} Tick 找到動作, 位於索引 %s{f} 處, 數據為：%s"
+        search_action: "{f}在 %s{f} Tick 找到動作，位於索引 %s{f} 處。"
+        search_action_data: "{f}在 %s{f} Tick 找到動作，位於索引 %s{f} 處，數據為：%s"
 
     # Recording strings
     recording:
         recording: "%s{f} 已處於被錄制狀態。"
-        dead: "{f}已終止錄制 %s{f}, 因為玩家已死亡。"
-        message: "{f}若要開始錄制 %s{f}, %s{f}!"
+        dead: "{f}已終止錄制 %s{f}，因為玩家已死亡。"
+        message: "{f}若要開始錄制 %s{f}，%s{f}！"
         clickhere: 點擊這裏

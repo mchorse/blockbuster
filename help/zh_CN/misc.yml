@@ -2,14 +2,17 @@
 blockbuster:
     # Parsing
     parsing:
-        lacks_pose: 解析的 "%s" 模型没有名为 "%s" 的姿势!
-        lacks_limbs: 解析的 "%s" 模型没有任何肢体!
+        lacks_pose: 解析的 "%s" 模型没有名为 "%s" 的姿势！
+        lacks_limbs: 解析的 "%s" 模型没有任何肢体！
 
     recording: 录制到 {7}%s{r}
     "yes": "是"
     "no": "否"
     morph_error: 未找到模型
     start_recording: "现在开始录制 {7}%s{r}, 在 {7}%s{r}"
+
+    bye_director_block: 导演方块现已被废弃。存储在该方块内的数据会被转换为场景。
+    bye_register_item: 导演块现已被废弃。这个物品现在已经没用了...
 
 # Metamorph
 morph.section.blockbuster: Blockbuster 模型
