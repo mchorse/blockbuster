@@ -224,13 +224,8 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             return null;
         }
 
-        float duration = 0;
+        float duration = this.getDuration();
         int size = this.morphs.size();
-
-        for (SequenceEntry entry : this.morphs)
-        {
-            duration += entry.getDuration(this.getRandomSeed(duration));
-        }
 
         /* A shortcut in case the durations of every sequence is zero */
         if (duration <= 0)
@@ -267,6 +262,21 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         }
 
         return entry == null ? null : new FoundMorph(entry, lastEntry, duration, lastDuration, prevLastDuration);
+    }
+
+    /**
+     * Get duration of this sequencer morph for a single cycle
+     */
+    public float getDuration()
+    {
+        float duration = 0F;
+
+        for (SequenceEntry entry : this.morphs)
+        {
+            duration += entry.getDuration(this.getRandomSeed(duration));
+        }
+
+        return duration;
     }
 
     @Override

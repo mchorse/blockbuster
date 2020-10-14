@@ -2,6 +2,8 @@ package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.ActionRegistry;
+import mchorse.blockbuster.recording.actions.MorphAction;
+import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.mclib.McLib;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
@@ -9,6 +11,8 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.ScrollArea;
 import mchorse.mclib.client.gui.utils.ScrollArea.ScrollDirection;
 import mchorse.mclib.utils.MathUtils;
+import mchorse.metamorph.api.morphs.utils.Animation;
+import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -35,6 +39,8 @@ public class GuiRecordSelector extends GuiElement
 
     public boolean dragging;
     public boolean moving;
+
+    private int adaptiveMaxIndex;
 
     public GuiRecordSelector(Minecraft mc, GuiRecordingEditorPanel panel, Consumer<Action> callback)
     {
@@ -246,12 +252,19 @@ public class GuiRecordSelector extends GuiElement
 
         GuiDraw.scissor(this.area.x, this.area.y, this.area.w, this.area.h, context);
 
-        int h = this.scroll.scrollItemSize;
-        int index = this.scroll.scroll / h;
+        int w = this.scroll.scrollItemSize;
+        int index = this.scroll.scroll / w;
+        int diff = index;
 
-        for (int i = index, c = i + this.area.w / h + 2; i < c; i++)
+        index -= this.adaptiveMaxIndex;
+        index = index < 0 ? 0 : index;
+        diff = diff - index;
+
+        this.adaptiveMaxIndex = 0;
+
+        for (int i = index, c = i + this.area.w / w + 2 + diff; i < c; i++)
         {
-            int x = this.scroll.x - this.scroll.scroll + i * h;
+            int x = this.scroll.x - this.scroll.scroll + i * w;
 
             if (i < count)
             {
@@ -260,7 +273,7 @@ public class GuiRecordSelector extends GuiElement
 
             if (i == this.tick)
             {
-                Gui.drawRect(x, this.scroll.y, x + h + 1, this.scroll.ey(), 0x440088ff);
+                Gui.drawRect(x, this.scroll.y, x + w + 1, this.scroll.ey(), 0x440088ff);
             }
 
             if (i >= 0 && i < count)
@@ -273,18 +286,24 @@ public class GuiRecordSelector extends GuiElement
 
                     for (Action action : actions)
                     {
-                        int y = this.scroll.y + j * 20 - this.vertical.scroll;
-                        int color = MathHelper.hsvToRGB((ActionRegistry.getType(action) - 1) / 20F, 1F, 1F);
                         String label = String.valueOf(j);
 
+                        int y = this.scroll.y + j * 20 - this.vertical.scroll;
+                        int color = MathHelper.hsvToRGB((ActionRegistry.getType(action) - 1) / 20F, 1F, 1F);
+                        boolean selected = i == this.tick && j == this.index;
                         int offset = this.scroll.scrollItemSize < 18 ? (this.scroll.scrollItemSize - this.font.getStringWidth(label)) / 2 : 6;
 
-                        Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
+                        if (!this.moving || !selected)
+                        {
+                            this.drawAnimationLength(action, x, y, color, selected);
+                        }
+
+                        Gui.drawRect(x, y, x + w, y + 20, color + 0x88000000);
                         this.font.drawStringWithShadow(label, x + offset, y + 6, 0xffffff);
 
-                        if (i == this.tick && j == this.index)
+                        if (selected)
                         {
-                            GuiDraw.drawOutline(x, y, x + h, y + 20, 0xffffffff);
+                            GuiDraw.drawOutline(x, y, x + w, y + 20, 0xffffffff);
                         }
 
                         j++;
@@ -293,16 +312,16 @@ public class GuiRecordSelector extends GuiElement
             }
         }
 
-        for (int i = index, c = i + this.area.w / h + 2; i < c; i++)
+        for (int i = index, c = i + this.area.w / w + 2; i < c; i++)
         {
             if (i % 5 == 0 && i < count)
             {
-                int x = this.scroll.x - this.scroll.scroll + i * h;
+                int x = this.scroll.x - this.scroll.scroll + i * w;
                 int y = this.scroll.ey() - 12;
 
                 String str = String.valueOf(i);
 
-                this.drawGradientRect(x + 1, y - 6, x + h, y + 12, 0x00000000, 0x88000000);
+                this.drawGradientRect(x + 1, y - 6, x + w, y + 12, 0x00000000, 0x88000000);
                 this.font.drawStringWithShadow(str, x + (this.scroll.scrollItemSize - this.font.getStringWidth(str) + 2) / 2, y, 0xffffff);
             }
         }
@@ -318,16 +337,53 @@ public class GuiRecordSelector extends GuiElement
 
         if (this.moving)
         {
-            int x = mouseX - h / 2;
+            int x = mouseX - w / 2;
             int y = mouseY;
 
             Action action = this.panel.record.getAction(this.tick, this.index);
             int color = MathHelper.hsvToRGB((ActionRegistry.getType(action) - 1) / 20F, 1F, 1F);
 
-            Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
+            this.drawAnimationLength(action, x, y, color, true);
+
+            Gui.drawRect(x, y, x + w, y + 20, color + 0x88000000);
             this.font.drawStringWithShadow(String.valueOf(this.index), x + 6, y + 6, 0xffffff);
+            GuiDraw.drawOutline(x, y, x + w, y + 20, 0xffffffff);
         }
 
         super.draw(context);
+    }
+
+    private void drawAnimationLength(Action action, int x, int y, int color, boolean selected)
+    {
+        if (action instanceof MorphAction)
+        {
+            MorphAction morphAction = (MorphAction) action;
+            int ticks = 0;
+
+            if (morphAction.morph instanceof IAnimationProvider)
+            {
+                Animation animation = ((IAnimationProvider) morphAction.morph).getAnimation();
+
+                if (animation.animates)
+                {
+                    ticks = animation.duration;
+                }
+            }
+            else if (morphAction.morph instanceof SequencerMorph)
+            {
+                SequencerMorph morph = (SequencerMorph) morphAction.morph;
+
+                ticks = (int) morph.getDuration();
+            }
+
+            if (ticks > 0)
+            {
+                int offset = x + this.scroll.scrollItemSize;
+
+                Gui.drawRect(offset, y + 8, offset + ticks * this.scroll.scrollItemSize, y + 12, selected ? 0xffffffff : color + 0x33000000);
+            }
+
+            this.adaptiveMaxIndex = Math.max(ticks, this.adaptiveMaxIndex);
+        }
     }
 }
