@@ -7,7 +7,6 @@ blockbuster.config:
         tooltip: Общие параметры конфигурации Блокбастера
         
         show_first_time_modal: Показывать заставку первого запуска
-        disable_teleport_playback_button: Отключить телепорт к блоку режиссёра кнопкой воспроизведения
         extra_wubs: Экстра тыцы
         auto_refresh_models: Автоматическое обновление скинов и моделей
         debug_playback_ticks: Тики отладки
@@ -23,6 +22,7 @@ blockbuster.config:
         model_block_disable_rendering: Выключить отображение блоков-моделей
         model_block_disable_item_rendering: Выключить отображение предметов
         restore: Восстановление блоков-моделей
+        reset_on_playback: Сбросить по взаимодействию
     
     recording:
         title: Процесс Записи
@@ -36,6 +36,7 @@ blockbuster.config:
         record_attack_on_swipe: Атака взмахом
         record_commands: Запись команд
         record_chat_prefix: Префикс действия в чате
+        record_pause_preview: Улучшенный предпросмотр
     
     actor:
         title: Актёры
@@ -49,6 +50,7 @@ blockbuster.config:
         actor_swish_swipe: Вжух при взмахе
         actor_y: Исправить движение по оси Y
         actor_disable_riding: Отключить катание верхом на морфах
+        actor_playback_body_yaw: Рыскание тела воспроизведения
 
     damage_control:
         title: Контроль урона
@@ -56,3 +58,25 @@ blockbuster.config:
         
         damage_control: Контроль урона
         damage_control_distance: Дистанция урона
+
+    model_folders:
+        title: Папки Моделей
+        tooltip: Добавить дополнительные папки моделей
+
+        path: Дополнительная папка
+
+    snowstorm:
+        title: Snowstorm
+        tooltip: Snowstorm - это система частиц, которая позволяет создавать довольно сложные частицы, здесь вы можете найти глобальные настройки, связанные с системами частиц
+
+        depth_sorting: Глубина фильтрации частиц
+
+    audio:
+        title: Аудио
+        tooltip: Настройки для внутриигровой возможности синхронизировать аудио
+
+        waveform_visible: Видимость аудиополос
+        waveform_density: Плотность аудиополосы
+        waveform_width: Ширина аудиополосы
+        waveform_height: Высота аудиополосы
+        waveform_filename: Показывать название файла аудиополосы
