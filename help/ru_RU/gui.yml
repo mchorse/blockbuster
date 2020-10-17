@@ -15,7 +15,6 @@ blockbuster.gui:
     duplicate: Дублировать
     search: Искать
     cancel: Отменить
-    break: Сломать
     select: Выбрать
     ok: Oк
     billboard: Смотреть на игрока
@@ -34,10 +33,6 @@ blockbuster.gui:
         reset: Сбросить позу
         create: Создать позу
     
-    confirm:
-        title: Подтвердить Уничтожение Блока Режиссёра
-        description: Блок режиссёра в ({7}%s{f}, {7}%s{f}, {7}%s{f}) содержит {7}%s{f} записей. Вы уверены, что хотите уничтожить этот блок? Записи в нём будут {c}удалены{r} {l}навсегда{r}.
-    
     dashboard: 
         main: Панель управления
         director: Блок режиссёра
@@ -54,25 +49,34 @@ blockbuster.gui:
         discord: Дискорд
         tutorial: Видеоуроки
         models: Открыть Модели...
+        skins: Открыть Скины...
+
+        reset_audio: Сбросить пути аудио
+        open_audio: Открыть пути аудио...
         
         options: Настройки
     
     # Director block GUI strings
     director:
-        title: Блоки режиссёра
-        config: Настройка блока режиссёра
-        convert: Конвертировать блок режиссёра в сцену
-        convert_modal: "Впишите название сцены:"
-        not_selected: Выбрать блок режиссёра...
+        config: Общие настройки
+        not_selected: Выбрать сцену...
         no_replays: Создать запись...
+
+        add_replay: Добавить воспроизведение
+        dupe_replay: Клонировать выбранное воспроизведение
+        remove_replay: Удалить выбранное воспроизведение
     
         display_title: Название
         start_command: Команда на старте
         stop_command: Команда в конце
         loops: Закольцевать
-        disable_states: Отключить статистику
-        hide: Спрятать во время воспроизведения
         
+        audio: Аудиофайлы
+        audio_tooltip: Выбрать аудиофайл, который будет использован для синхронизации аудио с этой сценой
+        audio_shift: Смещение аудио
+        audio_shift_tooltip: Насколько сильным должно быть смещение, т.е. сокращение длины аудио, указанное в тиках.
+        open_audio_folder: Открыть папку с аудиофайлами
+
         id: ID Записи
         name: Имя
         invincible: Неуязвимый
@@ -96,19 +100,27 @@ blockbuster.gui:
         tp: Телепоритроваться
         tp_tooltip: Телепортирует вас к начальной позиции воспроизведения
 
+        none: "(отсутствует)"
+
         keys:
             category: Сцены
 
             toggle_list: Показать/Скрыть список сцен
+            toggle_options: Показать/Скрыть общие настройки
 
     scenes:
         title: Сцены
+
+        add_scene: "Добавить сцену..."
+        dupe_scene: "Клонировать выбранную сцену..."
+        rename_scene: "Переименовать выбранную сцену..."
+        remove_scene: "Удалить выбранную сцену..."
 
         add_modal: "Впишите название для новой сцены:"
         dupe_modal: "Впишите название для дублированной сцены:"
         rename_modal: "Впишите новое название для текущей сцены:"
         remove_modal: "Вы уверенны, что хотите удалить эту сцену?"
-    
+
     # Actor configuration GUI strings
     actor:
         title: Конфигурация Актёра
@@ -264,11 +276,6 @@ blockbuster.gui:
         limbs: Конечности
         body_parts: Части тела
         use_target: Использовать цель
-
-        animates: Анимируется
-        ignored: Игнорируется
-        animation_duration: Продолжительность
-        pick_interpolation: Выбрать интерполяцию
      
     image:
         crop: Обрезать
@@ -287,6 +294,8 @@ blockbuster.gui:
     sequencer:
         duration: Длительность
         random: Случайно
+        set_duration: Установить длительность
+        set_duration_tooltip: "Когда параметр включён, эта функция возьмёт рассчитанную продолжительность и присваивает её выбранному морфу, у которого включено свойство \"анимируется\""
         reverse: Реверсировать
         no_morph: (Морф отсутствует)
         morphs: Морфы
