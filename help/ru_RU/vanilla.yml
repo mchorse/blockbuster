@@ -2,7 +2,6 @@
 blockbuster:
     info:
         playback_button: Включает блок режиссёра
-        playback_director: Прикреплено к ({r}%d{7}, {r}%d{7}, {r}%d{7})
         playback_profile: Воспроизводит профиль "{f}{o}%s{r}{7}"
         playback_play: Воспроизводит камеру
         playback_scene: Прикреплено к сцене {f}%s{r}
