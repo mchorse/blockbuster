@@ -21,11 +21,6 @@ Install [Minecraft Forge](http://files.minecraftforge.net/), download the latest
 
 After that, Blockbuster mod should be installed and will appear in Minecraft's mods menu. If Blockbuster didn't appear in the mods menu, then something went wrong. 
 
-## FAQ
-
-**Q: Model block is invisible when I hold it in the hand. How to fix it? (1.12.2)**  
-A: Looks like you're using Optifine D1 or below. Update Optifine to D2 or higher.
-
 ## Features
 
 Blockbuster mod provides you with lots of features to create outstanding machinimas/roleplay series:
