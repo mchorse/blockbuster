@@ -31,7 +31,6 @@ A: Looks like you're using Optifine D1 or below. Update Optifine to D2 or higher
 Blockbuster mod provides you with lots of features to create outstanding machinimas/roleplay series:
 
 * **Actors and player recording** – the most important feature, as you won't be able to create a machinimas without it. With Blockbuster mod you can record yourself doing things and then playback it using an actor. *Recording code has some limitations on which actions it can record*. See [Blockbuster Wiki](https://github.com/mchorse/blockbuster/wiki) for more information about limitations.
-* **Director blocks** – special blocks which manage playback of multiple actors. With a director block, you can record an actor at a time, meanwhile reacting to previously recorded actors, making it possible to create complex scenes solo.
 * **Scenes** – scenes are just like director blocks, but cooler. They are stored in separate files (in world's `blockbuster/scenes/` folder), as opposed in the world. With scenes, you can create templates, transfer to another worlds, and most importantly you will never lose them in the world.
 * **Model block** – besides actors, Blockbuster also adds a *model block*, allowing you placing down custom models or mobs as static props, which allows creating magnificient and immersive scenes. Besides placing them down, you can also hold those models or mobs in your hand.
 * **BB gun item** – a special item which shoots projectiles on right click. This feature provides many different configuration options which can be used to create not only firearm combat scenes, but also special effects like avalanches, fake physics, crowd explosion and much more!
@@ -50,7 +49,8 @@ Blockbuster mod provides you with lots of features to create outstanding machini
 * **Animated GIF support** – now you can put reaction and meme GIFs onto Blockbuster models and just as images. Credit goes to [MrCrayfish's furniture mod](https://github.com/MrCrayfish/MrCrayfishFurnitureMod) and [DhyanB](https://github.com/DhyanB/Open-Imaging/blob/master/src/main/java/at/dhyan/open_imaging/GifDecoder.java).
 * **Animations** — with animated poses and image morph animations, you can add animation to your actors and sets.
 * **[Minema](https://github.com/daipenger/minema/releases) compatability** – thanks to frame-based player recording and cameras, you can convert your in-game machinimas to videos with a press of a button.
-* **Speaks multiple languages** – besides English, Blockbuster is also translated into Russian and Chinese thanks to [Andruxioid](https://www.youtube.com/channel/UCnHOceBjwMyqCR5oYOoNqhQ), [ycwei982](https://www.youtube.com/channel/UCfUDMSGlXUblXimkvNl_7Ww) and [Chunk7](https://twitter.com/RuaC7w) respectively.
+* **In-game audio synchronization** – if you have an .wav audio track, you can load it into Blockbuster, which will make actor and camera synchronization so much easier! Everytime you'll record an actor, play the scene or edit the camera, an audio waveform preview will be visible, which will make any kind of timing synchronizations a breeze!
+* **Speaks multiple languages** – besides English, Blockbuster is also translated into Russian and Chinese thanks to [Andruxioid](https://www.youtube.com/channel/UCnHOceBjwMyqCR5oYOoNqhQ) and [ycwei982](https://www.youtube.com/channel/UCfUDMSGlXUblXimkvNl_7Ww), respectively.
 
 ## Videos
 
@@ -58,11 +58,11 @@ Blockbuster mod provides you with lots of features to create outstanding machini
 
 This is change logs playlist. Almost every update (for exception of patches with bug fixes and minor features) comes with a change log video which showcases new features, and briefly shows how to use them.
 
-<a href="https://youtu.be/JghXifbHi-k?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/JghXifbHi-k/0.jpg"></a> 
+<a href="https://youtu.be/NmGz3SVs6Gs?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/NmGz3SVs6Gs/0.jpg"></a> 
 
 Here is also a playlist of tutorials directly or indirectly related to Blockbuster/Minecraft machinima creation. Make sure to check it out, as it consists out of tutorials such as basics of Blockbuster mod, how to import OBJ models, etc.
 
-<a href="https://youtu.be/vo8fquY-TUM?list=PLLnllO8nnzE-LIHZiaq0-ZAZiDO82K1I9"><img src="https://img.youtube.com/vi/vo8fquY-TUM/0.jpg"></a> 
+<a href="https://youtu.be/Vv5ZwtZdwz0?list=PLLnllO8nnzE-xmqdymsLpxnXTaAbyIVjM"><img src="https://img.youtube.com/vi/Vv5ZwtZdwz0/0.jpg"></a> 
 
 ### Blockbuster machinimas
 
@@ -70,9 +70,9 @@ This playlist consists out of videos that I've created a bunch of machinimas dur
 
 <a href="https://youtu.be/eig13klr-kw?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/eig13klr-kw/0.jpg"></a> 
 
-Here is also a playlist of 400+ community made videos with Blockbuster mod:
+Here is also a playlist of 700+ community made videos with Blockbuster mod:
 
-<a href="https://youtu.be/9hCMFoNnfxw?list=PL6UPd2Tj65nEE8kLKBxYYZLAjruJkO0r_"><img src="https://img.youtube.com/vi/9hCMFoNnfxw/0.jpg"></a> 
+<a href="https://youtu.be/kJHMj245qSY?list=PL6UPd2Tj65nEE8kLKBxYYZLAjruJkO0r_"><img src="https://img.youtube.com/vi/kJHMj245qSY/0.jpg"></a> 
 
 If you're interested in this project, you might as well follow me on any of social media accounts listed below:
 

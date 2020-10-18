@@ -1,6 +1,39 @@
-# Change Log
+## Version 2.1
 
-Blockbuster's change log.
+This update is focused on simplifying some aspects of recording actors, and editing the player recordings. This update features a game changer feature called in-game audio synchronization. Director blocks' functionality was removed.
+
+**Compatible** with McLib `2.1`, Metamorph `1.2.3` and Aperture `1.5`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+<a href="https://youtu.be/NmGz3SVs6Gs"><img src="https://img.youtube.com/vi/NmGz3SVs6Gs/0.jpg"></a> 
+
+* Added an option to specify custom model folder on the disk (implemented by Maxi)
+* Added `/item_nbt <generate_give_command:true|false>` command which allows to copying currently held item's NBT and optionally generate a `/give` command of this item (suggested by Tossler)
+* Added extrusion max and extrusion factors options to model editor, which allows having HD skins to have smaller HD bits (suggested by ZyphoxFilms)
+* Added **in-game audio syncing** feature to scenes, which allows attaching a `.wav` audio track which plays and syncs when you playback a scene, record an actor and edit camera profile
+* Added **better preview** mechanism to sync animated poses, image animations, etc. while previewing the scene in the camera editor (it's not 100% accurate yet still better than what we had)
+* Added a new `body_yaw` property to player recording's frames (which represents horizontal body rotation)
+* Added `/record calculate_body_yaw` subcommand that allows to calculate the `body_yaw` property for old player recordings
+* Added **Set duration** option to sequencer morph, which allows to overwrite the duration of the animated morph with sequence's duration (suggested by Chunk7)
+* Added options to **Recording** category:
+	* Added **Playback body yaw** option to Actor category which allows to disable recorded playback of body's horizontal rotation (it's enabled by default)
+	* Added **Better preview** option to toggle **better preview** (it's enabled by default)
+* Added **Snowstorm** option category with one option to enabled particle depth sorting
+* Added **Audio** option category with new options:
+	* Audio bars visible — whether preview waveform audio bars should be visible
+	* Waveform density — how many pixels per second for waveform
+	* Audio bar width — how wide is a single audio bar (in `0..1` percentage)
+	* Audio bar height — how high is a single audio bar (in pixels)
+	* Show audio bar's filename — whether filename of a played audio should be shown
+* Added **Reset on playback** option to **Model block** category which allows resetting model blocks upon playback of the scene (suggested by Herr Bergmann)
+* Added a simpler skin loading mechanism that allows to drop any Minecraft player skins into `minecraft/config/blockbuster/skins/`, and they will be transferred into correct folder, depending on the format of the skin (`1:1` skins, like `64x64`, will go to `fred/skins`, while `2:1` skins, like `64x32`, will to go `steve/skins`, HD skins supported as well, inspired by Chunk7's suggestion)
+* Added animated and sequencer morph indicators to display to morph action block in the player recording editor
+* Added camera editor's timeline cursor to the action editor
+* Changed the horizontal zoom reset after selecting another player recording to edit (suggested by Andruxioid)
+* Changed the way action editor is being synced with camera editor's timeline when scrubbing and playing
+* Fixed hovering actors bug (after 3 years, reported by Badr, KazerLight and El_Redstoniano)
+* Fixed **Always render actors** option not working in culled chunks (reported by many in the past)
+* Fixed enchanted armor not working on custom models (reported by VillagerFilms)
+* Removed the functionality of **Director blocks** (however data in director blocks will be converted to scenes upon loading this update)
 
 ## Version 2.0.2
 
