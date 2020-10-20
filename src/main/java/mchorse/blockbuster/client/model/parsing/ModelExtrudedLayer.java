@@ -51,7 +51,10 @@ public class ModelExtrudedLayer
     {
         clearByTexture(location);
 
-        images.put(location, new CachedImage(image));
+        CachedImage cached = new CachedImage(image);
+
+        cached.timer = Integer.MAX_VALUE;
+        images.put(location, cached);
     }
 
     /**
@@ -135,11 +138,14 @@ public class ModelExtrudedLayer
                 {
                     return;
                 }
-                else
-                {
-                    image = new CachedImage(ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(texture).getInputStream()));
-                    images.put(texture, image);
-                }
+
+                image = new CachedImage(ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(texture).getInputStream()));
+                images.put(texture, image);
+            }
+
+            if (image.timer > 20)
+            {
+                image.timer = 20;
             }
 
             Chunk chunk = fillChunk(image.image, renderer);
