@@ -1,12 +1,14 @@
 package mchorse.blockbuster.client.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelLimb.Holding;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
+import mchorse.blockbuster.api.formats.obj.ShapeKey;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
@@ -66,7 +68,7 @@ public class ModelCustom extends ModelBiped
     public ModelCustomRenderer[] armor;
 
     public Map<String, ResourceLocation> materials;
-    public Map<String, Float> shapes;
+    public List<ShapeKey> shapes;
 
     /**
      * Initiate the model with the size of the texture

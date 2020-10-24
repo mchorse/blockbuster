@@ -7,11 +7,11 @@ import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
+import mchorse.blockbuster.api.formats.obj.ShapeKey;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
-import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
@@ -19,7 +19,6 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
-import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.Minecraft;
@@ -33,7 +32,6 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumHand;
@@ -42,7 +40,9 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -116,7 +116,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     /**
      * Shapes configurations
      */
-    private Map<String, Float> shapes = new HashMap<String, Float>();
+    private List<ShapeKey> shapes = new ArrayList<ShapeKey>();
 
     /**
      * Cached key value 
@@ -178,7 +178,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         return this.animation;
     }
 
-    public Map<String, Float> getShapesForRendering(float partialTick)
+    public List<ShapeKey> getShapesForRendering(float partialTick)
     {
         if (this.animation.isInProgress())
         {
@@ -188,7 +188,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         return this.shapes;
     }
 
-    public Map<String, Float> getShapes()
+    public List<ShapeKey> getShapes()
     {
         return this.shapes;
     }
@@ -581,7 +581,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             this.model = custom.model;
 
             this.shapes.clear();
-            this.shapes.putAll(custom.shapes);
+
+            for (ShapeKey key : custom.shapes)
+            {
+                this.shapes.add(key.copy());
+            }
 
             return true;
         }
@@ -707,7 +711,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             this.parts.copy(morph.parts);
             this.animation.copy(morph.animation);
             this.shapes.clear();
-            this.shapes.putAll(morph.shapes);
+
+            for (ShapeKey key : morph.shapes)
+            {
+                this.shapes.add(key.copy());
+            }
         }
     }
 
@@ -760,13 +768,13 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
         if (!this.shapes.isEmpty())
         {
-            NBTTagCompound shapes = new NBTTagCompound();
+            NBTTagList shapes = new NBTTagList();
 
-            for (Map.Entry<String, Float> shape : this.shapes.entrySet())
+            for (ShapeKey shape : this.shapes)
             {
-                if (shape.getValue() != 0)
+                if (shape.value != 0)
                 {
-                    shapes.setFloat(shape.getKey(), shape.getValue());
+                    shapes.appendTag(shape.toNBT());
                 }
             }
 
@@ -830,13 +838,18 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
         if (tag.hasKey("Shapes"))
         {
-            NBTTagCompound shapes = tag.getCompoundTag("Shapes");
+            NBTTagList shapes = tag.getTagList("Shapes", NBT.TAG_COMPOUND);
 
             this.shapes.clear();
 
-            for (String key : shapes.getKeySet())
+            for (int i = 0; i < shapes.tagCount(); i++)
             {
-                this.shapes.put(key, shapes.getFloat(key));
+                NBTTagCompound key = shapes.getCompoundTagAt(i);
+
+                if (key.hasKey("Name") && key.hasKey("Value"))
+                {
+                    this.shapes.add(new ShapeKey(key.getString("Name"), key.getFloat("Value")));
+                }
             }
         }
     }
@@ -846,11 +859,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
      */
     public static class PoseAnimation extends Animation
     {
-        public Map<String, Float> lastShapes = new HashMap<String, Float>();
+        public List<ShapeKey> lastShapes = new ArrayList<ShapeKey>();
         public ModelPose last;
         public ModelPose pose = new ModelPose();
 
-        private Map<String, Float> temporaryShapes = new HashMap<String, Float>();
+        private List<ShapeKey> temporaryShapes = new ArrayList<ShapeKey>();
 
         @Override
         public void merge(Animation animation)
@@ -859,29 +872,38 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             this.pose.limbs.clear();
         }
 
-        public void mergeShape(Map<String, Float> shapes)
+        public void mergeShape(List<ShapeKey> shapes)
         {
             this.lastShapes.clear();
-            this.lastShapes.putAll(shapes);
+            this.lastShapes.addAll(shapes);
         }
 
-        public Map<String, Float> calculateShapes(CustomMorph morph, float partialTicks)
+        public List<ShapeKey> calculateShapes(CustomMorph morph, float partialTicks)
         {
             float factor = this.getFactor(partialTicks);
 
             this.temporaryShapes.clear();
 
-            for (Map.Entry<String, Float> entry : this.lastShapes.entrySet())
+            for (ShapeKey key : this.lastShapes)
             {
-                this.temporaryShapes.put(entry.getKey(), this.interp.interpolate(entry.getValue(), 0, factor));
+                this.temporaryShapes.add(new ShapeKey(key.name, this.interp.interpolate(key.value, 0, factor)));
             }
 
-            for (Map.Entry<String, Float> entry : morph.shapes.entrySet())
+            for (ShapeKey key : morph.shapes)
             {
-                Float last = this.lastShapes.get(entry.getKey());
-                Float current = entry.getValue();
+                ShapeKey last = null;
 
-                this.temporaryShapes.put(entry.getKey(), this.interp.interpolate(last == null ? 0 : last.floatValue(), current.floatValue(), factor));
+                for (ShapeKey previous : this.lastShapes)
+                {
+                    if (previous.name.equals(key.name))
+                    {
+                        last = previous;
+
+                        break;
+                    }
+                }
+
+                this.temporaryShapes.add(new ShapeKey(key.name, this.interp.interpolate(last == null ? 0 : last.value, key.value, factor)));
             }
 
             return this.temporaryShapes;

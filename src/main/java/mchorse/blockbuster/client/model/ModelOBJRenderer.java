@@ -6,6 +6,7 @@ import mchorse.blockbuster.api.formats.obj.MeshOBJ;
 import mchorse.blockbuster.api.formats.obj.MeshesOBJ;
 import mchorse.blockbuster.api.formats.obj.OBJMaterial;
 import mchorse.blockbuster.api.formats.obj.OBJParser;
+import mchorse.blockbuster.api.formats.obj.ShapeKey;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.client.textures.MipmapTexture;
@@ -23,7 +24,6 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.ByteBuffer;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +50,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
     /**
      * Shape configurations
      */
-    public Map<String, Float> shapes;
+    public List<ShapeKey> shapes;
 
     /**
      * Solid colored texture ID 
@@ -325,9 +325,9 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                     this.temporary.normData[i * 3 + 2] = this.mesh.normData[i * 3 + 2];
                 }
 
-                for (Map.Entry<String, Float> entry : renderer.shapes.entrySet())
+                for (ShapeKey key : renderer.shapes)
                 {
-                    List<MeshOBJ> list = renderer.mesh.shapes.get(entry.getKey());
+                    List<MeshOBJ> list = renderer.mesh.shapes.get(key.name);
 
                     if (list == null)
                     {
@@ -335,7 +335,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                     }
 
                     MeshOBJ mesh = list.get(this.index);
-                    float factor = entry.getValue();
+                    float factor = key.value;
 
                     if (mesh == null || this.temporary.triangles != mesh.triangles)
                     {

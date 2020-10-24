@@ -281,6 +281,11 @@ blockbuster.gui:
         shape_keys_factor: Shape keys factor
         shape_keys_factor_tooltip: This field determines the factor of how much a shape key will be applied (0 = no effect, 1 = full deform)
 
+        context:
+            add: Add a shape key...
+            add_to: "Add \"%s\" shape key"
+            remove: Remove this shape key
+
     image:
         crop: Crop
         left: Left

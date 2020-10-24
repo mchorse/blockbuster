@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils;
 
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.api.formats.obj.ShapeKey;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
@@ -21,6 +22,7 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,7 +41,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     public boolean looking = true;
 
     public Map<String, ResourceLocation> materials;
-    public Map<String, Float> shapes;
+    public List<ShapeKey> shapes;
     public ResourceLocation texture;
     public ModelCustom model;
     public ModelPose pose;
