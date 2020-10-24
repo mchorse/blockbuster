@@ -764,7 +764,10 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
             for (Map.Entry<String, Float> shape : this.shapes.entrySet())
             {
-                shapes.setFloat(shape.getKey(), shape.getValue());
+                if (shape.getValue() != 0)
+                {
+                    shapes.setFloat(shape.getKey(), shape.getValue());
+                }
             }
 
             tag.setTag("Shapes", shapes);
@@ -868,12 +871,17 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
             this.temporaryShapes.clear();
 
+            for (Map.Entry<String, Float> entry : this.lastShapes.entrySet())
+            {
+                this.temporaryShapes.put(entry.getKey(), this.interp.interpolate(entry.getValue(), 0, factor));
+            }
+
             for (Map.Entry<String, Float> entry : morph.shapes.entrySet())
             {
                 Float last = this.lastShapes.get(entry.getKey());
                 Float current = entry.getValue();
 
-                this.temporaryShapes.put(entry.getKey(), this.interp.interpolate(last == null ? current.floatValue() : last.floatValue(), current.floatValue(), factor));
+                this.temporaryShapes.put(entry.getKey(), this.interp.interpolate(last == null ? 0 : last.floatValue(), current.floatValue(), factor));
             }
 
             return this.temporaryShapes;
