@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class OBJMaterial
 {
-    public String name = "";
+    public String name;
 
     public float r = 1;
     public float g = 1;

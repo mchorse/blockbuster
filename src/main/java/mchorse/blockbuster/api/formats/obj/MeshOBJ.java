@@ -10,4 +10,9 @@ public class MeshOBJ extends Mesh
 	{
 		super(faces);
 	}
+
+	public MeshOBJ(float[] posData, float[] texData, float[] normData)
+	{
+		super(posData, texData, normData);
+	}
 }

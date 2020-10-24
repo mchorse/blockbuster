@@ -14,12 +14,13 @@ public class ModelLoaderOBJ implements IModelLoader
 	{
 		IResourceEntry json = new FileEntry(new File(folder, "model.json"));
 		File obj = new File(folder, "model.obj");
+		File shapes = new File(folder, "shapes");
 
 		if (obj.isFile())
 		{
 			File mtl = new File(folder, "model.mtl");
 
-			return new ModelLazyLoaderOBJ(json, new FileEntry(obj), new FileEntry(mtl));
+			return new ModelLazyLoaderOBJ(json, new FileEntry(obj), new FileEntry(mtl), shapes);
 		}
 
 		for (File file : folder.listFiles())
@@ -29,7 +30,7 @@ public class ModelLoaderOBJ implements IModelLoader
 				String name = file.getName();
 				File mtl = new File(folder, name.substring(0, name.length() - 3) + "mtl");
 
-				return new ModelLazyLoaderOBJ(json, new FileEntry(file), new FileEntry(mtl));
+				return new ModelLazyLoaderOBJ(json, new FileEntry(file), new FileEntry(mtl), shapes);
 			}
 		}
 

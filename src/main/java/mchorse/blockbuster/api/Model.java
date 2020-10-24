@@ -1,5 +1,16 @@
 package mchorse.blockbuster.api;
 
+import com.google.common.base.MoreObjects;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
+import mchorse.blockbuster.api.formats.obj.OBJMaterial;
+import mchorse.blockbuster.api.json.ModelAdapter;
+import mchorse.blockbuster.api.json.ModelLimbAdapter;
+import mchorse.mclib.utils.resources.RLUtils;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,18 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
-import com.google.common.base.MoreObjects;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
-
-import mchorse.blockbuster.api.json.ModelAdapter;
-import mchorse.blockbuster.api.json.ModelLimbAdapter;
-import mchorse.blockbuster.api.formats.obj.OBJMaterial;
-import mchorse.mclib.utils.resources.RLUtils;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * Model class
@@ -113,6 +112,8 @@ public class Model
     public Map<String, ModelPose> poses = new HashMap<String, ModelPose>();
 
     public Map<String, OBJMaterial> materials = new HashMap<String, OBJMaterial>();
+
+    public List<String> shapes = new ArrayList<String>();
 
     /**
      * Parse model from input stream

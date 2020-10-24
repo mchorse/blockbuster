@@ -39,6 +39,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     public boolean looking = true;
 
     public Map<String, ResourceLocation> materials;
+    public Map<String, Float> shapes;
     public ResourceLocation texture;
     public ModelCustom model;
     public ModelPose pose;
@@ -207,6 +208,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     protected void updateModel(float limbSwing, float headYaw, float headPitch, float factor, float partial)
     {
         this.model.materials = this.materials;
+        this.model.shapes = this.shapes;
         this.model.pose = this.pose;
         this.model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp(1.0F - (this.swipe - 1.0F * partial) / 6.0F, 0.0F, 1.0F);
         this.model.setLivingAnimations(this.entity, headYaw, headPitch, partial);

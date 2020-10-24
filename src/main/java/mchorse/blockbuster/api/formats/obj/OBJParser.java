@@ -66,6 +66,33 @@ public class OBJParser
         this.mtlFile = mtlFile;
     }
 
+    public boolean equalData(OBJParser parser)
+    {
+        boolean result = this.vertices.size() == parser.vertices.size();
+
+        result = result && this.textures.size() == parser.textures.size();
+        result = result && this.normals.size() == parser.normals.size();
+        result = result && this.objects.size() == parser.objects.size();
+
+        here:
+        for (OBJDataMesh mesh : this.objects)
+        {
+            for (OBJDataMesh dataMesh : parser.objects)
+            {
+                if (mesh.name.equals(dataMesh.name))
+                {
+                    result = result && mesh.groups.size() == dataMesh.groups.size();
+
+                    continue here;
+                }
+            }
+
+            return false;
+        }
+
+        return result;
+    }
+
     /**
      * Read the data first 
      */

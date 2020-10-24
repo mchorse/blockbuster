@@ -163,6 +163,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
             }
 
             model.materials = this.current.materials;
+            model.shapes = this.current.shapes;
             model.pose = pose;
             model.current = this.current;
             this.mainModel = model;

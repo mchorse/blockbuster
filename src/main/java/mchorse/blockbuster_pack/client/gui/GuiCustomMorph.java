@@ -12,6 +12,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDrawable;
@@ -206,6 +207,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         CustomMorph custom = this.morph;
 
         this.bbRenderer.materials = custom.materials;
+        this.bbRenderer.shapes = custom.shapes;
         this.bbRenderer.model = ModelCustom.MODELS.get(custom.getKey());
         this.bbRenderer.texture = custom.skin == null ? custom.model.defaultTexture : custom.skin;
         this.bbRenderer.pose = custom.customPose == null ? custom.model.getPose(custom.currentPose) : custom.customPose;
@@ -223,6 +225,11 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         public GuiStringListElement materials;
         public GuiTexturePicker picker;
         public GuiToggleElement keying;
+
+        public GuiStringListElement shapes;
+        public GuiTrackpadElement factor;
+
+        private String currentShape;
 
         public GuiMaterialsPanel(Minecraft mc, GuiCustomMorph editor)
         {
@@ -261,13 +268,34 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.keying.tooltip(IKey.lang("blockbuster.gui.image.keying_tooltip"), Direction.TOP);
             this.picker = new GuiTexturePicker(mc, skin);
 
+            this.shapes = new GuiStringListElement(mc, (str) -> this.setFactor(str.get(0)));
+            this.shapes.background();
+            this.factor = new GuiTrackpadElement(mc, (value) -> this.setFactor(value.floatValue()));
+            this.factor.tooltip(IKey.str("Shape key frame value"), Direction.TOP);
+
             this.skin.flex().relative(this).set(10, 10, 110, 20);
             this.texture.flex().relative(this.skin).set(0, 25, 110, 20);
             this.materials.flex().relative(this.texture).set(0, 25, 110, 0).hTo(this.keying.flex(), -5);
             this.keying.flex().relative(this).x(10).w(110).y(1F, -24);
             this.picker.flex().relative(this).wh(1F, 1F);
 
-            this.add(this.skin, this.texture, this.keying, this.materials);
+            this.shapes.flex().relative(this).x(1F, -120).y(10).w(110).hTo(this.factor.flex(), -10);
+            this.factor.flex().relative(this).x(1F, -120).y(1F, -30).wh(110, 20);
+
+            this.add(this.skin, this.texture, this.keying, this.materials, this.factor, this.shapes);
+        }
+
+        private void setFactor(String name)
+        {
+            Float factor = this.morph.shapes.get(name);
+
+            this.currentShape = name;
+            this.factor.setValue(factor == null ? 0 : factor.floatValue());
+        }
+
+        private void setFactor(float value)
+        {
+            this.morph.shapes.put(this.currentShape, value);
         }
 
         private void setCurrentMaterialRL(ResourceLocation rl)
@@ -314,6 +342,22 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.materials.setVisible(!noMaterials);
             this.texture.setVisible(!noMaterials);
             this.keying.toggled(morph.keying);
+
+            this.shapes.clear();
+            this.shapes.add(morph.model.shapes);
+            this.shapes.sort();
+
+            boolean hidden = this.shapes.getList().isEmpty();
+
+            this.shapes.setVisible(!hidden);
+            this.factor.setVisible(!hidden);
+            this.currentShape = null;
+
+            if (hidden)
+            {
+                this.shapes.setIndex(0);
+                this.setFactor(this.shapes.getCurrentFirst());
+            }
         }
 
         @Override

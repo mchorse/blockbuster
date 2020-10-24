@@ -66,6 +66,7 @@ public class ModelCustom extends ModelBiped
     public ModelCustomRenderer[] armor;
 
     public Map<String, ResourceLocation> materials;
+    public Map<String, Float> shapes;
 
     /**
      * Initiate the model with the size of the texture
@@ -201,7 +202,10 @@ public class ModelCustom extends ModelBiped
 
             if (limb instanceof ModelOBJRenderer)
             {
-                ((ModelOBJRenderer) limb).materials = this.materials;
+                ModelOBJRenderer obj = (ModelOBJRenderer) limb;
+
+                obj.materials = this.materials;
+                obj.shapes = this.shapes;
             }
 
             float factor = mirror ^ invert ? -1 : 1;

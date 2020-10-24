@@ -1,22 +1,17 @@
 package mchorse.blockbuster.client.model;
 
-import java.nio.ByteBuffer;
-import java.util.Map;
-
-import mchorse.blockbuster.api.formats.obj.MeshOBJ;
-import mchorse.blockbuster.api.formats.obj.MeshesOBJ;
-import mchorse.blockbuster.client.textures.GifTexture;
-import org.lwjgl.opengl.GL11;
-
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelTransform;
+import mchorse.blockbuster.api.formats.obj.MeshOBJ;
+import mchorse.blockbuster.api.formats.obj.MeshesOBJ;
 import mchorse.blockbuster.api.formats.obj.OBJMaterial;
 import mchorse.blockbuster.api.formats.obj.OBJParser;
 import mchorse.blockbuster.client.render.RenderCustomModel;
+import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.client.textures.MipmapTexture;
+import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.ReflectionUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
@@ -25,6 +20,12 @@ import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Like {@link ModelCustomRenderer}, this model renders 
@@ -47,6 +48,11 @@ public class ModelOBJRenderer extends ModelCustomRenderer
     public Map<String, ResourceLocation> materials;
 
     /**
+     * Shape configurations
+     */
+    public Map<String, Float> shapes;
+
+    /**
      * Solid colored texture ID 
      */
     protected int solidColorTex = -1;
@@ -67,8 +73,6 @@ public class ModelOBJRenderer extends ModelCustomRenderer
     {
         if (this.mesh != null)
         {
-            BufferBuilder renderer = Tessellator.getInstance().getBuffer();
-
             this.displayLists = new OBJDisplayList[this.mesh.meshes.size()];
             int index = 0;
             int texture = 0;
@@ -109,6 +113,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
             /* Generate display lists */
             int j = 0;
+            int k = 0;
 
             for (MeshOBJ mesh : this.mesh.meshes)
             {
@@ -121,6 +126,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
                 int id = GLAllocation.generateDisplayLists(1);
                 boolean hasColor = material != null && !mesh.material.useTexture;
+                BufferBuilder renderer = Tessellator.getInstance().getBuffer();
 
                 GlStateManager.glNewList(id, GL11.GL_COMPILE);
                 renderer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL);
@@ -152,14 +158,19 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                 Tessellator.getInstance().draw();
                 GlStateManager.glEndList();
 
-                this.displayLists[index++] = new OBJDisplayList(id, texture, mesh.material);
+                this.displayLists[index++] = new OBJDisplayList(k, id, texture, mesh, this.mesh.shapes == null);
                 j += hasColor ? 1 : 0;
+                k += 1;
             }
 
-            /* I hope this will get garbage collected xD */
             this.compiled = true;
-            this.mesh = null;
             this.solidColorTex = texture;
+
+            /* Discard the mesh ONLY if there are no shapes */
+            if (this.mesh.shapes == null)
+            {
+                this.mesh = null;
+            }
         }
         else
         {
@@ -238,7 +249,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                 GifTexture.bindTexture(texture, RenderCustomModel.tick);
             }
 
-            GL11.glCallList(list.id);
+            list.render(this);
 
             if (hasColor || (hasTexture && list.material.texture != null))
             {
@@ -271,15 +282,108 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
     public static class OBJDisplayList
     {
+        public int index;
         public int id;
         public int texId;
         public OBJMaterial material;
 
-        public OBJDisplayList(int id, int texId, OBJMaterial material)
+        private MeshOBJ mesh;
+        private MeshOBJ temporary;
+
+        public OBJDisplayList(int index, int id, int texId, MeshOBJ mesh, boolean discard)
         {
+            this.index = index;
             this.id = id;
             this.texId = texId;
-            this.material = material;
+            this.material = mesh.material;
+
+            if (!discard)
+            {
+                this.mesh = mesh;
+                this.temporary = new MeshOBJ(new float[mesh.posData.length], new float[mesh.texData.length], new float[mesh.normData.length]);
+            }
+        }
+
+        public void render(ModelOBJRenderer renderer)
+        {
+            if (renderer.shapes != null && this.mesh != null)
+            {
+                BufferBuilder builder = Tessellator.getInstance().getBuffer();
+
+                builder.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL);
+                // float texF = (j + 0.5F) / count;
+
+                for (int i = 0, c = this.mesh.triangles; i < c; i++)
+                {
+                    this.temporary.posData[i * 3] = this.mesh.posData[i * 3];
+                    this.temporary.posData[i * 3 + 1] = this.mesh.posData[i * 3 + 1];
+                    this.temporary.posData[i * 3 + 2] = this.mesh.posData[i * 3 + 2];
+                    this.temporary.texData[i * 2] = this.mesh.texData[i * 2];
+                    this.temporary.texData[i * 2 + 1] = this.mesh.texData[i * 2 + 1];
+                    this.temporary.normData[i * 3] = this.mesh.normData[i * 3];
+                    this.temporary.normData[i * 3 + 1] = this.mesh.normData[i * 3 + 1];
+                    this.temporary.normData[i * 3 + 2] = this.mesh.normData[i * 3 + 2];
+                }
+
+                for (Map.Entry<String, Float> entry : renderer.shapes.entrySet())
+                {
+                    List<MeshOBJ> list = renderer.mesh.shapes.get(entry.getKey());
+
+                    if (list == null)
+                    {
+                        continue;
+                    }
+
+                    MeshOBJ mesh = list.get(this.index);
+                    float factor = entry.getValue();
+
+                    if (mesh == null || this.temporary.triangles != mesh.triangles)
+                    {
+                        continue;
+                    }
+
+                    for (int i = 0, c = this.temporary.triangles; i < c; i++)
+                    {
+                        this.temporary.posData[i * 3] = Interpolations.lerp(this.temporary.posData[i * 3], mesh.posData[i * 3], factor);
+                        this.temporary.posData[i * 3 + 1] = Interpolations.lerp(this.temporary.posData[i * 3 + 1], mesh.posData[i * 3 + 1], factor);
+                        this.temporary.posData[i * 3 + 2] = Interpolations.lerp(this.temporary.posData[i * 3 + 2], mesh.posData[i * 3 + 2], factor);
+                        this.temporary.texData[i * 2] = Interpolations.lerp(this.temporary.texData[i * 2], mesh.texData[i * 2], factor);
+                        this.temporary.texData[i * 2 + 1] = Interpolations.lerp(this.temporary.texData[i * 2 + 1], mesh.texData[i * 2 + 1], factor);
+                        this.temporary.normData[i * 3] = Interpolations.lerp(this.temporary.normData[i * 3], mesh.normData[i * 3], factor);
+                        this.temporary.normData[i * 3 + 1] = Interpolations.lerp(this.temporary.normData[i * 3 + 1], mesh.normData[i * 3 + 1], factor);
+                        this.temporary.normData[i * 3 + 2] = Interpolations.lerp(this.temporary.normData[i * 3 + 2], mesh.normData[i * 3 + 2], factor);
+                    }
+                }
+
+                for (int i = 0, c = this.temporary.triangles; i < c; i++)
+                {
+                    float x = this.temporary.posData[i * 3] - renderer.limb.origin[0];
+                    float y = -this.temporary.posData[i * 3 + 1] + renderer.limb.origin[1];
+                    float z = this.temporary.posData[i * 3 + 2] - renderer.limb.origin[2];
+
+                    float u = this.temporary.texData[i * 2];
+                    float v = this.temporary.texData[i * 2 + 1];
+
+                    float nx = this.temporary.normData[i * 3];
+                    float ny = -this.temporary.normData[i * 3 + 1];
+                    float nz = this.temporary.normData[i * 3 + 2];
+
+                    if (false)
+                    {
+                        // renderer.pos(x, y, z).tex(texF, 0.5F).normal(nx, ny, nz).endVertex();
+                    }
+                    else
+                    {
+                        builder.pos(x, y, z).tex(u, v).normal(nx, ny, nz).endVertex();
+                    }
+                }
+
+                Tessellator.getInstance().draw();
+            }
+            else
+            {
+                GL11.glCallList(this.id);
+            }
         }
     }
 }

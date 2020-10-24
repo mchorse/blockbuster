@@ -1,49 +1,96 @@
 package mchorse.blockbuster.api.loaders.lazy;
 
 import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.api.formats.IMeshes;
+import mchorse.blockbuster.api.formats.obj.MeshesOBJ;
 import mchorse.blockbuster.api.formats.obj.OBJDataMesh;
+import mchorse.blockbuster.api.formats.obj.OBJParser;
 import mchorse.blockbuster.api.resource.FileEntry;
 import mchorse.blockbuster.api.resource.IResourceEntry;
-import mchorse.blockbuster.api.formats.obj.OBJParser;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.StringJoiner;
 
 public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 {
 	public IResourceEntry obj;
 	public IResourceEntry mtl;
 
+	public List<IResourceEntry> shapes = new ArrayList<IResourceEntry>();
+
 	private OBJParser parser;
 	private long lastModified;
 
-	public ModelLazyLoaderOBJ(IResourceEntry model, IResourceEntry obj, IResourceEntry mtl)
+	public ModelLazyLoaderOBJ(IResourceEntry model, IResourceEntry obj, IResourceEntry mtl, File shapes)
 	{
 		super(model);
 
 		this.obj = obj;
 		this.mtl = mtl;
+
+		this.setupShapes(shapes);
+	}
+
+	private void setupShapes(File shapes)
+	{
+		if (shapes == null)
+		{
+			return;
+		}
+
+		File[] files = shapes.listFiles();
+
+		if (files == null)
+		{
+			return;
+		}
+
+		for (File file : files)
+		{
+			if (file.isFile() && file.getName().endsWith(".obj"))
+			{
+				this.shapes.add(new FileEntry(file));
+			}
+		}
 	}
 
 	@Override
 	public int count()
 	{
-		return super.count() + (this.obj.exists() ? 2 : 0) + (this.mtl.exists() ? 4 : 0);
+		int count = super.count() + (this.obj.exists() ? 2 : 0) + (this.mtl.exists() ? 4 : 0);
+		int bit = 3;
+
+		for (IResourceEntry shape : this.shapes)
+		{
+			if (shape.exists())
+			{
+				count += shape.exists() ? 1 << bit : 0;
+			}
+
+			bit++;
+		}
+
+		return count;
 	}
 
 	@Override
 	public boolean hasChanged()
 	{
-		return super.hasChanged() || this.obj.hasChanged() || this.mtl.hasChanged();
+		boolean hasChanged = super.hasChanged() || this.obj.hasChanged() || this.mtl.hasChanged();
+
+		for (IResourceEntry shape : this.shapes)
+		{
+			hasChanged = hasChanged || shape.hasChanged();
+		}
+
+		return hasChanged;
 	}
 
 	@Override
@@ -62,6 +109,19 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 			model = this.generateOBJModel(key);
 		}
 
+		for (IResourceEntry entry : this.shapes)
+		{
+			if (!entry.exists())
+			{
+				continue;
+			}
+
+			String name = entry.getName();
+
+			name = name.substring(0, name.lastIndexOf("."));
+			model.shapes.add(name);
+		}
+
 		return model;
 	}
 
@@ -71,7 +131,25 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 	{
 		try
 		{
-			Map<String, IMeshes> meshes = this.getOBJParser(key, model).compile();
+			OBJParser parser = this.getOBJParser(key, model);
+			Map<String, IMeshes> meshes = parser.compile();
+
+			for (IResourceEntry shape : this.shapes)
+			{
+				try
+				{
+					OBJParser shapeParser = new OBJParser(shape.getStream(), null);
+
+					shapeParser.read();
+
+					if (shapeParser.equalData(parser))
+					{
+						this.mergeParsers(shape.getName(), meshes, shapeParser);
+					}
+				}
+				catch (Exception e)
+				{}
+			}
 
 			this.parser = null;
 			this.lastModified = 0;
@@ -81,6 +159,26 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 		catch (Exception e) {}
 
 		return null;
+	}
+
+	/**
+	 * Merges data of shape parsers
+	 */
+	private void mergeParsers(String name, Map<String, IMeshes> meshes, OBJParser shapeParser)
+	{
+		name = name.substring(0, name.lastIndexOf("."));
+
+		Map<String, IMeshes> shapeMeshes = shapeParser.compile();
+
+		for (Map.Entry<String, IMeshes> entry : meshes.entrySet())
+		{
+			IMeshes shapeMesh = shapeMeshes.get(entry.getKey());
+
+			if (shapeMesh != null)
+			{
+				((MeshesOBJ) entry.getValue()).mergeShape(name, (MeshesOBJ) shapeMesh);
+			}
+		}
 	}
 
 	/**
@@ -178,10 +276,16 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 	@Override
 	public boolean copyFiles(File folder)
 	{
-		boolean skins = super.copyFiles(folder);
-		boolean obj = this.obj.copyTo(new File(folder, this.obj.getName()));
-		boolean mtl = this.mtl.copyTo(new File(folder, this.mtl.getName()));
+		boolean result = super.copyFiles(folder);
 
-		return skins || obj || mtl;
+		result = result || this.obj.copyTo(new File(folder, this.obj.getName()));
+		result = result || this.mtl.copyTo(new File(folder, this.mtl.getName()));
+
+		for (IResourceEntry shape : this.shapes)
+		{
+			result = result || shape.copyTo(new File(folder, "shapes/" + shape.getName()));
+		}
+
+		return result;
 	}
 }

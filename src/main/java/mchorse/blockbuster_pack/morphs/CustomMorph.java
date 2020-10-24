@@ -11,6 +11,7 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
+import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
@@ -111,6 +112,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
      * Body part manager 
      */
     public BodyPartManager parts = new BodyPartManager();
+
+    /**
+     * Shapes configurations
+     */
+    public Map<String, Float> shapes = new HashMap<String, Float>();
 
     /**
      * Cached key value 
@@ -500,6 +506,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             result = result && this.parts.equals(morph.parts);
             result = result && this.keying == morph.keying;
             result = result && this.animation.equals(morph.animation);
+            result = result && this.shapes.equals(morph.shapes);
 
             return result;
         }
@@ -678,6 +685,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             this.model = morph.model;
             this.parts.copy(morph.parts);
             this.animation.copy(morph.animation);
+            this.shapes.clear();
+            this.shapes.putAll(morph.shapes);
         }
     }
 
@@ -726,6 +735,18 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         if (!animation.hasNoTags())
         {
             tag.setTag("Animation", animation);
+        }
+
+        if (!this.shapes.isEmpty())
+        {
+            NBTTagCompound shapes = new NBTTagCompound();
+
+            for (Map.Entry<String, Float> shape : this.shapes.entrySet())
+            {
+                shapes.setFloat(shape.getKey(), shape.getValue());
+            }
+
+            tag.setTag("Shapes", shapes);
         }
     }
 
@@ -781,6 +802,18 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         if (tag.hasKey("Animation"))
         {
             this.animation.fromNBT(tag.getCompoundTag("Animation"));
+        }
+
+        if (tag.hasKey("Shapes"))
+        {
+            NBTTagCompound shapes = tag.getCompoundTag("Shapes");
+
+            this.shapes.clear();
+
+            for (String key : shapes.getKeySet())
+            {
+                this.shapes.put(key, shapes.getFloat(key));
+            }
         }
     }
 
