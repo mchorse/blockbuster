@@ -271,7 +271,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.shapes = new GuiStringListElement(mc, (str) -> this.setFactor(str.get(0)));
             this.shapes.background();
             this.factor = new GuiTrackpadElement(mc, (value) -> this.setFactor(value.floatValue()));
-            this.factor.tooltip(IKey.str("Shape key frame value"), Direction.TOP);
+            this.factor.tooltip(IKey.lang("blockbuster.gui.builder.shape_keys_factor_tooltip"), Direction.TOP);
 
             this.skin.flex().relative(this).set(10, 10, 110, 20);
             this.texture.flex().relative(this.skin).set(0, 25, 110, 20);
@@ -279,7 +279,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.keying.flex().relative(this).x(10).w(110).y(1F, -24);
             this.picker.flex().relative(this).wh(1F, 1F);
 
-            this.shapes.flex().relative(this).x(1F, -120).y(10).w(110).hTo(this.factor.flex(), -10);
+            this.shapes.flex().relative(this).x(1F, -120).y(22).w(110).hTo(this.factor.flex(), -17);
             this.factor.flex().relative(this).x(1F, -120).y(1F, -30).wh(110, 20);
 
             this.add(this.skin, this.texture, this.keying, this.materials, this.factor, this.shapes);
@@ -366,6 +366,12 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             if (this.materials.isVisible())
             {
                 this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.obj_materials"), this.materials.area.x, this.materials.area.y - 12, 0xffffff);
+            }
+
+            if (this.shapes.isVisible())
+            {
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.shape_keys"), this.shapes.area.x, this.shapes.area.y - 12, 0xffffff);
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.shape_keys_factor"), this.factor.area.x, this.factor.area.y - 12, 0xffffff);
             }
 
             super.draw(context);

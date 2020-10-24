@@ -141,11 +141,7 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 					OBJParser shapeParser = new OBJParser(shape.getStream(), null);
 
 					shapeParser.read();
-
-					if (shapeParser.equalData(parser))
-					{
-						this.mergeParsers(shape.getName(), meshes, shapeParser);
-					}
+					this.mergeParsers(shape.getName(), meshes, shapeParser);
 				}
 				catch (Exception e)
 				{}

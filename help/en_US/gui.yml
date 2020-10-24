@@ -277,6 +277,10 @@ blockbuster.gui:
         body_parts: Body parts
         use_target: Use target
 
+        shape_keys: Shape keys
+        shape_keys_factor: Shape keys factor
+        shape_keys_factor_tooltip: This field determines the factor of how much a shape key will be applied (0 = no effect, 1 = full deform)
+
     image:
         crop: Crop
         left: Left
