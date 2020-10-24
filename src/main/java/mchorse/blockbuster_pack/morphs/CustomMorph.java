@@ -116,7 +116,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     /**
      * Shapes configurations
      */
-    public Map<String, Float> shapes = new HashMap<String, Float>();
+    private Map<String, Float> shapes = new HashMap<String, Float>();
 
     /**
      * Cached key value 
@@ -159,6 +159,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             {
                 this.animation.last = pose;
             }
+
+            this.animation.mergeShape(custom.shapes);
         }
 
         this.parts.pause(previous, offset);
@@ -174,6 +176,21 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     public Animation getAnimation()
     {
         return this.animation;
+    }
+
+    public Map<String, Float> getShapesForRendering(float partialTick)
+    {
+        if (this.animation.isInProgress())
+        {
+            return this.animation.calculateShapes(this, partialTick);
+        }
+
+        return this.shapes;
+    }
+
+    public Map<String, Float> getShapes()
+    {
+        return this.shapes;
     }
 
     @Override
@@ -540,6 +557,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                 this.currentPose = custom.currentPose;
                 this.customPose = custom.customPose == null ? null : custom.customPose.clone();
                 this.animation.merge(custom.animation);
+                this.animation.mergeShape(this.shapes);
             }
             else
             {
@@ -561,6 +579,9 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
             this.parts.merge(custom.parts);
             this.model = custom.model;
+
+            this.shapes.clear();
+            this.shapes.putAll(custom.shapes);
 
             return true;
         }
@@ -822,14 +843,40 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
      */
     public static class PoseAnimation extends Animation
     {
+        public Map<String, Float> lastShapes = new HashMap<String, Float>();
         public ModelPose last;
         public ModelPose pose = new ModelPose();
+
+        private Map<String, Float> temporaryShapes = new HashMap<String, Float>();
 
         @Override
         public void merge(Animation animation)
         {
             super.merge(animation);
             this.pose.limbs.clear();
+        }
+
+        public void mergeShape(Map<String, Float> shapes)
+        {
+            this.lastShapes.clear();
+            this.lastShapes.putAll(shapes);
+        }
+
+        public Map<String, Float> calculateShapes(CustomMorph morph, float partialTicks)
+        {
+            float factor = this.getFactor(partialTicks);
+
+            this.temporaryShapes.clear();
+
+            for (Map.Entry<String, Float> entry : morph.shapes.entrySet())
+            {
+                Float last = this.lastShapes.get(entry.getKey());
+                Float current = entry.getValue();
+
+                this.temporaryShapes.put(entry.getKey(), this.interp.interpolate(last == null ? current.floatValue() : last.floatValue(), current.floatValue(), factor));
+            }
+
+            return this.temporaryShapes;
         }
 
         @Override

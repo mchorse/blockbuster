@@ -207,7 +207,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         CustomMorph custom = this.morph;
 
         this.bbRenderer.materials = custom.materials;
-        this.bbRenderer.shapes = custom.shapes;
+        this.bbRenderer.shapes = custom.getShapes();
         this.bbRenderer.model = ModelCustom.MODELS.get(custom.getKey());
         this.bbRenderer.texture = custom.skin == null ? custom.model.defaultTexture : custom.skin;
         this.bbRenderer.pose = custom.customPose == null ? custom.model.getPose(custom.currentPose) : custom.customPose;
@@ -287,7 +287,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
 
         private void setFactor(String name)
         {
-            Float factor = this.morph.shapes.get(name);
+            Float factor = this.morph.getShapes().get(name);
 
             this.currentShape = name;
             this.factor.setValue(factor == null ? 0 : factor.floatValue());
@@ -295,7 +295,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
 
         private void setFactor(float value)
         {
-            this.morph.shapes.put(this.currentShape, value);
+            this.morph.getShapes().put(this.currentShape, value);
         }
 
         private void setCurrentMaterialRL(ResourceLocation rl)

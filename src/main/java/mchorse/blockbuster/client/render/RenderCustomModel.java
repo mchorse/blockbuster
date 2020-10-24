@@ -9,7 +9,6 @@ import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.utils.MatrixUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -163,7 +162,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
             }
 
             model.materials = this.current.materials;
-            model.shapes = this.current.shapes;
+            model.shapes = this.current.getShapesForRendering(partialTicks);
             model.pose = pose;
             model.current = this.current;
             this.mainModel = model;
