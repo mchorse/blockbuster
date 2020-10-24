@@ -848,7 +848,10 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
                 if (key.hasKey("Name") && key.hasKey("Value"))
                 {
-                    this.shapes.add(new ShapeKey(key.getString("Name"), key.getFloat("Value")));
+                    ShapeKey shapeKey = new ShapeKey();
+
+                    shapeKey.fromNBT(key);
+                    this.shapes.add(shapeKey);
                 }
             }
         }
@@ -886,7 +889,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
             for (ShapeKey key : this.lastShapes)
             {
-                this.temporaryShapes.add(new ShapeKey(key.name, this.interp.interpolate(key.value, 0, factor)));
+                this.temporaryShapes.add(new ShapeKey(key.name, this.interp.interpolate(key.value, 0, factor), key.relative));
             }
 
             for (ShapeKey key : morph.shapes)
@@ -903,7 +906,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                     }
                 }
 
-                this.temporaryShapes.add(new ShapeKey(key.name, this.interp.interpolate(last == null ? 0 : last.value, key.value, factor)));
+                this.temporaryShapes.add(new ShapeKey(key.name, this.interp.interpolate(last == null ? 0 : last.value, key.value, factor), key.relative));
             }
 
             return this.temporaryShapes;

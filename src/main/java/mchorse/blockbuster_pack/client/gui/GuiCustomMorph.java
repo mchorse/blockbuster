@@ -233,6 +233,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
 
         public GuiListElement<ShapeKey> shapes;
         public GuiTrackpadElement factor;
+        public GuiToggleElement relative;
 
         public GuiMaterialsPanel(Minecraft mc, GuiCustomMorph editor)
         {
@@ -316,6 +317,9 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.factor = new GuiTrackpadElement(mc, (value) -> this.setFactor(value.floatValue()));
             this.factor.tooltip(IKey.lang("blockbuster.gui.builder.shape_keys_factor_tooltip"), Direction.TOP);
 
+            this.relative = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.builder.relative"), (b) -> this.shapes.getCurrentFirst().relative = b.isToggled());
+            this.relative.tooltip(IKey.lang("blockbuster.gui.builder.relative_tooltip"), Direction.TOP);
+
             this.skin.flex().relative(this).set(10, 10, 110, 20);
             this.texture.flex().relative(this.skin).set(0, 25, 110, 20);
             this.materials.flex().relative(this.texture).set(0, 25, 110, 0).hTo(this.keying.flex(), -5);
@@ -323,18 +327,21 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.picker.flex().relative(this).wh(1F, 1F);
 
             this.shapes.flex().relative(this).x(1F, -120).y(22).w(110).hTo(this.factor.flex(), -17);
-            this.factor.flex().relative(this).x(1F, -120).y(1F, -30).wh(110, 20);
+            this.factor.flex().relative(this.relative.flex()).y(-25).wh(110, 20);
+            this.relative.flex().relative(this).x(1F, -120).y(1F, -10).w(110).anchorY(1F);
 
-            this.add(this.skin, this.texture, this.keying, this.materials, this.factor, this.shapes);
+            this.add(this.skin, this.texture, this.keying, this.materials, this.relative, this.factor, this.shapes);
         }
 
         private void setFactor(ShapeKey key)
         {
             this.factor.setVisible(key != null);
+            this.relative.setVisible(key != null);
 
             if (key != null)
             {
                 this.factor.setValue(key.value);
+                this.relative.toggled(key.relative);
             }
         }
 

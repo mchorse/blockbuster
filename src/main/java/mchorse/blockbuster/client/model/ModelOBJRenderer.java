@@ -344,14 +344,47 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
                     for (int i = 0, c = this.temporary.triangles; i < c; i++)
                     {
-                        this.temporary.posData[i * 3] = Interpolations.lerp(this.temporary.posData[i * 3], mesh.posData[i * 3], factor);
-                        this.temporary.posData[i * 3 + 1] = Interpolations.lerp(this.temporary.posData[i * 3 + 1], mesh.posData[i * 3 + 1], factor);
-                        this.temporary.posData[i * 3 + 2] = Interpolations.lerp(this.temporary.posData[i * 3 + 2], mesh.posData[i * 3 + 2], factor);
-                        this.temporary.texData[i * 2] = Interpolations.lerp(this.temporary.texData[i * 2], mesh.texData[i * 2], factor);
-                        this.temporary.texData[i * 2 + 1] = Interpolations.lerp(this.temporary.texData[i * 2 + 1], mesh.texData[i * 2 + 1], factor);
-                        this.temporary.normData[i * 3] = Interpolations.lerp(this.temporary.normData[i * 3], mesh.normData[i * 3], factor);
-                        this.temporary.normData[i * 3 + 1] = Interpolations.lerp(this.temporary.normData[i * 3 + 1], mesh.normData[i * 3 + 1], factor);
-                        this.temporary.normData[i * 3 + 2] = Interpolations.lerp(this.temporary.normData[i * 3 + 2], mesh.normData[i * 3 + 2], factor);
+                        float x;
+                        float y;
+                        float z;
+                        float u;
+                        float v;
+                        float nx;
+                        float ny;
+                        float nz;
+
+                        if (key.relative)
+                        {
+                            /* final = temporary + lerp(initial, current, x) - initial */
+                            x = this.temporary.posData[i * 3] + Interpolations.lerp(this.mesh.posData[i * 3], mesh.posData[i * 3], factor) - this.mesh.posData[i * 3];
+                            y = this.temporary.posData[i * 3 + 1] + Interpolations.lerp(this.mesh.posData[i * 3 + 1], mesh.posData[i * 3 + 1], factor) - this.mesh.posData[i * 3 + 1];
+                            z = this.temporary.posData[i * 3 + 2] + Interpolations.lerp(this.mesh.posData[i * 3 + 2], mesh.posData[i * 3 + 2], factor) - this.mesh.posData[i * 3 + 2];
+                            u = this.temporary.texData[i * 2] + Interpolations.lerp(this.mesh.texData[i * 2], mesh.texData[i * 2], factor) - this.mesh.texData[i * 2];
+                            v = this.temporary.texData[i * 2 + 1] + Interpolations.lerp(this.mesh.texData[i * 2 + 1], mesh.texData[i * 2 + 1], factor) - this.mesh.texData[i * 2 + 1];
+                            nx = this.temporary.normData[i * 3] + Interpolations.lerp(this.mesh.normData[i * 3], mesh.normData[i * 3], factor) - this.mesh.normData[i * 3];
+                            ny = this.temporary.normData[i * 3 + 1] + Interpolations.lerp(this.mesh.normData[i * 3 + 1], mesh.normData[i * 3 + 1], factor) - this.mesh.normData[i * 3 + 1];
+                            nz = this.temporary.normData[i * 3 + 2] + Interpolations.lerp(this.mesh.normData[i * 3 + 2], mesh.normData[i * 3 + 2], factor) - this.mesh.normData[i * 3 + 2];
+                        }
+                        else
+                        {
+                            x = Interpolations.lerp(this.temporary.posData[i * 3], mesh.posData[i * 3], factor);
+                            y = Interpolations.lerp(this.temporary.posData[i * 3 + 1], mesh.posData[i * 3 + 1], factor);
+                            z = Interpolations.lerp(this.temporary.posData[i * 3 + 2], mesh.posData[i * 3 + 2], factor);
+                            u = Interpolations.lerp(this.temporary.texData[i * 2], mesh.texData[i * 2], factor);
+                            v = Interpolations.lerp(this.temporary.texData[i * 2 + 1], mesh.texData[i * 2 + 1], factor);
+                            nx = Interpolations.lerp(this.temporary.normData[i * 3], mesh.normData[i * 3], factor);
+                            ny = Interpolations.lerp(this.temporary.normData[i * 3 + 1], mesh.normData[i * 3 + 1], factor);
+                            nz = Interpolations.lerp(this.temporary.normData[i * 3 + 2], mesh.normData[i * 3 + 2], factor);
+                        }
+
+                        this.temporary.posData[i * 3] = x;
+                        this.temporary.posData[i * 3 + 1] = y;
+                        this.temporary.posData[i * 3 + 2] = z;
+                        this.temporary.texData[i * 2] = u;
+                        this.temporary.texData[i * 2 + 1] = v;
+                        this.temporary.normData[i * 3] = nx;
+                        this.temporary.normData[i * 3 + 1] = ny;
+                        this.temporary.normData[i * 3 + 2] = nz;
                     }
                 }
 
