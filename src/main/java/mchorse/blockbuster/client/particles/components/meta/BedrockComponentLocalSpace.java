@@ -13,7 +13,9 @@ public class BedrockComponentLocalSpace extends BedrockComponentBase implements 
 {
 	public boolean position;
 	public boolean rotation;
-
+	public boolean direction;
+	public boolean gravity;
+	
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
 		if (!elem.isJsonObject()) return super.fromJson(elem, parser);
@@ -22,7 +24,9 @@ public class BedrockComponentLocalSpace extends BedrockComponentBase implements 
 
 		if (element.has("position")) this.position = element.get("position").getAsBoolean();
 		if (element.has("rotation")) this.rotation = element.get("rotation").getAsBoolean();
-
+		if (element.has("direction")) this.direction = element.get("direction").getAsBoolean();
+		if (element.has("gravity")) this.gravity = element.get("gravity").getAsBoolean();
+		
 		return super.fromJson(element, parser);
 	}
 
@@ -33,7 +37,9 @@ public class BedrockComponentLocalSpace extends BedrockComponentBase implements 
 
 		if (this.position) object.addProperty("position", true);
 		if (this.rotation) object.addProperty("rotation", true);
-
+		if (this.direction) object.addProperty("direction", true);
+		if (this.gravity) object.addProperty("gravity", true);
+		
 		return object;
 	}
 
@@ -42,7 +48,9 @@ public class BedrockComponentLocalSpace extends BedrockComponentBase implements 
 	{
 		particle.relativePosition = this.position;
 		particle.relativeRotation = this.rotation;
-
+		particle.relativeDirection = this.direction;
+		particle.gravity = this.gravity;
+		
 		particle.setupMatrix(emitter);
 	}
 
