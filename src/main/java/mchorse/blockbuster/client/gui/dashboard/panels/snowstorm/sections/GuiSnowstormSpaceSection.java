@@ -11,7 +11,9 @@ public class GuiSnowstormSpaceSection extends GuiSnowstormComponentSection<Bedro
 {
 	public GuiToggleElement position;
 	public GuiToggleElement rotation;
-
+	public GuiToggleElement direction; //local direction for physical accurate systems
+	public GuiToggleElement gravity;
+	
 	public GuiSnowstormSpaceSection(Minecraft mc, GuiSnowstorm parent)
 	{
 		super(mc, parent);
@@ -27,8 +29,18 @@ public class GuiSnowstormSpaceSection extends GuiSnowstormComponentSection<Bedro
 			this.component.rotation = b.isToggled();
 			this.parent.dirty();
 		});
-
-		this.fields.add(this.position, this.rotation);
+		this.direction = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.space.direction"), (b) ->
+		{
+			this.component.direction = b.isToggled();
+			this.parent.dirty();
+		});
+		this.gravity = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.space.gravity"), (b) ->
+		{
+			this.component.gravity = b.isToggled();
+			this.parent.dirty();
+		});
+		
+		this.fields.add(this.position, this.rotation, this.direction, this.gravity);
 	}
 
 	@Override
@@ -48,5 +60,7 @@ public class GuiSnowstormSpaceSection extends GuiSnowstormComponentSection<Bedro
 	{
 		this.position.toggled(this.component.position);
 		this.rotation.toggled(this.component.rotation);
+		this.direction.toggled(this.component.direction);
+		this.gravity.toggled(this.component.gravity);
 	}
 }
