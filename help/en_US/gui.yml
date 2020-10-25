@@ -380,7 +380,9 @@ blockbuster.gui:
 
             position: Local position
             rotation: Local rotation
-
+            direction: Local direction
+            gravity: gravity
+            
         initialization:
             title: Initialization expressions
 
