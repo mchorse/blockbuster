@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<BedrockComponentMotionCollision>
 {
 	public GuiToggleElement enabled;
+	public GuiToggleElement realisticCollision;
 	public GuiTrackpadElement drag;
 	public GuiTrackpadElement bounciness;
 	public GuiTrackpadElement radius;
@@ -24,6 +25,11 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		super(mc, parent);
 
 		this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.enabled"), (b) -> this.parent.dirty());
+		this.realisticCollision = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.realisticCollision"), (b) ->
+		{
+			this.component.realisticCollision = b.isToggled();
+			this.parent.dirty();
+		});
 		this.drag = new GuiTrackpadElement(mc, (value) ->
 		{
 			this.component.collissionDrag = value.floatValue();
@@ -48,7 +54,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 			this.parent.dirty();
 		});
 
-		this.fields.add(this.enabled, this.drag, this.bounciness, this.radius, this.expire);
+		this.fields.add(this.enabled, this.realisticCollision, this.drag, this.bounciness, this.radius, this.expire);
 	}
 
 	@Override
@@ -75,6 +81,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 	protected void fillData()
 	{
 		this.enabled.toggled(this.wasPresent);
+		this.realisticCollision.toggled(this.component.realisticCollision);
 		this.drag.setValue(this.component.collissionDrag);
 		this.bounciness.setValue(this.component.bounciness);
 		this.radius.setValue(this.component.radius);
