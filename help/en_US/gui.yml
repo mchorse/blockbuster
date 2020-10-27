@@ -390,6 +390,9 @@ blockbuster.gui:
 
             position: Local position
             rotation: Local rotation
+            direction: Local direction
+            acceleration: Local acceleration
+            gravity: gravity
 
         initialization:
             title: Initialization expressions
@@ -516,6 +519,7 @@ blockbuster.gui:
             title: Collision
 
             enabled: Enabled
+            realisticCollision: realistic Vector Collision
             drag: Collision drag adds a drag (slowdown) after particle's collision with blocks in the world
             bounciness: Bounciness multiplies particle's acceleration after collision
             radius: Radius of particle's hitbox
