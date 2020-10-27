@@ -5,6 +5,8 @@ import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.mclib.McLib;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.resources.MultiResourceLocation;
+import mchorse.mclib.utils.resources.MultiskinThread;
+import mchorse.mclib.utils.resources.TextureProcessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
@@ -49,8 +51,6 @@ public class ModelExtrudedLayer
 
     public static void forceReload(ResourceLocation location, BufferedImage image)
     {
-        clearByTexture(location);
-
         CachedImage cached = new CachedImage(image);
 
         cached.timer = Integer.MAX_VALUE;
@@ -136,6 +136,8 @@ public class ModelExtrudedLayer
                 /* Multi-threaded multi-skins freak out when gerResource(ResourceLocation) gets called */
                 if (texture instanceof MultiResourceLocation && McLib.multiskinMultiThreaded.get())
                 {
+                    MultiskinThread.add((MultiResourceLocation) texture);
+
                     return;
                 }
 
