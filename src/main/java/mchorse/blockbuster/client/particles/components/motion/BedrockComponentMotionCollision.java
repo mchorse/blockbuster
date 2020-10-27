@@ -23,6 +23,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 	public float bounciness = 1;
 	public float radius = 0.01F;
 	public boolean expireOnImpact;
+	public boolean realisticCollision;
 
 	/* Runtime options */
 	public boolean json;
@@ -42,7 +43,8 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		if (element.has("coefficient_of_restitution")) this.bounciness = element.get("coefficient_of_restitution").getAsFloat();
 		if (element.has("collision_radius")) this.radius = element.get("collision_radius").getAsFloat();
 		if (element.has("expire_on_contact")) this.expireOnImpact = element.get("expire_on_contact").getAsBoolean();
-
+		if (element.has("realisticCollision")) this.realisticCollision = element.get("realisticCollision").getAsBoolean();
+		
 		return super.fromJson(element, parser);
 	}
 
@@ -57,6 +59,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		}
 
 		if (!MolangExpression.isOne(this.enabled)) object.add("enabled", this.enabled.toJson());
+		if (this.realisticCollision) object.addProperty("realisticCollision", true);
 		if (this.collissionDrag != 0) object.addProperty("collision_drag", this.collissionDrag);
 		if (this.bounciness != 1) object.addProperty("coefficient_of_restitution", this.bounciness);
 		if (this.radius != 0.01F) object.addProperty("collision_radius", this.radius);
@@ -143,19 +146,22 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
 				if (d0 != y)
 				{
-					particle.accelerationFactor.y *= -this.bounciness;
+					if(realisticCollision) particle.speed.y = -particle.speed.y*this.bounciness;
+					else particle.accelerationFactor.y *= -this.bounciness;
 					now.y += d0 < y ? r : -r;
 				}
 
 				if (origX != x)
 				{
-					particle.accelerationFactor.x *= -this.bounciness;
+					if(realisticCollision) particle.speed.x = -particle.speed.x*this.bounciness;
+					else particle.accelerationFactor.x *= -this.bounciness;
 					now.x += origX < x ? r : -r;
 				}
 
 				if (origZ != z)
 				{
-					particle.accelerationFactor.z *= -this.bounciness;
+					if(realisticCollision) particle.speed.z = -particle.speed.z*this.bounciness;
+					else particle.accelerationFactor.z *= -this.bounciness;
 					now.z += origZ < z ? r : -r;
 				}
 
