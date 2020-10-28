@@ -151,9 +151,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				
 				if (d0 != y)
 				{
-					if(realisticCollision) {
+					if(realisticCollision && this.bounciness!=0) {
 						particle.speed.y = -particle.speed.y*this.bounciness;
-						if(this.randomBounciness!=0) {
+						if(this.randomBounciness!=0 && ((int)particle.speed.y)!=0) {
 							randomBounciness(particle.speed, 'y');
 						}
 					}
@@ -163,9 +163,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
 				if (origX != x)
 				{
-					if(realisticCollision) {
+					if(realisticCollision && this.bounciness!=0) {
 						particle.speed.x = -particle.speed.x*this.bounciness;
-						if(this.randomBounciness!=0) {
+						if(this.randomBounciness!=0 && ((int)particle.speed.x)!=0) {
 							randomBounciness(particle.speed, 'x');
 						}
 					}
@@ -175,9 +175,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
 				if (origZ != z)
 				{
-					if(realisticCollision) {
+					if(realisticCollision && this.bounciness!=0) {
 						particle.speed.z = -particle.speed.z*this.bounciness;
-						if(this.randomBounciness!=0) {
+						if(this.randomBounciness!=0 && ((int)particle.speed.z)!=0) {
 							randomBounciness(particle.speed, 'z');
 						}
 					}
@@ -204,14 +204,17 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 					vector.x += vector.x<0 ? -random1 : random1;
 					vector.y += random2;
 					vector.z += random3;
+					break;
 				case 'y':
 					vector.y += vector.y<0 ? -random1 : random1;
 					vector.x += random2;
 					vector.z += random3;
+					break;
 				case 'z':
 					vector.z += vector.z<0 ? -random1 : random1;
 					vector.y += random2;
 					vector.x += random3;
+					break;
 			}
 			vector.scale(prevSpeedLength/vector.length()); //scale back to original length
 		}
