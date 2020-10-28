@@ -15,6 +15,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 	public GuiToggleElement realisticCollision;
 	public GuiTrackpadElement drag;
 	public GuiTrackpadElement bounciness;
+	public GuiTrackpadElement randomBounciness;
 	public GuiTrackpadElement radius;
 	public GuiToggleElement expire;
 
@@ -42,6 +43,12 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 			this.parent.dirty();
 		});
 		this.bounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.bounciness"));
+		this.randomBounciness = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.component.randomBounciness = (value<0) ? -value.floatValue() : value.floatValue();
+			this.parent.dirty();
+		});
+		this.randomBounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.randomBounciness"));
 		this.radius = new GuiTrackpadElement(mc, (value) ->
 		{
 			this.component.radius = value.floatValue();
@@ -54,7 +61,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 			this.parent.dirty();
 		});
 
-		this.fields.add(this.enabled, this.realisticCollision, this.drag, this.bounciness, this.radius, this.expire);
+		this.fields.add(this.enabled, this.realisticCollision, this.drag, this.bounciness, this.randomBounciness, this.radius, this.expire);
 	}
 
 	@Override
@@ -84,6 +91,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		this.realisticCollision.toggled(this.component.realisticCollision);
 		this.drag.setValue(this.component.collissionDrag);
 		this.bounciness.setValue(this.component.bounciness);
+		this.randomBounciness.setValue(this.component.randomBounciness);
 		this.radius.setValue(this.component.radius);
 		this.expire.toggled(this.component.expireOnImpact);
 	}
