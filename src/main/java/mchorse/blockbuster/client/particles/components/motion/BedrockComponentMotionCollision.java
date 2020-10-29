@@ -153,7 +153,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				{
 					if(realisticCollision && this.bounciness!=0) {
 						particle.speed.y = -particle.speed.y*this.bounciness;
-						if(this.randomBounciness!=0 && ((int)particle.speed.y)!=0) {
+						if(this.randomBounciness!=0 && Math.round(particle.speed.y)!=0) {
 							randomBounciness(particle.speed, 'y');
 						}
 					}
@@ -165,7 +165,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				{
 					if(realisticCollision && this.bounciness!=0) {
 						particle.speed.x = -particle.speed.x*this.bounciness;
-						if(this.randomBounciness!=0 && ((int)particle.speed.x)!=0) {
+						if(this.randomBounciness!=0 && Math.round(particle.speed.x)!=0) {
 							randomBounciness(particle.speed, 'x');
 						}
 					}
@@ -177,7 +177,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				{
 					if(realisticCollision && this.bounciness!=0) {
 						particle.speed.z = -particle.speed.z*this.bounciness;
-						if(this.randomBounciness!=0 && ((int)particle.speed.z)!=0) {
+						if(this.randomBounciness!=0 && Math.round(particle.speed.z)!=0) {
 							randomBounciness(particle.speed, 'z');
 						}
 					}
@@ -186,7 +186,8 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				}
 
 				particle.position.set(now);
-				particle.dragFactor += this.collissionDrag;
+				//only apply drag when speed is almost not zero and randombounciness is off...prevent particles from accelerating away
+				if(!(this.randomBounciness!=0 && particle.speed.length()<=0.55)) particle.dragFactor += this.collissionDrag;
 			}
 		}
 	}
