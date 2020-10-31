@@ -1,3 +1,11 @@
+## Version 2.1.1
+
+This small patch update features texture coordinates preview in the model editor, a bug fix for extruded models and updated the tutorial link to the new version of tutorial series.
+
+* Added texture coordinates preview to the model editor panel
+* Changed the tutorial link to new Blockbuster academy (2020) playlist
+* Fixed extruded layers not working from time to time with asynchronous multi-skin
+
 ## Version 2.1
 
 This update is focused on simplifying some aspects of recording actors, and editing the player recordings. This update features a game changer feature called in-game audio synchronization. Director blocks' functionality was removed.
