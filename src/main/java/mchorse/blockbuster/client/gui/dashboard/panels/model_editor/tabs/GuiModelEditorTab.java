@@ -18,6 +18,11 @@ public abstract class GuiModelEditorTab extends GuiElement
         this.panel = panel;
     }
 
+    public GuiModelEditorPanel getPanel()
+    {
+        return this.panel;
+    }
+
     @Override
     public void draw(GuiContext context)
     {

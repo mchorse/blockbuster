@@ -5,10 +5,12 @@ import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelLimb.ArmorSlot;
 import mchorse.blockbuster.api.ModelLimb.Holding;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTextureCanvas;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -39,9 +41,11 @@ public class GuiModelLimbs extends GuiModelEditorTab
     /* First category */
     private GuiThreeElement size;
     private GuiTrackpadElement sizeOffset;
-    private GuiTwoElement texture;
+    private GuiButtonElement texture;
     private GuiThreeElement anchor;
     private GuiThreeElement origin;
+
+    private GuiTextureCanvas textureEditor;
 
     /* Second category */
     private GuiColorElement color;
@@ -75,6 +79,9 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.scroll.scroll.scrollSpeed = 15;
         this.scroll.flex().relative(this.limbs).y(1F).w(1F).hTo(this.area, 1F).column(5).vertical().stretch().scroll().height(20).padding(10);
 
+        this.textureEditor = new GuiTextureCanvas(mc, this);
+        this.textureEditor.flex().relative(this.limbs).y(1F).w(1F).hTo(this.area, 1F);
+
         /* First category */
         this.size = new GuiThreeElement(mc, (values) ->
         {
@@ -89,13 +96,11 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.limb.sizeOffset = value.floatValue();
             this.panel.rebuildModel();
         });
-        this.texture = new GuiTwoElement(mc, (values) ->
+        this.texture = new GuiButtonElement(mc, IKey.comp(IKey.lang("blockbuster.gui.edit"), IKey.str("...")), (b) ->
         {
-            this.panel.limb.texture[0] = values[0].intValue();
-            this.panel.limb.texture[1] = values[1].intValue();
-            this.panel.rebuildModel();
+            this.textureEditor.toggleVisible();
+            this.textureEditor.setSize(this.panel.model.texture[0], this.panel.model.texture[1]);
         });
-        this.texture.setLimit(0, 8192, true);
         this.anchor = new GuiThreeElement(mc, (values) ->
         {
             this.panel.limb.anchor[0] = values[0].floatValue();
@@ -144,6 +149,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.limb.mirror = b.isToggled();
             this.panel.rebuildModel();
         });
+        this.mirror.flex().h(20);
         this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.lighting"), false, (b) ->
         {
             this.panel.limb.lighting = b.isToggled();
@@ -213,7 +219,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size")).background(0x88000000), this.size);
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size_offset")).background(0x88000000), this.sizeOffset);
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.texture"), 24).anchor(0, 1).background(0x88000000), this.texture, this.mirror);
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.texture"), 24).anchor(0, 1).background(0x88000000), Elements.row(mc, 5, 0, 20, this.texture, this.mirror));
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.anchor"), 24).anchor(0, 1).background(0x88000000), this.anchor);
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.origin")).background(0x88000000), this.origin);
 
@@ -246,7 +252,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         sidebar.flex().relative(this).x(1F).h(20).anchorX(1F).row(0).resize();
 
-        this.add(sidebar, this.limbs, this.scroll);
+        this.add(sidebar, this.limbs, this.scroll, this.textureEditor);
     }
 
     private void addLimb()
@@ -358,13 +364,17 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.limbs.clear();
         this.limbs.add(model.limbs.keySet());
         this.limbs.sort();
+
+        this.textureEditor.setVisible(false);
     }
 
     public void fillLimbData(ModelLimb limb)
     {
+        this.textureEditor.x.setValue(this.panel.limb.texture[0]);
+        this.textureEditor.y.setValue(this.panel.limb.texture[0]);
+
         this.size.setValues(limb.size[0], limb.size[1], limb.size[2]);
         this.sizeOffset.setValue(limb.sizeOffset);
-        this.texture.setValues(limb.texture[0], limb.texture[1]);
         this.anchor.setValues(limb.anchor[0], limb.anchor[1], limb.anchor[2]);
         this.origin.setValues(limb.origin[0], limb.origin[1], limb.origin[2]);
         this.color.picker.setColor(limb.color[0], limb.color[1], limb.color[2], limb.opacity);
