@@ -100,7 +100,7 @@ public class Blockbuster
     @SideOnly(Side.CLIENT)
     public static String TUTORIAL_URL()
     {
-        return langOrDefault("blockbuster.gui.links.tutorial", "https://www.youtube.com/watch?v=vo8fquY-TUM&list=PLLnllO8nnzE-LIHZiaq0-ZAZiDO82K1I9&index=2");
+        return langOrDefault("blockbuster.gui.links.tutorial", "https://www.youtube.com/watch?v=qDPEjf2TxAc&list=PLLnllO8nnzE-xmqdymsLpxnXTaAbyIVjM&index=2");
     }
 
     @SideOnly(Side.CLIENT)
