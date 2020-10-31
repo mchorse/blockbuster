@@ -371,7 +371,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
     public void fillLimbData(ModelLimb limb)
     {
         this.textureEditor.x.setValue(this.panel.limb.texture[0]);
-        this.textureEditor.y.setValue(this.panel.limb.texture[0]);
+        this.textureEditor.y.setValue(this.panel.limb.texture[1]);
 
         this.size.setValues(limb.size[0], limb.size[1], limb.size[2]);
         this.sizeOffset.setValue(limb.sizeOffset);
