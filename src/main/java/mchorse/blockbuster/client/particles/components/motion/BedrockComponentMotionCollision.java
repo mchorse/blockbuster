@@ -15,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
+
 import java.util.List;
 
 public class BedrockComponentMotionCollision extends BedrockComponentBase implements IComponentParticleUpdate
@@ -23,10 +24,18 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 	public float collissionDrag = 0;
 	public float bounciness = 1;
 	public float randomBounciness = 0;
-	public float randomXZfactor = 0.25f; //for random bounciness - x z vector
 	public float radius = 0.01F;
 	public boolean expireOnImpact;
 	public boolean realisticCollision;
+	
+	/*
+	 * this is used to estimate whether an object is only bouncing or lying on a surface
+	 * 
+	 * NOTE: doesn't always work - specifically sometimes with realistic collision. 
+	 * I haven't found a solution, to stop the particles from sometimes 
+	 * bouncing slightly, without changing the whole calculation...
+	 */
+	public Vector3f collisionTime = new Vector3f();
 
 	/* Runtime options */
 	public boolean json;
@@ -152,73 +161,90 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				if (d0 != y)
 				{
 					if(realisticCollision && this.bounciness!=0) {
-						particle.speed.y = -particle.speed.y*this.bounciness;
-						if(this.randomBounciness!=0 && Math.round(particle.speed.y)!=0) {
-							randomBounciness(particle.speed, 'y');
-						}
+						if(this.collisionTime.y!=(particle.age-1)) particle.speed.y = -particle.speed.y*this.bounciness;
 					}
 					else particle.accelerationFactor.y *= -this.bounciness;
+					
+					if(this.randomBounciness!=0 && Math.round(particle.speed.y)!=0) {
+						if(this.collisionTime.y!=(particle.age-1)) particle.speed = randomBounciness(particle.speed, 'y');
+					}
+					
+					this.collisionTime.y = particle.age;
 					now.y += d0 < y ? r : -r;
 				}
-
+				
 				if (origX != x)
 				{
 					if(realisticCollision && this.bounciness!=0) {
-						particle.speed.x = -particle.speed.x*this.bounciness;
-						if(this.randomBounciness!=0 && Math.round(particle.speed.x)!=0) {
-							randomBounciness(particle.speed, 'x');
-						}
+						if(this.collisionTime.x!=(particle.age-1)) particle.speed.x = -particle.speed.x*this.bounciness;
 					}
 					else particle.accelerationFactor.x *= -this.bounciness;
+					
+					if(this.randomBounciness!=0 && Math.round(particle.speed.x)!=0) {
+						if(this.collisionTime.x!=(particle.age-1)) particle.speed = randomBounciness(particle.speed, 'x');
+					}
+					
+					this.collisionTime.x = particle.age;
 					now.x += origX < x ? r : -r;
 				}
 
 				if (origZ != z)
 				{
 					if(realisticCollision && this.bounciness!=0) {
-						particle.speed.z = -particle.speed.z*this.bounciness;
-						if(this.randomBounciness!=0 && Math.round(particle.speed.z)!=0) {
-							randomBounciness(particle.speed, 'z');
-						}
+						if(this.collisionTime.z!=(particle.age-1)) particle.speed.z = -particle.speed.z*this.bounciness;
 					}
 					else particle.accelerationFactor.z *= -this.bounciness;
+					
+					if(this.randomBounciness!=0 && Math.round(particle.speed.z)!=0) {
+						if(this.collisionTime.z!=(particle.age-1)) particle.speed = randomBounciness(particle.speed, 'z');
+					}
+					
+					this.collisionTime.z = particle.age;
 					now.z += origZ < z ? r : -r;
 				}
 
 				particle.position.set(now);
-				//only apply drag when speed is almost not zero and randombounciness is off...prevent particles from accelerating away
-				if(!(this.randomBounciness!=0 && particle.speed.length()<=0.55)) particle.dragFactor += this.collissionDrag;
+				/*only apply drag when speed is almost not zero and randombounciness and realisticCollision are off
+				prevent particles from accelerating away when randomBounciness is active*/
+				if(!((this.randomBounciness!=0 || !this.realisticCollision) && Math.round(particle.speed.length())!=0)) particle.dragFactor += this.collissionDrag;
 			}
 		}
 	}
 	
-	public void randomBounciness(Vector3f vector, char component) {
+	public Vector3f randomBounciness(Vector3f vector0, char component) {
 		if(this.randomBounciness!=0 && (component=='x' || component=='y' || component=='z')) {
-			float prevSpeedLength = vector.length();
+			Vector3f vector = new Vector3f(vector0);
+			float randomfactor = 0.25f; //scale down the vector components not involved in the collision reflection
+			float prevLength = vector.length();
 			float max = this.randomBounciness*0.1f; //scaled down to 1/10
 			float min = -max;
 			float random1 = (float) Math.random()*max;
-			float random2 = (float) Math.random()*(max*this.randomXZfactor-min*this.randomXZfactor)+min*this.randomXZfactor;
-			float random3 = (float) Math.random()*(max*this.randomXZfactor-min*this.randomXZfactor)+min*this.randomXZfactor;
+			float random2 = (float) Math.random()*(max*randomfactor-min*randomfactor)+min*randomfactor;
+			float random3 = (float) Math.random()*(max*randomfactor-min*randomfactor)+min*randomfactor;
 			switch(component) {
 				case 'x':
-					vector.x += vector.x<0 ? -random1 : random1;
+					if(bounciness!=0) vector.x += vector.x<0 ? -random1 : random1;
 					vector.y += random2;
 					vector.z += random3;
 					break;
 				case 'y':
-					vector.y += vector.y<0 ? -random1 : random1;
+					if(bounciness!=0) vector.y += vector.y<0 ? -random1 : random1;
 					vector.x += random2;
 					vector.z += random3;
 					break;
 				case 'z':
-					vector.z += vector.z<0 ? -random1 : random1;
+					if(bounciness!=0) vector.z += vector.z<0 ? -random1 : random1;
 					vector.y += random2;
 					vector.x += random3;
 					break;
 			}
-			vector.scale(prevSpeedLength/vector.length()); //scale back to original length
+			vector.scale(prevLength/vector.length()); //scale back to original length
+			return vector;
 		}
+		else if(this.randomBounciness!=0) { //component wrong input
+			throw new IllegalArgumentException("Invalid component input value: "+component);
+		}
+		return null;
 	}
 
 	@Override
