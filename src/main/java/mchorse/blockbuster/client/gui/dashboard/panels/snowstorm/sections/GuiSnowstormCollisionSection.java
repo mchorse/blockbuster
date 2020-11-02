@@ -115,8 +115,8 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		this.drag.setValue(this.component.collissionDrag);
 		this.bounciness.setValue(this.component.bounciness);
 		this.randomBounciness.setValue(this.component.randomBounciness);
-		//this.splitParticle.setValue(this.component.splitParticleCount);
-		//this.splitParticleSpeedThreshold.setValue(this.component.splitParticleSpeedThreshold);
+		this.splitParticle.setValue(this.component.splitParticleCount);
+		this.splitParticleSpeedThreshold.setValue(this.component.splitParticleSpeedThreshold);
 		this.radius.setValue(this.component.radius);
 		this.expire.toggled(this.component.expireOnImpact);
 	}
