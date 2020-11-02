@@ -29,12 +29,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 public class BedrockEmitter
 {
 	public BedrockScheme scheme;
 	public List<BedrockParticle> particles = new ArrayList<BedrockParticle>();
+	public List<BedrockParticle> splitParticles = new ArrayList<BedrockParticle>();
 	public Map<String, IValue> variables;
 
 	public EntityLivingBase target;
@@ -274,17 +276,27 @@ public class BedrockEmitter
 	 */
 	private void updateParticles()
 	{
-		Iterator<BedrockParticle> it = this.particles.iterator();
+		ListIterator<BedrockParticle> it = this.particles.listIterator();
 
 		while (it.hasNext())
 		{
 			BedrockParticle particle = it.next();
 
 			this.updateParticle(particle);
-
+			
 			if (particle.dead)
 			{
 				it.remove();
+			}
+		}
+		if(!this.splitParticles.isEmpty()) 
+		{
+			ListIterator<BedrockParticle> it1 = this.splitParticles.listIterator();
+			while (it1.hasNext())
+			{
+				BedrockParticle splitParticle = it1.next();
+				it.add(splitParticle);
+				it1.remove();
 			}
 		}
 	}
@@ -320,7 +332,7 @@ public class BedrockEmitter
 	/**
 	 * Create a new particle
 	 */
-	private BedrockParticle createParticle(boolean forceRelative)
+	public BedrockParticle createParticle(boolean forceRelative)
 	{
 		BedrockParticle particle = new BedrockParticle();
 
