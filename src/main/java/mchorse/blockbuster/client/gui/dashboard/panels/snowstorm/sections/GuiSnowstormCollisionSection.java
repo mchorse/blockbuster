@@ -65,8 +65,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		
 		this.splitParticle = new GuiTrackpadElement(mc, (value) ->
 		{
-			this.component.splitParticleCount = (int)Math.round((value<0) ? -value : value);
-			//if(value!=0) this.fields.add(this.splitParticleSpeedThreshold);
+			this.component.splitParticleCount = (int)Math.abs(value);
 			this.parent.dirty();
 		});
 		this.splitParticle.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.splitParticle"));
@@ -84,7 +83,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 			this.parent.dirty();
 		});
 
-		this.fields.add(this.enabled, this.realisticCollision, this.drag, this.bounciness, this.randomBounciness, this.splitParticle, this.radius, this.expire);
+		this.fields.add(this.enabled, this.realisticCollision, this.drag, this.bounciness, this.randomBounciness, this.splitParticle,  this.splitParticleSpeedThreshold, this.radius, this.expire);
 	}
 
 	@Override

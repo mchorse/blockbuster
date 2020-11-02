@@ -291,11 +291,11 @@ public class BedrockEmitter
 		}
 		if(!this.splitParticles.isEmpty()) 
 		{
-			ListIterator<BedrockParticle> it1 = this.splitParticles.listIterator();
+			Iterator<BedrockParticle> it1 = this.splitParticles.iterator();
 			while (it1.hasNext())
 			{
 				BedrockParticle splitParticle = it1.next();
-				it.add(splitParticle);
+				this.particles.add(splitParticle);
 				it1.remove();
 			}
 		}
