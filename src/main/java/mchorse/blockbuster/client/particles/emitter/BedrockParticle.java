@@ -24,6 +24,15 @@ public class BedrockParticle
 	public boolean relativeAcceleration;
 	public boolean gravity; //works best with relativeDirection
 	public boolean manual;
+	
+	/*
+	 * this is used to estimate whether an object is only bouncing or lying on a surface
+	 * 
+	 * NOTE: doesn't always work - specifically sometimes with realistic collision. 
+	 * I haven't found a solution, to stop the particles from sometimes 
+	 * bouncing slightly, without changing the whole calculation...
+	 */
+	public Vector3f collisionTime = new Vector3f();
 
 	/* Rotation */
 	public float rotation;
