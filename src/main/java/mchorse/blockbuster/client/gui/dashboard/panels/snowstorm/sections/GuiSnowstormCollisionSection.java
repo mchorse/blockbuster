@@ -16,6 +16,8 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 	public GuiTrackpadElement drag;
 	public GuiTrackpadElement bounciness;
 	public GuiTrackpadElement randomBounciness;
+	public GuiTrackpadElement splitParticle; //split particle into n particles on collision
+	public GuiTrackpadElement splitParticleSpeedThreshold;
 	public GuiTrackpadElement radius;
 	public GuiToggleElement expire;
 
@@ -26,42 +28,63 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		super(mc, parent);
 
 		this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.enabled"), (b) -> this.parent.dirty());
+		
 		this.realisticCollision = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.realisticCollision"), (b) ->
 		{
 			this.component.realisticCollision = b.isToggled();
 			this.parent.dirty();
 		});
+		
 		this.drag = new GuiTrackpadElement(mc, (value) ->
 		{
 			this.component.collissionDrag = value.floatValue();
 			this.parent.dirty();
 		});
 		this.drag.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.drag"));
+		
 		this.bounciness = new GuiTrackpadElement(mc, (value) ->
 		{
 			this.component.bounciness = value.floatValue();
 			this.parent.dirty();
 		});
 		this.bounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.bounciness"));
+		
 		this.randomBounciness = new GuiTrackpadElement(mc, (value) ->
 		{
 			this.component.randomBounciness = (value<0) ? -value.floatValue() : value.floatValue();
 			this.parent.dirty();
 		});
 		this.randomBounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.randomBounciness"));
+		
+		this.splitParticleSpeedThreshold = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.component.splitParticleSpeedThreshold = value.floatValue();
+			this.parent.dirty();
+		});
+		this.splitParticleSpeedThreshold.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.splitParticleSpeedThreshold"));
+		
+		this.splitParticle = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.component.splitParticleCount = (int)Math.round((value<0) ? -value : value);
+			//if(value!=0) this.fields.add(this.splitParticleSpeedThreshold);
+			this.parent.dirty();
+		});
+		this.splitParticle.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.splitParticle"));
+		
 		this.radius = new GuiTrackpadElement(mc, (value) ->
 		{
 			this.component.radius = value.floatValue();
 			this.parent.dirty();
 		});
 		this.radius.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.radius"));
+		
 		this.expire = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.expire"), (b) ->
 		{
 			this.component.expireOnImpact = b.isToggled();
 			this.parent.dirty();
 		});
 
-		this.fields.add(this.enabled, this.realisticCollision, this.drag, this.bounciness, this.randomBounciness, this.radius, this.expire);
+		this.fields.add(this.enabled, this.realisticCollision, this.drag, this.bounciness, this.randomBounciness, this.splitParticle, this.radius, this.expire);
 	}
 
 	@Override
@@ -92,6 +115,8 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		this.drag.setValue(this.component.collissionDrag);
 		this.bounciness.setValue(this.component.bounciness);
 		this.randomBounciness.setValue(this.component.randomBounciness);
+		//this.splitParticle.setValue(this.component.splitParticleCount);
+		//this.splitParticleSpeedThreshold.setValue(this.component.splitParticleSpeedThreshold);
 		this.radius.setValue(this.component.radius);
 		this.expire.toggled(this.component.expireOnImpact);
 	}

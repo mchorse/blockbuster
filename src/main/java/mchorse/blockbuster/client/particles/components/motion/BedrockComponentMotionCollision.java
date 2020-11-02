@@ -16,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 public class BedrockComponentMotionCollision extends BedrockComponentBase implements IComponentParticleUpdate
@@ -24,6 +25,8 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 	public float collissionDrag = 0;
 	public float bounciness = 1;
 	public float randomBounciness = 0;
+	public int splitParticleCount;
+	public float splitParticleSpeedThreshold; //threshold to activate the split
 	public float radius = 0.01F;
 	public boolean expireOnImpact;
 	public boolean realisticCollision;
@@ -54,6 +57,8 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		if (element.has("collision_drag")) this.collissionDrag = element.get("collision_drag").getAsFloat();
 		if (element.has("coefficient_of_restitution")) this.bounciness = element.get("coefficient_of_restitution").getAsFloat();
 		if (element.has("bounciness_randomness")) this.randomBounciness = element.get("bounciness_randomness").getAsFloat();
+		if (element.has("split_particle_count")) this.splitParticleCount = element.get("split_particle_count").getAsInt();
+		if (element.has("split_particle_speedThreshold")) this.splitParticleSpeedThreshold = element.get("split_particle_speedThreshold").getAsFloat();
 		if (element.has("collision_radius")) this.radius = element.get("collision_radius").getAsFloat();
 		if (element.has("expire_on_contact")) this.expireOnImpact = element.get("expire_on_contact").getAsBoolean();
 		if (element.has("realisticCollision")) this.realisticCollision = element.get("realisticCollision").getAsBoolean();
@@ -76,6 +81,8 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		if (this.collissionDrag != 0) object.addProperty("collision_drag", this.collissionDrag);
 		if (this.bounciness != 1) object.addProperty("coefficient_of_restitution", this.bounciness);
 		if (this.randomBounciness != 0) object.addProperty("bounciness_randomness", this.randomBounciness);
+		if (this.splitParticleCount != 0) object.addProperty("split_particle_count", this.splitParticleCount);
+		if (this.splitParticleSpeedThreshold != 0) object.addProperty("split_particle_speedThreshold", this.splitParticleSpeedThreshold);
 		if (this.radius != 0.01F) object.addProperty("collision_radius", this.radius);
 		if (this.expireOnImpact) object.addProperty("expire_on_contact", true);
 
@@ -169,6 +176,27 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						if(this.collisionTime.y!=(particle.age-1)) particle.speed = randomBounciness(particle.speed, 'y');
 					}
 					
+					if(this.splitParticleCount!=0 && this.collisionTime.y!=(particle.age-1) && particle.speed.length()>0.75) 
+					{
+						for(int i = 0; i<splitParticleCount;i++) {
+							BedrockParticle splitParticle = emitter.createParticle(false);
+							
+							Field[] fields = particle.getClass().getFields();
+							for(int b = 0; b<fields.length; b++) {
+								try {
+									fields[i].set(splitParticle, fields[i].getFloat(particle));
+								} catch (IllegalArgumentException e) {
+									e.printStackTrace();
+								} catch (IllegalAccessException e) {
+									e.printStackTrace();
+								}
+							}
+							splitParticle.position.y += d0 < y ? splitParticle.r : -splitParticle.r;
+							emitter.splitParticles.add(splitParticle);
+						}
+						particle.dead = true;
+					}
+					
 					this.collisionTime.y = particle.age;
 					now.y += d0 < y ? r : -r;
 				}
@@ -206,7 +234,8 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				particle.position.set(now);
 				/*only apply drag when speed is almost not zero and randombounciness and realisticCollision are off
 				prevent particles from accelerating away when randomBounciness is active*/
-				if(!((this.randomBounciness!=0 || !this.realisticCollision) && Math.round(particle.speed.length())!=0)) particle.dragFactor += this.collissionDrag;
+				if(!( (this.randomBounciness!=0 || this.realisticCollision) && Math.round(particle.speed.length())==0 )) 
+					particle.dragFactor += this.collissionDrag;
 			}
 		}
 	}
@@ -221,6 +250,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			float random1 = (float) Math.random()*max;
 			float random2 = (float) Math.random()*(max*randomfactor-min*randomfactor)+min*randomfactor;
 			float random3 = (float) Math.random()*(max*randomfactor-min*randomfactor)+min*randomfactor;
+			//NOTE: maybe add a tmp variable for the case bounciness==0 so the vector will be scaled back correctly
 			switch(component) {
 				case 'x':
 					if(bounciness!=0) vector.x += vector.x<0 ? -random1 : random1;
@@ -241,7 +271,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			vector.scale(prevLength/vector.length()); //scale back to original length
 			return vector;
 		}
-		else if(this.randomBounciness!=0) { //component wrong input
+		else if(!(component=='x' || component=='y' || component=='z')) { //component wrong input
 			throw new IllegalArgumentException("Invalid component input value: "+component);
 		}
 		return null;
