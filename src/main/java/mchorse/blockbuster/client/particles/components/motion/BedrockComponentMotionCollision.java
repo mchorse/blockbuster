@@ -164,10 +164,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						{
 							particle.speed.y = -particle.speed.y*this.bounciness;
 						}
+						else particle.speed.y = 0;
 					}
 					else particle.accelerationFactor.y *= -this.bounciness;
 					
-					if(this.randomBounciness!=0 && Math.round(particle.speed.y)!=0) {
+					if(this.randomBounciness!=0 /*&& Math.round(particle.speed.y)!=0*/) {
 						if(particle.collisionTime.y!=(particle.age-1))
 						{
 							particle.speed = randomBounciness(particle.speed, 'y', this.randomBounciness);
@@ -189,10 +190,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						{
 							particle.speed.x = -particle.speed.x*this.bounciness;
 						}
+						else particle.speed.x = 0;
 					}
 					else particle.accelerationFactor.x *= -this.bounciness;
 					
-					if(this.randomBounciness!=0 && Math.round(particle.speed.x)!=0) {
+					if(this.randomBounciness!=0 /*&& Math.round(particle.speed.x)!=0*/) {
 						if(particle.collisionTime.x!=(particle.age-1))
 						{
 							particle.speed = randomBounciness(particle.speed, 'x', this.randomBounciness);
@@ -214,10 +216,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						{
 							particle.speed.z = -particle.speed.z*this.bounciness;
 						}
+						else particle.speed.z = 0;
 					}
 					else particle.accelerationFactor.z *= -this.bounciness;
 					
-					if(this.randomBounciness!=0 && Math.round(particle.speed.z)!=0) {
+					if(this.randomBounciness!=0 /*&& Math.round(particle.speed.z)!=0*/) {
 						if(particle.collisionTime.z!=(particle.age-1))
 						{
 							particle.speed = randomBounciness(particle.speed, 'z', this.randomBounciness);
@@ -258,10 +261,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				splitParticle.drag = particle.drag;
 				splitParticle.dragFactor = particle.dragFactor;
 				
-				Vector3f randomSpeed = randomBounciness(particle.speed, component, (this.randomBounciness!=0) ? this.randomBounciness : 100);
-				splitParticle.speed.x = randomSpeed.x/this.splitParticleCount;
-				splitParticle.speed.y = randomSpeed.y/this.splitParticleCount;
-				splitParticle.speed.z = randomSpeed.z/this.splitParticleCount;
+				
 				splitParticle.age = particle.age;
 				
 				switch(component) 
@@ -285,6 +285,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						splitParticle.position.z += orig < offset ? this.radius : -this.radius;
 						break;
 				}
+				Vector3f randomSpeed = randomBounciness(particle.speed, component, (this.randomBounciness!=0) ? this.randomBounciness : 100);
+				randomSpeed.scale(1.0f/this.splitParticleCount);
+				splitParticle.speed.set(randomSpeed);
 				emitter.splitParticles.add(splitParticle);
 			}
 			particle.dead = true;
