@@ -12,6 +12,7 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.math.Operation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import scala.collection.parallel.immutable.ParVector;
 
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
@@ -159,12 +160,12 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				
 				if (d0 != y)
 				{
-					if(realisticCollision && this.bounciness!=0) {
+					if(realisticCollision) {
 						if(particle.collisionTime.y!=(particle.age-1)) 
 						{
-							particle.speed.y = -particle.speed.y*this.bounciness;
+							if(this.bounciness!=0) particle.speed.y = -particle.speed.y*this.bounciness;
 						}
-						else particle.speed.y = 0;
+						else if(particle.collisionTime.y==(particle.age-1)) particle.speed.y = 0;
 					}
 					else particle.accelerationFactor.y *= -this.bounciness;
 					
@@ -185,12 +186,12 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				
 				if (origX != x)
 				{
-					if(realisticCollision && this.bounciness!=0) {
+					if(realisticCollision) {
 						if(particle.collisionTime.x!=(particle.age-1)) 
 						{
-							particle.speed.x = -particle.speed.x*this.bounciness;
+							if(this.bounciness!=0) particle.speed.x = -particle.speed.x*this.bounciness;
 						}
-						else particle.speed.x = 0;
+						else if(particle.collisionTime.x==(particle.age-1)) particle.speed.x = 0;
 					}
 					else particle.accelerationFactor.x *= -this.bounciness;
 					
@@ -211,12 +212,12 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
 				if (origZ != z)
 				{
-					if(realisticCollision && this.bounciness!=0) {
+					if(realisticCollision) {
 						if(particle.collisionTime.z!=(particle.age-1)) 
 						{
-							particle.speed.z = -particle.speed.z*this.bounciness;
+							if(this.bounciness!=0) particle.speed.z = -particle.speed.z*this.bounciness;
 						}
-						else particle.speed.z = 0;
+						else if(particle.collisionTime.z==(particle.age-1)) particle.speed.z = 0;
 					}
 					else particle.accelerationFactor.z *= -this.bounciness;
 					
