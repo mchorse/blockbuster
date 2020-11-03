@@ -12,7 +12,6 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.math.Operation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import scala.collection.parallel.immutable.ParVector;
 
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
