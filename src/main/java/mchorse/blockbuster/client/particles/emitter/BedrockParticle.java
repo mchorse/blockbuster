@@ -28,11 +28,14 @@ public class BedrockParticle
 	/*
 	 * this is used to estimate whether an object is only bouncing or lying on a surface
 	 * 
-	 * NOTE: doesn't always work - specifically sometimes with realistic collision. 
-	 * I haven't found a solution, to stop the particles from sometimes 
+	 * NOTE: rarely doesn't work - specifically with realistic collision.
+	 * I haven't found a solution, to stop the particles from rarely 
 	 * bouncing slightly, without changing the whole calculation...
+	 * CollisionTime won't work when e.g. the particle bounces of the surface and directly in the next
+	 * update cycle hits the same surface side like from top of the block to bottom of the block...
+	 * I think this probably never happens in practice
 	 */
-	public Vector3f collisionTime = new Vector3f();
+	public Vector3f collisionTime = new Vector3f(-2f, -2f,-2f);
 
 	/* Rotation */
 	public float rotation;
