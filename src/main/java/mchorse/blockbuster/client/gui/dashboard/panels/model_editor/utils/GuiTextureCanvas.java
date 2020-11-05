@@ -106,7 +106,7 @@ public class GuiTextureCanvas extends GuiCanvasEditor
 
 		Gui.drawRect(area.x, area.y, area.ex(), area.ey(), 0xdd000000);
 
-		area = this.calculateRelative(lx + ld * 2 + lw, ly, lx + ld * 2 + lw * 2, ly + ld);
+		area = this.calculateRelative(lx + ld + lw * 2, ly, lx + ld * 2 + lw * 2, ly + ld);
 
 		Gui.drawRect(area.x, area.y, area.ex(), area.ey(), 0xdd000000);
 
