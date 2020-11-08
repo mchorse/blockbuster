@@ -190,8 +190,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						{
 							splitParticle(particle, emitter, 'y', d0, y, now, prev);
 						}
+						
 						/*damping*/
-						else if(damp!=0) 
+						if(damp!=0) 
 						{
 							particle.speed = damping(particle.speed);
 						}
@@ -228,8 +229,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						{
 							splitParticle(particle, emitter, 'x', origX, x, now, prev);
 						}
+						
 						/*damping*/
-						else if(damp!=0) 
+						if(damp!=0) 
 						{
 							particle.speed = damping(particle.speed);
 						}
@@ -265,8 +267,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						{
 							splitParticle(particle, emitter, 'z', origZ, z, now, prev);
 						}
+						
 						/*damping*/
-						else if(damp!=0) 
+						if(damp!=0) 
 						{
 							particle.speed = damping(particle.speed);
 						}
