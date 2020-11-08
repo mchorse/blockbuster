@@ -16,6 +16,8 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 	public GuiTrackpadElement drag;
 	public GuiTrackpadElement bounciness;
 	public GuiTrackpadElement randomBounciness;
+	public GuiTrackpadElement randomDamp;
+	public GuiTrackpadElement damp;
 	public GuiTrackpadElement splitParticle; //split particle into n particles on collision
 	public GuiTrackpadElement splitParticleSpeedThreshold;
 	public GuiTrackpadElement radius;
@@ -51,10 +53,24 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		
 		this.randomBounciness = new GuiTrackpadElement(mc, (value) ->
 		{
-			this.component.randomBounciness = (value<0) ? -value.floatValue() : value.floatValue();
+			this.component.randomBounciness = (float) Math.abs(value);
 			this.parent.dirty();
 		});
 		this.randomBounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.randomBounciness"));
+		
+		this.damp = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.component.damp = value.floatValue();
+			this.parent.dirty();
+		});
+		this.damp.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.damp"));
+
+		this.randomDamp = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.component.randomDamp = (float) Math.abs(value);
+			this.parent.dirty();
+		});
+		this.randomDamp.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.randomDamp"));
 		
 		this.splitParticleSpeedThreshold = new GuiTrackpadElement(mc, (value) ->
 		{
@@ -83,7 +99,8 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 			this.parent.dirty();
 		});
 
-		this.fields.add(this.enabled, this.realisticCollision, this.drag, this.bounciness, this.randomBounciness, this.splitParticle,  this.splitParticleSpeedThreshold, this.radius, this.expire);
+		this.fields.add(this.enabled, this.realisticCollision, this.drag, this.bounciness, this.randomBounciness,
+						this.damp, this.randomDamp, this.splitParticle,  this.splitParticleSpeedThreshold, this.radius, this.expire);
 	}
 
 	@Override
@@ -114,6 +131,8 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		this.drag.setValue(this.component.collissionDrag);
 		this.bounciness.setValue(this.component.bounciness);
 		this.randomBounciness.setValue(this.component.randomBounciness);
+		this.damp.setValue(this.component.damp);
+		this.randomDamp.setValue(this.component.randomDamp);
 		this.splitParticle.setValue(this.component.splitParticleCount);
 		this.splitParticleSpeedThreshold.setValue(this.component.splitParticleSpeedThreshold);
 		this.radius.setValue(this.component.radius);
