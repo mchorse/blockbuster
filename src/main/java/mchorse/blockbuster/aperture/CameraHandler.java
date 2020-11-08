@@ -1,13 +1,14 @@
 package mchorse.blockbuster.aperture;
 
 import mchorse.aperture.Aperture;
-import mchorse.aperture.ClientProxy;
 import mchorse.aperture.camera.CameraAPI;
-import mchorse.aperture.client.gui.GuiCameraEditor;
+import mchorse.aperture.client.gui.dashboard.GuiCameraDashboard;
+import mchorse.aperture.client.gui.dashboard.GuiCameraEditor;
+import mchorse.aperture.events.CameraEditorDashboardEvent;
 import mchorse.aperture.events.CameraEditorEvent;
 import mchorse.aperture.network.common.PacketCameraProfileList;
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerCameraProfileList;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerSceneLength;
@@ -29,15 +30,11 @@ import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
 import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
-import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
-import mchorse.mclib.client.gui.framework.elements.utils.GuiDrawable;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
-import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.ScrollArea;
 import mchorse.mclib.client.gui.utils.keys.IKey;
-import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -52,9 +49,6 @@ import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
-
-import java.util.function.Consumer;
 
 /**
  * Camera handler
@@ -80,15 +74,6 @@ public class CameraHandler
      */
     public static boolean actions = true;
 
-    /**
-     * Camera editor integrations
-     */
-    @SideOnly(Side.CLIENT)
-    public static GuiElement cameraEditorElements;
-
-    @SideOnly(Side.CLIENT)
-    public static GuiElement editorElement;
-
     public static SceneLocation location;
 
     /**
@@ -110,7 +95,7 @@ public class CameraHandler
     @Method(modid = Aperture.MOD_ID)
     private static void registerHandlers()
     {
-        ClientProxy.EVENT_BUS.register(new CameraHandler());
+        Aperture.EVENT_BUS.register(new CameraHandler());
         MinecraftForge.EVENT_BUS.register(new CameraGUIHandler());
     }
 
@@ -138,13 +123,7 @@ public class CameraHandler
     @Method(modid = Aperture.MOD_ID)
     public static void openCameraEditor()
     {
-        Minecraft mc = Minecraft.getMinecraft();
-        EntityPlayer player = mc.player;
-        GuiCameraEditor editor = ClientProxy.getCameraEditor();
-
-        editor.updateCameraEditor(player);
-        player.setVelocity(0, 0, 0);
-        mc.displayGuiScreen(editor);
+        GuiCameraDashboard.openCameraEditor();
     }
 
     @Method(modid = Aperture.MOD_ID)
@@ -188,7 +167,7 @@ public class CameraHandler
     @SideOnly(Side.CLIENT)
     private static boolean isCurrentScreenCameraEditor()
     {
-        return Minecraft.getMinecraft().currentScreen instanceof GuiCameraEditor;
+        return Minecraft.getMinecraft().currentScreen instanceof GuiCameraDashboard;
     }
 
     /* Event listeners */
@@ -205,7 +184,7 @@ public class CameraHandler
             Dispatcher.sendToServer(new PacketSceneGoto(location, event.position, CameraHandler.actions));
         }
 
-        GuiBlockbusterPanels dashboard = mchorse.blockbuster.ClientProxy.panels;
+        GuiBlockbusterPanels dashboard = ClientProxy.panels;
 
         if (dashboard != null && dashboard.recordingEditorPanel.selector.isVisible())
         {
@@ -245,125 +224,44 @@ public class CameraHandler
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     @Method(modid = Aperture.MOD_ID)
-    public void onCameraOptions(CameraEditorEvent.Options event)
-    {
-        event.options.add(new GuiDirectorConfigOptions(Minecraft.getMinecraft(), event.editor));
-    }
-
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    @Method(modid = Aperture.MOD_ID)
-    public void onCameraEditorInit(CameraEditorEvent.Init event)
+    public void onCameraRegisterPanels(CameraEditorDashboardEvent.RegisteringPanels event)
     {
         location = null;
 
         GuiDashboard.get();
 
-        Minecraft mc = Minecraft.getMinecraft();
-        GuiCameraEditor editor = event.editor;
-        GuiBlockbusterPanels panels = mchorse.blockbuster.ClientProxy.panels;
-        GuiRecordingEditorPanel record = panels.recordingEditorPanel;
+        GuiBlockbusterPanels panels = ClientProxy.panels;
+        GuiCameraEditor editor = event.editor.camera;
 
-        /* Just in case */
-        if (record == null)
+        event.editor.panels.registerPanel(panels.modelPanel, IKey.lang("blockbuster.gui.dashboard.model"), Icons.BLOCK);
+        event.editor.panels.registerPanel(panels.recordingEditorPanel, IKey.lang("blockbuster.gui.dashboard.player_recording"), BBIcons.EDITOR);
+
+        GuiElement editorElement = new GuiElement(Minecraft.getMinecraft())
         {
-            return;
-        }
-
-        editorElement = new GuiElement(mc)
-        {
-            @Override
-            public boolean mouseClicked(GuiContext context)
-            {
-                return super.mouseClicked(context) || (record.editor.delegate != null && record.editor.area.isInside(context));
-            }
-
-            @Override
-            public boolean mouseScrolled(GuiContext context)
-            {
-                return super.mouseScrolled(context) || (record.editor.delegate != null && record.editor.area.isInside(context));
-            }
-
             @Override
             public void draw(GuiContext context)
             {
-                if (this.isVisible() && record.editor.delegate != null)
-                {
-                    Area area = record.editor.delegate.area;
+                GuiRecordingEditorPanel record = panels.recordingEditorPanel;
 
-                    area.draw(0x66000000);
+                if (editor.getRunner().isRunning() && record.record != null)
+                {
+                    ScrollArea scroll = record.selector.scroll;
+
+                    scroll.scrollIntoView(scroll.scrollItemSize * (int) (editor.getRunner().ticks - record.record.preDelay), 2);
+                    record.selector.cursor = (int) editor.getRunner().ticks;
                 }
 
-                if (editor.getRunner().isRunning())
-                {
-                    ScrollArea scroll = panels.recordingEditorPanel.selector.scroll;
+                int w = (int) (editor.area.w * Blockbuster.audioWaveformWidth.get());
 
-                    scroll.scrollIntoView(scroll.scrollItemSize * (int) (editor.getRunner().ticks - panels.recordingEditorPanel.record.preDelay), 2);
-                    panels.recordingEditorPanel.selector.cursor = (int) editor.getRunner().ticks;
-                }
-
-                super.draw(context);
+                AudioRenderer.renderAll(editor.area.x + (editor.area.w - w) / 2, editor.dashboard.timeline.area.y - 15, w, Blockbuster.audioWaveformHeight.get(), context.screen.width, context.screen.height);
+                record.selector.cursor = editor.dashboard.timeline.value;
             }
         };
 
-        Consumer<GuiIconElement> refresh = (b) ->
-        {
-            boolean show = editorElement.isVisible();
-
-            editor.panel.flex().h(1, show ? -150 : -70);
-            editor.timeline.flex().y(1, show ? -100 : -20);
-            record.records.flex().h(1, show ? -80 : 0);
-            b.both(show ? Icons.DOWNLOAD : Icons.UPLOAD);
-
-            editor.root.resize();
-        };
-
-        GuiIconElement open = new GuiIconElement(mc, BBIcons.EDITOR, (b) -> panels.recordingEditorPanel.records.toggleVisible());
-        GuiIconElement toggle = new GuiIconElement(mc, Icons.UPLOAD, (b) ->
-        {
-            if (!record.selector.isVisible())
-            {
-                return;
-            }
-
-            editorElement.setVisible(!editorElement.isVisible());
-            refresh.accept(b);
-        });
-
-        GuiDrawable drawable = new GuiDrawable((context) ->
-        {
-            int w = (int) (editor.root.area.w * Blockbuster.audioWaveformWidth.get());
-
-            AudioRenderer.renderAll(editor.root.area.x + (editor.root.area.w - w) / 2, editor.timeline.area.y - 15, w, Blockbuster.audioWaveformHeight.get(), context.screen.width, context.screen.height);
-            record.selector.cursor = editor.timeline.value;
-        });
-
-        IKey category = IKey.lang("blockbuster.gui.aperture.keys.category");
-        IKey toggleEditor = IKey.lang("blockbuster.gui.aperture.keys.toggle_editor");
-        IKey detachScene = IKey.lang("blockbuster.gui.aperture.keys.detach_scene");
-        IKey reloadScene = IKey.lang("blockbuster.gui.aperture.keys.reload_scene");
-
-        GuiDirectorConfigOptions directorOptions = editor.config.getChildren(GuiDirectorConfigOptions.class).get(0);
-
-        open.tooltip(IKey.lang("blockbuster.gui.dashboard.player_recording"), Direction.TOP);
-        open.keys().register(IKey.lang("blockbuster.gui.aperture.keys.toggle_list"), Keyboard.KEY_L, () -> open.clickItself(editor.context)).held(Keyboard.KEY_LCONTROL).category(category);
-        toggle.tooltip(toggleEditor, Direction.TOP);
-        toggle.keys().register(toggleEditor, Keyboard.KEY_E, () -> toggle.clickItself(editor.context)).held(Keyboard.KEY_LCONTROL).category(category);
-        toggle.keys().register(detachScene, Keyboard.KEY_D, () -> directorOptions.detachScene.clickItself(editor.context)).held(Keyboard.KEY_LSHIFT).category(category).active(() -> !editor.flight.isFlightEnabled() && directorOptions.detachScene.isEnabled());
-        toggle.keys().register(reloadScene, Keyboard.KEY_R, () -> directorOptions.reloadScene.clickItself(editor.context)).held(Keyboard.KEY_LSHIFT).category(category).active(() -> !editor.flight.isFlightEnabled());
-
-        editorElement.setVisible(false);
-
-        toggle.flex().relative(editor.timeline).set(0, 0, 20, 20).x(1F);
-        open.flex().relative(editor.timeline).set(-20, 0, 20, 20);
-        editor.timeline.flex().x(30).w(1, -60);
-
-        editor.top.remove(editor.timeline);
-        cameraEditorElements = new GuiElement(mc);
-        cameraEditorElements.add(drawable, editor.timeline, toggle, open, editorElement);
-
-        editor.top.add(cameraEditorElements);
-        refresh.accept(toggle);
+        event.editor.panels.prepend(editorElement);
+        // open.keys().register(IKey.lang("blockbuster.gui.aperture.keys.toggle_list"), Keyboard.KEY_L, () -> open.clickItself(editor.context)).held(Keyboard.KEY_LCONTROL).category(category);
+        // editor.dashboard.panels.keys().register(detachScene, Keyboard.KEY_D, () -> directorOptions.detachScene.clickItself(GuiBase.getCurrent())).held(Keyboard.KEY_LSHIFT).category(category).active(() -> !editor.dashboard.flight.isFlightEnabled() && directorOptions.detachScene.isEnabled());
+        // editor.dashboard.panels.keys().register(reloadScene, Keyboard.KEY_R, () -> directorOptions.reloadScene.clickItself(GuiBase.getCurrent())).held(Keyboard.KEY_LSHIFT).category(category).active(() -> !editor.dashboard.flight.isFlightEnabled());
     }
 
     /**
@@ -409,13 +307,13 @@ public class CameraHandler
             GuiScreen current = Minecraft.getMinecraft().currentScreen;
             GuiScreen toOpen = event.getGui();
             SceneLocation location = get();
-            boolean toOpenCamera = toOpen instanceof GuiCameraEditor;
+            boolean toOpenCamera = toOpen instanceof GuiCameraDashboard;
 
             if (location != null)
             {
-                int tick = ClientProxy.getCameraEditor().timeline.value;
+                int tick = GuiCameraDashboard.getCameraEditor().timeline.value;
 
-                if (!(current instanceof GuiCameraEditor) && toOpenCamera)
+                if (!(current instanceof GuiCameraDashboard) && toOpenCamera)
                 {
                     /* Camera editor opens */
                     CameraHandler.tick = tick;
@@ -428,31 +326,6 @@ public class CameraHandler
                     Dispatcher.sendToServer(new PacketRequestLength(location));
                     Dispatcher.sendToServer(new PacketSceneRequestCast(location));
                 }
-            }
-
-            if (toOpenCamera)
-            {
-                GuiDashboard.get();
-
-                GuiCameraEditor editor = ClientProxy.getCameraEditor();
-                GuiRecordingEditorPanel panel = mchorse.blockbuster.ClientProxy.panels.recordingEditorPanel;
-
-                panel.open();
-                panel.appear();
-                panel.selector.removeFromParent();
-                panel.selector.flex().relative(editor.viewport);
-                panel.editor.removeFromParent();
-                panel.editor.flex().relative(editor.viewport);
-                panel.records.removeFromParent();
-                panel.records.flex().relative(editor.viewport).h(1F, editorElement.isVisible() ? -80 : 0);
-                panel.records.setVisible(false);
-
-                cameraEditorElements.prepend(panel.records);
-                editorElement.add(panel.selector, panel.editor);
-            }
-            else if (current instanceof GuiCameraEditor)
-            {
-                mchorse.blockbuster.ClientProxy.panels.recordingEditorPanel.save();
             }
         }
     }

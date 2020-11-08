@@ -161,12 +161,6 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.subChildren.add(this.inventory);
     }
 
-    @Override
-    public boolean needsBackground()
-    {
-        return false;
-    }
-
     private void pickItem(ItemStack stack)
     {
         if (this.inventory.linked != null)
@@ -401,6 +395,19 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
             this.model.rx = (float) x;
             this.model.ry = (float) y;
             this.model.rz = (float) z;
+        }
+    }
+
+    @Override
+    public void drawBackground(GuiContext context)
+    {
+        int h = this.area.h / 8;
+
+        this.drawGradientRect(this.area.x, this.area.y, this.area.ex(), this.area.y + h, 0x44000000, 0x00000000);
+
+        if (context.screen instanceof GuiDashboard)
+        {
+            this.drawGradientRect(this.area.x, this.area.ey() - h, this.area.ex(), this.area.ey(), 0x00000000, 0x44000000);
         }
     }
 }

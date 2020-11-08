@@ -5,6 +5,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.mclib.GuiAbstractDashboard;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -37,7 +38,7 @@ public class GuiFirstTime extends GuiElement
 		return Blockbuster.generalFirstTime.get();
 	}
 
-	public static void addOverlay(GuiDashboard dashboard)
+	public static void addOverlay(GuiAbstractDashboard dashboard)
 	{
 		if (!GuiFirstTime.shouldOpen())
 		{

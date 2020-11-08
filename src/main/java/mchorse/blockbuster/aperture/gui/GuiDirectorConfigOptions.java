@@ -1,8 +1,8 @@
 package mchorse.blockbuster.aperture.gui;
 
-import mchorse.aperture.ClientProxy;
-import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.client.gui.config.GuiAbstractConfigOptions;
+import mchorse.aperture.client.gui.dashboard.GuiCameraDashboard;
+import mchorse.aperture.client.gui.dashboard.GuiCameraEditor;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.aperture.network.common.PacketAudioShift;
 import mchorse.blockbuster.client.gui.dashboard.panels.scene.GuiScenePanel;
@@ -65,7 +65,7 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
 
             if (location != null)
             {
-                Dispatcher.sendToServer(new PacketScenePlay(location, PacketScenePlay.RESTART, ClientProxy.getCameraEditor().timeline.value));
+                Dispatcher.sendToServer(new PacketScenePlay(location, PacketScenePlay.RESTART, GuiCameraDashboard.getCameraEditor().timeline.value));
             }
         });
 
