@@ -85,12 +85,9 @@ public class ItemPlayback extends Item
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }
 
-            if (stack.getTagCompound().hasKey("Scene"))
+            if (stack.getTagCompound().hasKey("Scene") && CommonProxy.scenes.toggle(stack.getTagCompound().getString("Scene"), player.world))
             {
-                if (CommonProxy.scenes.toggle(stack.getTagCompound().getString("Scene"), player.world) && CameraHandler.isApertureLoaded())
-                {
-                    CameraHandler.handlePlaybackItem(player, tag);
-                }
+                CameraHandler.handlePlaybackItem(player, tag);
             }
         }
 

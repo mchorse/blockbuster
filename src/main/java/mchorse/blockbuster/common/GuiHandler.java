@@ -2,8 +2,6 @@ package mchorse.blockbuster.common;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.aperture.CameraHandler;
-import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.blockbuster.client.gui.GuiActor;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -14,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,7 +24,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiHandler implements IGuiHandler
 {
     /* GUI ids */
-    public static final int PLAYBACK = 0;
     public static final int ACTOR = 1;
     public static final int MODEL_BLOCK = 3;
 
@@ -54,11 +50,7 @@ public class GuiHandler implements IGuiHandler
     {
         Entity entity = world.getEntityByID(x);
 
-        if (ID == PLAYBACK && CameraHandler.isApertureLoaded())
-        {
-            return this.getPlayback();
-        }
-        else if (ID == ACTOR && entity instanceof EntityActor)
+        if (ID == ACTOR && entity instanceof EntityActor)
         {
             return new GuiActor(Minecraft.getMinecraft(), (EntityActor) entity);
         }
@@ -76,23 +68,6 @@ public class GuiHandler implements IGuiHandler
         }
 
         return null;
-    }
-
-    /**
-     * Returns created playback GUI
-     *
-     * The reason behind creating it here, instead of in the
-     * getClientGuiElement method, is because it may get Aperture's classes get
-     * referenced which might cause I crash.
-     *
-     * So instead, I'm creating it here, so Method annotation would strip away
-     * reference to {@link GuiPlayback} (which in turn will reference
-     * Aperture's classes).
-     */
-    @Method(modid = "aperture")
-    private Object getPlayback()
-    {
-        return new GuiPlayback();
     }
 
     /**

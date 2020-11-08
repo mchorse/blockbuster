@@ -44,7 +44,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -76,39 +75,13 @@ public class CameraHandler
 
     public static SceneLocation location;
 
-    /**
-     * Check whether Aperture is loaded
-     */
-    public static boolean isApertureLoaded()
-    {
-        return Loader.isModLoaded(Aperture.MOD_ID);
-    }
-
     public static void register()
-    {
-        if (CameraHandler.isApertureLoaded())
-        {
-            registerHandlers();
-        }
-    }
-
-    @Method(modid = Aperture.MOD_ID)
-    private static void registerHandlers()
     {
         Aperture.EVENT_BUS.register(new CameraHandler());
         MinecraftForge.EVENT_BUS.register(new CameraGUIHandler());
     }
 
     public static void registerMessages()
-    {
-        if (CameraHandler.isApertureLoaded())
-        {
-            registerApertureMessages();
-        }
-    }
-
-    @Method(modid = Aperture.MOD_ID)
-    private static void registerApertureMessages()
     {
         Dispatcher.DISPATCHER.register(PacketRequestProfiles.class, ServerHandlerRequestProfiles.class, Side.SERVER);
         Dispatcher.DISPATCHER.register(PacketCameraProfileList.class, ClientHandlerCameraProfileList.class, Side.CLIENT);
@@ -117,13 +90,6 @@ public class CameraHandler
         Dispatcher.DISPATCHER.register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
 
         Dispatcher.DISPATCHER.register(PacketAudioShift.class, ServerHandlerAudioShift.class, Side.SERVER);
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Method(modid = Aperture.MOD_ID)
-    public static void openCameraEditor()
-    {
-        GuiCameraDashboard.openCameraEditor();
     }
 
     @Method(modid = Aperture.MOD_ID)
@@ -155,18 +121,6 @@ public class CameraHandler
 
     public static boolean isCameraEditorOpen()
     {
-        if (isApertureLoaded())
-        {
-            return isCurrentScreenCameraEditor();
-        }
-
-        return false;
-    }
-
-    @Method(modid = Aperture.MOD_ID)
-    @SideOnly(Side.CLIENT)
-    private static boolean isCurrentScreenCameraEditor()
-    {
         return Minecraft.getMinecraft().currentScreen instanceof GuiCameraDashboard;
     }
 
@@ -174,7 +128,6 @@ public class CameraHandler
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    @Method(modid = Aperture.MOD_ID)
     public void onCameraScrub(CameraEditorEvent.Scrubbed event)
     {
         SceneLocation location = get();
@@ -197,7 +150,6 @@ public class CameraHandler
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    @Method(modid = Aperture.MOD_ID)
     public void onCameraPlause(CameraEditorEvent.Playback event)
     {
         SceneLocation location = get();
@@ -210,7 +162,6 @@ public class CameraHandler
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    @Method(modid = Aperture.MOD_ID)
     public void onCameraRewind(CameraEditorEvent.Rewind event)
     {
         SceneLocation location = get();
@@ -223,7 +174,6 @@ public class CameraHandler
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    @Method(modid = Aperture.MOD_ID)
     public void onCameraRegisterPanels(CameraEditorDashboardEvent.RegisteringPanels event)
     {
         location = null;
@@ -292,13 +242,13 @@ public class CameraHandler
      * exception it only spawns actors when the camera editor GUI is getting
      * opened.
      */
+    @SideOnly(Side.CLIENT)
     public static class CameraGUIHandler
     {
         @SubscribeEvent
-        @SideOnly(Side.CLIENT)
-        @Method(modid = Aperture.MOD_ID)
         public void onGuiOpen(GuiOpenEvent event)
         {
+            /* When the GUI events get triggered from main menu GUIs */
             if (Minecraft.getMinecraft().player == null)
             {
                 return;
@@ -309,23 +259,20 @@ public class CameraHandler
             SceneLocation location = get();
             boolean toOpenCamera = toOpen instanceof GuiCameraDashboard;
 
-            if (location != null)
+            if (location != null && !(current instanceof GuiCameraDashboard) && toOpenCamera)
             {
+                /* Camera editor opens */
                 int tick = GuiCameraDashboard.getCameraEditor().timeline.value;
 
-                if (!(current instanceof GuiCameraDashboard) && toOpenCamera)
+                CameraHandler.tick = tick;
+
+                if (CameraHandler.reload)
                 {
-                    /* Camera editor opens */
-                    CameraHandler.tick = tick;
-
-                    if (CameraHandler.reload)
-                    {
-                        Dispatcher.sendToServer(new PacketScenePlay(location, PacketScenePlay.START, tick));
-                    }
-
-                    Dispatcher.sendToServer(new PacketRequestLength(location));
-                    Dispatcher.sendToServer(new PacketSceneRequestCast(location));
+                    Dispatcher.sendToServer(new PacketScenePlay(location, PacketScenePlay.START, tick));
                 }
+
+                Dispatcher.sendToServer(new PacketRequestLength(location));
+                Dispatcher.sendToServer(new PacketSceneRequestCast(location));
             }
         }
     }

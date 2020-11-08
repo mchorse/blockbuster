@@ -1,29 +1,24 @@
 package mchorse.blockbuster.aperture.gui;
 
-import mchorse.aperture.Aperture;
 import mchorse.aperture.ClientProxy;
 import mchorse.aperture.camera.CameraAPI;
 import mchorse.aperture.camera.CameraProfile;
 import mchorse.aperture.camera.destination.AbstractDestination;
 import mchorse.aperture.camera.destination.ClientDestination;
 import mchorse.aperture.client.gui.GuiProfilesManager;
-import mchorse.blockbuster.aperture.CameraHandler;
-import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
-import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -45,52 +40,42 @@ public class GuiPlayback extends GuiBase
     private GuiCirculateElement cameraMode;
     private GuiButtonElement done;
 
-    public GuiListElement profiles;
+    public GuiProfilesManager.GuiCameraProfilesList profiles;
     public Area frame = new Area();
 
     private String profile;
-    private CameraProfile dummy = new CameraProfile(null);
     private SceneLocation location;
-
-    private boolean aperture;
 
     public GuiPlayback()
     {
         Minecraft mc = Minecraft.getMinecraft();
 
-        this.aperture = CameraHandler.isApertureLoaded();
-
         this.done = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.done"), (b) -> this.saveAndQuit());
         this.done.flex().relative(this.frame).set(0, 0, 0, 20).y(1, -20).w(1, 0);
 
-        if (this.aperture)
-        {
-            this.profiles = this.createListElement(mc);
-            this.profiles.background();
-            this.profiles.flex().set(0, 35, 0, 0).relative(this.frame).w(1, 0).h(1, -100);
+        this.profiles = this.createListElement(mc);
+        this.profiles.background();
+        this.profiles.flex().set(0, 35, 0, 0).relative(this.frame).w(1, 0).h(1, -100);
 
-            this.cameraMode = new GuiCirculateElement(mc, (b) -> this.setValue(this.cameraMode.getValue()));
-            this.cameraMode.addLabel(IKey.lang("blockbuster.gui.playback.nothing"));
-            this.cameraMode.addLabel(IKey.lang("blockbuster.gui.playback.play"));
-            this.cameraMode.addLabel(IKey.lang("blockbuster.gui.playback.load_profile"));
-            this.cameraMode.flex().relative(this.frame).set(0, 0, 0, 20).y(1, -45).w(1, 0);
+        this.cameraMode = new GuiCirculateElement(mc, (b) -> this.setValue(this.cameraMode.getValue()));
+        this.cameraMode.addLabel(IKey.lang("blockbuster.gui.playback.nothing"));
+        this.cameraMode.addLabel(IKey.lang("blockbuster.gui.playback.play"));
+        this.cameraMode.addLabel(IKey.lang("blockbuster.gui.playback.load_profile"));
+        this.cameraMode.flex().relative(this.frame).set(0, 0, 0, 20).y(1, -45).w(1, 0);
 
-            this.root.add(this.profiles, this.cameraMode);
-            this.fillData();
-        }
+        this.root.add(this.profiles, this.cameraMode);
+        this.fillData();
 
         this.root.add(this.done);
     }
 
     /* Aperture specific methods */
 
-    @Optional.Method(modid = Aperture.MOD_ID)
-    private GuiListElement createListElement(Minecraft mc)
+    private GuiProfilesManager.GuiCameraProfilesList createListElement(Minecraft mc)
     {
         return new GuiProfilesManager.GuiCameraProfilesList(mc, null);
     }
 
-    @Optional.Method(modid = Aperture.MOD_ID)
     private void fillData()
     {
         /* Fill data */
@@ -130,16 +115,14 @@ public class GuiPlayback extends GuiBase
         }
     }
 
-    @Optional.Method(modid = Aperture.MOD_ID)
     public void selectCurrent()
     {
         this.selectCurrent(this.profile);
     }
 
-    @Optional.Method(modid = Aperture.MOD_ID)
     public void selectCurrent(String profile)
     {
-        List<CameraProfile> list = (List<CameraProfile>) this.profiles.getList();
+        List<CameraProfile> list = this.profiles.getList();
 
         for (int i = 0; i < list.size(); i ++)
         {
@@ -152,16 +135,14 @@ public class GuiPlayback extends GuiBase
         }
     }
 
-    @Optional.Method(modid = Aperture.MOD_ID)
     private void sendPlaybackButton()
     {
         Dispatcher.sendToServer(new PacketPlaybackButton(this.location, this.cameraMode.getValue(), this.getSelected()));
     }
 
-    @Optional.Method(modid = Aperture.MOD_ID)
     private String getSelected()
     {
-        CameraProfile current = (CameraProfile) this.profiles.getCurrentFirst();
+        CameraProfile current = this.profiles.getCurrentFirst();
 
         if (current != null)
         {
@@ -171,7 +152,6 @@ public class GuiPlayback extends GuiBase
         return "";
     }
 
-    @Optional.Method(modid = Aperture.MOD_ID)
     public void addDestination(AbstractDestination destination)
     {
         this.profiles.add(new CameraProfile(destination));
@@ -197,10 +177,7 @@ public class GuiPlayback extends GuiBase
         this.profile = profile;
         this.setValue(value);
 
-        if (this.aperture)
-        {
-            this.selectCurrent(profile);
-        }
+        this.selectCurrent(profile);
     }
 
     @Override
@@ -211,15 +188,7 @@ public class GuiPlayback extends GuiBase
 
     private void saveAndQuit()
     {
-        if (this.aperture)
-        {
-            this.sendPlaybackButton();
-        }
-        else
-        {
-            Dispatcher.sendToServer(new PacketPlaybackButton(this.location, 0, ""));
-        }
-
+        this.sendPlaybackButton();
         this.mc.displayGuiScreen(null);
     }
 
@@ -234,7 +203,7 @@ public class GuiPlayback extends GuiBase
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        boolean isCameraProfile = this.cameraMode.getValue() == 2 && this.aperture;
+        boolean isCameraProfile = this.cameraMode.getValue() == 2;
 
         GuiDraw.drawCustomBackground(0, 0, this.width, this.height);
         this.drawString(this.fontRenderer, this.stringTitle, this.frame.x, this.frame.y, 0xffffffff);

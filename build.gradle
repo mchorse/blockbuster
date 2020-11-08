@@ -42,6 +42,7 @@ minecraft
     replace "%VERSION%", project.version
     replace "%METAMORPH%", project.metamorph
     replace "%MCLIB%", project.mclib
+    replace "%APERTURE%", project.aperture
 }
 
 dependencies 

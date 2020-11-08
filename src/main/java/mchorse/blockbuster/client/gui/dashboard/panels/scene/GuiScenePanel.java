@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.scene;
 
+import mchorse.aperture.client.gui.dashboard.GuiCameraDashboard;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
@@ -227,17 +228,16 @@ public class GuiScenePanel extends GuiBlockbusterPanel
 
         right.add(this.attach, this.record, update, this.rename, edit);
 
-        if (CameraHandler.isApertureLoaded())
+        /* Aperture thing */
+        this.camera = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.camera"), (b) ->
         {
-            this.camera = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.camera"), (b) ->
-            {
-                CameraHandler.location = this.location;
-                CameraHandler.openCameraEditor();
-            });
-            this.camera.keys().register(this.camera.label, Keyboard.KEY_C, () -> this.camera.clickItself(GuiBase.getCurrent())).category(category).active(active);
+            CameraHandler.location = this.location;
 
-            right.add(this.camera);
-        }
+            GuiCameraDashboard.openCameraEditor();
+        });
+        this.camera.keys().register(this.camera.label, Keyboard.KEY_C, () -> this.camera.clickItself(GuiBase.getCurrent())).category(category).active(active);
+
+        right.add(this.camera);
 
         right.add(this.teleport);
         this.replayEditor.add(this.pickMorph);
@@ -531,16 +531,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
 
     private void attach()
     {
-        if (CameraHandler.isApertureLoaded())
-        {
-            CameraHandler.attach(this.location);
-        }
-        else
-        {
-            Dispatcher.sendToServer(new PacketPlaybackButton(this.location, 0, ""));
-
-            this.mc.displayGuiScreen(null);
-        }
+        CameraHandler.attach(this.location);
     }
 
     private void openRecordEditor()
