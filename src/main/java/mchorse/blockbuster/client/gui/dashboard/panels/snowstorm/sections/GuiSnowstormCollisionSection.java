@@ -7,6 +7,7 @@ import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.client.gui.utils.Elements;
 import net.minecraft.client.Minecraft;
 
 public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<BedrockComponentMotionCollision>
@@ -63,28 +64,28 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 			this.component.damp = value.floatValue();
 			this.parent.dirty();
 		});
-		this.damp.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.damp"));
-
+		this.damp.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.damping.strength"));
+		
 		this.randomDamp = new GuiTrackpadElement(mc, (value) ->
 		{
 			this.component.randomDamp = (float) Math.abs(value);
 			this.parent.dirty();
 		});
-		this.randomDamp.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.randomDamp"));
+		this.randomDamp.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.damping.randomness"));
 		
 		this.splitParticleSpeedThreshold = new GuiTrackpadElement(mc, (value) ->
 		{
 			this.component.splitParticleSpeedThreshold = value.floatValue();
 			this.parent.dirty();
 		});
-		this.splitParticleSpeedThreshold.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.splitParticleSpeedThreshold"));
+		this.splitParticleSpeedThreshold.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.splitParticle.speedThreshold"));
 		
 		this.splitParticle = new GuiTrackpadElement(mc, (value) ->
 		{
 			this.component.splitParticleCount = (int)Math.abs(value);
 			this.parent.dirty();
 		});
-		this.splitParticle.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.splitParticle"));
+		this.splitParticle.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.splitParticle.count"));
 		
 		this.radius = new GuiTrackpadElement(mc, (value) ->
 		{
@@ -99,8 +100,9 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 			this.parent.dirty();
 		});
 
-		this.fields.add(this.enabled, this.realisticCollision, this.drag, this.bounciness, this.randomBounciness,
-						this.damp, this.randomDamp, this.splitParticle,  this.splitParticleSpeedThreshold, this.radius, this.expire);
+		this.fields.add(this.enabled, this.realisticCollision, this.drag, this.bounciness, this.randomBounciness, this.radius, this.expire,
+						Elements.label(IKey.lang("blockbuster.gui.snowstorm.collision.damping.title"), 20).anchor(0, 1F), this.damp, this.randomDamp, 
+						Elements.label(IKey.lang("blockbuster.gui.snowstorm.collision.splitParticle.title"), 20).anchor(0, 1F), this.splitParticle,  this.splitParticleSpeedThreshold);
 	}
 
 	@Override
