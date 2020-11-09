@@ -524,14 +524,14 @@ blockbuster.gui:
             bounciness: Bounciness multiplies particle's acceleration after collision
             randomBounciness: randomBounciness - randomize the direction vector. It doesn't affect the velocity.
             damping:
-            	title: damping
+                title: damping
                 strength: damping - reduce the velocity on impact. Valid values are between 0 and 1. 1=highest damping -> reduces velocity completely
                 randomness: randomDamping - randomize the damping.
             splitParticle:
-            	title: split particle
+                title: split particle
             	
-            	count: split the particles into the given count on impact - speed is divided by the count
-            	speedThreshold: speed threshold to activate the split process
+                count: split the particles into the given count on impact - speed is divided by the count
+                speedThreshold: speed threshold to activate the split process
             radius: Radius of particle's hitbox
             expire: Expire on contact
 
