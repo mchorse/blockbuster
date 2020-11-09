@@ -509,7 +509,7 @@ blockbuster.gui:
             title: Collision
 
             enabled: Enabled
-            realisticCollision: the direction vector will be mirrored on collision - realistic bounce
+            realisticCollision: realistic collision
             drag: Collision drag adds a drag (slowdown) after particle's collision with blocks in the world
             bounciness: Bounciness multiplies particle's acceleration after collision
             randomBounciness: randomBounciness - randomize the direction vector. It doesn't affect the velocity.
@@ -519,7 +519,7 @@ blockbuster.gui:
                 randomness: randomDamping - randomize the damping.
             splitParticle:
                 title: split particle
-            	
+                
                 count: split the particles into the given count on impact - speed is divided by the count
                 speedThreshold: speed threshold to activate the split process
             radius: Radius of particle's hitbox
