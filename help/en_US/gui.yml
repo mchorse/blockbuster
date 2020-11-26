@@ -534,6 +534,7 @@ blockbuster.gui:
                 speedThreshold: speed threshold to activate the split process
             radius: Radius of particle's hitbox
             expire: Expire on contact
+            expirationDelay: Delay the expiration. Measured in ticks - 20 = 1 second
 
     record_morph:
         random_skip: Random Skip
