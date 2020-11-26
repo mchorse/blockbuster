@@ -16,7 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 public class BedrockComponentMotionCollision extends BedrockComponentBase implements IComponentParticleUpdate
@@ -31,10 +30,12 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 	public float splitParticleSpeedThreshold; //threshold to activate the split
 	public float radius = 0.01F;
 	public boolean expireOnImpact;
+	public int expirationDelay;
 	public boolean realisticCollision;
-	
-	
 
+	
+	
+	
 	/* Runtime options */
 	public boolean json;
 	private Vector3d previous = new Vector3d();
@@ -58,6 +59,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		if (element.has("split_particle_speedThreshold")) this.splitParticleSpeedThreshold = element.get("split_particle_speedThreshold").getAsFloat();
 		if (element.has("collision_radius")) this.radius = element.get("collision_radius").getAsFloat();
 		if (element.has("expire_on_contact")) this.expireOnImpact = element.get("expire_on_contact").getAsBoolean();
+		if (element.has("expirationDelay")) this.expirationDelay = element.get("expirationDelay").getAsInt();
 		if (element.has("realisticCollision")) this.realisticCollision = element.get("realisticCollision").getAsBoolean();
 		
 		return super.fromJson(element, parser);
@@ -84,7 +86,8 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		if (this.splitParticleSpeedThreshold != 0) object.addProperty("split_particle_speedThreshold", this.splitParticleSpeedThreshold);
 		if (this.radius != 0.01F) object.addProperty("collision_radius", this.radius);
 		if (this.expireOnImpact) object.addProperty("expire_on_contact", true);
-
+		if (this.expirationDelay!=0) object.addProperty("expirationDelay", this.expirationDelay);
+		
 		return object;
 	}
 
@@ -151,9 +154,17 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			{
 				if (this.expireOnImpact)
 				{
-					particle.dead = true;
+					if(this.expirationDelay!=0 && particle.expireAge==0)
+					{
+						particle.expireAge = particle.age+this.expirationDelay;
+					}
+					else 
+					{
+						particle.dead = true;
 
-					return;
+						return;
+					}
+					
 				}
 
 				if (particle.relativePosition)

@@ -17,6 +17,7 @@ public class BedrockParticle
 	/* States */
 	public int age;
 	public int lifetime;
+	public int expireAge; //age when the particle should expire
 	public boolean dead;
 	public boolean relativePosition;
 	public boolean relativeRotation;
@@ -165,7 +166,8 @@ public class BedrockParticle
 			this.position.z += vec.z / 20F;
 		}
 
-		if (this.lifetime >= 0 && this.age >= this.lifetime)
+		if (this.lifetime >= 0 &&
+			(this.age >= this.lifetime || (this.age>=this.expireAge && this.expireAge!=0)) )
 		{
 			this.dead = true;
 		}
