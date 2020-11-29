@@ -525,6 +525,9 @@ blockbuster.gui:
             radius: Radius of particle's hitbox
             expire: Expire on contact
             expirationDelay: Delay the expiration. Measured in ticks - 20 = 1 second
+            
+            appearance:
+                title: Texture on Colllision
 
     record_morph:
         random_skip: Random Skip

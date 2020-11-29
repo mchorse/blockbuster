@@ -4,6 +4,7 @@ import jdk.nashorn.internal.ir.Block;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormAppearanceSection;
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormCollisionAppearanceSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormCollisionSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormExpirationSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormGeneralSection;
@@ -126,7 +127,8 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		this.addSection(new GuiSnowstormAppearanceSection(mc, this));
 		this.addSection(new GuiSnowstormLightingSection(mc, this));
 		this.addSection(new GuiSnowstormCollisionSection(mc, this));
-
+		this.addSection(new GuiSnowstormCollisionAppearanceSection(mc, this));
+		
 		this.keys()
 			.register(IKey.lang("blockbuster.gui.snowstorm.keys.save"), Keyboard.KEY_S, () -> this.save.clickItself(GuiBase.getCurrent()))
 			.held(Keyboard.KEY_LCONTROL).category(IKey.lang("blockbuster.gui.snowstorm.keys.category"));
