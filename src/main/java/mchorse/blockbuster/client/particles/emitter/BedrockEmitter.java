@@ -7,6 +7,7 @@ import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
 import mchorse.blockbuster.client.particles.components.IComponentParticleInitialize;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
+import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.mclib.math.IValue;
 import mchorse.mclib.math.Variable;
@@ -449,21 +450,26 @@ public class BedrockEmitter
 				});
 			}
 
-			GifTexture.bindTexture(this.scheme.texture, this.age, partialTicks);
-			builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
-
+			
 			for (BedrockParticle particle : this.particles)
 			{
+				if(!particle.collisionTexture) GifTexture.bindTexture(this.scheme.texture, this.age, partialTicks);
+				else GifTexture.bindTexture(this.scheme.get(BedrockComponentCollisionAppearance.class).texture, this.age, partialTicks);
+				
+				builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
 				this.setEmitterVariables(partialTicks);
 				this.setParticleVariables(particle, partialTicks);
 
 				for (IComponentParticleRender component : renders)
 				{
-					component.render(this, particle, builder, partialTicks);
+					if(!(particle.collisionTexture && component.getClass().getName().contains("BedrockComponentAppearanceBillboard")))
+					{
+						component.render(this, particle, builder, partialTicks);
+					}	
 				}
+				Tessellator.getInstance().draw();
 			}
 
-			Tessellator.getInstance().draw();
 		}
 
 		for (IComponentParticleRender component : renders)

@@ -152,13 +152,16 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
 			if (d0 != y || origX != x || origZ != z)
 			{
+				if(true) { //later there will be an option to enable texture on collision...
+					particle.collisionTexture = true;
+				}
 				if (this.expireOnImpact)
 				{
 					if(this.expirationDelay!=0 && particle.expireAge==0)
 					{
 						particle.expireAge = particle.age+this.expirationDelay;
 					}
-					else 
+					else if(this.expirationDelay==0)
 					{
 						particle.dead = true;
 

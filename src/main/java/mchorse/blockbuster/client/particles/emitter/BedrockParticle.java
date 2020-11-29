@@ -37,7 +37,8 @@ public class BedrockParticle
 	 * I think this probably never happens in practice
 	 */
 	public Vector3f collisionTime = new Vector3f(-2f, -2f,-2f);
-
+	public boolean collisionTexture;
+	
 	/* Rotation */
 	public float rotation;
 	public float initialRotation;
