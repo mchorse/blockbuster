@@ -15,6 +15,7 @@ import mchorse.blockbuster.client.particles.components.appearance.BedrockCompone
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceLighting;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceTinting;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
+import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionTinting;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireInBlocks;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireNotInBlocks;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentKillPlane;
@@ -107,7 +108,8 @@ public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>
 		this.components.put("minecraft:particle_appearance_lighting", BedrockComponentAppearanceLighting.class);
 		this.components.put("minecraft:particle_appearance_tinting", BedrockComponentAppearanceTinting.class);
 		this.components.put("minecraft:particle_collision_appearance", BedrockComponentCollisionAppearance.class);
-
+		this.components.put("minecraft:particle_collision_tinting", BedrockComponentCollisionTinting.class);
+		
 		/* Motion & Rotation */
 		this.components.put("minecraft:particle_initial_speed", BedrockComponentInitialSpeed.class);
 		this.components.put("minecraft:particle_initial_spin", BedrockComponentInitialSpin.class);

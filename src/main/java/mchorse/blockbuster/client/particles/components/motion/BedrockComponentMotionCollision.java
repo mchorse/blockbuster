@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
+import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
+import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionTinting;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import mchorse.blockbuster.client.particles.molang.MolangException;
@@ -152,7 +154,10 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
 			if (d0 != y || origX != x || origZ != z)
 			{
-				if(true) { //later there will be an option to enable texture on collision...
+				if(MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionTinting.class).enabled)) {
+					particle.collisionTinting = true;
+				}
+				if(MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionAppearance.class).enabled)) {
 					particle.collisionTexture = true;
 				}
 				if (this.expireOnImpact)

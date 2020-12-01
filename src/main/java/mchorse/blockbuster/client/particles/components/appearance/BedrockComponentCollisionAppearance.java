@@ -37,6 +37,7 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentBase im
 	public BedrockMaterial material = BedrockMaterial.OPAQUE;
 	public ResourceLocation texture = DEFAULT_TEXTURE;
 	
+	public MolangExpression enabled = MolangParser.ZERO;
 	public MolangExpression sizeW = MolangParser.ZERO;
 	public MolangExpression sizeH = MolangParser.ZERO;
 	public CameraFacing facing = CameraFacing.LOOKAT_XYZ;
@@ -47,6 +48,7 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentBase im
 	public MolangExpression uvW = MolangParser.ZERO;
 	public MolangExpression uvH = MolangParser.ZERO;
 
+	public boolean lit; //gets set from GuiCollisionLighting
 	public boolean flipbook = false;
 	public float stepX;
 	public float stepY;
@@ -83,6 +85,12 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentBase im
 
 		JsonObject element = elem.getAsJsonObject();
 
+		if (element.has("enabled")) this.enabled = parser.parseJson(element.get("enabled"));
+		if(element.has("lit")) 
+		{
+			this.lit = element.get("lit").getAsBoolean();
+		}
+		
 		if (element.has("material"))
 		{
 			this.material = BedrockMaterial.fromString(element.get("material").getAsString());
@@ -206,10 +214,15 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentBase im
 		size.add(this.sizeW.toJson());
 		size.add(this.sizeH.toJson());
 
+		
+		
+		object.add("enabled", this.enabled.toJson());
 		/* Adding "uv" properties */
 		uv.addProperty("texture_width", this.textureWidth);
 		uv.addProperty("texture_height", this.textureHeight);
 
+		object.addProperty("lit", this.lit);
+		
 		object.addProperty("material", this.material.id);
 		
 		if(this.texture != null && !this.texture.equals(BedrockScheme.DEFAULT_TEXTURE)) 
@@ -290,8 +303,23 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentBase im
 	@Override
 	public void render(BedrockEmitter emitter, BedrockParticle particle, BufferBuilder builder, float partialTicks)
 	{
-		if(!particle.collisionTexture) return;
-		//GifTexture.bindTexture(this.texture, emitter.age, partialTicks);
+		boolean tmpLit = false;
+		if(!particle.collisionTexture) {
+			if(particle.collisionTinting) {
+				tmpLit = emitter.lit;
+				emitter.lit = this.lit;
+				emitter.scheme.get(BedrockComponentAppearanceBillboard.class).render(emitter, particle, builder, partialTicks);
+				emitter.lit = tmpLit;
+			}
+			return;
+		}
+		else {
+			if(!particle.collisionTinting) {
+				tmpLit = this.lit;
+				this.lit = emitter.lit;
+			}
+		}
+		GifTexture.bindTexture(this.texture, emitter.age, partialTicks);
 		
 		this.calculateUVs(particle, partialTicks);
 
@@ -349,7 +377,7 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentBase im
 		}
 
 		/* Calculate the geometry for billboards using cool matrix math */
-		int light = emitter.getBrightnessForRender(partialTicks, px, py, pz);
+		int light = (lit) ? 15728880 : emitter.getBrightnessForRender(partialTicks, px, py, pz);
 		int lightX = light >> 16 & 65535;
 		int lightY = light & 65535;
 
@@ -389,6 +417,9 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentBase im
 		builder.pos(this.vertices[1].x, this.vertices[1].y, this.vertices[1].z).tex(u2, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
 		builder.pos(this.vertices[2].x, this.vertices[2].y, this.vertices[2].z).tex(u2, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
 		builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(u1, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		if(!particle.collisionTinting) {
+			this.lit = tmpLit;
+		}
 	}
 
 	@Override
