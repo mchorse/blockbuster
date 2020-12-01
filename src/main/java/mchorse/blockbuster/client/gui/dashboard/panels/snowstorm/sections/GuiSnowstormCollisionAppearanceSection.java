@@ -5,6 +5,9 @@ import mchorse.blockbuster.client.particles.BedrockMaterial;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceBillboard;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
+import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionTinting;
+import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
@@ -24,6 +27,7 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 	//inheriting this throughout the structure would make things less copy and paste
 	public static final String GUIPATH = "blockbuster.gui.snowstorm.appearance";
 	
+	public GuiToggleElement enabled;
 	public GuiButtonElement pick;
 	public GuiCirculateElement material;
 	public GuiTexturePicker texture;
@@ -50,6 +54,8 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 	{
 		super(mc, parent);
 
+		this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.enabled"), (b) -> this.parent.dirty());
+		
 		this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.snowstorm.general.pick"), (b) ->
 		{
 			GuiElement container = this.getParentContainer();
@@ -147,6 +153,7 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 		this.flipbook.add(Elements.row(mc, 5, 0, 20, this.fps, this.max));
 		this.flipbook.add(Elements.row(mc, 5, 0, 20, this.stretch, this.loop));
 
+		this.fields.add(this.enabled);
 		this.fields.add(Elements.row(mc, 5, 0, 20, this.pick, this.material));
 		this.fields.add(Elements.row(mc, 5, 0, 20, this.modeLabel, this.mode));
 		this.fields.add(Elements.label(IKey.lang(GUIPATH+".size"), 20).anchor(0, 1F));
@@ -181,7 +188,13 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 	{
 		super.setScheme(scheme);
 
-		this.material.setValue(scheme.material.ordinal());
+		this.material.setValue(this.component.material.ordinal());
+	}
+	
+	@Override
+	public void beforeSave(BedrockScheme scheme)
+	{
+		this.component.enabled = this.enabled.isToggled() ? MolangParser.ONE : MolangParser.ZERO;
 	}
 
 	@Override
@@ -206,6 +219,7 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 	{
 		super.fillData();
 
+		//this.enabled.toggled(MolangExpression.isOne(this.scheme.get(BedrockComponentCollisionAppearance.class).enabled));
 		this.mode.setValue(this.component.flipbook ? 1 : 0);
 		this.set(this.sizeW, this.component.sizeW);
 		this.set(this.sizeH, this.component.sizeH);

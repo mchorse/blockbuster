@@ -454,7 +454,6 @@ public class BedrockEmitter
 			for (BedrockParticle particle : this.particles)
 			{
 				if(!particle.collisionTexture) GifTexture.bindTexture(this.scheme.texture, this.age, partialTicks);
-				else GifTexture.bindTexture(this.scheme.get(BedrockComponentCollisionAppearance.class).texture, this.age, partialTicks);
 				
 				builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
 				this.setEmitterVariables(partialTicks);
@@ -462,7 +461,7 @@ public class BedrockEmitter
 
 				for (IComponentParticleRender component : renders)
 				{
-					if(!(particle.collisionTexture && component.getClass().getName().contains("BedrockComponentAppearanceBillboard")))
+					if(!((particle.collisionTexture || particle.collisionTinting) && component.getClass().getName().contains("BedrockComponentAppearanceBillboard")))
 					{
 						component.render(this, particle, builder, partialTicks);
 					}	

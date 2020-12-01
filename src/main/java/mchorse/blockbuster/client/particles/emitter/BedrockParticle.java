@@ -38,6 +38,7 @@ public class BedrockParticle
 	 */
 	public Vector3f collisionTime = new Vector3f(-2f, -2f,-2f);
 	public boolean collisionTexture;
+	public boolean collisionTinting;
 	
 	/* Rotation */
 	public float rotation;
@@ -174,6 +175,7 @@ public class BedrockParticle
 		}
 
 		this.age ++;
+		System.out.println(this.speed.length());
 	}
 
 	public void setupMatrix(BedrockEmitter emitter)
