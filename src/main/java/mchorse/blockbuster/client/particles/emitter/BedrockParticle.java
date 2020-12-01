@@ -175,7 +175,6 @@ public class BedrockParticle
 		}
 
 		this.age ++;
-		System.out.println(this.speed.length());
 	}
 
 	public void setupMatrix(BedrockEmitter emitter)
