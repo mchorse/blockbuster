@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 public class BedrockComponentMotionCollision extends BedrockComponentBase implements IComponentParticleUpdate
@@ -185,116 +186,34 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				
 				if (d0 != y)
 				{
-					/*realistic collision*/
-					if(realisticCollision) 
-					{
-						if(particle.collisionTime.y!=(particle.age-1)) 
-						{
-							if(this.bounciness!=0) particle.speed.y = -particle.speed.y*this.bounciness;
-						}
-						else if(particle.collisionTime.y==(particle.age-1)) particle.speed.y = 0;
+					try {
+						collisionHandler(particle, emitter, 'y', d0, y, now, prev);
+					} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
+							| IllegalAccessException e) {
+						e.printStackTrace();
 					}
-					else particle.accelerationFactor.y *= -this.bounciness;
-					
-					if(particle.collisionTime.y!=(particle.age-1))
-					{
-						/*random bounciness*/
-						if(this.randomBounciness!=0 /*&& Math.round(particle.speed.y)!=0*/) 
-						{
-							particle.speed = randomBounciness(particle.speed, 'y', this.randomBounciness);
-						}
-						
-						/*split particles*/
-						if(this.splitParticleCount!=0) 
-						{
-							splitParticle(particle, emitter, 'y', d0, y, now, prev);
-						}
-						
-						/*damping*/
-						if(damp!=0) 
-						{
-							particle.speed = damping(particle.speed);
-						}
-					}
-					
-					
-					particle.collisionTime.y = particle.age;
 					now.y += d0 < y ? r : -r;
 				}
 				
 				if (origX != x)
 				{
-					/*realistic collision*/
-					if(realisticCollision) 
-					{
-						if(particle.collisionTime.x!=(particle.age-1)) 
-						{
-							if(this.bounciness!=0) particle.speed.x = -particle.speed.x*this.bounciness;
-						}
-						else if(particle.collisionTime.x==(particle.age-1)) particle.speed.x = 0;
+					try {
+						collisionHandler(particle, emitter, 'x', origX, x, now, prev);
+					} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
+							| IllegalAccessException e) {
+						e.printStackTrace();
 					}
-					else particle.accelerationFactor.x *= -this.bounciness;
-					
-					if(particle.collisionTime.x!=(particle.age-1))
-					{
-						/*random bounciness*/
-						if(this.randomBounciness!=0 /*&& Math.round(particle.speed.x)!=0*/) 
-						{
-							particle.speed = randomBounciness(particle.speed, 'x', this.randomBounciness);
-						}
-						
-						/*split particles*/
-						if(this.splitParticleCount!=0) 
-						{
-							splitParticle(particle, emitter, 'x', origX, x, now, prev);
-						}
-						
-						/*damping*/
-						if(damp!=0) 
-						{
-							particle.speed = damping(particle.speed);
-						}
-					}
-					
-					particle.collisionTime.x = particle.age;
 					now.x += origX < x ? r : -r;
 				}
 
 				if (origZ != z)
 				{
-					/*realistic collision*/
-					if(realisticCollision) 
-					{
-						if(particle.collisionTime.z!=(particle.age-1)) 
-						{
-							if(this.bounciness!=0) particle.speed.z = -particle.speed.z*this.bounciness;
-						}
-						else if(particle.collisionTime.z==(particle.age-1)) particle.speed.z = 0;
+					try {
+						collisionHandler(particle, emitter, 'z', origZ, z, now, prev);
+					} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
+							| IllegalAccessException e) {
+						e.printStackTrace();
 					}
-					else particle.accelerationFactor.z *= -this.bounciness;
-					
-					if(particle.collisionTime.z!=(particle.age-1))
-					{
-						/*random bounciness*/
-						if(this.randomBounciness!=0 /*&& Math.round(particle.speed.z)!=0*/) 
-						{
-							particle.speed = randomBounciness(particle.speed, 'z', this.randomBounciness);
-						}
-						
-						/*split particles*/
-						if(this.splitParticleCount!=0) 
-						{
-							splitParticle(particle, emitter, 'z', origZ, z, now, prev);
-						}
-						
-						/*damping*/
-						if(damp!=0) 
-						{
-							particle.speed = damping(particle.speed);
-						}
-					}
-					
-					particle.collisionTime.z = particle.age;
 					now.z += origZ < z ? r : -r;
 				}
 
@@ -307,6 +226,55 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		}
 	}
 	
+	//with java reflect - code redundancy can be avoided quick and easily - may cost a little more performance?
+	public void collisionHandler(BedrockParticle particle, BedrockEmitter emitter, char component, double orig, double offset, Vector3d now, Vector3d prev) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	{
+		if(!(component=='x' || component=='y' || component=='z')) 
+			throw new IllegalArgumentException("Illegal value of the component: "+component);
+			
+		String componentStr = String.valueOf(component);
+		Field vector3fField = Vector3f.class.getField(componentStr);
+		
+		float collisionTime = vector3fField.getFloat(particle.collisionTime);
+		float speed = vector3fField.getFloat(particle.speed);
+		float accelerationFactor = vector3fField.getFloat(particle.accelerationFactor);
+		
+		
+		/*realistic collision*/
+		if(this.realisticCollision) 
+		{
+			if(collisionTime!=(particle.age-1)) 
+			{
+				if(this.bounciness!=0) vector3fField.setFloat(particle.speed, -speed*this.bounciness);
+			}
+			else if(collisionTime==(particle.age-1)) vector3fField.setFloat(particle.speed, 0);
+		}
+		else vector3fField.setFloat(particle.accelerationFactor, accelerationFactor*-this.bounciness);
+		
+		if(collisionTime!=(particle.age-1))
+		{
+			/*random bounciness*/
+			if(this.randomBounciness!=0 /*&& Math.round(particle.speed.x)!=0*/) 
+			{
+				particle.speed = randomBounciness(particle.speed, component, this.randomBounciness);
+			}
+			
+			/*split particles*/
+			if(this.splitParticleCount!=0) 
+			{
+				splitParticle(particle, emitter, component, orig, offset, now, prev);
+			}
+			
+			/*damping*/
+			if(damp!=0) 
+			{
+				particle.speed = damping(particle.speed);
+			}
+		}
+		
+		vector3fField.setFloat(particle.collisionTime, particle.age);
+	}
+	
 	public Vector3f damping(Vector3f vector) 
 	{
 		float randomDamp = (this.randomDamp*0.1f)/2;
@@ -316,109 +284,92 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		return vector;
 	}
 	
-	public void splitParticle(BedrockParticle particle, BedrockEmitter emitter, char component, double orig, double offset, Vector3d now, Vector3d prev) {
-		if(component=='x' || component=='y' || component=='z')
+	public void splitParticle(BedrockParticle particle, BedrockEmitter emitter, char component, double orig, double offset, Vector3d now, Vector3d prev) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		if(!(component=='x' || component=='y' || component=='z')) 
+			throw new IllegalArgumentException("Illegal value of the component: "+component);
+
+		for(int i = 0; i<this.splitParticleCount;i++) 
 		{
-			for(int i = 0; i<splitParticleCount;i++) 
+			BedrockParticle splitParticle = emitter.createParticle(false);
+			splitParticle.initialPosition.set(particle.initialPosition);
+			splitParticle.collisionTime.set(particle.collisionTime);
+			splitParticle.position.set(now);
+			splitParticle.prevPosition.set(prev);
+			
+			//Mh is this necessary?
+			splitParticle.acceleration.set(particle.acceleration);
+			splitParticle.accelerationFactor.set(particle.accelerationFactor);
+			splitParticle.drag = particle.drag;
+			splitParticle.dragFactor = particle.dragFactor;
+			splitParticle.collisionTexture = particle.collisionTexture;
+			splitParticle.collisionTinting = particle.collisionTinting;
+			
+			splitParticle.age = particle.age;
+			
+			String componentStr = String.valueOf(component);
+			
+			Field vector3fField = Vector3f.class.getField(componentStr);
+			Field vector3dField = Vector3d.class.getField(componentStr);
+		
+			float speed = vector3fField.getFloat(particle.speed);
+			double splitPosition = vector3dField.getDouble(splitParticle.position);
+			
+			if(!(Math.abs(speed)>Math.abs(this.splitParticleSpeedThreshold)))
+				return;
+			vector3fField.setFloat(splitParticle.collisionTime, particle.age);
+			vector3dField.setDouble(splitParticle.position, splitPosition + ((orig < offset) ? this.radius : -this.radius));
+
+			Vector3f randomSpeed = randomBounciness(particle.speed, component, (this.randomBounciness!=0) ? this.randomBounciness : 100);
+			randomSpeed.scale(1.0f/this.splitParticleCount);
+			splitParticle.speed.set(randomSpeed);
+			
+			if(damp!=0) 
 			{
-				BedrockParticle splitParticle = emitter.createParticle(false);
-				splitParticle.initialPosition.set(particle.initialPosition);
-				splitParticle.collisionTime.set(particle.collisionTime);
-				splitParticle.position.set(now);
-				splitParticle.prevPosition.set(prev);
-				
-				//Mh is this necessary?
-				splitParticle.acceleration.set(particle.acceleration);
-				splitParticle.accelerationFactor.set(particle.accelerationFactor);
-				splitParticle.drag = particle.drag;
-				splitParticle.dragFactor = particle.dragFactor;
-				
-				
-				splitParticle.age = particle.age;
-				
-				switch(component) 
-				{
-					case 'x':
-						if(!(Math.abs(particle.speed.x)>Math.abs(this.splitParticleSpeedThreshold)))
-							return;
-						splitParticle.collisionTime.x = particle.age;
-						splitParticle.position.x += orig < offset ? this.radius : -this.radius;
-						break;
-					case 'y':
-						if(!(Math.abs(particle.speed.y)>Math.abs(this.splitParticleSpeedThreshold)))
-							return;
-						splitParticle.collisionTime.y = particle.age;
-						splitParticle.position.y += orig < offset ? this.radius : -this.radius;
-						break;
-					case 'z':
-						if(!(Math.abs(particle.speed.z)>Math.abs(this.splitParticleSpeedThreshold)))
-							return;
-						splitParticle.collisionTime.z = particle.age;
-						splitParticle.position.z += orig < offset ? this.radius : -this.radius;
-						break;
-				}
-				Vector3f randomSpeed = randomBounciness(particle.speed, component, (this.randomBounciness!=0) ? this.randomBounciness : 100);
-				randomSpeed.scale(1.0f/this.splitParticleCount);
-				splitParticle.speed.set(randomSpeed);
-				if(damp!=0) {
-					splitParticle.speed = damping(splitParticle.speed);
-				}
-				emitter.splitParticles.add(splitParticle);
+				splitParticle.speed = damping(splitParticle.speed);
 			}
-			particle.dead = true;
+			
+			emitter.splitParticles.add(splitParticle);
 		}
-		else 
-		{
-			throw new IllegalArgumentException("Invalid component input value: "+component);
-		}
+		particle.dead = true;
 	}
 	
-	public Vector3f randomBounciness(Vector3f vector0, char component, float randomness) {
-		if(this.randomBounciness!=0 && (component=='x' || component=='y' || component=='z')) {
-			Vector3f vector = new Vector3f(vector0);
+	public Vector3f randomBounciness(Vector3f vector0, char component, float randomness) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		if(randomness!=0 && (component=='x' || component=='y' || component=='z')) {
+			
+			Vector3f vector = new Vector3f(vector0); //don't change the vector0 - pointer behaviour not wanted here
 			float randomfactor = 0.25f; //scale down the vector components not involved in the collision reflection
 			float prevLength = vector.length();
 			randomness *= 0.1f; //scaled down to 1/10
 			float random1 = (float) Math.random()*randomness;
 			float random2 = (float) (randomness*randomfactor*(Math.random()*2-1));
 			float random3 = (float) (randomness*randomfactor*(Math.random()*2-1));
-			/* tmpComponent explanation
+			
+			Field vector3fField = Vector3f.class.getField(String.valueOf(component));
+			float vectorValue = vector3fField.getFloat(vector);
+			/* tmpComponent explanation (tmpComponent is now vectorValue due to java reflect system)
 			*  if bounciness=0 then the speed of a specific component wont't affect the particles movement
 			*  so the particles speed needs to be scaled back without taking that component into account
 			*/
+			if(bounciness!=0) vector3fField.setFloat(vector, vectorValue + ((vectorValue<0) ? -random1 : random1));
+			else {
+				float tmpComponent = vectorValue;
+				//vector3fField.setFloat(vector, 0); //NEED TO CHECK THAT AGAIN
+				vector.scale(prevLength/vector.length());
+				vector3fField.setFloat(vector, tmpComponent);
+			}
+			
 			switch(component) {
 				case 'x':
 					vector.y += random2;
 					vector.z += random3;
-					if(bounciness!=0) vector.x += vector.x<0 ? -random1 : random1;
-					else {
-						float tmpComponent=vector.x;
-						vector.x = 0;
-						vector.scale(prevLength/vector.length());
-						vector.x = tmpComponent;
-					}
 					break;
 				case 'y':
 					vector.x += random2;
 					vector.z += random3;
-					if(bounciness!=0) vector.y += vector.y<0 ? -random1 : random1;
-					else {
-						float tmpComponent=vector.y;
-						vector.y = 0;
-						vector.scale(prevLength/vector.length());
-						vector.y = tmpComponent;
-					}
 					break;
 				case 'z':
 					vector.y += random2;
 					vector.x += random3;
-					if(bounciness!=0) vector.z += vector.z<0 ? -random1 : random1;
-					else {
-						float tmpComponent=vector.z;
-						vector.z = 0;
-						vector.scale(prevLength/vector.length());
-						vector.z = tmpComponent;
-					}
 					break;
 			}
 			if(bounciness!=0) vector.scale(prevLength/vector.length()); //scale back to original length
