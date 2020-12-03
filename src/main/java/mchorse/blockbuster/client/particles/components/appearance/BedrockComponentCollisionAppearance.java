@@ -304,20 +304,22 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentBase im
 	public void render(BedrockEmitter emitter, BedrockParticle particle, BufferBuilder builder, float partialTicks)
 	{
 		boolean tmpLit = false;
-		if(!particle.collisionTexture) {
-			if(particle.collisionTinting) {
+		if(!particle.collisionTexture) 
+		{
+			if(particle.collisionTinting) 
+			{
 				tmpLit = emitter.lit;
 				emitter.lit = this.lit;
 				emitter.scheme.get(BedrockComponentAppearanceBillboard.class).render(emitter, particle, builder, partialTicks);
 				emitter.lit = tmpLit;
 			}
-			return;
+			return; //when texture and tinting is false - this render method should not be used
 		}
-		else {
-			if(!particle.collisionTinting) {
-				tmpLit = this.lit;
-				this.lit = emitter.lit;
-			}
+		else if(!particle.collisionTinting) 
+		{
+			//tinting false doesn't necessarily mean that lit was not passed - emitter.lit should be used
+			tmpLit = this.lit;
+			this.lit = emitter.lit;
 		}
 		GifTexture.bindTexture(this.texture, emitter.age, partialTicks);
 		
@@ -422,7 +424,7 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentBase im
 		}
 	}
 
-	@Override
+	@Override //not really important because it seems to be used for guiParticles - there is no collision
 	public void renderOnScreen(BedrockParticle particle, int x, int y, float scale, float partialTicks)
 	{
 		if(!particle.collisionTexture) return;

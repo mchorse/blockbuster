@@ -319,7 +319,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			vector3fField.setFloat(splitParticle.collisionTime, particle.age);
 			vector3dField.setDouble(splitParticle.position, splitPosition + ((orig < offset) ? this.radius : -this.radius));
 
-			Vector3f randomSpeed = randomBounciness(particle.speed, component, (this.randomBounciness!=0) ? this.randomBounciness : 100);
+			Vector3f randomSpeed = randomBounciness(particle.speed, component, (this.randomBounciness!=0) ? this.randomBounciness : 10);
 			randomSpeed.scale(1.0f/this.splitParticleCount);
 			splitParticle.speed.set(randomSpeed);
 			
@@ -334,7 +334,8 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 	}
 	
 	public Vector3f randomBounciness(Vector3f vector0, char component, float randomness) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		if(randomness!=0 && (component=='x' || component=='y' || component=='z')) {
+		if(randomness!=0 && (component=='x' || component=='y' || component=='z')) 
+		{
 			
 			Vector3f vector = new Vector3f(vector0); //don't change the vector0 - pointer behaviour not wanted here
 			float randomfactor = 0.25f; //scale down the vector components not involved in the collision reflection
@@ -349,16 +350,10 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			/* tmpComponent explanation (tmpComponent is now vectorValue due to java reflect system)
 			*  if bounciness=0 then the speed of a specific component wont't affect the particles movement
 			*  so the particles speed needs to be scaled back without taking that component into account
+			*  - ! so in theory this should make it more accurate but they get too fast - therefore disabled
 			*/
-			if(bounciness!=0) vector3fField.setFloat(vector, vectorValue + ((vectorValue<0) ? -random1 : random1));
-			else {
-				float tmpComponent = vectorValue;
-				//vector3fField.setFloat(vector, 0); //NEED TO CHECK THAT AGAIN
-				vector.scale(prevLength/vector.length());
-				vector3fField.setFloat(vector, tmpComponent);
-			}
-			
-			switch(component) {
+			switch(component) 
+			{
 				case 'x':
 					vector.y += random2;
 					vector.z += random3;
@@ -372,7 +367,26 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 					vector.x += random3;
 					break;
 			}
-			if(bounciness!=0) vector.scale(prevLength/vector.length()); //scale back to original length
+			
+			if(bounciness!=0) 
+			{
+				vector3fField.setFloat(vector, vectorValue + ((vectorValue<0) ? -random1 : random1));
+				vector.scale(prevLength/vector.length()); //scale back to original length
+			}
+			else if(vector.x != 0 || vector.y != 0 || vector.z!=0 )
+			{
+				vector3fField.setFloat(vector, 0); 
+				//if the vector is now zero... don't execute 1/vector.length() -> 1/0 not possible
+				if(vector.x != 0 || vector.y != 0 || vector.z!=0) vector.scale(prevLength/vector.length());
+				vector3fField.setFloat(vector, vectorValue);
+			}
+			else //bounciness==0 and vector is zero (rare case, but not impossible)
+			{
+				//if you don't want particles to stop, while others randomly slide away, 
+				//when bounciness==0, then return vector0
+				return vector0; 
+			}
+			
 			return vector;
 		}
 		else if(!(component=='x' || component=='y' || component=='z')) { //component wrong input

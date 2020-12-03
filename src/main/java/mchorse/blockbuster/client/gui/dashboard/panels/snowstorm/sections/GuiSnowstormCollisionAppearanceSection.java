@@ -219,7 +219,7 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 	{
 		super.fillData();
 
-		//this.enabled.toggled(MolangExpression.isOne(this.scheme.get(BedrockComponentCollisionAppearance.class).enabled));
+		this.enabled.toggled(MolangExpression.isOne(component.enabled));
 		this.mode.setValue(this.component.flipbook ? 1 : 0);
 		this.set(this.sizeW, this.component.sizeW);
 		this.set(this.sizeH, this.component.sizeH);

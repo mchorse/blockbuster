@@ -166,7 +166,8 @@ public class GuiSnowstormCollisionLightingSection extends GuiSnowstormSection
 		this.component = scheme.getOrCreate(BedrockComponentCollisionTinting.class);
 		this.appearanceComponent = scheme.getOrCreate(BedrockComponentCollisionAppearance.class);
 		this.lighting.toggled(!appearanceComponent.lit);
-
+		this.enabled.toggled(MolangExpression.isOne(component.enabled));
+		
 		if (this.component.color instanceof Tint.Solid)
 		{
 			Tint.Solid solid = this.getSolid();
