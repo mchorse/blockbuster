@@ -461,6 +461,11 @@ public class BedrockEmitter
 
 				for (IComponentParticleRender component : renders)
 				{
+					/*
+					 * if collisionTexture or collisionTinting is true - means that those options are enabled
+					 * therefore the old Billboardappearance should not be called
+					 * because collisionAppearance.class is rendering
+					 */
 					if(!((particle.collisionTexture || particle.collisionTinting) && component.getClass().getName().contains("BedrockComponentAppearanceBillboard")))
 					{
 						component.render(this, particle, builder, partialTicks);
