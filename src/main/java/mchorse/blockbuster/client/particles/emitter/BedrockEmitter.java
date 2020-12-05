@@ -453,6 +453,8 @@ public class BedrockEmitter
 			
 			for (BedrockParticle particle : this.particles)
 			{
+				//another possible implementation, without rendering for each iteration of the loop, would be to create a list of particles
+				//with collisionTexture on and one with particles without collisionTexture and render them with two loops...
 				if(!particle.collisionTexture) GifTexture.bindTexture(this.scheme.texture, this.age, partialTicks);
 				
 				builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);

@@ -11,7 +11,9 @@ import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.mclib.math.Operation;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
@@ -24,6 +26,9 @@ import java.util.List;
 public class BedrockComponentMotionCollision extends BedrockComponentBase implements IComponentParticleUpdate
 {
 	public MolangExpression enabled = MolangParser.ONE;
+	public MolangExpression preserveEnergy = MolangParser.ZERO;
+	public boolean entityCollision;
+	public boolean momentum;
 	public float collissionDrag = 0;
 	public float bounciness = 1;
 	public float randomBounciness = 0;
@@ -53,9 +58,12 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		JsonObject element = elem.getAsJsonObject();
 
 		if (element.has("enabled")) this.enabled = parser.parseJson(element.get("enabled"));
+		if (element.has("entityCollision")) this.entityCollision = element.get("entityCollision").getAsBoolean();
+		if (element.has("momentum")) this.momentum = element.get("momentum").getAsBoolean();
 		if (element.has("collision_drag")) this.collissionDrag = element.get("collision_drag").getAsFloat();
 		if (element.has("coefficient_of_restitution")) this.bounciness = element.get("coefficient_of_restitution").getAsFloat();
 		if (element.has("bounciness_randomness")) this.randomBounciness = element.get("bounciness_randomness").getAsFloat();
+		if (element.has("preserveEnergy")) this.preserveEnergy = parser.parseJson(element.get("preserveEnergy"));
 		if (element.has("damp")) this.damp = element.get("damp").getAsFloat();
 		if (element.has("random_damp")) this.randomDamp = element.get("random_damp").getAsFloat();
 		if (element.has("split_particle_count")) this.splitParticleCount = element.get("split_particle_count").getAsInt();
@@ -77,12 +85,15 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		{
 			return object;
 		}
-
+		
 		if (!MolangExpression.isOne(this.enabled)) object.add("enabled", this.enabled.toJson());
 		if (this.realisticCollision) object.addProperty("realisticCollision", true);
+		if (this.entityCollision) object.addProperty("entityCollision", true);
+		if (this.momentum) object.addProperty("momentum", true);
 		if (this.collissionDrag != 0) object.addProperty("collision_drag", this.collissionDrag);
 		if (this.bounciness != 1) object.addProperty("coefficient_of_restitution", this.bounciness);
 		if (this.randomBounciness != 0) object.addProperty("bounciness_randomness", this.randomBounciness);
+		if (MolangExpression.isOne(this.preserveEnergy)) object.add("preserveEnergy", this.preserveEnergy.toJson());
 		if (this.damp != 0) object.addProperty("damp", this.damp);
 		if (this.randomDamp != 0) object.addProperty("random_damp", this.randomDamp);
 		if (this.splitParticleCount != 0) object.addProperty("split_particle_count", this.splitParticleCount);
@@ -129,9 +140,18 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			double d0 = y;
 			double origX = x;
 			double origZ = z;
-
+			List<Entity> list2 = emitter.world.getEntitiesWithinAABB(Entity.class, aabb.expand(x, y, z));
 			List<AxisAlignedBB> list = emitter.world.getCollisionBoxes(null, aabb.expand(x, y, z));
 
+			if(this.entityCollision) 
+			{
+				for(Entity entity : list2) 
+				{
+					AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox();
+					list.add(axisalignedbb);
+				}
+			}
+			
 			for (AxisAlignedBB axisalignedbb : list)
 			{
 				y = axisalignedbb.calculateYOffset(aabb, y);
@@ -152,6 +172,8 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			}
 
 			aabb = aabb.offset(0.0D, 0.0D, z);
+			
+			
 
 			if (d0 != y || origX != x || origZ != z)
 			{
@@ -187,7 +209,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				if (d0 != y)
 				{
 					try {
-						collisionHandler(particle, emitter, 'y', d0, y, now, prev);
+						collisionHandler(particle, emitter, 'y', d0, y, now, prev, list2);
 					} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
 							| IllegalAccessException e) {
 						e.printStackTrace();
@@ -198,7 +220,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				if (origX != x)
 				{
 					try {
-						collisionHandler(particle, emitter, 'x', origX, x, now, prev);
+						collisionHandler(particle, emitter, 'x', origX, x, now, prev, list2);
 					} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
 							| IllegalAccessException e) {
 						e.printStackTrace();
@@ -209,7 +231,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				if (origZ != z)
 				{
 					try {
-						collisionHandler(particle, emitter, 'z', origZ, z, now, prev);
+						collisionHandler(particle, emitter, 'z', origZ, z, now, prev, list2);
 					} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
 							| IllegalAccessException e) {
 						e.printStackTrace();
@@ -227,7 +249,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 	}
 	
 	//with java reflect - code redundancy can be avoided quick and easily - may cost a little more performance?
-	public void collisionHandler(BedrockParticle particle, BedrockEmitter emitter, char component, double orig, double offset, Vector3d now, Vector3d prev) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	public void collisionHandler(BedrockParticle particle, BedrockEmitter emitter, char component, double orig, double offset, Vector3d now, Vector3d prev, List<Entity> entities) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
 	{
 		if(!(component=='x' || component=='y' || component=='z')) 
 			throw new IllegalArgumentException("Illegal value of the component: "+component);
@@ -269,6 +291,14 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			if(damp!=0) 
 			{
 				particle.speed = damping(particle.speed);
+			}
+		}
+		if(this.momentum && this.entityCollision) { //NOT FINISHED
+			for(Entity entity : entities) 
+			{
+				particle.speed.x += entity.posX-entity.prevPosX;
+				particle.speed.y += entity.posY-entity.prevPosY;
+				particle.speed.z += entity.posZ-entity.prevPosZ;
 			}
 		}
 		
@@ -347,11 +377,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			
 			Field vector3fField = Vector3f.class.getField(String.valueOf(component));
 			float vectorValue = vector3fField.getFloat(vector);
-			/* tmpComponent explanation (tmpComponent is now vectorValue due to java reflect system)
-			*  if bounciness=0 then the speed of a specific component wont't affect the particles movement
-			*  so the particles speed needs to be scaled back without taking that component into account
-			*  - ! so in theory this should make it more accurate but they get too fast - therefore disabled
-			*/
+			
 			switch(component) 
 			{
 				case 'x':
@@ -375,7 +401,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			}
 			else if(vector.x != 0 || vector.y != 0 || vector.z!=0 )
 			{
-				vector3fField.setFloat(vector, 0); 
+				/* if bounciness=0 then the speed of a specific component wont't affect the particles movement
+				*  so the particles speed needs to be scaled back without taking that component into account
+				*  when bounciness=0 the energy of that component gets absorbed by the collision block and therefore is lost for the particle 
+				*/
+				if(MolangExpression.isOne(this.preserveEnergy)) vector3fField.setFloat(vector, 0); 
 				//if the vector is now zero... don't execute 1/vector.length() -> 1/0 not possible
 				if(vector.x != 0 || vector.y != 0 || vector.z!=0) vector.scale(prevLength/vector.length());
 				vector3fField.setFloat(vector, vectorValue);

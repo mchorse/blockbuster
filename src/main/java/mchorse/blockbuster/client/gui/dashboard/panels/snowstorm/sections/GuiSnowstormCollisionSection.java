@@ -4,6 +4,8 @@ import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotionCollision;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -14,9 +16,12 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 {
 	public GuiToggleElement enabled;
 	public GuiToggleElement realisticCollision;
+	public GuiToggleElement entityCollision;
+	public GuiToggleElement momentum;
 	public GuiTrackpadElement drag;
 	public GuiTrackpadElement bounciness;
 	public GuiTrackpadElement randomBounciness;
+	public GuiToggleElement preserveEnergy;
 	public GuiTrackpadElement randomDamp;
 	public GuiTrackpadElement damp;
 	public GuiTrackpadElement splitParticle; //split particle into n particles on collision
@@ -24,6 +29,9 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 	public GuiTrackpadElement radius;
 	public GuiToggleElement expire;
 	public GuiTrackpadElement expirationDelay;
+	
+	public GuiElement controlToggleElements;
+	public GuiElement randomBouncinessRow;
 
 	private boolean wasPresent;
 
@@ -36,6 +44,18 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		this.realisticCollision = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.realisticCollision"), (b) ->
 		{
 			this.component.realisticCollision = b.isToggled();
+			this.parent.dirty();
+		});
+		
+		this.entityCollision = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.entityCollision"), (b) ->
+		{
+			this.component.entityCollision = b.isToggled();
+			this.parent.dirty();
+		});
+		
+		this.momentum = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.momentum"), (b) ->
+		{
+			this.component.momentum = b.isToggled();
 			this.parent.dirty();
 		});
 		
@@ -60,12 +80,15 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		});
 		this.randomBounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.randomBounciness"));
 		
+		this.preserveEnergy = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.preserveEnergy"), (b) -> this.parent.dirty());
+		
 		this.damp = new GuiTrackpadElement(mc, (value) ->
 		{
 			this.component.damp = value.floatValue();
 			this.parent.dirty();
 		});
 		this.damp.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.damping.strength"));
+		this.damp.limit(0, 1);
 		
 		this.randomDamp = new GuiTrackpadElement(mc, (value) ->
 		{
@@ -108,7 +131,17 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		});
 		this.expirationDelay.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.expirationDelay"));
 		
-		this.fields.add(this.enabled, this.realisticCollision, this.drag, this.bounciness, this.randomBounciness, this.radius, this.expire, this.expirationDelay,
+		this.controlToggleElements = new GuiElement(mc);
+		this.controlToggleElements.flex().column(4).stretch().vertical().height(4);
+		
+		this.controlToggleElements.add(this.enabled, this.realisticCollision, this.entityCollision);
+		
+		this.randomBouncinessRow = new GuiElement(mc);
+		this.randomBouncinessRow.flex().column(2).stretch().vertical().height(2);
+
+		this.randomBouncinessRow.add(this.randomBounciness);
+		
+		this.fields.add(this.controlToggleElements, this.drag, this.bounciness, this.randomBouncinessRow , this.radius, this.expire, this.expirationDelay,
 						Elements.label(IKey.lang("blockbuster.gui.snowstorm.collision.damping.title"), 20).anchor(0, 1F), this.damp, this.randomDamp, 
 						Elements.label(IKey.lang("blockbuster.gui.snowstorm.collision.splitParticle.title"), 20).anchor(0, 1F), this.splitParticle,  this.splitParticleSpeedThreshold);
 	}
@@ -122,6 +155,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 	@Override
 	public void beforeSave(BedrockScheme scheme)
 	{
+		this.component.preserveEnergy = this.preserveEnergy.isToggled() ? MolangParser.ONE : MolangParser.ZERO;
 		this.component.enabled = this.enabled.isToggled() ? MolangParser.ONE : MolangParser.ZERO;
 	}
 
@@ -136,11 +170,16 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 	@Override
 	protected void fillData()
 	{
+		this.preserveEnergy.removeFromParent();
+		this.momentum.removeFromParent();
+		
 		this.enabled.toggled(this.wasPresent);
 		this.realisticCollision.toggled(this.component.realisticCollision);
+		this.entityCollision.toggled(this.component.entityCollision);
 		this.drag.setValue(this.component.collissionDrag);
 		this.bounciness.setValue(this.component.bounciness);
 		this.randomBounciness.setValue(this.component.randomBounciness);
+		this.preserveEnergy.toggled(MolangExpression.isOne(this.component.preserveEnergy));
 		this.damp.setValue(this.component.damp);
 		this.randomDamp.setValue(this.component.randomDamp);
 		this.splitParticle.setValue(this.component.splitParticleCount);
@@ -148,5 +187,14 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		this.radius.setValue(this.component.radius);
 		this.expire.toggled(this.component.expireOnImpact);
 		this.expirationDelay.setValue(this.component.expirationDelay);
+		
+		if(this.entityCollision.isToggled()) {
+			this.controlToggleElements.add(momentum);
+		}
+		
+		if(this.randomBounciness.value!=0 && this.bounciness.value==0) {
+			this.randomBouncinessRow.add(preserveEnergy);
+		}
+		this.resizeParent();
 	}
 }
