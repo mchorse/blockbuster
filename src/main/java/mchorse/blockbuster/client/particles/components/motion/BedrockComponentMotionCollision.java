@@ -140,6 +140,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			double d0 = y;
 			double origX = x;
 			double origZ = z;
+			
 			List<Entity> list2 = emitter.world.getEntitiesWithinAABB(Entity.class, aabb.expand(x, y, z));
 			List<AxisAlignedBB> list = emitter.world.getCollisionBoxes(null, aabb.expand(x, y, z));
 
@@ -296,9 +297,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		if(this.momentum && this.entityCollision) { //NOT FINISHED
 			for(Entity entity : entities) 
 			{
-				particle.speed.x += entity.posX-entity.prevPosX;
-				particle.speed.y += entity.posY-entity.prevPosY;
-				particle.speed.z += entity.posZ-entity.prevPosZ;
+				particle.speed.x += 2*(entity.posX-entity.prevPosX);
+				particle.speed.y += 2*(entity.posY-entity.prevPosY);
+				particle.speed.z += 2*(entity.posZ-entity.prevPosZ);
 			}
 		}
 		
@@ -307,8 +308,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 	
 	public Vector3f damping(Vector3f vector) 
 	{
-		float randomDamp = (this.randomDamp*0.1f)/2;
-		float random = (float) (randomDamp*(Math.random()*2-1));
+		float random = (float) (this.randomDamp*(Math.random()*2-1));
 		float clampedValue = Math.max(0, Math.min(1, (1-damp)+random)); //clamp between 0 and 1
 		vector.scale(clampedValue);
 		return vector;
@@ -325,7 +325,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			splitParticle.collisionTime.set(particle.collisionTime);
 			splitParticle.position.set(now);
 			splitParticle.prevPosition.set(prev);
-			
+
 			//Mh is this necessary?
 			splitParticle.acceleration.set(particle.acceleration);
 			splitParticle.accelerationFactor.set(particle.accelerationFactor);
