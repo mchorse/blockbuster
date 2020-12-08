@@ -162,7 +162,7 @@ public class BedrockParticle
 			{
 				this.matrix.transform(vec);
 			}
-
+			
 			this.position.x += vec.x / 20F;
 			this.position.y += vec.y / 20F;
 			this.position.z += vec.z / 20F;

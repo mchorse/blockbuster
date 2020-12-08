@@ -215,6 +215,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 							| IllegalAccessException e) {
 						e.printStackTrace();
 					}
+					
+					if(d0 < y) now.y = aabb.minY;
+					else now.y = aabb.maxY;
 					now.y += d0 < y ? r : -r;
 				}
 				
@@ -226,6 +229,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 							| IllegalAccessException e) {
 						e.printStackTrace();
 					}
+					
+					if(origX < x) now.x = aabb.minX;
+					else now.x = aabb.maxX;
 					now.x += origX < x ? r : -r;
 				}
 
@@ -237,6 +243,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 							| IllegalAccessException e) {
 						e.printStackTrace();
 					}
+					
+					if(origZ < z) now.z = aabb.minZ;
+					else now.z = aabb.maxZ;
 					now.z += origZ < z ? r : -r;
 				}
 
