@@ -180,15 +180,18 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			{
 				if(MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionTinting.class).enabled)) {
 					particle.collisionTinting = true;
+					particle.firstCollision = particle.age;
 				}
 				if(MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionAppearance.class).enabled)) {
 					particle.collisionTexture = true;
+					particle.firstCollision = particle.age;
 				}
 				if (this.expireOnImpact)
 				{
 					if(this.expirationDelay!=0 && particle.expireAge==0)
 					{
 						particle.expireAge = particle.age+this.expirationDelay;
+						particle.expirationDelay = this.expirationDelay;
 					}
 					else if(this.expirationDelay==0)
 					{

@@ -484,8 +484,8 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentBase im
 
 			if (this.stretchFPS)
 			{
-				float lifetime = particle.lifetime <= 0 ? 0 : (particle.age + partialTicks) / particle.lifetime;
-
+				float lifetime = (particle.lifetime <= 0) ? 0 : (particle.age + partialTicks) / (particle.lifetime-particle.firstCollision);
+				if(particle.expireAge!=0) lifetime = (particle.lifetime <= 0) ? 0 : (particle.age + partialTicks) / (particle.expirationDelay);
 				index = (int) (lifetime * max);
 			}
 
