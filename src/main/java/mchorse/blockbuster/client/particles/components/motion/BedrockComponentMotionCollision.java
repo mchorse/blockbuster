@@ -142,6 +142,38 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			double origZ = z;
 			
 			List<Entity> list2 = emitter.world.getEntitiesWithinAABB(Entity.class, aabb.expand(x, y, z));
+			//for own hitbox implementation: check for hitbox expanded for the previous position - prevent fast moving tunneling
+			/*for(Entity entity : list2) 
+			{
+				AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox();
+				Vector3f speedEntity = new Vector3f();
+				speedEntity.x = (float)entity.motionX;
+				speedEntity.y = (float)entity.motionY;
+				speedEntity.z = (float)entity.motionZ;
+				
+				Vector3f speedParticle = particle.speed;
+				Vector3f ray = particle.speed;
+				if(Math.round(speedParticle.dot(speedEntity))==0) {
+					ray = speedEntity;
+				}
+				
+
+				Vector3d ray0 = intersect(ray, particle.getGlobalPosition(emitter), axisalignedbb);
+				if(ray0!=null) {
+					
+					particle.position.add(ray0);
+					now = particle.getGlobalPosition(emitter);
+
+					x = now.x - prev.x;
+					y = now.y - prev.y;
+					z = now.z - prev.z;
+					aabb = new AxisAlignedBB(prev.x - r, prev.y - r, prev.z - r, prev.x + r, prev.y + r, prev.z + r);
+
+					d0 = y;
+					origX = x;
+					origZ = z;
+				}
+			}*/
 			List<AxisAlignedBB> list = emitter.world.getCollisionBoxes(null, aabb.expand(x, y, z));
 
 			if(this.entityCollision) 
@@ -436,6 +468,65 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		}
 		return vector0;
 	}
+	
+	public Vector3d intersect(Vector3f ray, Vector3d orig, AxisAlignedBB aabb) 
+	{ 
+		double tmin = (aabb.minX - orig.x) / ray.x; 
+	    double tmax = (aabb.maxX - orig.x) / ray.x; 
+	 
+	    if (tmin > tmax) {
+	    	double tminTmp = tmin;
+	    	tmin = tmax;
+	    	tmax = tminTmp;
+	    }
+	 
+	    double tymin = (aabb.minY - orig.y) / ray.y; 
+	    double tymax = (aabb.maxY - orig.y) / ray.y; 
+	 
+	    if (tymin > tymax) {
+	    	double tyminTmp = tymin;
+	    	tymin = tymax;
+	    	tymax = tyminTmp;
+	    }
+	 
+	    if ((tmin > tymax) || (tymin > tmax)) 
+	        return null; 
+	 
+	    if (tymin > tmin) 
+	        tmin = tymin; 
+	 
+	    if (tymax < tmax) 
+	        tmax = tymax; 
+	 
+	    double tzmin = (aabb.minZ - orig.z) / ray.z; 
+	    double tzmax = (aabb.maxZ - orig.z) / ray.z; 
+	 
+	    if (tzmin > tzmax) {
+	    	double tzminTmp = tzmin;
+	    	tzmin = tzminTmp;
+	    	tzmax = tzminTmp;
+	    } 
+	 
+	    if ((tmin > tzmax) || (tzmin > tmax)) 
+	        return null; 
+	 
+	    if (tzmin > tmin) 
+	        tmin = tzmin; 
+	 
+	    if (tzmax < tmax) 
+	        tmax = tzmax; 
+	    
+	    Vector3d ray1 = new Vector3d();
+	    ray1.x = ray.x;
+	    ray1.y = ray.y;
+	    ray1.z = ray.z;
+	    double t = 0;
+	    if(tmin!=0) t=tmin;
+	    if(tmax!=0) t=tmax;
+	    ray1.scale(t);
+	    return ray1; 
+	} 
+	
 
 	@Override
 	public int getSortingIndex()
