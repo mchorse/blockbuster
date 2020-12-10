@@ -201,10 +201,21 @@ public class CameraHandler
                     record.selector.cursor = (int) editor.getRunner().ticks;
                 }
 
-                int w = (int) (editor.area.w * Blockbuster.audioWaveformWidth.get());
+                Object delegate = editor.dashboard.panels.view.delegate;
 
-                AudioRenderer.renderAll(editor.area.x + (editor.area.w - w) / 2, editor.dashboard.timeline.area.y - 15, w, Blockbuster.audioWaveformHeight.get(), context.screen.width, context.screen.height);
-                record.selector.cursor = editor.dashboard.timeline.value;
+                if (delegate == editor || delegate == panels.recordingEditorPanel)
+                {
+                    int w = (int) (editor.area.w * Blockbuster.audioWaveformWidth.get());
+                    int y = editor.dashboard.timeline.area.y - 15;
+
+                    if (delegate == panels.recordingEditorPanel)
+                    {
+                        y = panels.recordingEditorPanel.selector.area.y;
+                    }
+
+                    AudioRenderer.renderAll(editor.area.x + (editor.area.w - w) / 2, y, w, Blockbuster.audioWaveformHeight.get(), context.screen.width, context.screen.height);
+                    record.selector.cursor = editor.dashboard.timeline.value;
+                }
             }
         };
 

@@ -29,6 +29,7 @@ import mchorse.blockbuster_pack.client.render.RenderCustomActor;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.blockbuster_pack.morphs.StructureMorph.StructureRenderer;
 import mchorse.mclib.McLib;
+import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.mclib.utils.files.GlobalTree;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -140,33 +141,16 @@ public class ClientProxy extends CommonProxy
     @SuppressWarnings("unchecked")
     private void injectResourcePack(String path)
     {
-        try
-        {
-            Field field = FMLClientHandler.class.getDeclaredField("resourcePackList");
-            field.setAccessible(true);
+        ReflectionUtils.registerResourcePack(actorPack = new ActorsPack());
 
-            List<IResourcePack> packs = (List<IResourcePack>) field.get(FMLClientHandler.instance());
-            packs.add(actorPack = new ActorsPack());
-            IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
+        /* File tree */
+        GlobalTree.TREE.register(tree = new BlockbusterTree(this.pack.folders.get(0)));
 
-            if (manager instanceof SimpleReloadableResourceManager)
-            {
-                ((SimpleReloadableResourceManager) manager).reloadResourcePack(actorPack);
-            }
-
-            /* File tree */
-            GlobalTree.TREE.register(tree = new BlockbusterTree(this.pack.folders.get(0)));
-
-            /* Create steve, alex and fred skins folders */
-            new File(path + "/models/steve/skins").mkdirs();
-            new File(path + "/models/alex/skins").mkdirs();
-            new File(path + "/models/fred/skins").mkdirs();
-            new File(path + "/models/image/skins").mkdirs();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        /* Create steve, alex and fred skins folders */
+        new File(path + "/models/steve/skins").mkdirs();
+        new File(path + "/models/alex/skins").mkdirs();
+        new File(path + "/models/fred/skins").mkdirs();
+        new File(path + "/models/image/skins").mkdirs();
     }
 
     /**
