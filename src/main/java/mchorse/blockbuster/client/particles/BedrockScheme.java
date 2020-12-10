@@ -13,6 +13,7 @@ import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
 import mchorse.blockbuster.client.particles.components.motion.BedrockComponentInitialSpeed;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.mclib.math.Variable;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class BedrockScheme
 	private boolean factory;
 
 	/* MoLang integration */
-	public MolangParser parser = new MolangParser();
+	public MolangParser parser;
 
 	public static BedrockScheme parse(String json)
 	{
@@ -75,6 +76,25 @@ public class BedrockScheme
 	public static BedrockScheme dupe(BedrockScheme scheme)
 	{
 		return parse(toJson(scheme));
+	}
+
+	public BedrockScheme()
+	{
+		this.parser = new MolangParser();
+
+		/* Default variables */
+		this.parser.register(new Variable("variable.particle_age", 0));
+		this.parser.register(new Variable("variable.particle_lifetime", 0));
+		this.parser.register(new Variable("variable.particle_random_1", 0));
+		this.parser.register(new Variable("variable.particle_random_2", 0));
+		this.parser.register(new Variable("variable.particle_random_3", 0));
+		this.parser.register(new Variable("variable.particle_random_4", 0));
+		this.parser.register(new Variable("variable.emitter_age", 0));
+		this.parser.register(new Variable("variable.emitter_lifetime", 0));
+		this.parser.register(new Variable("variable.emitter_random_1", 0));
+		this.parser.register(new Variable("variable.emitter_random_2", 0));
+		this.parser.register(new Variable("variable.emitter_random_3", 0));
+		this.parser.register(new Variable("variable.emitter_random_4", 0));
 	}
 
 	public BedrockScheme factory(boolean factory)

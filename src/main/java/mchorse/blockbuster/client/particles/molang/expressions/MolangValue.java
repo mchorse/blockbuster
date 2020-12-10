@@ -9,7 +9,7 @@ import mchorse.mclib.math.IValue;
 public class MolangValue extends MolangExpression
 {
 	public IValue value;
-	public boolean addReturn;
+	public boolean returns;
 
 	public MolangValue(MolangParser context, IValue value)
 	{
@@ -20,7 +20,7 @@ public class MolangValue extends MolangExpression
 
 	public MolangExpression addReturn()
 	{
-		this.addReturn = true;
+		this.returns = true;
 
 		return this;
 	}
@@ -34,7 +34,7 @@ public class MolangValue extends MolangExpression
 	@Override
 	public String toString()
 	{
-		return (this.addReturn ? MolangParser.RETURN : "") + this.value.toString();
+		return (this.returns ? MolangParser.RETURN : "") + this.value.toString();
 	}
 
 	@Override

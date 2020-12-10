@@ -29,7 +29,7 @@ public class MolangParser extends MathBuilder
 	public static final MolangExpression ONE = new MolangValue(null, new Constant(1));
 	public static final String RETURN = "return ";
 
-	public boolean registerVariables = true;
+	private MolangMultiStatement currentStatement;
 
 	public MolangParser()
 	{
@@ -78,29 +78,27 @@ public class MolangParser extends MathBuilder
 		}
 	}
 
-	public IValue parseNoRegister(String expression) throws Exception
-	{
-		IValue value;
-
-		this.registerVariables = false;
-		value = super.parse(expression);
-		this.registerVariables = true;
-
-		return value;
-	}
-
 	/**
 	 * Interactively return a new variable
 	 */
 	@Override
 	protected Variable getVariable(String name)
 	{
-		if (!this.variables.containsKey(name) && this.registerVariables)
+		Variable variable = this.currentStatement == null ? null : this.currentStatement.locals.get(name);
+
+		if (variable == null)
 		{
-			this.register(new Variable(name, 0));
+			variable = super.getVariable(name);
 		}
 
-		return super.getVariable(name);
+		if (variable == null)
+		{
+			variable = new Variable(name, 0);
+
+			this.register(variable);
+		}
+
+		return variable;
 	}
 
 	public MolangExpression parseJson(JsonElement element) throws MolangException
@@ -149,17 +147,25 @@ public class MolangParser extends MathBuilder
 			throw new MolangException("Molang expression cannot be blank!");
 		}
 
-		if (lines.size() == 1)
-		{
-			return this.parseOneLine(lines.get(0));
-		}
-
 		MolangMultiStatement result = new MolangMultiStatement(this);
 
-		for (String line : lines)
+		this.currentStatement = result;
+
+		try
 		{
-			result.expressions.add(this.parseOneLine(line));
+			for (String line : lines)
+			{
+				result.expressions.add(this.parseOneLine(line));
+			}
 		}
+		catch (Exception e)
+		{
+			this.currentStatement = null;
+
+			throw e;
+		}
+
+		this.currentStatement = null;
 
 		return result;
 	}
@@ -169,6 +175,8 @@ public class MolangParser extends MathBuilder
 	 */
 	protected MolangExpression parseOneLine(String expression) throws MolangException
 	{
+		expression = expression.trim();
+
 		if (expression.startsWith(RETURN))
 		{
 			try
@@ -191,7 +199,19 @@ public class MolangParser extends MathBuilder
 				String name = (String) symbols.get(0);
 				symbols = symbols.subList(2, symbols.size());
 
-				return new MolangAssignment(this, this.getVariable(name), this.parseSymbolsMolang(symbols));
+				Variable variable = null;
+
+				if (!this.variables.containsKey(name) && !this.currentStatement.locals.containsKey(name))
+				{
+					variable = new Variable(name, 0);
+					this.currentStatement.locals.put(name, variable);
+				}
+				else
+				{
+					variable = this.getVariable(name);
+				}
+
+				return new MolangAssignment(this, variable, this.parseSymbolsMolang(symbols));
 			}
 
 			return new MolangValue(this, this.parseSymbolsMolang(symbols));

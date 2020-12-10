@@ -198,7 +198,7 @@ public class BedrockEmitter
 	{
 		try
 		{
-			this.variables.put(name, this.scheme.parser.parseNoRegister(expression));
+			this.variables.put(name, this.scheme.parser.parse(expression));
 		}
 		catch (Exception e)
 		{}
