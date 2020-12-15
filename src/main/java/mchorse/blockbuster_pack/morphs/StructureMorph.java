@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.resources.I18n;
 import org.lwjgl.opengl.GL11;
@@ -49,11 +50,6 @@ public class StructureMorph extends AbstractMorph
      * The name of the structure which should be rendered 
      */
     public String structure = "";
-
-    /**
-     * Whether the structure applies lightmap 
-     */
-    public boolean lighting;
 
     @SideOnly(Side.CLIENT)
     public static void request()
@@ -196,11 +192,6 @@ public class StructureMorph extends AbstractMorph
             GlStateManager.enableRescaleNormal();
             GlStateManager.translate(x, y, z);
 
-            if (!this.lighting)
-            {
-                RenderHelper.disableStandardItemLighting();
-            }
-
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
@@ -211,14 +202,6 @@ public class StructureMorph extends AbstractMorph
             GlStateManager.disableBlend();
             GlStateManager.disableAlpha();
             GlStateManager.shadeModel(GL11.GL_FLAT);
-
-            if (!this.lighting)
-            {
-                GlStateManager.enableLighting();
-                GlStateManager.enableLight(0);
-                GlStateManager.enableLight(1);
-                GlStateManager.enableColorMaterial();
-            }
 
             GL11.glColor4f(1, 1, 1, 1);
             renderer.renderTEs();
@@ -243,7 +226,6 @@ public class StructureMorph extends AbstractMorph
             StructureMorph morph = (StructureMorph) from;
 
             this.structure = morph.structure;
-            this.lighting = morph.lighting;
         }
     }
 
@@ -269,7 +251,6 @@ public class StructureMorph extends AbstractMorph
             StructureMorph morph = (StructureMorph) obj;
 
             result = result && Objects.equals(this.structure, morph.structure);
-            result = result && this.lighting == morph.lighting;
         }
 
         return result;
@@ -280,7 +261,6 @@ public class StructureMorph extends AbstractMorph
     {
         super.fromNBT(tag);
         this.structure = tag.getString("Structure");
-        this.lighting = tag.getBoolean("Lighting");
     }
 
     @Override
@@ -289,7 +269,6 @@ public class StructureMorph extends AbstractMorph
         super.toNBT(tag);
 
         if (!this.structure.isEmpty()) tag.setString("Structure", this.structure);
-        if (this.lighting) tag.setBoolean("Lighting", this.lighting);
     }
 
     /**
