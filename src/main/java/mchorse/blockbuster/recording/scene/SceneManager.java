@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +31,8 @@ public class SceneManager
 	 * Currently loaded scenes
 	 */
 	public Map<String, Scene> scenes = new HashMap<String, Scene>();
+
+	private List<String> toRemove = new ArrayList<String>();
 
 	public static boolean isValidFilename(String filename)
 	{
@@ -49,19 +52,24 @@ public class SceneManager
 	 */
 	public void tick()
 	{
-		Iterator<Scene> it = this.scenes.values().iterator();
-
-		while (it.hasNext())
+		for (Map.Entry<String, Scene> entry : this.scenes.entrySet())
 		{
-			Scene scene = it.next();
+			Scene scene = entry.getValue();
 
 			scene.tick();
 
 			if (!scene.playing)
 			{
-				it.remove();
+				this.toRemove.add(entry.getKey());
 			}
 		}
+
+		for (String scene : this.toRemove)
+		{
+			this.scenes.remove(scene);
+		}
+
+		this.toRemove.clear();
 	}
 
 	/**
