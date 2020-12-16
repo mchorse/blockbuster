@@ -1,37 +1,43 @@
 package mchorse.blockbuster_pack.morphs;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.resources.I18n;
-import org.lwjgl.opengl.GL11;
-
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.client.ClientHandlerStructure;
 import mchorse.blockbuster.network.common.structure.PacketStructure;
 import mchorse.blockbuster.network.common.structure.PacketStructureRequest;
 import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class StructureMorph extends AbstractMorph
 {
@@ -129,11 +135,11 @@ public class StructureMorph extends AbstractMorph
 
         if (renderer != null)
         {
-            if (renderer.list < 0)
+            if (renderer.vbo < 0)
             {
-                if (renderer.list == -1)
+                if (renderer.vbo == -1)
                 {
-                    renderer.list = -2;
+                    renderer.vbo = -2;
                     Dispatcher.sendToServer(new PacketStructureRequest(this.structure));
                 }
 
@@ -174,16 +180,21 @@ public class StructureMorph extends AbstractMorph
 
         if (renderer != null)
         {
-            if (renderer.list < 0)
+            if (renderer.vbo < 0)
             {
-                if (renderer.list == -1)
+                if (renderer.vbo == -1)
                 {
-                    renderer.list = -2;
+                    renderer.vbo = -2;
                     Dispatcher.sendToServer(new PacketStructureRequest(this.structure));
                 }
 
                 return;
             }
+
+            float lastX = OpenGlHelper.lastBrightnessX;
+            float lastY = OpenGlHelper.lastBrightnessY;
+
+            renderer.world.setLightLevel(lastX, lastY);
 
             Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
@@ -280,24 +291,47 @@ public class StructureMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public static class StructureRenderer
     {
-        public int list = -1;
+        public int vbo = -1;
+        public int count = 0;
         public BlockPos size = BlockPos.ORIGIN;
         public List<TileEntity> tes;
+        public ClientHandlerStructure.FakeWorld world;
 
         public StructureRenderer()
         {}
 
-        public StructureRenderer(int list, BlockPos size, List<TileEntity> tes)
+        public StructureRenderer(int vbo, int count, BlockPos size, List<TileEntity> tes, ClientHandlerStructure.FakeWorld world)
         {
-            this.list = list;
+            this.vbo = vbo;
+            this.count = count;
             this.size = size;
             this.tes = tes;
+            this.world = world;
         }
 
         public void render()
         {
             GL11.glNormal3f(0, 1, 0);
-            GL11.glCallList(this.list);
+            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vbo);
+
+            GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+            GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
+            GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+
+            GlStateManager.glVertexPointer(3, 5126, 28, 0);
+            GlStateManager.glColorPointer(4, 5121, 28, 12);
+            GlStateManager.glTexCoordPointer(2, 5126, 28, 16);
+            OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapTexUnit);
+            GlStateManager.glTexCoordPointer(2, 5122, 28, 24);
+            OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
+
+            GlStateManager.glDrawArrays(GL11.GL_QUADS, 0, this.count);
+
+            GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
+            GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
+            GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+
+            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
         }
 
         public void renderTEs()
@@ -316,10 +350,11 @@ public class StructureMorph extends AbstractMorph
 
         public void delete()
         {
-            if (this.list > 0)
+            if (this.vbo > 0)
             {
-                GL11.glDeleteLists(this.list, 1);
-                this.list = -1;
+                GL15.glDeleteBuffers(this.vbo);
+                this.vbo = -1;
+                this.count = 0;
                 this.tes = null;
             }
         }

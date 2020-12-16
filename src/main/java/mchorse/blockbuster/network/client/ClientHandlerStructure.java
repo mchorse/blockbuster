@@ -23,6 +23,7 @@ import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
@@ -36,6 +37,8 @@ import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
 
 public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure>
 {
@@ -96,7 +99,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         WorldSettings settings = new WorldSettings(0, GameType.CREATIVE, true, false, WorldType.DEFAULT);
         WorldInfo info = new WorldInfo(settings, message.name);
         WorldProvider provider = new WorldProviderSurface();
-        World world = new FakeWorld(null, info, provider, profiler, true);
+        FakeWorld world = new FakeWorld(null, info, provider, profiler, true);
         List<TileEntity> tes = new ArrayList<TileEntity>();
 
         provider.setWorld(world);
@@ -122,11 +125,10 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buffer = tess.getBuffer();
-        int list = GLAllocation.generateDisplayLists(1);
+        int vbo = GL15.glGenBuffers();
 
         /* Centerize the geometry */
-        GlStateManager.glNewList(list, 4864);
-        buffer.begin(7, DefaultVertexFormats.BLOCK);
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
         buffer.setTranslation(-w / 2F - origin.getX(), -origin.getY(), -d / 2F - origin.getZ());
 
         for (BlockPos.MutableBlockPos pos : BlockPos.getAllInBoxMutable(origin, origin.add(w, h, d)))
@@ -141,10 +143,16 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         }
 
         buffer.setTranslation(0, 0, 0);
-        tess.draw();
-        GlStateManager.glEndList();
 
-        return new StructureRenderer(list, template.getSize(), tes);
+        int size = buffer.getVertexCount();
+
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.getByteBuffer(), GL15.GL_STATIC_DRAW);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+        buffer.finishDrawing();
+
+        return new StructureRenderer(vbo, size, template.getSize(), tes, world);
     }
 
     /**
@@ -156,6 +164,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
     public static class FakeWorld extends World
     {
         public ChunkProviderClient clientChunkProvider;
+        public int combinedLight;
 
         public FakeWorld(ISaveHandler saveHandlerIn, WorldInfo info, WorldProvider providerIn, Profiler profilerIn, boolean client)
         {
@@ -188,6 +197,17 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         public boolean isAreaLoaded(BlockPos center, int radius, boolean allowEmpty)
         {
             return true;
+        }
+
+        public void setLightLevel(float lastBrightnessX, float lastBrightnessY)
+        {
+            this.combinedLight = (int) lastBrightnessX + (int) lastBrightnessY * 65536;
+        }
+
+        @Override
+        public int getCombinedLight(BlockPos pos, int lightValue)
+        {
+            return this.combinedLight;
         }
     }
 }
