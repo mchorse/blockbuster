@@ -528,7 +528,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         public AbstractMorph morph;
         public float duration = 10;
         public float random = 0;
-        public boolean setDuration = true;
+        public boolean setDuration;
 
         public SequenceEntry()
         {}
@@ -564,7 +564,11 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         @Override
         public SequenceEntry clone()
         {
-            return new SequenceEntry(this.morph, this.duration, this.random, this.setDuration);
+            SequenceEntry entry = new SequenceEntry(this.morph, this.duration, this.random, this.setDuration);
+
+            entry.setDuration = this.setDuration;
+
+            return entry;
         }
 
         @Override
@@ -574,10 +578,10 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             {
                 SequenceEntry entry = (SequenceEntry) obj;
 
-                return Objects.equals(this.morph, entry.morph) &&
-                    this.duration == entry.duration &&
-                    this.random == entry.random &&
-                    this.setDuration == entry.setDuration;
+                return Objects.equals(this.morph, entry.morph)
+                    && this.duration == entry.duration
+                    && this.random == entry.random
+                    && this.setDuration == entry.setDuration;
             }
 
             return super.equals(obj);
