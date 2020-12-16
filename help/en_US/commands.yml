@@ -192,9 +192,9 @@ blockbuster:
                     {r}Removes all records on the client (used to force unload client-side records).
             play: 
                 |
-                    {l}{6}/{r}action {8}play{r} {7}<filename> [name_tag] [model] [skin] [invincibility]{r}
+                    {l}{6}/{r}action {8}play{r} {7}<filename> [invincibility] [morph_nbt]{r}
                     
-                    {r}Playbacks an action from given {7}<filename>{r}. This sub-command also can receive optional arguments {7}[name]{r} of the actor, his {7}[model]{r} and {7}[skin]{r} and {7}[invincibility]{r} flag ({7}1{r}, {7}0{r}, {7}true{r} or {7}false{r} values).
+                    {r}Playbacks an action from given {7}<filename>{r}. This sub-command also can receive optional arguments {7}[invincibility]{r} flag ({7}1{r}, {7}0{r}, {7}true{r} or {7}false{r} values) and {7}[morph_nbt]{r} (which allows to specify a morph).
             record: 
                 |
                     {l}{6}/{r}action {8}record{r} {7}<filename> [scene]{7}

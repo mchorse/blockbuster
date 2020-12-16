@@ -6,9 +6,14 @@ import mchorse.blockbuster.commands.action.SubCommandActionRecord;
 import mchorse.blockbuster.commands.action.SubCommandActionRequest;
 import mchorse.blockbuster.commands.action.SubCommandActionStop;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
+import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.world.World;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Command /action
@@ -57,28 +62,33 @@ public class CommandAction extends SubCommandBase
      * Description of every element in array:
      *
      * 1. Ignored (since it's filename)
-     * 2. Name tag
-     * 3. Model name
-     * 4. Skin resource location
-     * 5. Invincible flag (boolean)
+     * 2. Invincible flag (boolean)
+     * 3+. NBT data of the morph
      *
      * And of course, all of those arguments are optional (i.e. have default
      * values).
      */
     public static EntityActor actorFromArgs(String[] args, World world) throws CommandException
     {
-        EntityActor actor = null;
+        EntityActor actor;
+        AbstractMorph morph = null;
 
-        String name = args.length >= 2 ? args[1] : "";
-        String model = args.length >= 3 ? args[2] : "";
-        String skin = args.length >= 4 ? args[3] : "";
-        boolean invincible = args.length >= 5 ? CommandBase.parseBoolean(args[4]) : false;
+        boolean invincible = args.length >= 2 && CommandBase.parseBoolean(args[1]);
+        String model = args.length >= 3 ? String.join(" ",SubCommandBase.dropFirstArguments(args, 2)) : null;
+
+        if (model != null)
+        {
+            try
+            {
+                morph = MorphManager.INSTANCE.morphFromNBT(JsonToNBT.getTagFromJson(model));
+            }
+            catch (Exception e)
+            {}
+        }
 
         actor = new EntityActor(world);
-        /* TODO: fix */
-        actor.modify(null, false, true);
+        actor.modify(morph, false, true);
         actor.setEntityInvulnerable(invincible);
-        actor.setCustomNameTag(name);
 
         return actor;
     }
