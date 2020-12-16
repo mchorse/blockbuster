@@ -35,6 +35,7 @@ public class GunProps
     public int projectiles;
     public float scatter;
     public boolean launch;
+    public boolean useTarget;
 
     /* Projectile properties */
     public AbstractMorph projectileMorph;
@@ -72,6 +73,7 @@ public class GunProps
 
     private int shoot = 0;
     private Morph current = new Morph();
+    private boolean renderLock;
 
     public EntityLivingBase entity;
 
@@ -159,26 +161,50 @@ public class GunProps
     }
 
     @SideOnly(Side.CLIENT)
-    public void render(float partialTicks)
+    public void render(EntityLivingBase target, float partialTicks)
     {
+        if (this.renderLock)
+        {
+            return;
+        }
+
+        this.renderLock = true;
+
         if (this.entity == null)
         {
             this.createEntity();
         }
 
+        EntityLivingBase entity = this.useTarget && target != null ? target : this.entity;
         AbstractMorph morph = this.current.get();
 
-        if (morph != null && this.entity != null)
+        if (morph != null && entity != null)
         {
+            float rotationYaw = entity.renderYawOffset;
+            float prevRotationYaw = entity.prevRenderYawOffset;
+            float rotationYawHead = entity.rotationYawHead;
+            float prevRotationYawHead = entity.prevRotationYawHead;
+
+            entity.rotationYawHead -= entity.renderYawOffset;
+            entity.prevRotationYawHead -= entity.prevRenderYawOffset;
+            entity.renderYawOffset = entity.prevRenderYawOffset = 0.0F;
+
             GL11.glPushMatrix();
             GL11.glTranslatef(0.5F, 0, 0.5F);
             this.gunTransform.transform();
 
             this.setupEntity();
-            morph.render(this.entity, 0, 0, 0, 0, partialTicks);
+            MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
 
             GL11.glPopMatrix();
+
+            entity.renderYawOffset = rotationYaw;
+            entity.prevRenderYawOffset = prevRotationYaw;
+            entity.rotationYawHead = rotationYawHead;
+            entity.prevRotationYawHead = prevRotationYawHead;
         }
+
+        this.renderLock = false;
     }
 
     @SideOnly(Side.CLIENT)
@@ -208,6 +234,7 @@ public class GunProps
         this.projectiles = 1;
         this.scatter = 0F;
         this.launch = false;
+        this.useTarget = false;
 
         /* Projectile properties */
         this.projectileMorph = null;
@@ -255,6 +282,7 @@ public class GunProps
         if (tag.hasKey("Projectiles")) this.projectiles = tag.getInteger("Projectiles");
         if (tag.hasKey("Scatter")) this.scatter = tag.getFloat("Scatter");
         if (tag.hasKey("Launch")) this.launch = tag.getBoolean("Launch");
+        if (tag.hasKey("Target")) this.useTarget = tag.getBoolean("Target");
 
         /* Projectile properties */
         this.projectileMorph = this.create(tag, "Projectile");
@@ -318,6 +346,7 @@ public class GunProps
         if (this.projectiles != 1) tag.setInteger("Projectiles", this.projectiles);
         if (this.scatter != 0F) tag.setFloat("Scatter", this.scatter);
         if (this.launch) tag.setBoolean("Launch", this.launch);
+        if (this.useTarget) tag.setBoolean("Target", this.useTarget);
 
         /* Projectile properties */
         if (this.projectileMorph != null) tag.setTag("Projectile", this.to(this.projectileMorph));

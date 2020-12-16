@@ -26,7 +26,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -49,6 +48,7 @@ public class RenderingHandler
 {
     private static TileEntityModelItemStackRenderer model = new TileEntityModelItemStackRenderer();
     private static TileEntityGunItemStackRenderer gun = new TileEntityGunItemStackRenderer();
+    private static EntityLivingBase lastItemHolder;
 
     private boolean wasPaused;
 
@@ -237,6 +237,33 @@ public class RenderingHandler
         }
 
         lastRenderedEntities.clear();
+    }
+
+    /**
+     * Called by ASM
+     */
+    public static void setLastItemHolder(EntityLivingBase entity)
+    {
+        if (lastItemHolder == null)
+        {
+            lastItemHolder = entity;
+        }
+    }
+
+    /**
+     * Called by ASM
+     */
+    public static void resetLastItemHolder(EntityLivingBase entity)
+    {
+        if (lastItemHolder == entity)
+        {
+            lastItemHolder = null;
+        }
+    }
+
+    public static EntityLivingBase getLastItemHolder()
+    {
+        return lastItemHolder;
     }
 
     public RenderingHandler(GuiRecordingOverlay overlay)

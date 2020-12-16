@@ -1,11 +1,13 @@
 package mchorse.blockbuster.client.render.tileentity;
 
+import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.utils.NBTUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
@@ -65,7 +67,7 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
         if (model != null)
         {
             model.timer = 20;
-            model.props.render(partialTicks);
+            model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
             this.reset();
         }
     }

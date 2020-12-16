@@ -2,6 +2,7 @@ package mchorse.blockbuster.core;
 
 import mchorse.blockbuster.core.transformers.EntityRendererTransformer;
 import mchorse.blockbuster.core.transformers.RenderGlobalTransformer;
+import mchorse.blockbuster.core.transformers.RenderItemTransformer;
 import mchorse.blockbuster.core.transformers.WorldTransformer;
 import mchorse.blockbuster.utils.mclib.coremod.CoreClassTransformer;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -19,6 +20,7 @@ public class BBCoreClassTransformer extends CoreClassTransformer
     private WorldTransformer world = new WorldTransformer();
     private RenderGlobalTransformer render = new RenderGlobalTransformer();
     private EntityRendererTransformer entityRenderer = new EntityRendererTransformer();
+    private RenderItemTransformer renderItem = new RenderItemTransformer();
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass)
@@ -40,6 +42,12 @@ public class BBCoreClassTransformer extends CoreClassTransformer
             System.out.println("BBCoreMod: Transforming EntityRenderer class (" + name + ")");
 
             return this.entityRenderer.transform(name, basicClass);
+        }
+        else if (checkName(name, "bzw", "net.minecraft.client.renderer.RenderItem"))
+        {
+            System.out.println("BBCoreMod: Transforming RenderItem class (" + name + ")");
+
+            return this.renderItem.transform(name, basicClass);
         }
 
         return basicClass;

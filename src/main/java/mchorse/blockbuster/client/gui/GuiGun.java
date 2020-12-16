@@ -57,6 +57,7 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement projectiles;
     public GuiTrackpadElement scatter;
     public GuiToggleElement launch;
+    public GuiToggleElement useTarget;
 
     /* Projectile options */
     public GuiElement projectileOptions;
@@ -149,6 +150,7 @@ public class GuiGun extends GuiBase
         this.scatter = new GuiTrackpadElement(mc, (value) -> this.props.scatter = value.floatValue());
         this.scatter.tooltip(IKey.lang("blockbuster.gui.gun.scatter"));
         this.launch = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.launch"), false, (b) -> this.props.launch = b.isToggled());
+        this.useTarget = new GuiToggleElement(mc, IKey.lang("metamorph.gui.body_parts.use_target"), false, (b) -> this.props.useTarget = b.isToggled());
 
         this.pickDefault.flex().relative(area).w(100).x(0.25F, -50).y(1, -100);
         this.pickFiring.flex().relative(area).w(100).x(0.75F, -50).y(1, -100);
@@ -157,8 +159,9 @@ public class GuiGun extends GuiBase
         this.projectiles.flex().relative(this.pickFiring.resizer()).set(0, 25, 100, 20);
         this.scatter.flex().relative(area).set(0, 0, 0, 20).x(0.25F, 55).y(1, -75).w(0.5F, -110);
         this.launch.flex().relative(this.scatter.resizer()).set(0, -5 - (20 + 11) / 2, 100, 11);
+        this.useTarget.flex().relative(this.launch.resizer()).set(0, -5 - (20 + 11) / 2, 100, 11);
 
-        this.gunOptions.add(this.pickDefault, this.pickFiring, this.fireCommand, this.delay, this.projectiles, this.scatter, this.launch);
+        this.gunOptions.add(this.pickDefault, this.pickFiring, this.fireCommand, this.delay, this.projectiles, this.scatter, this.launch, this.useTarget);
 
         /* Projectile options */
         area = this.projectileOptions.area;
@@ -282,6 +285,7 @@ public class GuiGun extends GuiBase
         this.projectiles.setValue(this.props.projectiles);
         this.scatter.setValue(this.props.scatter);
         this.launch.toggled(this.props.launch);
+        this.useTarget.toggled(this.props.useTarget);
 
         /* Projectile properties */
         this.pickProjectile.setMorph(this.props.projectileMorph);
