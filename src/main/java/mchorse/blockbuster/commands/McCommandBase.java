@@ -1,11 +1,14 @@
 package mchorse.blockbuster.commands;
 
+import com.google.common.collect.ImmutableList;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
+
+import java.util.List;
 
 /**
  * McHorse's base command class
@@ -17,6 +20,8 @@ import net.minecraft.server.MinecraftServer;
  */
 public abstract class McCommandBase extends CommandBase
 {
+    public static final List<String> BOOLEANS = ImmutableList.of("true", "false", "1", "0");
+
     /**
      * Get the count of arguments which are required
      */

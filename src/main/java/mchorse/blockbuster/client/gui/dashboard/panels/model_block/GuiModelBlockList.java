@@ -50,7 +50,7 @@ public class GuiModelBlockList extends GuiBlockList<TileEntityModel>
         GuiContext context = GuiBase.getCurrent();
         int h = this.scroll.scrollItemSize;
 
-        if (element.morph != null)
+        if (!element.morph.isEmpty())
         {
             int mny = MathHelper.clamp(y, this.scroll.y, this.scroll.ey());
             int mxy = MathHelper.clamp(y + 20, this.scroll.y, this.scroll.ey());
@@ -58,7 +58,7 @@ public class GuiModelBlockList extends GuiBlockList<TileEntityModel>
             if (mxy - mny > 0)
             {
                 GuiDraw.scissor(x, mny, this.scroll.w, mxy - mny, context);
-                element.morph.renderOnScreen(this.mc.player, x + this.scroll.w - 16, y + 30, 20, 1);
+                element.morph.get().renderOnScreen(this.mc.player, x + this.scroll.w - 16, y + 30, 20, 1);
                 GuiDraw.unscissor(context);
             }
         }

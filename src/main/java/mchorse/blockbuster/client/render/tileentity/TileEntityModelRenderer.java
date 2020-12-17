@@ -5,6 +5,7 @@ import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.mclib.client.Draw;
 import mchorse.mclib.utils.MatrixUtils;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -41,8 +42,10 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
     {
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (te.morph != null && !Blockbuster.modelBlockDisableRendering.get() && te.enabled)
+        if (!te.morph.isEmpty() && !Blockbuster.modelBlockDisableRendering.get() && te.enabled)
         {
+            AbstractMorph morph = te.morph.get();
+
             if (this.renderer == null)
             {
                 this.renderer = new RenderShadow(mc.getRenderManager());
@@ -104,12 +107,12 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
                 GlStateManager.scale(te.sx, te.sy, te.sz);
             }
 
-            te.morph.render(entity, 0, 0, 0, 0, partialTicks);
+            morph.render(entity, 0, 0, 0, 0, partialTicks);
             GlStateManager.popMatrix();
 
             if (te.shadow)
             {
-                this.renderer.setShadowSize(te.morph.getWidth(entity) * 0.8F);
+                this.renderer.setShadowSize(morph.getWidth(entity) * 0.8F);
                 this.renderer.doRenderShadowAndFire(te.entity, xx, yy, zz, 0, partialTicks);
             }
 

@@ -1,6 +1,7 @@
 package mchorse.blockbuster;
 
 import mchorse.blockbuster.commands.CommandAction;
+import mchorse.blockbuster.commands.CommandModelBlock;
 import mchorse.blockbuster.commands.CommandOnHead;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.commands.CommandScene;
@@ -301,6 +302,7 @@ public class Blockbuster
         event.registerServerCommand(new CommandOnHead());
         event.registerServerCommand(new CommandSpectate());
         event.registerServerCommand(new CommandScene());
+        event.registerServerCommand(new CommandModelBlock());
     }
 
     @EventHandler

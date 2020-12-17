@@ -112,7 +112,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
         column.flex().relative(this).w(120).column(5).vertical().stretch().height(20).padding(10);
 
-        this.pickMorph = new GuiNestedEdit(mc, (editing) -> ClientProxy.panels.addMorphs(this, editing, this.model.morph));
+        this.pickMorph = new GuiNestedEdit(mc, (editing) -> ClientProxy.panels.addMorphs(this, editing, this.model.morph.get()));
 
         GuiButtonElement look = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.model_block.look"), (button) ->
         {
@@ -185,7 +185,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     {
         if (this.model != null)
         {
-            this.model.morph = morph;
+            this.model.morph.setDirect(morph);
         }
 
         this.pickMorph.setMorph(morph);
@@ -257,7 +257,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         {
             TileEntityModel old = this.old.get(model.getPos());
 
-            model.copyData(old);
+            model.copyData(old, false);
         }
 
         tryAddingBlock(model.getPos());
@@ -301,7 +301,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
             this.trans.set(this.model);
 
-            this.pickMorph.setMorph(this.model.morph);
+            this.pickMorph.setMorph(this.model.morph.get());
             this.order.setValue(this.model.order.ordinal());
             this.shadow.toggled(this.model.shadow);
             this.global.toggled(this.model.global);
@@ -319,7 +319,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     {
         if (this.model != null)
         {
-            AbstractMorph morph = this.model.morph;
+            AbstractMorph morph = this.model.morph.get();
 
             if (morph != null)
             {

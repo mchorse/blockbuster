@@ -19,7 +19,7 @@ public class ServerHandlerModifyModelBlock extends ServerMessageHandler<PacketMo
 
         if (tile instanceof TileEntityModel)
         {
-            ((TileEntityModel) tile).copyData(message.model);
+            ((TileEntityModel) tile).copyData(message.model, false);
 
             Dispatcher.DISPATCHER.get().sendToAllAround(message, new TargetPoint(player.dimension, pos.getX(), pos.getY(), pos.getZ(), 64));
         }

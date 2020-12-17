@@ -5,6 +5,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
+import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -35,7 +36,7 @@ public class TileEntityModel extends TileEntity implements ITickable
 {
     public static long lastUpdate;
 
-    public AbstractMorph morph;
+    public Morph morph = new Morph();
     public EntityLivingBase entity;
     public ItemStack[] slots = new ItemStack[] {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY};
 
@@ -73,7 +74,7 @@ public class TileEntityModel extends TileEntity implements ITickable
 
         tag.setString("Name", "blockbuster.fred");
 
-        this.morph = MorphManager.INSTANCE.morphFromNBT(tag);
+        this.morph.setDirect(MorphManager.INSTANCE.morphFromNBT(tag));
         this.lastModelUpdate = lastUpdate;
     }
 
@@ -85,7 +86,7 @@ public class TileEntityModel extends TileEntity implements ITickable
 
     public void setMorph(AbstractMorph morph)
     {
-        this.morph = morph;
+        this.morph.set(morph);
         this.markDirty();
     }
 
@@ -129,9 +130,9 @@ public class TileEntityModel extends TileEntity implements ITickable
             this.entity.posY = this.pos.getY() + this.y;
             this.entity.posZ = this.pos.getZ() + this.z + 0.5;
 
-            if (this.morph != null)
+            if (!this.morph.isEmpty())
             {
-                this.morph.update(this.entity);
+                this.morph.get().update(this.entity);
             }
         }
 
@@ -171,7 +172,7 @@ public class TileEntityModel extends TileEntity implements ITickable
         return range * range;
     }
 
-    public void copyData(TileEntityModel model)
+    public void copyData(TileEntityModel model, boolean merge)
     {
         this.order = model.order;
         this.rotateYawHead = model.rotateYawHead;
@@ -191,7 +192,14 @@ public class TileEntityModel extends TileEntity implements ITickable
         this.global = model.global;
         this.enabled = model.enabled;
 
-        this.morph = model.morph;
+        if (merge)
+        {
+            this.morph.set(model.morph.get());
+        }
+        else
+        {
+            this.morph.setDirect(model.morph.get());
+        }
 
         for (int i = 0; i < model.slots.length; i++)
         {
@@ -275,12 +283,9 @@ public class TileEntityModel extends TileEntity implements ITickable
 
         compound.setTag("Items", list);
 
-        if (this.morph != null)
+        if (!this.morph.isEmpty())
         {
-            NBTTagCompound morph = new NBTTagCompound();
-            this.morph.toNBT(morph);
-
-            compound.setTag("Morph", morph);
+            compound.setTag("Morph", this.morph.toNBT());
         }
 
         return super.writeToNBT(compound);
@@ -330,7 +335,7 @@ public class TileEntityModel extends TileEntity implements ITickable
 
         if (compound.hasKey("Morph", 10))
         {
-            this.morph = MorphManager.INSTANCE.morphFromNBT(compound.getCompoundTag("Morph"));
+            this.morph.setDirect(MorphManager.INSTANCE.morphFromNBT(compound.getCompoundTag("Morph")));
         }
     }
 
@@ -362,7 +367,7 @@ public class TileEntityModel extends TileEntity implements ITickable
             this.slots[i] = buf.readBoolean() ? ByteBufUtils.readItemStack(buf) : null;
         }
 
-        this.morph = MorphUtils.morphFromBuf(buf);
+        this.morph.setDirect(MorphUtils.morphFromBuf(buf));
     }
 
     public void toBytes(ByteBuf buf)
@@ -400,7 +405,7 @@ public class TileEntityModel extends TileEntity implements ITickable
             }
         }
 
-        MorphUtils.morphToBuf(buf, this.morph);
+        MorphUtils.morphToBuf(buf, this.morph.get());
     }
 
     /**

@@ -175,7 +175,7 @@ public class GunProps
             this.createEntity();
         }
 
-        EntityLivingBase entity = this.useTarget && target != null ? target : this.entity;
+        EntityLivingBase entity = this.useTarget ? target : this.entity;
         AbstractMorph morph = this.current.get();
 
         if (morph != null && entity != null)

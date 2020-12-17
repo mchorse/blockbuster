@@ -15,6 +15,7 @@ public class PacketModifyModelBlock implements IMessage
 {
     public BlockPos pos;
     public TileEntityModel model;
+    public boolean merge;
 
     public PacketModifyModelBlock()
     {}
@@ -23,6 +24,13 @@ public class PacketModifyModelBlock implements IMessage
     {
         this.pos = pos;
         this.model = model;
+    }
+
+    public PacketModifyModelBlock(BlockPos pos, TileEntityModel model, boolean merge)
+    {
+        this(pos, model);
+
+        this.merge = merge;
     }
 
     @Override
@@ -35,6 +43,8 @@ public class PacketModifyModelBlock implements IMessage
             this.model = new TileEntityModel();
             this.model.fromBytes(buf);
         }
+
+        this.merge = buf.readBoolean();
     }
 
     @Override
@@ -49,5 +59,7 @@ public class PacketModifyModelBlock implements IMessage
         {
             this.model.toBytes(buf);
         }
+
+        buf.writeBoolean(this.merge);
     }
 }

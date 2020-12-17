@@ -16,9 +16,9 @@ public class ClientHandlerModifyModelBlock extends ClientMessageHandler<PacketMo
     {
         TileEntity tile = player.world.getTileEntity(message.pos);
 
-        if (tile != null && tile instanceof TileEntityModel)
+        if (tile instanceof TileEntityModel)
         {
-            ((TileEntityModel) tile).copyData(message.model);
+            ((TileEntityModel) tile).copyData(message.model, message.merge);
         }
     }
 }

@@ -222,3 +222,18 @@ blockbuster:
                 {r}{o}Spectate command{r}. This command allows making given player to spectate given entity.
                 
                 {l}{6}/{r}spectate {8}<player>{r} {7}<entity>{r}
+
+        modelblock:
+            help: "{r}{o}Model block command{r}. This command allows editing model blocks through commands."
+
+            morph:
+                |
+                    {l}{6}/{r}modelblock {8}morph{r} {7}<x> <y> <z> [morph_nbt]{r}
+
+                    {r}Changes morph to {7}[morph_nbt]{r} of a model block at {7}<x>{r}, {7}<y>{r}, {7}<z>{r}.
+
+            property:
+                |
+                    {l}{6}/{r}modelblock {8}property{r} {7}<x> <y> <z> <property:enabled> <value>{r}
+
+                    {r}Changes model block property {7}<property>{r} to {7}<value>{r} of a model block at {7}<x>{r}, {7}<y>{r}, {7}<z>{r}.
