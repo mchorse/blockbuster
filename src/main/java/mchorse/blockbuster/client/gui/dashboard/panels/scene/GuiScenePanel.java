@@ -111,7 +111,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         GuiElement right = new GuiElement(mc);
 
         left.flex().relative(this).w(120).y(20).hTo(this.selector.flex()).column(5).width(100).height(20).padding(10);
-        right.flex().relative(this).x(1F).y(20).w(120).hTo(this.selector.flex()).anchorX(1F).column(5).width(100).height(20).padding(10);
+        right.flex().relative(this).x(1F).y(20).w(120).hTo(this.selector.flex()).anchorX(1F).column(5).flip().width(100).height(20).padding(10);
 
         this.subChildren = new GuiElement(mc);
         this.subChildren.setVisible(false);
