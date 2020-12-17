@@ -523,6 +523,11 @@ blockbuster.gui:
         mipmap_tooltip: When enabled, looks less noisy far away
         replace: Replace
         replace_modal: "Type in the resource location of {l}already loaded{r} texture which you want to replace with:"
+        export: Save texture
+        export_modal: "Selected texture was successfully selected as {7}%s{r}!"
+        export_error: "This texture couldn't be exported... Check the logs for the error message!"
+        open_folder: "Open export folder..."
+        copy: "Copy currently selected texture as a string (domain:path)"
 
     gun:
         title: Gun configuration

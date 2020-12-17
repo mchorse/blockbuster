@@ -2,34 +2,40 @@ package mchorse.blockbuster.client.gui.dashboard.panels;
 
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
-import mchorse.blockbuster.client.gui.dashboard.GuiFirstTime;
 import mchorse.blockbuster.client.textures.MipmapTexture;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiResourceLocationListElement;
+import mchorse.mclib.client.gui.framework.elements.modals.GuiMessageModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
-import mchorse.mclib.client.gui.mclib.GuiDashboardPanel;
+import mchorse.mclib.client.gui.utils.Elements;
+import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.config.GuiUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.lwjgl.opengl.GL11;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.nio.ByteBuffer;
 import java.util.Map;
 
 /**
@@ -48,6 +54,8 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
     public GuiToggleElement mipmap;
     public GuiButtonElement remove;
     public GuiButtonElement replace;
+    public GuiButtonElement export;
+    public GuiIconElement copy;
 
     private ResourceLocation rl;
     private String title = I18n.format("blockbuster.gui.texture.title");
@@ -65,14 +73,103 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
         this.mipmap.tooltip(IKey.lang("blockbuster.gui.texture.mipmap_tooltip"), Direction.LEFT);
         this.remove = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.remove"), (b) -> this.remove());
         this.replace = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.texture.replace"), (b) -> this.replace());
+        this.export = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.texture.export"), (b) -> this.export());
+        this.copy = new GuiIconElement(mc, Icons.COPY, (b) -> this.copy());
+        this.copy.tooltip(IKey.lang("blockbuster.gui.texture.copy"), Direction.TOP).flex().wh(20, 20);
 
+        GuiElement element = new GuiElement(mc);
+
+        element.flex().relative(this).xy(1F, 1F).w(148).anchor(1F, 1F).column(5).vertical().stretch().padding(10);
         this.textures.flex().relative(this.area).set(10, 50, 0, 0).w(1, -30 - 128).h(1, -60);
-        this.remove.flex().relative(this.area).set(0, 0, 128, 20).x(1, -138).y(1, -30);
-        this.replace.flex().relative(this.remove.resizer()).set(0, -25, 128, 20);
-        this.linear.flex().relative(this.replace.resizer()).set(0, -16, 64, 11);
-        this.mipmap.flex().relative(this.linear.resizer()).set(64, 0, 64, 11);
 
-        this.add(this.textures, this.linear, this.mipmap, this.replace, this.remove);
+        element.add(Elements.row(mc, 5, 0, this.export, this.copy));
+        element.add(this.replace, this.remove, this.linear, this.mipmap);
+        this.add(this.textures, element);
+    }
+
+    private void copy()
+    {
+        ResourceLocation location = this.textures.getCurrentFirst();
+
+        if (location == null)
+        {
+            return;
+        }
+
+        GuiScreen.setClipboardString(location.toString());
+    }
+
+    private void export()
+    {
+        ResourceLocation location = this.textures.getCurrentFirst();
+
+        if (location == null)
+        {
+            return;
+        }
+
+        File file = this.getFirstAvailableFile(FilenameUtils.getBaseName(location.getResourcePath()));
+
+        this.mc.renderEngine.bindTexture(location);
+
+        int w = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
+        int h = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
+        ByteBuffer buffer = GLAllocation.createDirectByteBuffer(w * h * 4);
+
+        GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+
+        BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        int[] pixelData = new int[w * h];
+
+        for (int i = 0, c = w * h; i < c; i++)
+        {
+            int r = buffer.get() & 0xff;
+            int g = buffer.get() & 0xff;
+            int b = buffer.get() & 0xff;
+            int a = buffer.get() & 0xff;
+
+            pixelData[i] = (a << 24) | (r << 16) | (g << 8) | b;
+        }
+
+        image.setRGB(0, 0, w, h, pixelData, 0, w);
+
+        try
+        {
+            ImageIO.write(image, "png", file);
+            GuiModal.addFullModal(this, () ->
+            {
+                GuiMessageModal modal = new GuiMessageModal(this.mc, IKey.format("blockbuster.gui.texture.export_modal", file.getName()));
+                GuiButtonElement open = new GuiButtonElement(this.mc, IKey.lang("blockbuster.gui.texture.open_folder"), (b) ->
+                {
+                    modal.removeFromParent();
+                    GuiUtils.openWebLink(new File(ClientProxy.configFile, "export").toURI());
+                });
+
+                modal.bar.add(open);
+
+                return modal;
+            });
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            GuiModal.addFullModal(this, () -> new GuiMessageModal(this.mc, IKey.lang("blockbuster.gui.texture.export_error")));
+        }
+    }
+
+    public File getFirstAvailableFile(String name)
+    {
+        File folder = new File(ClientProxy.configFile, "export");
+        File file = new File(folder, name + ".png");
+        int index = 0;
+
+        while (file.exists())
+        {
+            index += 1;
+            file = new File(folder, name + index + ".png");
+        }
+
+        return file;
     }
 
     private void pickRL(ResourceLocation rl)
@@ -250,8 +347,8 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
 
             x -= fw + 10;
 
-            this.mc.renderEngine.bindTexture(Icons.ICONS);
-            GuiUtils.drawContinuousTexturedBox(x, y, 0, 240, fw, fh, 16, 16, 0, 0);
+            GlStateManager.color(1, 1, 1);
+            Icons.CHECKBOARD.renderArea(x, y, fw, fh);
 
             GlStateManager.enableAlpha();
             this.mc.renderEngine.bindTexture(this.rl);

@@ -401,6 +401,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
 
             this.shapes.setVisible(!hidden);
             this.factor.setVisible(!hidden);
+            this.relative.setVisible(!hidden);
 
             if (!hidden)
             {
