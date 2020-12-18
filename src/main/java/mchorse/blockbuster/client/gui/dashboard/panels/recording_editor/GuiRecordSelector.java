@@ -9,7 +9,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.ScrollArea;
-import mchorse.mclib.client.gui.utils.ScrollArea.ScrollDirection;
+import mchorse.mclib.client.gui.utils.ScrollDirection;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;

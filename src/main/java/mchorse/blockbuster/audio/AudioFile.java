@@ -14,6 +14,8 @@ public class AudioFile
 	public Waveform waveform;
 	public long update;
 
+	private boolean wasPaused;
+
 	public AudioFile(String name, File file, WavePlayer player, Waveform waveform, long update)
 	{
 		this.name = name;
@@ -51,6 +53,15 @@ public class AudioFile
 	public void pause(boolean pause)
 	{
 		int state = this.player.getSourceState();
+
+		if (!pause && this.wasPaused)
+		{
+			this.wasPaused = false;
+
+			return;
+		}
+
+		this.wasPaused = pause && state == AL10.AL_PAUSED;
 
 		if (pause && state == AL10.AL_PLAYING)
 		{
