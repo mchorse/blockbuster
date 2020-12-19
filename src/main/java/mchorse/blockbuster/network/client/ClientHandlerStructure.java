@@ -1,29 +1,14 @@
 package mchorse.blockbuster.network.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.common.structure.PacketStructure;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.blockbuster_pack.morphs.StructureMorph.StructureRenderer;
 import mchorse.mclib.network.ClientMessageHandler;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.profiler.Profiler;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
@@ -37,8 +22,6 @@ import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
 
 public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure>
 {
@@ -86,8 +69,6 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
      * rendering fully baked into a display list.
      * 
      * This was harder than I thought...
-     * 
-     * TODO: make translucent render correctly (at least with itself)
      */
     @SideOnly(Side.CLIENT)
     private StructureRenderer createListFromTemplate(PacketStructure message)
@@ -100,14 +81,12 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         WorldInfo info = new WorldInfo(settings, message.name);
         WorldProvider provider = new WorldProviderSurface();
         FakeWorld world = new FakeWorld(null, info, provider, profiler, true);
-        List<TileEntity> tes = new ArrayList<TileEntity>();
 
         provider.setWorld(world);
         template.read(message.tag);
 
         BlockPos origin = new BlockPos(1, 1, 1);
         int w = template.getSize().getX();
-        int h = template.getSize().getY();
         int d = template.getSize().getZ();
 
         for (int x = 0, cx = (w + 2) / 16 + 1; x < cx; x++)
@@ -119,40 +98,8 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         }
 
         template.addBlocksToWorld(world, origin, placement);
-        tes.addAll(world.loadedTileEntityList);
 
-        /* Create display list */
-        BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
-        Tessellator tess = Tessellator.getInstance();
-        BufferBuilder buffer = tess.getBuffer();
-        int vbo = GL15.glGenBuffers();
-
-        /* Centerize the geometry */
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-        buffer.setTranslation(-w / 2F - origin.getX(), -origin.getY(), -d / 2F - origin.getZ());
-
-        for (BlockPos.MutableBlockPos pos : BlockPos.getAllInBoxMutable(origin, origin.add(w, h, d)))
-        {
-            IBlockState state = world.getBlockState(pos);
-            Block block = state.getBlock();
-
-            if (block.getDefaultState().getRenderType() != EnumBlockRenderType.INVISIBLE)
-            {
-                dispatcher.renderBlock(state, pos, world, buffer);
-            }
-        }
-
-        buffer.setTranslation(0, 0, 0);
-
-        int size = buffer.getVertexCount();
-
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.getByteBuffer(), GL15.GL_STATIC_DRAW);
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-
-        buffer.finishDrawing();
-
-        return new StructureRenderer(vbo, size, template.getSize(), tes, world);
+        return new StructureRenderer(template.getSize(), world);
     }
 
     /**

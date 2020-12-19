@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -37,7 +36,6 @@ import org.lwjgl.opengl.GL15;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -66,6 +64,13 @@ public class StructureMorph extends AbstractMorph
         {
             Dispatcher.sendToServer(new PacketStructureRequest());
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void reloadStructures()
+    {
+        cleanUp();
+        request();
     }
 
     /**
@@ -273,6 +278,7 @@ public class StructureMorph extends AbstractMorph
     public void fromNBT(NBTTagCompound tag)
     {
         super.fromNBT(tag);
+
         this.structure = tag.getString("Structure");
     }
 
@@ -281,7 +287,10 @@ public class StructureMorph extends AbstractMorph
     {
         super.toNBT(tag);
 
-        if (!this.structure.isEmpty()) tag.setString("Structure", this.structure);
+        if (!this.structure.isEmpty())
+        {
+            tag.setString("Structure", this.structure);
+        }
     }
 
     /**
@@ -295,20 +304,40 @@ public class StructureMorph extends AbstractMorph
     {
         public int vbo = -1;
         public int count = 0;
-        public BlockPos size = BlockPos.ORIGIN;
-        public List<TileEntity> tes;
+        public BlockPos size;
         public ClientHandlerStructure.FakeWorld world;
 
         public StructureRenderer()
         {}
 
-        public StructureRenderer(int vbo, int count, BlockPos size, List<TileEntity> tes, ClientHandlerStructure.FakeWorld world)
+        public StructureRenderer(BlockPos size, ClientHandlerStructure.FakeWorld world)
         {
-            this.vbo = vbo;
-            this.count = count;
             this.size = size;
-            this.tes = tes;
             this.world = world;
+
+            this.rebuild();
+        }
+
+        public void rebuild()
+        {
+            /* Create VBO */
+            int vbo = GL15.glGenBuffers();
+
+            Tessellator tess = Tessellator.getInstance();
+            BufferBuilder buffer = tess.getBuffer();
+
+            this.render(buffer);
+
+            int count = buffer.getVertexCount();
+
+            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+            GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.getByteBuffer(), GL15.GL_STATIC_DRAW);
+            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+            buffer.finishDrawing();
+
+            this.count = count;
+            this.vbo = vbo;
         }
 
         public void render()
@@ -340,44 +369,50 @@ public class StructureMorph extends AbstractMorph
             }
             else
             {
-                /* Create display list */
-                BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
                 Tessellator tess = Tessellator.getInstance();
                 BufferBuilder buffer = tess.getBuffer();
 
-                BlockPos origin = new BlockPos(1, 1, 1);
-                int w = this.size.getX();
-                int h = this.size.getY();
-                int d = this.size.getZ();
+                this.render(buffer);
 
-                /* Centerize the geometry */
-                buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-                buffer.setTranslation(-w / 2F - origin.getX(), -origin.getY(), -d / 2F - origin.getZ());
-
-                for (BlockPos.MutableBlockPos pos : BlockPos.getAllInBoxMutable(origin, origin.add(w, h, d)))
-                {
-                    IBlockState state = world.getBlockState(pos);
-                    Block block = state.getBlock();
-
-                    if (block.getDefaultState().getRenderType() != EnumBlockRenderType.INVISIBLE)
-                    {
-                        dispatcher.renderBlock(state, pos, world, buffer);
-                    }
-                }
-
-                buffer.setTranslation(0, 0, 0);
                 tess.draw();
             }
         }
 
+        public void render(BufferBuilder buffer)
+        {
+            BlockPos origin = new BlockPos(1, 1, 1);
+            int w = this.size.getX();
+            int h = this.size.getY();
+            int d = this.size.getZ();
+
+            BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
+
+            /* Centerize the geometry */
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+            buffer.setTranslation(-w / 2F - origin.getX(), -origin.getY(), -d / 2F - origin.getZ());
+
+            for (BlockPos.MutableBlockPos pos : BlockPos.getAllInBoxMutable(origin, origin.add(w, h, d)))
+            {
+                IBlockState state = this.world.getBlockState(pos);
+                Block block = state.getBlock();
+
+                if (block.getDefaultState().getRenderType() != EnumBlockRenderType.INVISIBLE)
+                {
+                    dispatcher.renderBlock(state, pos, this.world, buffer);
+                }
+            }
+
+            buffer.setTranslation(0, 0, 0);
+        }
+
         public void renderTEs()
         {
-            if (this.tes == null)
+            if (this.world == null)
             {
                 return;
             }
 
-            for (TileEntity te : this.tes)
+            for (TileEntity te : this.world.loadedTileEntityList)
             {
                 BlockPos pos = te.getPos();
                 TileEntityRendererDispatcher.instance.render(te, pos.getX() - this.size.getX() / 2D - 1, pos.getY() - 1, pos.getZ() - this.size.getZ() / 2D - 1, 0);
@@ -391,7 +426,6 @@ public class StructureMorph extends AbstractMorph
                 GL15.glDeleteBuffers(this.vbo);
                 this.vbo = -1;
                 this.count = 0;
-                this.tes = null;
             }
         }
     }

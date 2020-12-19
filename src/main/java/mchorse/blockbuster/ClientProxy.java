@@ -210,7 +210,15 @@ public class ClientProxy extends CommonProxy
         ClientCommandHandler.instance.registerCommand(new CommandModel());
         ClientCommandHandler.instance.registerCommand(new CommandItemNBT());
 
-        ((IReloadableResourceManager) mc.getResourceManager()).registerReloadListener((manager) -> audio.reset());
+        ((IReloadableResourceManager) mc.getResourceManager()).registerReloadListener((manager) ->
+        {
+            audio.reset();
+
+            if (Minecraft.getMinecraft().player != null)
+            {
+                StructureMorph.reloadStructures();
+            }
+        });
     }
 
     protected void registerItemModel(Block block, String path)
