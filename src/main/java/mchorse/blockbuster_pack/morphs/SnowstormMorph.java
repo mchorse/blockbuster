@@ -323,6 +323,8 @@ public class SnowstormMorph extends AbstractMorph
 		{
 			SnowstormMorph snow = (SnowstormMorph) morph;
 
+			this.mergeBasic(morph);
+
 			if (!this.scheme.equals(snow.scheme) && this.emitter != null)
 			{
 				this.setScheme(snow.scheme);

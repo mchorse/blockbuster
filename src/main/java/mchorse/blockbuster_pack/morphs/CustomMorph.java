@@ -460,20 +460,13 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     {
         this.updateModel();
         this.animation.update();
-
-        if (this.model != null)
-        {
-            this.updateSize(target);
-        }
-
         this.parts.updateBodyLimbs(target);
+
         super.update(target);
     }
 
-    /**
-     * Update size of the player based on the given morph.
-     */
-    public void updateSize(EntityLivingBase target)
+    @Override
+    protected void updateUserHitbox(EntityLivingBase target)
     {
         this.pose = this.getPose(target, 0);
 
@@ -537,6 +530,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         if (morph instanceof CustomMorph)
         {
             CustomMorph custom = (CustomMorph) morph;
+
+            this.mergeBasic(morph);
 
             /* Don't suddenly end the animation in progress, interpolate */
             if (!custom.animation.ignored)

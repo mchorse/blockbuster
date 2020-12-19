@@ -425,6 +425,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
             if (!sequencer.morphs.equals(this.morphs))
             {
+                this.mergeBasic(morph);
                 this.morphs.clear();
 
                 for (SequenceEntry entry : sequencer.morphs)

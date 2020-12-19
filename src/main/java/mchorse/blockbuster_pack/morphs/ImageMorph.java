@@ -451,6 +451,8 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         {
             ImageMorph image = (ImageMorph) morph;
 
+            this.mergeBasic(morph);
+
             if (!image.animation.ignored)
             {
                 this.animation.merge(this, image);
