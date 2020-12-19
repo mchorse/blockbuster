@@ -148,6 +148,7 @@ public class Blockbuster
     public static ValueInt chromaSkyColor;
     public static ValueBoolean syncedURLTextureDownload;
     public static ValueBoolean addUtilityBlocks;
+    public static ValueBoolean cachedStructureRendering;
 
     public static ValueBoolean modelBlockDisableRendering;
     public static ValueBoolean modelBlockDisableItemRendering;
@@ -218,6 +219,7 @@ public class Blockbuster
         chromaSkyColor = builder.getInt("green_screen_sky_color", 0xff00ff00).colorAlpha();
         syncedURLTextureDownload = builder.getBoolean("url_skins_sync_download", true);
         addUtilityBlocks = builder.getBoolean("add_utility_blocks", false);
+        cachedStructureRendering = builder.getBoolean("cached_structure_rendering", true);
 
         /* Model block */
         modelBlockDisableRendering = builder.category("model_block").getBoolean("model_block_disable_rendering", false);

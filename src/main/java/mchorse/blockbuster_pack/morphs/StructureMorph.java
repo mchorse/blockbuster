@@ -1,5 +1,6 @@
 package mchorse.blockbuster_pack.morphs;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.client.ClientHandlerStructure;
 import mchorse.blockbuster.network.common.structure.PacketStructure;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -311,27 +313,61 @@ public class StructureMorph extends AbstractMorph
 
         public void render()
         {
-            GL11.glNormal3f(0, 1, 0);
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vbo);
+            GL11.glNormal3f(0, 0.6F, 0);
 
-            GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-            GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
-            GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+            if (Blockbuster.cachedStructureRendering.get())
+            {
+                GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vbo);
 
-            GlStateManager.glVertexPointer(3, 5126, 28, 0);
-            GlStateManager.glColorPointer(4, 5121, 28, 12);
-            GlStateManager.glTexCoordPointer(2, 5126, 28, 16);
-            OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapTexUnit);
-            GlStateManager.glTexCoordPointer(2, 5122, 28, 24);
-            OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
+                GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+                GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
+                GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
 
-            GlStateManager.glDrawArrays(GL11.GL_QUADS, 0, this.count);
+                GlStateManager.glVertexPointer(3, 5126, 28, 0);
+                GlStateManager.glColorPointer(4, 5121, 28, 12);
+                GlStateManager.glTexCoordPointer(2, 5126, 28, 16);
+                OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapTexUnit);
+                GlStateManager.glTexCoordPointer(2, 5122, 28, 24);
+                OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
 
-            GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
-            GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
-            GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+                GlStateManager.glDrawArrays(GL11.GL_QUADS, 0, this.count);
 
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+                GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
+                GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
+                GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+
+                GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+            }
+            else
+            {
+                /* Create display list */
+                BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
+                Tessellator tess = Tessellator.getInstance();
+                BufferBuilder buffer = tess.getBuffer();
+
+                BlockPos origin = new BlockPos(1, 1, 1);
+                int w = this.size.getX();
+                int h = this.size.getY();
+                int d = this.size.getZ();
+
+                /* Centerize the geometry */
+                buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+                buffer.setTranslation(-w / 2F - origin.getX(), -origin.getY(), -d / 2F - origin.getZ());
+
+                for (BlockPos.MutableBlockPos pos : BlockPos.getAllInBoxMutable(origin, origin.add(w, h, d)))
+                {
+                    IBlockState state = world.getBlockState(pos);
+                    Block block = state.getBlock();
+
+                    if (block.getDefaultState().getRenderType() != EnumBlockRenderType.INVISIBLE)
+                    {
+                        dispatcher.renderBlock(state, pos, world, buffer);
+                    }
+                }
+
+                buffer.setTranslation(0, 0, 0);
+                tess.draw();
+            }
         }
 
         public void renderTEs()

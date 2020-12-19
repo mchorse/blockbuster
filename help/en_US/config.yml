@@ -14,6 +14,7 @@ blockbuster.config:
         green_screen_sky_color: Chroma sky color
         url_skins_sync_download: Synchronous URL downloads
         add_utility_blocks: Add utility blocks
+        cached_structure_rendering: Cached structure rendering
     
     model_block:
         title: Model block
