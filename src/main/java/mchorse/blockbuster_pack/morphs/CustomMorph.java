@@ -409,6 +409,13 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             return false;
         }
 
+        ResourceLocation location = this.skin != null ? this.skin : (this.model != null ? this.model.defaultTexture : null);
+
+        if (location != null)
+        {
+            renderer.bindTexture(location);
+        }
+
         if (hand.equals(EnumHand.MAIN_HAND))
         {
             renderer.renderRightArm(player);
