@@ -11,6 +11,7 @@ import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.vanilla_pack.morphs.PlayerMorph;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -71,6 +72,12 @@ public class Replay
         actor.setEntityInvulnerable(this.invincible);
         actor.morph(mchorse.metamorph.api.MorphUtils.copy(this.morph), false);
         actor.invisible = this.invisible;
+
+        if (this.health > 20)
+        {
+            actor.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(this.health);
+        }
+
         actor.setHealth(this.health);
         actor.notifyPlayers();
     }
