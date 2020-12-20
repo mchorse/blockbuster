@@ -6,6 +6,7 @@ import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceBillboard;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionTinting;
+import mchorse.blockbuster.client.particles.components.appearance.CameraFacing;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -35,6 +36,8 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 	public GuiCirculateElement mode;
 	public GuiLabel modeLabel;
 
+	public GuiCirculateElement facingMode;
+	public GuiLabel facingModeLabel;
 	public GuiTextElement sizeW;
 	public GuiTextElement sizeH;
 	public GuiTextElement uvX;
@@ -49,6 +52,9 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 	public GuiTextElement max;
 	public GuiToggleElement stretch;
 	public GuiToggleElement loop;
+	
+	public CameraFacing[] facingModes = {CameraFacing.DIRECTION_X, CameraFacing.DIRECTION_Y, CameraFacing.DIRECTION_Z, CameraFacing.LOOKAT_XYZ,
+			 CameraFacing.LOOKAT_Y, CameraFacing.ROTATE_XYZ, CameraFacing.ROTATE_Y};
 	
 	public GuiSnowstormCollisionAppearanceSection(Minecraft mc, GuiSnowstorm parent)
 	{
@@ -98,6 +104,20 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 		this.mode.addLabel(IKey.lang(GUIPATH+".animated"));
 		this.modeLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"), 20).anchor(0, 0.5F);
 
+		this.facingMode = new GuiCirculateElement(mc, (b) ->
+		{
+			this.component.facing = facingModes[this.facingMode.getValue()];
+			this.parent.dirty();
+		});
+		this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.direction_x"));
+		this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.direction_y"));
+		this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.direction_z"));
+		this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.lookat_xyz"));
+		this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.lookat_y"));
+		this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.rotate_xyz"));
+		this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.rotate_y"));
+		this.facingModeLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.label"), 20).anchor(0, 0.5F);
+		
 		this.sizeW = new GuiTextElement(mc, 10000, (str) -> this.component.sizeW = this.parse(str, this.sizeW, this.component.sizeW));
 		this.sizeW.tooltip(IKey.lang(GUIPATH+".width"));
 		this.sizeH = new GuiTextElement(mc, 10000, (str) -> this.component.sizeH = this.parse(str, this.sizeH, this.component.sizeH));
@@ -156,6 +176,7 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 		this.fields.add(this.enabled);
 		this.fields.add(Elements.row(mc, 5, 0, 20, this.pick, this.material));
 		this.fields.add(Elements.row(mc, 5, 0, 20, this.modeLabel, this.mode));
+		this.fields.add(Elements.row(mc, 5, 0, 20, this.facingModeLabel, this.facingMode));
 		this.fields.add(Elements.label(IKey.lang(GUIPATH+".size"), 20).anchor(0, 1F));
 		this.fields.add(this.sizeW, this.sizeH);
 		this.fields.add(Elements.label(IKey.lang(GUIPATH+".mapping"), 20).anchor(0, 1F));
@@ -221,6 +242,16 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 
 		this.enabled.toggled(MolangExpression.isOne(component.enabled));
 		this.mode.setValue(this.component.flipbook ? 1 : 0);
+		int facingModeI = -1;
+		for(int i = 0; i<this.facingModes.length; i++)
+		{
+			if(this.facingModes[i]==this.component.facing)
+			{
+				facingModeI = i;
+				break;
+			}
+		}
+		this.facingMode.setValue(facingModeI);
 		this.set(this.sizeW, this.component.sizeW);
 		this.set(this.sizeH, this.component.sizeH);
 		this.set(this.uvX, this.component.uvX);
