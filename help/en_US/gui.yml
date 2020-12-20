@@ -483,7 +483,18 @@ blockbuster.gui:
 
             regular: Regular
             animated: Animated
-
+            
+            cameraFacing:
+                label: Facing mode
+                
+                direction_x: Direction X
+                direction_y: Direction Y
+                direction_z: Direction Z
+                lookat_xyz: Look at XYZ
+                lookat_y: Look at Y
+                rotate_xyz: Rotate XYZ
+                rotate_y: Rotate Y
+            
             size: Billboard size
             width: Width
             height: Height
@@ -519,7 +530,10 @@ blockbuster.gui:
             title: Collision
 
             enabled: Enabled
-            realisticCollision: realistic collision
+            realisticCollision: Realistic collision
+            preserveEnergy: Preserve Energy
+            entityCollision: Collision with entities
+            momentum: Momentum for entity Collision
             drag: Collision drag adds a drag (slowdown) after particle's collision with blocks in the world
             bounciness: Bounciness multiplies particle's acceleration after collision
             randomBounciness: randomBounciness - randomize the direction vector. It doesn't affect the velocity.
@@ -537,7 +551,9 @@ blockbuster.gui:
             expirationDelay: Delay the expiration. Measured in ticks - 20 = 1 second
             
             appearance:
-                title: Texture on Colllision
+                title: Texture on colllision
+            lighting:
+                title: Lighting on collision
 
     record_morph:
         random_skip: Random Skip

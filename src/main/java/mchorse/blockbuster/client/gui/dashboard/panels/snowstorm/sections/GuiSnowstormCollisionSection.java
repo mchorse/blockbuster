@@ -7,6 +7,7 @@ import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.client.gui.utils.Elements;
@@ -28,7 +29,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 	public GuiTrackpadElement splitParticleSpeedThreshold;
 	public GuiTrackpadElement radius;
 	public GuiToggleElement expire;
-	public GuiTrackpadElement expirationDelay;
+	public GuiTextElement expirationDelay;
 	
 	public GuiElement controlToggleElements;
 	public GuiElement randomBouncinessRow;
@@ -126,9 +127,9 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 			this.parent.dirty();
 		});
 		
-		this.expirationDelay = new GuiTrackpadElement(mc, (value) ->
+		this.expirationDelay = new GuiTextElement(mc, (value) ->
 		{
-			this.component.expirationDelay = value.intValue();
+			this.component.expirationDelay = this.parse(value, this.expirationDelay, this.component.expirationDelay);
 			this.parent.dirty();
 		});
 		this.expirationDelay.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.expirationDelay"));
@@ -188,7 +189,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		this.splitParticleSpeedThreshold.setValue(this.component.splitParticleSpeedThreshold);
 		this.radius.setValue(this.component.radius);
 		this.expire.toggled(this.component.expireOnImpact);
-		this.expirationDelay.setValue(this.component.expirationDelay);
+		this.set(this.expirationDelay, this.component.expirationDelay);
 		
 		if(this.entityCollision.isToggled()) {
 			this.controlToggleElements.add(momentum);
