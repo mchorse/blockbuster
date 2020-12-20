@@ -62,7 +62,7 @@ public class LayerBodyPart implements LayerRenderer<EntityLivingBase>
                 {
                     GL11.glPushMatrix();
                     limb.postRender(scale);
-                    part.render(target, partialTicks);
+                    part.render(morph, target, partialTicks);
                     GL11.glPopMatrix();
 
                     break;

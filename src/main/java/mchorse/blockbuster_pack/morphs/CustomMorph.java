@@ -467,7 +467,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     {
         this.updateModel();
         this.animation.update();
-        this.parts.updateBodyLimbs(target);
+        this.parts.updateBodyLimbs(this, target);
 
         super.update(target);
     }
