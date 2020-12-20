@@ -313,6 +313,12 @@ blockbuster.gui:
         random_order: Random order
         ticks: ticks
 
+        preview_tick: Preview tick of this sequencer morph
+
+        keys:
+            toggle: Toggle sequencer playback
+            stop: Stop sequencer playback
+
     particle:
         tooltip: General properties
         emission: Emission properties

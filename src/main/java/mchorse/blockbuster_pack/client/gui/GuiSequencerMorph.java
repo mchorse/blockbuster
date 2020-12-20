@@ -5,6 +5,7 @@ import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
@@ -13,6 +14,9 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
+import mchorse.mclib.utils.DummyEntity;
+import mchorse.mclib.utils.MathUtils;
+import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiMorphRenderer;
@@ -24,6 +28,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -67,6 +72,17 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
         public SequenceEntry entry;
 
+        /* Playback preview */
+        public GuiTrackpadElement preview;
+        public GuiIconElement plause;
+        public GuiIconElement stop;
+
+        private Morph previewMorph = new Morph();
+        private DummyEntity dummy = new DummyEntity(Minecraft.getMinecraft().world);
+        private boolean playing;
+        private int tick;
+        private long lastTick;
+
         public GuiSequencerMorphPanel(Minecraft mc, GuiSequencerMorph editor)
         {
             super(mc, editor);
@@ -91,6 +107,8 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                 this.list.setIndex(this.list.getList().size() - 1);
                 this.select(entry);
                 this.list.update();
+
+                this.stopPlayback();
             });
 
             this.removePart = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.remove"), (b) ->
@@ -102,6 +120,8 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
                     this.select(this.list.getCurrentFirst());
                     this.list.update();
+
+                    this.stopPlayback();
                 }
             });
 
@@ -125,6 +145,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                 if (this.entry != null)
                 {
                     this.entry.duration = value.floatValue();
+                    this.stopPlayback();
                 }
             });
             this.duration.tooltip(IKey.lang("blockbuster.gui.sequencer.duration"));
@@ -135,6 +156,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                 if (this.entry != null)
                 {
                     this.entry.random = value.floatValue();
+                    this.stopPlayback();
                 }
             });
             this.random.tooltip(IKey.lang("blockbuster.gui.sequencer.random"));
@@ -145,11 +167,13 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.reverse = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.sequencer.reverse"), false, (b) ->
             {
                 this.morph.reverse = b.isToggled();
+                this.stopPlayback();
             });
 
             this.randomOrder = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.sequencer.random_order"), false, (b) ->
             {
                 this.morph.isRandom = b.isToggled();
+                this.stopPlayback();
             });
 
             this.addPart.flex().relative(this.area).set(10, 10, 50, 20);
@@ -158,8 +182,28 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.randomOrder.flex().relative(this).x(10).y(1F, -24).w(105);
             this.reverse.flex().relative(this.randomOrder).y(-1F, -5).w(1F);
 
+            /* Playback preview code */
+            this.preview = new GuiTrackpadElement(mc, (value) -> this.previewTick(value.intValue()));
+            this.preview.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.sequencer.preview_tick"));
+            this.plause = new GuiIconElement(mc, Icons.PLAY, (b) -> this.togglePlay());
+            this.plause.tooltip(IKey.lang("blockbuster.gui.sequencer.keys.toggle")).flex().wh(16, 20);
+            this.stop = new GuiIconElement(mc, Icons.STOP, (b) -> this.stopPlayback());
+            this.stop.tooltip(IKey.lang("blockbuster.gui.sequencer.keys.stop")).flex().wh(16, 20);
+
+            GuiElement previewBar = new GuiElement(mc);
+
+            previewBar.flex().relative(this).x(130).y(10).wTo(this.elements.flex()).h(20).row(5).preferred(1);
+            previewBar.add(this.plause, this.preview, this.stop);
+
             this.elements.add(this.pick, this.duration, this.random, this.setDuration);
-            this.add(this.addPart, this.removePart, this.randomOrder, this.reverse, this.list, this.elements);
+            this.add(this.addPart, this.removePart, this.randomOrder, this.reverse, this.list, this.elements, previewBar);
+
+            this.keys().register(this.plause.tooltip.label, Keyboard.KEY_SPACE, () -> this.plause.clickItself(GuiBase.getCurrent()))
+                .held(Keyboard.KEY_LSHIFT)
+                .category(GuiAbstractMorph.KEY_CATEGORY);
+            this.keys().register(this.stop.tooltip.label, Keyboard.KEY_SPACE, () -> this.stop.clickItself(GuiBase.getCurrent()))
+                .held(Keyboard.KEY_LMENU)
+                .category(GuiAbstractMorph.KEY_CATEGORY);
         }
 
         private void select(SequenceEntry entry)
@@ -183,10 +227,78 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.elements.setVisible(entry != null);
         }
 
+        /* Playback preview */
+
+        private void previewTick(int tick)
+        {
+            this.tick = tick;
+
+            if (this.playing)
+            {
+                this.togglePlay();
+            }
+
+            this.updatePreviewMorph();
+        }
+
+        private void togglePlay()
+        {
+            this.playing = !this.playing;
+            this.updatePlauseButton();
+        }
+
+        private void updatePlauseButton()
+        {
+            this.plause.both(this.playing ? Icons.PAUSE : Icons.PLAY);
+        }
+
+        private void stopPlayback()
+        {
+            this.tick = 0;
+            this.playing = false;
+            this.updatePlauseButton();
+            this.preview.setValue(0);
+
+            if (this.entry != null)
+            {
+                ((GuiMorphRenderer) this.editor.renderer).morph = this.entry.morph;
+            }
+        }
+
+        private void updatePreviewMorph()
+        {
+            SequencerMorph.FoundMorph morph = this.morph.getMorphAt(this.tick);
+
+            if (morph != null)
+            {
+                AbstractMorph current = morph.getCurrentMorph();
+                AbstractMorph previous = morph.getPreviousMorph();
+
+                current = MorphUtils.copy(current);
+                previous = MorphUtils.copy(previous);
+
+                int prevDuration = (int) morph.getPreviousDuration();
+
+                MorphUtils.pause(previous, null, prevDuration);
+                MorphUtils.pause(current, previous, this.tick - (int) (morph.totalDuration - morph.getCurrentDuration()));
+
+                this.previewMorph.setDirect(current);
+                ((GuiMorphRenderer) this.editor.renderer).morph = this.previewMorph.get();
+            }
+        }
+
+        private void resetPlayback()
+        {
+            this.stopPlayback();
+            this.updatePreviewMorph();
+        }
+
         @Override
         public void fillData(SequencerMorph morph)
         {
             super.fillData(morph);
+
+            this.resetPlayback();
 
             this.list.setList(morph.morphs);
             this.list.setIndex(0);
@@ -199,9 +311,37 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         @Override
         public void draw(GuiContext context)
         {
+            this.updateLogic(context);
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.sequencer.morphs"), this.list.area.x, this.list.area.y - 12, 0xffffff);
 
             super.draw(context);
+        }
+
+        private void updateLogic(GuiContext context)
+        {
+            if (this.playing)
+            {
+                long i = MathUtils.clamp(context.tick - this.lastTick, 0, 10);
+
+                while (i > 0L)
+                {
+                    this.updatePreviewMorph();
+
+                    AbstractMorph morph = this.previewMorph.get();
+
+                    if (morph != null)
+                    {
+                        this.dummy.ticksExisted = (int) context.tick;
+                    }
+
+                    this.tick += 1;
+                    this.preview.setValue(this.tick);
+
+                    --i;
+                }
+            }
+
+            this.lastTick = context.tick;
         }
 
         @Override
