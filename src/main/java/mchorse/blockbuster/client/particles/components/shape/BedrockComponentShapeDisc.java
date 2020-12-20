@@ -29,13 +29,33 @@ public class BedrockComponentShapeDisc extends BedrockComponentShapeSphere
 
 		if (element.has("plane_normal"))
 		{
-			JsonArray array = element.getAsJsonArray("plane_normal");
+			JsonElement normal = element.get("plane_normal");
 
-			if (array.size() >= 3)
+			if (normal.isJsonPrimitive())
 			{
-				this.normal[0] = parser.parseJson(array.get(0));
-				this.normal[1] = parser.parseJson(array.get(1));
-				this.normal[2] = parser.parseJson(array.get(2));
+				String axis = normal.getAsString().toLowerCase();
+
+				if (axis.equals("x"))
+				{
+					this.normal[0] = MolangParser.ONE;
+					this.normal[1] = MolangParser.ZERO;
+				}
+				else if (axis.equals("z"))
+				{
+					this.normal[1] = MolangParser.ZERO;
+					this.normal[2] = MolangParser.ONE;
+				}
+			}
+			else
+			{
+				JsonArray array = element.getAsJsonArray("plane_normal");
+
+				if (array.size() >= 3)
+				{
+					this.normal[0] = parser.parseJson(array.get(0));
+					this.normal[1] = parser.parseJson(array.get(1));
+					this.normal[2] = parser.parseJson(array.get(2));
+				}
 			}
 		}
 
