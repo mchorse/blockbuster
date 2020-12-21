@@ -224,7 +224,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				{
 					if(this.expirationDelay.get()!=0 && particle.expireAge==0)
 					{
-						particle.expireAge = (int) (particle.age+MathUtils.clamp(this.expirationDelay.get(), 0, 1));
+						particle.expireAge = (int) (particle.age+Math.abs(this.expirationDelay.get()));
 						particle.expirationDelay = (int) this.expirationDelay.get();
 					}
 					else if(this.expirationDelay.get()==0)
