@@ -197,6 +197,14 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
         }
 
         @Override
+        public void finishEditing()
+        {
+            this.picker.close();
+
+            super.finishEditing();
+        }
+
+        @Override
         public void draw(GuiContext context)
         {
             GifTexture.bindTexture(this.morph.texture);

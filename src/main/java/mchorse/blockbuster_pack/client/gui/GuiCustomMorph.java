@@ -411,6 +411,14 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         }
 
         @Override
+        public void finishEditing()
+        {
+            this.picker.close();
+
+            super.finishEditing();
+        }
+
+        @Override
         public void draw(GuiContext context)
         {
             if (this.materials.isVisible())
