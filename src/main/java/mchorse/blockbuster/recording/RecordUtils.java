@@ -52,16 +52,9 @@ public class RecordUtils
      */
     public static void broadcastMessage(ITextComponent message)
     {
-        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
-
-        for (String username : players.getOnlinePlayerNames())
+        for (EntityPlayerMP player : getPlayers())
         {
-            EntityPlayerMP player = players.getPlayerByUsername(username);
-
-            if (player != null)
-            {
-                player.sendMessage(message);
-            }
+            player.sendMessage(message);
         }
     }
 
@@ -72,16 +65,9 @@ public class RecordUtils
      */
     public static void broadcastError(String string, Object... objects)
     {
-        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
-
-        for (String username : players.getOnlinePlayerNames())
+        for (EntityPlayerMP player : getPlayers())
         {
-            EntityPlayerMP player = players.getPlayerByUsername(username);
-
-            if (player != null)
-            {
-                L10n.error(player, string, objects);
-            }
+            L10n.error(player, string, objects);
         }
     }
 
@@ -92,17 +78,15 @@ public class RecordUtils
      */
     public static void broadcastInfo(String string, Object... objects)
     {
-        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
-
-        for (String username : players.getOnlinePlayerNames())
+        for (EntityPlayerMP player : getPlayers())
         {
-            EntityPlayerMP player = players.getPlayerByUsername(username);
-
-            if (player != null)
-            {
-                L10n.info(player, string, objects);
-            }
+            L10n.info(player, string, objects);
         }
+    }
+
+    public static List<EntityPlayerMP> getPlayers()
+    {
+        return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers();
     }
 
     /**

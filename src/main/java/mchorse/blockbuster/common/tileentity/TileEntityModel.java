@@ -5,6 +5,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
+import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -34,8 +35,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class TileEntityModel extends TileEntity implements ITickable
 {
-    public static long lastUpdate;
-
     public Morph morph = new Morph();
     public EntityLivingBase entity;
     public ItemStack[] slots = new ItemStack[] {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY};
@@ -75,7 +74,7 @@ public class TileEntityModel extends TileEntity implements ITickable
         tag.setString("Name", "blockbuster.fred");
 
         this.morph.setDirect(MorphManager.INSTANCE.morphFromNBT(tag));
-        this.lastModelUpdate = lastUpdate;
+        this.lastModelUpdate = Scene.lastUpdate;
     }
 
     public TileEntityModel(float yaw)
@@ -136,7 +135,7 @@ public class TileEntityModel extends TileEntity implements ITickable
             }
         }
 
-        if (this.lastModelUpdate < lastUpdate)
+        if (this.lastModelUpdate < Scene.lastUpdate)
         {
             if (this.world != null && !this.world.isRemote)
             {
@@ -147,7 +146,7 @@ public class TileEntityModel extends TileEntity implements ITickable
                 Dispatcher.DISPATCHER.get().sendToAllAround(message, point);
             }
 
-            this.lastModelUpdate = lastUpdate;
+            this.lastModelUpdate = Scene.lastUpdate;
         }
     }
 

@@ -5,7 +5,10 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.mclib.math.functions.limit.Min;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -17,8 +20,11 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
+@SideOnly(Side.CLIENT)
 public class GifTexture extends AbstractTexture implements ITickableTextureObject
 {
+    public static int globalTick;
+
     public ResourceLocation texture;
     public List<GifElement> elements = new ArrayList<GifElement>();
     public int index;
@@ -69,6 +75,11 @@ public class GifTexture extends AbstractTexture implements ITickableTextureObjec
         textures.bindTexture(location);
     }
 
+    public static void updateTick()
+    {
+        globalTick += 1;
+    }
+
     public GifTexture(ResourceLocation texture)
     {
         this.texture = texture;
@@ -104,7 +115,7 @@ public class GifTexture extends AbstractTexture implements ITickableTextureObjec
             return;
         }
 
-        this.calculateIndex(mc.player.ticksExisted, 0);
+        this.calculateIndex(globalTick, 0);
     }
 
     public void calculateIndex(int ticks, float partial)

@@ -7,7 +7,6 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.audio.AudioState;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.audio.PacketAudio;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
@@ -23,7 +22,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -52,6 +50,8 @@ import java.util.regex.Pattern;
  */
 public class Scene
 {
+	public static long lastUpdate;
+
 	/**
 	 * Pattern for finding numbered suffix
 	 */
@@ -593,7 +593,7 @@ public class Scene
 
 		if (Blockbuster.modelBlockResetOnPlayback.get())
 		{
-			TileEntityModel.lastUpdate = System.currentTimeMillis();
+			lastUpdate = System.currentTimeMillis();
 		}
 	}
 

@@ -140,7 +140,7 @@ public class Dispatcher
             register(PacketRequestRecording.class, ServerHandlerRequestRecording.class, Side.SERVER);
             register(PacketActionList.class, ClientHandlerActionList.class, Side.CLIENT);
 
-            /* Director block management messages */
+            /* Scene management messages */
             register(PacketSceneCast.class, ClientHandlerSceneCast.class, Side.CLIENT);
             register(PacketSceneCast.class, ServerHandlerSceneCast.class, Side.SERVER);
             register(PacketSceneRequestCast.class, ServerHandlerSceneRequestCast.class, Side.SERVER);
@@ -152,7 +152,7 @@ public class Dispatcher
 
             register(PacketUpdatePlayerData.class, ServerHandlerUpdatePlayerData.class, Side.SERVER);
 
-            /* Director block syncing */
+            /* Scene syncing */
             register(PacketSceneGoto.class, ServerHandlerSceneGoto.class, Side.SERVER);
             register(PacketScenePlay.class, ServerHandlerScenePlay.class, Side.SERVER);
             register(PacketScenePlayback.class, ServerHandlerScenePlayback.class, Side.SERVER);

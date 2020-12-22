@@ -11,6 +11,7 @@ import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRender
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer.GunEntry;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer.TEModel;
+import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordRecorder;
@@ -543,5 +544,6 @@ public class ActionHandler
         }
 
         RenderingHandler.updateEmitters();
+        GifTexture.updateTick();
     }
 }

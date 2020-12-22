@@ -2,13 +2,7 @@ package mchorse.blockbuster.network.common;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
-import mchorse.metamorph.api.MorphManager;
-import mchorse.metamorph.api.morphs.AbstractMorph;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class PacketModifyModelBlock implements IMessage

@@ -18,7 +18,10 @@ public class ClientHandlerModifyModelBlock extends ClientMessageHandler<PacketMo
 
         if (tile instanceof TileEntityModel)
         {
-            ((TileEntityModel) tile).copyData(message.model, message.merge);
+            TileEntityModel model = (TileEntityModel) tile;
+
+            model.copyData(message.model, message.merge);
+            model.entity.ticksExisted = 0;
         }
     }
 }
