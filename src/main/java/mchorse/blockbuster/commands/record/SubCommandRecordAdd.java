@@ -2,6 +2,7 @@ package mchorse.blockbuster.commands.record;
 
 import java.util.List;
 
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;

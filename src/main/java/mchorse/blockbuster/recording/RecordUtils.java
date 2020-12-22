@@ -234,23 +234,17 @@ public class RecordUtils
      */
     public static void unloadRecord(Record record)
     {
-        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
         String filename = record.filename;
 
-        for (String username : players.getOnlinePlayerNames())
+        for (EntityPlayerMP player : RecordUtils.getPlayers())
         {
-            EntityPlayerMP player = players.getPlayerByUsername(username);
+             IRecording recording = Recording.get(player);
 
-            if (player != null)
+            if (recording.hasRecording(filename))
             {
-                IRecording recording = Recording.get(player);
+                recording.removeRecording(filename);
 
-                if (recording.hasRecording(filename))
-                {
-                    recording.removeRecording(filename);
-
-                    Dispatcher.sendTo(new PacketUnloadFrames(filename), player);
-                }
+                Dispatcher.sendTo(new PacketUnloadFrames(filename), player);
             }
         }
     }

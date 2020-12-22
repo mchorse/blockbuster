@@ -37,3 +37,4 @@ blockbuster.success:
         process: "{f}Player recording %s{f}'s %s{f} property was successfully processed between %s{f} to %s{f}!"
         calculate_body_yaw: "{f}Player recording %s{f}'s body yaw was successfully auto calculated!"
         remove_body_yaw: "{f}Player recording %s{f}'s body yaw was remove!"
+        renamed: "{f}Player recording %s{f} was successfully renamed to %s{f}!"

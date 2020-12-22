@@ -90,6 +90,12 @@ blockbuster:
 
                     {r}Removes body yaw properties from given player recording.
 
+            rename:
+                |
+                    {l}{6}/{r}record {8}rename{r} {7}<filename> <new_filename>{r}
+
+                    {r}This command renames given {7}<filename>{r} player recording to a new name {7}<new_filename>{r}. It also renames past versions of the {7}<filename>{r} player recording, if there are any.
+
             restore:
                 |
                     {l}{6}/{r}record {8}restore{r} {7}<filename> <iteration>{r}

@@ -423,4 +423,21 @@ public class RecordManager
             record.countdown--;
         }
     }
+
+    public void rename(String old, Record record)
+    {
+        RecordUtils.unloadRecord(record);
+
+        this.records.remove(old);
+        this.records.put(record.filename, record);
+
+        for (String iter : RecordUtils.getReplayIterations(old))
+        {
+            File oldIter = new File(RecordUtils.replayFile(old).getAbsolutePath() + "~" + iter);
+
+            oldIter.renameTo(new File(RecordUtils.replayFile(record.filename).getAbsolutePath() + "~" + iter));
+        }
+
+        RecordUtils.replayFile(old).delete();
+    }
 }
