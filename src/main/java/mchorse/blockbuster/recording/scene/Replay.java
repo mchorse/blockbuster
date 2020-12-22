@@ -4,6 +4,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.recording.actions.ChatAction;
 import mchorse.mclib.utils.NBTUtils;
 import mchorse.metamorph.api.MorphAPI;
 import mchorse.metamorph.api.MorphManager;
@@ -68,7 +69,9 @@ public class Replay
      */
     public void apply(EntityActor actor)
     {
-        actor.setCustomNameTag(this.name);
+        String name = ChatAction.processNameTag(this.name);
+
+        actor.setCustomNameTag(name);
         actor.setEntityInvulnerable(this.invincible);
         actor.morph(mchorse.metamorph.api.MorphUtils.copy(this.morph), false);
         actor.invisible = this.invisible;

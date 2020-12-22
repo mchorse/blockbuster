@@ -20,6 +20,11 @@ public class ChatAction extends Action
     public ChatAction()
     {}
 
+    public static String processNameTag(String name)
+    {
+        return name.replace('[', '§');
+    }
+
     public ChatAction(String message)
     {
         this.message = message;
@@ -35,7 +40,7 @@ public class ChatAction extends Action
             message = prefix.replace("%NAME%", actor == null ? "Player" : actor.getName()) + message;
         }
 
-        return message.replace('[', '§');
+        return processNameTag(message);
     }
 
     @Override

@@ -79,6 +79,7 @@ blockbuster.gui:
         
         id: Recording ID
         name: Name tag
+        name_tooltip: Name tag of the actor. You can use this to target this actor via commands (like @e[name=Test]) or just display name.\n\nYou can use [ as the section symbol for display name formatting. [cR[aG[1B[r becomes {c}R{a}G{1}B{r}.
         invincible: Invincible
         invisible: Invisible
         enabled: Enabled
