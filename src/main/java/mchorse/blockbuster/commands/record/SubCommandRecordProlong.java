@@ -50,9 +50,16 @@ public class SubCommandRecordProlong extends SubCommandRecordBase
             record.preDelay = CommandBase.parseInt(args[2]);
         }
 
-        record.dirty = true;
-        RecordUtils.unloadRecord(record);
+        try
+        {
+            RecordUtils.saveRecord(record);
 
-        L10n.success(sender, "record.prolonged", args[0], record.preDelay, record.postDelay);
+            L10n.success(sender, "record.prolonged", args[0], record.preDelay, record.postDelay);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            L10n.error(sender, "record.couldnt_save", args[1]);
+        }
     }
 }

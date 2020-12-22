@@ -67,9 +67,16 @@ public class SubCommandRecordErase extends SubCommandRecordBase
         record.frames = frames;
         record.actions = actions;
 
-        record.dirty = true;
-        RecordUtils.unloadRecord(record);
+        try
+        {
+            RecordUtils.saveRecord(record);
 
-        L10n.success(sender, "record.erase", count, from, args[0], record.getLength());
+            L10n.success(sender, "record.erase", count, from, args[0], record.getLength());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            L10n.error(sender, "record.couldnt_save", args[1]);
+        }
     }
 }

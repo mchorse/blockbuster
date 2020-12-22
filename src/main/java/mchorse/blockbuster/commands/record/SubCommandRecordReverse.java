@@ -38,13 +38,20 @@ public class SubCommandRecordReverse extends SubCommandRecordBase
 	public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		String filename = args[0];
-
 		Record record = CommandRecord.getRecord(filename);
 
 		record.reverse();
-		record.dirty = true;
 
-		RecordUtils.unloadRecord(record);
-		L10n.success(sender, "record.reversed", args[0]);
+		try
+		{
+			RecordUtils.saveRecord(record);
+
+			L10n.success(sender, "record.reversed", args[0]);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			L10n.error(sender, "record.couldnt_save", args[1]);
+		}
 	}
 }

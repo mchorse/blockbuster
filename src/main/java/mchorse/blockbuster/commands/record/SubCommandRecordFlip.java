@@ -88,10 +88,17 @@ public class SubCommandRecordFlip extends SubCommandRecordBase
 			}
 		}
 
-		record.dirty = true;
-		RecordUtils.unloadRecord(record);
+		try
+		{
+			RecordUtils.saveRecord(record);
 
-		L10n.success(sender, "record.flipped", args[0], args[1], args[2]);
+			L10n.success(sender, "record.flipped", args[0], args[1], args[2]);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			L10n.error(sender, "record.couldnt_save", args[1]);
+		}
 	}
 
 	@Override

@@ -85,9 +85,16 @@ public class SubCommandRecordFill extends SubCommandRecordBase
 			record.actions = actions;
 		}
 
-		record.dirty = true;
+		try
+		{
+			RecordUtils.saveRecord(record);
 
-		RecordUtils.unloadRecord(record);
-		L10n.success(sender, "record.fill", count, tick, filename, record.frames.size());
+			L10n.success(sender, "record.fill", count, tick, filename, record.frames.size());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			L10n.error(sender, "record.couldnt_save", args[1]);
+		}
 	}
 }

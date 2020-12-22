@@ -43,9 +43,8 @@ public class SubCommandRecordRemoveBodyYaw extends SubCommandRecordBase
 			frame.bodyYaw = 0F;
 		}
 
-		record.dirty = true;
+		RecordUtils.dirtyRecord(record);
 
-		RecordUtils.unloadRecord(record);
 		L10n.success(sender, "record.remove_body_yaw", filename);
 	}
 }

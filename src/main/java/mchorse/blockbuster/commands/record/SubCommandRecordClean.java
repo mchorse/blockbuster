@@ -179,10 +179,17 @@ public class SubCommandRecordClean extends SubCommandRecordBase
             set(property, record.frames.get(i), original);
         }
 
-        record.dirty = true;
+        try
+        {
+            RecordUtils.saveRecord(record);
 
-        RecordUtils.unloadRecord(record);
-        L10n.success(sender, "record.clean", filename, property, start, end);
+            L10n.success(sender, "record.clean", filename, property, start, end);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            L10n.error(sender, "record.couldnt_save", args[1]);
+        }
     }
 
     @Override

@@ -70,9 +70,16 @@ public class SubCommandRecordFade extends SubCommandRecordBase
             current.mountPitch = Interpolations.lerp(last.mountPitch, first.mountPitch, x);
         }
 
-        record.dirty = true;
-        RecordUtils.unloadRecord(record);
+        try
+        {
+            RecordUtils.saveRecord(record);
 
-        L10n.success(sender, "record.faded", args[0], args[1]);
+            L10n.success(sender, "record.faded", args[0], args[1]);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            L10n.error(sender, "record.couldnt_save", args[1]);
+        }
     }
 }

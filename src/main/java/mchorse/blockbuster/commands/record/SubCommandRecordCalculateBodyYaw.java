@@ -118,9 +118,8 @@ public class SubCommandRecordCalculateBodyYaw extends SubCommandRecordBase
 			swingProgress--;
 		}
 
-		record.dirty = true;
+		RecordUtils.dirtyRecord(record);
 
-		RecordUtils.unloadRecord(record);
 		L10n.success(sender, "record.calculate_body_yaw", filename);
 	}
 }

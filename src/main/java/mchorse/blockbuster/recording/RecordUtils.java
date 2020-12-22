@@ -2,6 +2,7 @@ package mchorse.blockbuster.recording;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -247,5 +248,33 @@ public class RecordUtils
                 Dispatcher.sendTo(new PacketUnloadFrames(filename), player);
             }
         }
+    }
+
+    public static void saveRecord(Record record) throws IOException
+    {
+        saveRecord(record, true);
+    }
+
+    public static void saveRecord(Record record, boolean unload) throws IOException
+    {
+        saveRecord(record, true, unload);
+    }
+
+    public static void saveRecord(Record record, boolean savePast, boolean unload) throws IOException
+    {
+        record.dirty = false;
+        record.save(replayFile(record.filename), savePast);
+
+        if (unload)
+        {
+            unloadRecord(record);
+        }
+    }
+
+    public static void dirtyRecord(Record record)
+    {
+        record.dirty = true;
+
+        unloadRecord(record);
     }
 }

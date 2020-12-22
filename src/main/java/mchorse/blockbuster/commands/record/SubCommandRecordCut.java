@@ -62,9 +62,16 @@ public class SubCommandRecordCut extends SubCommandRecordBase
         record.frames = frames;
         record.actions = actions;
 
-        record.dirty = true;
-        RecordUtils.unloadRecord(record);
+        try
+        {
+            RecordUtils.saveRecord(record);
 
-        L10n.success(sender, "record.cut", args[0], args[1], args[2]);
+            L10n.success(sender, "record.cut", args[0], args[1], args[2]);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            L10n.error(sender, "record.couldnt_save", args[1]);
+        }
     }
 }

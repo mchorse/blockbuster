@@ -50,6 +50,7 @@ public class SubCommandRecordRename extends SubCommandRecordBase
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			L10n.error(sender, "record.couldnt_save", args[1]);
 		}
 	}

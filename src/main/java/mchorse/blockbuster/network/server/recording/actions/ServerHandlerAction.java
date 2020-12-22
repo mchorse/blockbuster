@@ -2,6 +2,7 @@ package mchorse.blockbuster.network.server.recording.actions;
 
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.network.common.recording.actions.PacketAction;
+import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -45,7 +46,14 @@ public class ServerHandlerAction extends ServerMessageHandler<PacketAction>
                 record.replaceAction(message.tick, message.index, message.action);
             }
 
-            record.dirty = true;
+            try
+            {
+                RecordUtils.saveRecord(record, false, false);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }

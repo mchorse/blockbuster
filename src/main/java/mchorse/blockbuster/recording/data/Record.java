@@ -7,13 +7,8 @@ import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.scene.Replay;
-import mchorse.blockbuster_pack.morphs.SequencerMorph;
-import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
-import mchorse.metamorph.bodypart.BodyPart;
-import mchorse.metamorph.bodypart.BodyPartManager;
-import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -580,15 +575,20 @@ public class Record
         return record;
     }
 
+    public void save(File file) throws IOException
+    {
+        this.save(file, true);
+    }
+
     /**
      * Save a recording to given file.
      *
      * This method basically writes the signature of the current version,
      * and then saves all available frames and actions.
      */
-    public void save(File file) throws IOException
+    public void save(File file, boolean savePast) throws IOException
     {
-        if (file.isFile())
+        if (savePast && file.isFile())
         {
             this.savePastCopies(file);
         }

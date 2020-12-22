@@ -113,9 +113,16 @@ public class SubCommandRecordOrigin extends SubCommandRecordBase
             }
         }
 
-        record.dirty = true;
+        try
+        {
+            RecordUtils.saveRecord(record);
 
-        RecordUtils.unloadRecord(record);
-        L10n.success(sender, "record.changed_origin", args[0], firstX, firstY, firstZ, x, y, z);
+            L10n.success(sender, "record.changed_origin", args[0], firstX, firstY, firstZ, x, y, z);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            L10n.error(sender, "record.couldnt_save", args[1]);
+        }
     }
 }
