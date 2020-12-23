@@ -210,7 +210,6 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 			GuiElement row = Elements.row(mc, 5, 0, 20, label, add);
 			this.blocks = new GuiElement(mc);
 
-
 			add.flex().wh(10, 16);
 			label.flex().h(0);
 			row.flex().row(5).preferred(0);

@@ -49,7 +49,7 @@ public class GuiSceneManager extends GuiElement
 		this.dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.dupeScene());
 		this.dupe.tooltip(IKey.lang("blockbuster.gui.scenes.dupe_scene"));
 		this.rename = new GuiIconElement(mc, Icons.EDIT, (b) -> this.renameScene());
-			this.rename.tooltip(IKey.lang("blockbuster.gui.scenes.rename_scene"));
+		this.rename.tooltip(IKey.lang("blockbuster.gui.scenes.rename_scene"));
 		this.remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeScene());
 		this.remove.tooltip(IKey.lang("blockbuster.gui.scenes.remove_scene"));
 

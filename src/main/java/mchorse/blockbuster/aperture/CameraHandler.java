@@ -305,6 +305,7 @@ public class CameraHandler
                 super.draw(context);
             }
         };
+        editorElement.noCulling();
 
         Consumer<GuiIconElement> refresh = (b) ->
         {
@@ -359,7 +360,7 @@ public class CameraHandler
         editor.timeline.flex().x(30).w(1, -60);
 
         editor.top.remove(editor.timeline);
-        cameraEditorElements = new GuiElement(mc);
+        cameraEditorElements = new GuiElement(mc).noCulling();
         cameraEditorElements.add(drawable, editor.timeline, toggle, open, editorElement);
 
         editor.top.add(cameraEditorElements);

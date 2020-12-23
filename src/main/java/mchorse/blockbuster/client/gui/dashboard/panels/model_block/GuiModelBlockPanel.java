@@ -80,7 +80,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     {
         super(mc, dashboard);
 
-        this.subChildren = new GuiElement(mc);
+        this.subChildren = new GuiElement(mc).noCulling();
         this.subChildren.setVisible(false);
         this.add(this.subChildren);
 
