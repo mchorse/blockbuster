@@ -17,6 +17,7 @@ import mchorse.mclib.utils.MathUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
@@ -163,7 +164,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			x = (double) offsetData[1];
 			y = (double) offsetData[2];
 			z = (double) offsetData[3];
-			
+			//NOT FINISHED
 			if(entityCollision && d0 == y && origX == x && origZ == z && entities.size()!=0) {
 				
 				for(Entity entity : entities) 
@@ -172,20 +173,47 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 					Vector3f speedEntity = new Vector3f((float)(entity.posX-entity.prevPosX), (float)(entity.posY-entity.prevPosY), (float)(entity.posZ-entity.prevPosZ));
 					
 					Vector3f speedParticle = particle.speed;
-					if(speedEntity.x==0 && speedEntity.y==0 && speedEntity.z==0) speedParticle.scale(1);
+					//if(speedEntity.x==0 && speedEntity.y==0 && speedEntity.z==0) speedParticle.scale(1);
 					Vector3f ray = speedParticle;
 					if(speedEntity.x!=0 || speedEntity.y!=0 || speedEntity.z!=0) {
 						ray = speedEntity;
 					}
-					
 					Vector3d frac = intersect(ray, particle.getGlobalPosition(emitter), entityAABB);
-					
+
 					if(frac!=null) {
 						//don't set the position directly to the intersection point so the normal collision code can start
-						frac.scale(0.8);
+						frac.scale(1);
 						particle.position.add(frac);
-						
-						Vector3d prevPos = new Vector3d(particle.position);
+						Vector3d curPos = particle.getGlobalPosition(emitter);
+						Vector3d prevPos = new Vector3d();
+						prevPos.x = curPos.x-speedParticle.x;
+						prevPos.y = curPos.y-speedParticle.y;
+						prevPos.z = curPos.z-speedParticle.z;
+						AxisAlignedBB particleAABB = new AxisAlignedBB(prevPos.x - r, prevPos.y - r, prevPos.z - r, prevPos.x + r, prevPos.y + r, prevPos.z + r);
+						double origX2 = curPos.x-prevPos.x;
+						double origY2 = curPos.y-prevPos.y;
+						double origZ2 = curPos.z-prevPos.z;
+						Object[] offsetData2 = calculateOffsets(particleAABB, entityAABBs, origX2, origY2, origZ2);
+						particleAABB = (AxisAlignedBB) offsetData2[0];
+						double x2 = (double) offsetData2[1];
+						double y2 = (double) offsetData2[2];
+						double z2 = (double) offsetData2[3];
+						//System.out.println(origX2+" "+x2);
+						//if(entityAABB.intersects(particleAABB)) 
+						//{
+							if (origX2 != x2)
+							{
+								try {
+									collisionHandler(particle, emitter, 'x', origX2, x2, now, prev, entities);
+								} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
+										| IllegalAccessException e) {
+									e.printStackTrace();
+								}
+								particle.position.x += origX2 < r ? r : -r;
+							}
+						//}
+						//this seems to NOT WORK
+						/*Vector3d prevPos = new Vector3d(particle.position);
 						prevPos.add(frac);
 						this.previous.set(particle.getGlobalPosition(emitter, prevPos));
 						this.current.set(particle.getGlobalPosition(emitter));
@@ -203,7 +231,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						aabb = (AxisAlignedBB) offsetData[0];
 						x = (double) offsetData[1];
 						y = (double) offsetData[2];
-						z = (double) offsetData[3];
+						z = (double) offsetData[3];*/
 					}
 				}
 			}
@@ -340,7 +368,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				particle.speed = damping(particle.speed);
 			}
 		}
-		if(this.momentum && this.entityCollision) { //NOT FINISHED
+		if(this.momentum && this.entityCollision) {
 			for(Entity entity : entities) 
 			{
 				particle.speed.x += 2*(entity.posX-entity.prevPosX);
@@ -380,6 +408,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			splitParticle.dragFactor = particle.dragFactor;
 			splitParticle.collisionTexture = particle.collisionTexture;
 			splitParticle.collisionTinting = particle.collisionTinting;
+			splitParticle.expirationDelay = particle.expirationDelay;
+			splitParticle.expireAge = particle.expireAge;
+			splitParticle.firstCollision = particle.firstCollision;
 			
 			splitParticle.age = particle.age;
 			
