@@ -179,6 +179,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		this.enabled.toggled(this.wasPresent);
 		this.realisticCollision.toggled(this.component.realisticCollision);
 		this.entityCollision.toggled(this.component.entityCollision);
+		this.momentum.toggled(this.component.momentum);
 		this.drag.setValue(this.component.collissionDrag);
 		this.bounciness.setValue(this.component.bounciness);
 		this.randomBounciness.setValue(this.component.randomBounciness);
