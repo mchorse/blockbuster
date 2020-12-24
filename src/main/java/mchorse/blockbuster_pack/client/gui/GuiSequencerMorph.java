@@ -19,6 +19,7 @@ import mchorse.mclib.utils.MathUtils;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
 import mchorse.metamorph.client.gui.creative.GuiMorphRenderer;
 import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
@@ -218,6 +219,11 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                 this.setDuration.toggled(entry.setDuration);
 
                 ((GuiMorphRenderer) this.editor.renderer).morph = entry.morph;
+
+                if (entry.morph instanceof IAnimationProvider)
+                {
+                    ((IAnimationProvider) entry.morph).getAnimation().reset();
+                }
             }
             else
             {
@@ -262,6 +268,11 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             if (this.entry != null)
             {
                 ((GuiMorphRenderer) this.editor.renderer).morph = this.entry.morph;
+
+                if (entry.morph instanceof IAnimationProvider)
+                {
+                    ((IAnimationProvider) entry.morph).getAnimation().reset();
+                }
             }
         }
 
