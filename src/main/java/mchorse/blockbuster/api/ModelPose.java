@@ -21,6 +21,24 @@ public class ModelPose
     public float[] size = new float[] {1, 1, 1};
     public Map<String, ModelTransform> limbs = new HashMap<String, ModelTransform>();
 
+    public void copy(ModelPose pose)
+    {
+        for (int i = 0, c = Math.min(pose.size.length, this.size.length); i < c; i++)
+        {
+            this.size[i] = pose.size[i];
+        }
+
+        for (Map.Entry<String, ModelTransform> entry : this.limbs.entrySet())
+        {
+            ModelTransform otherTransform = pose.limbs.get(entry.getKey());
+
+            if (otherTransform != null)
+            {
+                entry.getValue().copy(otherTransform);
+            }
+        }
+    }
+
     /**
      * Fill in missing transforms 
      */

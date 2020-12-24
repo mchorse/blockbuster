@@ -2,19 +2,27 @@ package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelLimb;
+import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelPoses;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.framework.elements.context.GuiContextMenu;
+import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.client.gui.editor.GuiAnimation;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -94,6 +102,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         });
         this.list.background();
         this.list.flex().xy(0, 40).w(110).hTo(this.poseOnSneak.area, -5);
+        this.list.context(this::limbContextMenu);
 
         this.transforms = new GuiPoseTransformations(mc);
         this.transforms.flex().relative(this.area).set(0, 0, 190, 70).x(0.5F, -95).y(1, -75);
@@ -130,6 +139,27 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         options.add(this.model, this.scale, this.scaleGui);
 
         this.add(this.reset, this.create, this.poseOnSneak, this.list, options, this.transforms, this.models, this.animation);
+    }
+
+    private GuiContextMenu limbContextMenu()
+    {
+        if (this.morph.customPose == null)
+        {
+            return null;
+        }
+
+        return GuiModelPoses.createCopyPasteMenu(this::copyPose, this::pastePose);
+    }
+
+    private void copyPose()
+    {
+        GuiScreen.setClipboardString(this.morph.customPose.toNBT(new NBTTagCompound()).toString());
+    }
+
+    private void pastePose(ModelPose pose)
+    {
+        this.morph.customPose.copy(pose);
+        this.transforms.set(this.transforms.trans);
     }
 
     @Override

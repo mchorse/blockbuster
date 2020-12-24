@@ -7,6 +7,8 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEdit
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
+import mchorse.mclib.client.gui.framework.elements.context.GuiContextMenu;
+import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiListModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiMessageModal;
@@ -17,8 +19,12 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class GuiModelPoses extends GuiModelEditorTab
 {
@@ -31,6 +37,35 @@ public class GuiModelPoses extends GuiModelEditorTab
     private GuiTwoElement hitbox;
 
     private String pose;
+
+    public static GuiContextMenu createCopyPasteMenu(Runnable copy, Consumer<ModelPose> paste)
+    {
+        GuiSimpleContextMenu menu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
+        ModelPose pose = null;
+
+        try
+        {
+            NBTTagCompound tag = JsonToNBT.getTagFromJson(GuiScreen.getClipboardString());
+            ModelPose loaded = new ModelPose();
+
+            loaded.fromNBT(tag);
+
+            pose = loaded;
+        }
+        catch (Exception e)
+        {}
+
+        menu.action(Icons.COPY, IKey.lang("blockbuster.gui.me.poses.context.copy"), copy);
+
+        if (pose != null)
+        {
+            final ModelPose innerPose = pose;
+
+            menu.action(Icons.PASTE, IKey.lang("blockbuster.gui.me.poses.context.paste"), () -> paste.accept(innerPose));
+        }
+
+        return menu;
+    }
 
     public GuiModelPoses(Minecraft mc, GuiModelEditorPanel panel)
     {
@@ -61,9 +96,37 @@ public class GuiModelPoses extends GuiModelEditorTab
 
         this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str.get(0)));
         this.posesList.flex().relative(this).y(20).w(1F).hTo(bottom.area);
+        this.posesList.context(() -> createCopyPasteMenu(this::copyCurrentPose, this::pastePose));
 
         bottom.add(Elements.label(IKey.lang("blockbuster.gui.me.poses.hitbox")), this.hitbox);
         this.add(sidebar, bottom, this.posesList);
+    }
+
+    private void copyCurrentPose()
+    {
+        GuiScreen.setClipboardString(this.panel.pose.toNBT(new NBTTagCompound()).toString());
+    }
+
+    private void pastePose(ModelPose pose)
+    {
+        GuiModal.addFullModal(this, () ->
+        {
+            GuiPromptModal modal = new GuiPromptModal(mc, IKey.lang("blockbuster.gui.me.poses.paste_pose"), (text) ->
+            {
+                this.addPose(text, pose);
+            });
+
+            String base = "pasted_pose";
+            String name = base;
+            int index = 1;
+
+            while (this.panel.model.poses.containsKey(name))
+            {
+                name = base + "_" + (index++);
+            }
+
+            return modal.setValue(name);
+        });
     }
 
     private void addPose()
@@ -78,10 +141,13 @@ public class GuiModelPoses extends GuiModelEditorTab
 
     private void addPose(String text)
     {
+        this.addPose(text, this.panel.pose == null ? new ModelPose() : this.panel.pose.clone());
+    }
+
+    private void addPose(String text, ModelPose pose)
+    {
         if (!this.panel.model.poses.containsKey(text))
         {
-            ModelPose pose = this.panel.pose.clone();
-
             this.panel.model.poses.put(text, pose);
             this.posesList.add(text);
             this.setCurrent(text);
