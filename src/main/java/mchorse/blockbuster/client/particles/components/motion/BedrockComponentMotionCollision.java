@@ -148,14 +148,90 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			List<AxisAlignedBB> entityAABBs = new ArrayList<AxisAlignedBB>();
 			//for own hitbox implementation: check for hitbox expanded for the previous position - prevent fast moving tunneling
 			List<AxisAlignedBB> list = emitter.world.getCollisionBoxes(null, aabb.expand(x, y, z));
-
+			
 			if(this.entityCollision) 
 			{
 				for(Entity entity : entities) 
 				{
-					AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox();
-					list.add(axisalignedbb);
-					entityAABBs.add(axisalignedbb);
+					AxisAlignedBB aabb2 = aabb;
+					AxisAlignedBB entityAABB = entity.getEntityBoundingBox();
+					entityAABBs.add(entityAABB);
+					list.add(entityAABB);
+					double y2 = y, x2 = x, z2 = z;
+					
+					y2 = entityAABB.calculateYOffset(aabb2, y2);
+					aabb2 = aabb2.offset(0.0D, y2, 0.0D);
+
+					x2 = entityAABB.calculateXOffset(aabb2, x2);
+					aabb2 = aabb2.offset(x2, 0.0D, 0.0D);
+					
+					z2 = entityAABB.calculateZOffset(aabb2, z2);
+					aabb2 = aabb2.offset(0.0D, 0.0D, z2);
+					
+					if(d0 == y2 && origX == x2 && origZ == z2) 
+					{
+						Vector3f speedEntity = new Vector3f((float)(entity.posX-entity.prevPosX), (float)(entity.posY-entity.prevPosY), (float)(entity.posZ-entity.prevPosZ));
+						Vector3f speedParticle = particle.speed;
+						Vector3f ray = speedParticle;
+						if(speedEntity.x!=0 || speedEntity.y!=0 || speedEntity.z!=0) {
+							ray = speedEntity;
+						} else break;
+						
+						Vector3d frac = intersect(ray, particle.getGlobalPosition(emitter), entityAABB);
+
+						if(frac!=null) {
+							frac.scale(1);
+
+							particle.position.add(frac);
+
+							aabb2 = new AxisAlignedBB(particle.position.x - r, particle.position.y - r, particle.position.z - r, particle.position.x + r, particle.position.y + r, particle.position.z + r);
+
+							if(aabb2.minX<entityAABB.maxX && aabb2.maxX>entityAABB.maxX) {
+								particle.position.x += r;
+							}
+							else if (aabb2.maxX>entityAABB.minX && aabb2.minX<entityAABB.minX) {
+								particle.position.x -= r;
+							}
+							
+							if(aabb2.minY<entityAABB.maxY && aabb2.maxY>entityAABB.maxY) {
+								particle.position.y += r;
+							}
+							else if (aabb2.maxY>entityAABB.minY && aabb2.minY<entityAABB.minY) {
+								particle.position.y -= r;
+							}
+							
+							if(aabb2.minZ<entityAABB.maxZ && aabb2.maxZ>entityAABB.maxZ) {
+								particle.position.z += r;
+							}
+							else if (aabb2.maxZ>entityAABB.minZ && aabb2.minZ<entityAABB.minZ) {
+								particle.position.z -= r;
+							}
+							
+							prev = particle.getGlobalPosition(emitter);
+							prev.x -= particle.speed.x;
+							prev.y -= particle.speed.y;
+							prev.z -= particle.speed.z;
+							
+							now = particle.getGlobalPosition(emitter);
+
+							x = now.x - prev.x;
+							y = now.y - prev.y;
+							z = now.z - prev.z;
+							
+							aabb = new AxisAlignedBB(prev.x - r, prev.y - r, prev.z - r, prev.x + r, prev.y + r, prev.z + r);
+							
+							d0 = y;
+							origX = x;
+							origZ = z;
+				            	
+							/*Object[] offsetData = calculateOffsets(aabb, list, x, y, z);
+							aabb = (AxisAlignedBB) offsetData[0];
+							x = (double) offsetData[1];
+							y = (double) offsetData[2];
+							z = (double) offsetData[3];*/
+						}
+					}
+					else list.add(entityAABB);
 				}
 			}
 			
@@ -164,82 +240,10 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			x = (double) offsetData[1];
 			y = (double) offsetData[2];
 			z = (double) offsetData[3];
-			//NOT FINISHED
-			if(entityCollision && d0 == y && origX == x && origZ == z && entities.size()!=0) {
-				
-				for(Entity entity : entities) 
-				{
-					AxisAlignedBB entityAABB = entity.getEntityBoundingBox();
-					Vector3f speedEntity = new Vector3f((float)(entity.posX-entity.prevPosX), (float)(entity.posY-entity.prevPosY), (float)(entity.posZ-entity.prevPosZ));
-					
-					Vector3f speedParticle = particle.speed;
-					//if(speedEntity.x==0 && speedEntity.y==0 && speedEntity.z==0) speedParticle.scale(1);
-					Vector3f ray = speedParticle;
-					if(speedEntity.x!=0 || speedEntity.y!=0 || speedEntity.z!=0) {
-						ray = speedEntity;
-					}
-					Vector3d frac = intersect(ray, particle.getGlobalPosition(emitter), entityAABB);
 
-					if(frac!=null) {
-						//don't set the position directly to the intersection point so the normal collision code can start
-						frac.scale(1);
-						particle.position.add(frac);
-						Vector3d curPos = particle.getGlobalPosition(emitter);
-						Vector3d prevPos = new Vector3d();
-						prevPos.x = curPos.x-speedParticle.x;
-						prevPos.y = curPos.y-speedParticle.y;
-						prevPos.z = curPos.z-speedParticle.z;
-						AxisAlignedBB particleAABB = new AxisAlignedBB(prevPos.x - r, prevPos.y - r, prevPos.z - r, prevPos.x + r, prevPos.y + r, prevPos.z + r);
-						double origX2 = curPos.x-prevPos.x;
-						double origY2 = curPos.y-prevPos.y;
-						double origZ2 = curPos.z-prevPos.z;
-						Object[] offsetData2 = calculateOffsets(particleAABB, entityAABBs, origX2, origY2, origZ2);
-						particleAABB = (AxisAlignedBB) offsetData2[0];
-						double x2 = (double) offsetData2[1];
-						double y2 = (double) offsetData2[2];
-						double z2 = (double) offsetData2[3];
-						//System.out.println(origX2+" "+x2);
-						//if(entityAABB.intersects(particleAABB)) 
-						//{
-							if (origX2 != x2)
-							{
-								try {
-									collisionHandler(particle, emitter, 'x', origX2, x2, now, prev, entities);
-								} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
-										| IllegalAccessException e) {
-									e.printStackTrace();
-								}
-								particle.position.x += origX2 < r ? r : -r;
-							}
-						//}
-						//this seems to NOT WORK
-						/*Vector3d prevPos = new Vector3d(particle.position);
-						prevPos.add(frac);
-						this.previous.set(particle.getGlobalPosition(emitter, prevPos));
-						this.current.set(particle.getGlobalPosition(emitter));
-						x = current.x - previous.x;
-						y = current.y - previous.y;
-						z = current.z - previous.z;
-						
-						aabb = new AxisAlignedBB(previous.x - r, previous.y - r, previous.z - r, previous.x + r, previous.y + r, previous.z + r);
-						
-						d0 = y;
-						origX = x;
-						origZ = z;
-						
-						offsetData = calculateOffsets(aabb, entityAABBs, x, y, z);
-						aabb = (AxisAlignedBB) offsetData[0];
-						x = (double) offsetData[1];
-						y = (double) offsetData[2];
-						z = (double) offsetData[3];*/
-					}
-				}
-			}
-
-			
 			if (d0 != y || origX != x || origZ != z)
 			{
-				//System.out.println(origX+" "+now.x+"\n");
+				System.out.println(origX+" "+x);
 				if(MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionTinting.class).enabled)) {
 					particle.collisionTinting = true;
 					particle.firstCollision = particle.age;
@@ -261,7 +265,6 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
 						return;
 					}
-					
 				}
 
 				if (particle.relativePosition)
