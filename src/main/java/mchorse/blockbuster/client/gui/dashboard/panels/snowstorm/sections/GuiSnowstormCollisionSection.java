@@ -21,7 +21,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 	public GuiToggleElement momentum;
 	public GuiTrackpadElement drag;
 	public GuiTrackpadElement bounciness;
-	public GuiTrackpadElement randomBounciness;
+	public GuiTrackpadElement randomBounciness; //randomize the direction vector
 	public GuiToggleElement preserveEnergy;
 	public GuiTrackpadElement randomDamp;
 	public GuiTrackpadElement damp;
@@ -79,7 +79,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 			this.component.randomBounciness = (float) Math.abs(value);
 			this.parent.dirty();
 		});
-		this.randomBounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.randomBounciness"));
+		this.randomBounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.randomDirection"));
 		
 		this.preserveEnergy = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.preserveEnergy"), (b) -> this.parent.dirty());
 		
