@@ -149,7 +149,6 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			//for own hitbox implementation: check for hitbox expanded for the previous position - prevent fast moving tunneling
 			List<AxisAlignedBB> list = emitter.world.getCollisionBoxes(null, aabb.expand(x, y, z));
 			
-			boolean lazy = false;
 			if(this.entityCollision) 
 			{
 				for(Entity entity : entities) 
@@ -187,11 +186,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						Vector3d frac = intersect(ray, particle.getGlobalPosition(emitter), entityAABB);
 
 						if(frac!=null) {
-							//lazy = true;
 							frac.scale(1);
 
 							particle.position.add(frac);
 							
+							//recalculate the variables
 							prev.set(particle.getGlobalPosition(emitter));
 							//frac.scale(particle.speed.length()/frac.length());
 							//prev.x += frac.x;
@@ -215,14 +214,13 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 							try {
 								if((aabb.minX<entityAABB.maxX && aabb.maxX>entityAABB.maxX) || (aabb.maxX>entityAABB.minX && aabb.minX<entityAABB.minX))
 								{
-									//float tmpSpeed = particle.speed.x;
-									float tmpTime = particle.collisionTime.x; //collisionTime should be not changed - otherwise the particles will stop when moving against them
+									float tmpTime = particle.collisionTime.x; //collisionTime should be not changed - otherwise the particles will stop when moving against moving entites
 									double delta = particle.position.x-entity.posX;
 									particle.position.x += delta>0 ? r : -r;
 									collisionHandler(particle, emitter, 'x', particle.position, prev, entities);
 									particle.collisionTime.x = tmpTime;
 									
-									//particle speed is always switched, as it always collides with the entity, but it should only remain one correct direction
+									//particle speed is always switched (realistcCollision==true), as it always collides with the entity, but it should only have one correct direction
 									if(particle.speed.x>0) {
 										if(speedEntity.x<0) particle.speed.x = -particle.speed.x;
 									}
