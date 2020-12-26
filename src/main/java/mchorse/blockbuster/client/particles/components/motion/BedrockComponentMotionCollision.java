@@ -149,6 +149,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			//for own hitbox implementation: check for hitbox expanded for the previous position - prevent fast moving tunneling
 			List<AxisAlignedBB> list = emitter.world.getCollisionBoxes(null, aabb.expand(x, y, z));
 			
+			boolean lazy = false;
 			if(this.entityCollision) 
 			{
 				for(Entity entity : entities) 
@@ -156,7 +157,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 					AxisAlignedBB aabb2 = aabb;
 					AxisAlignedBB entityAABB = entity.getEntityBoundingBox();
 					entityAABBs.add(entityAABB);
-					list.add(entityAABB);
+					
 					double y2 = y, x2 = x, z2 = z;
 					
 					y2 = entityAABB.calculateYOffset(aabb2, y2);
@@ -175,66 +176,67 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						Vector3f ray = speedParticle;
 						if(speedEntity.x!=0 || speedEntity.y!=0 || speedEntity.z!=0) {
 							ray = speedEntity;
-						} else break;
+						} else continue;
 						
 						Vector3d frac = intersect(ray, particle.getGlobalPosition(emitter), entityAABB);
 
 						if(frac!=null) {
+							//lazy = true;
 							frac.scale(1);
 
 							particle.position.add(frac);
-
-							aabb2 = new AxisAlignedBB(particle.position.x - r, particle.position.y - r, particle.position.z - r, particle.position.x + r, particle.position.y + r, particle.position.z + r);
-
-							if(aabb2.minX<entityAABB.maxX && aabb2.maxX>entityAABB.maxX) {
-								particle.position.x += r;
-							}
-							else if (aabb2.maxX>entityAABB.minX && aabb2.minX<entityAABB.minX) {
-								particle.position.x -= r;
-							}
 							
-							if(aabb2.minY<entityAABB.maxY && aabb2.maxY>entityAABB.maxY) {
-								particle.position.y += r;
-							}
-							else if (aabb2.maxY>entityAABB.minY && aabb2.minY<entityAABB.minY) {
-								particle.position.y -= r;
-							}
+							prev.set(particle.getGlobalPosition(emitter));
+							//frac.scale(particle.speed.length()/frac.length());
+							//prev.x += frac.x;
+							//prev.y += frac.y;
+							//prev.z += frac.z;
 							
-							if(aabb2.minZ<entityAABB.maxZ && aabb2.maxZ>entityAABB.maxZ) {
-								particle.position.z += r;
-							}
-							else if (aabb2.maxZ>entityAABB.minZ && aabb2.minZ<entityAABB.minZ) {
-								particle.position.z -= r;
-							}
-							
-							prev = particle.getGlobalPosition(emitter);
-							prev.x -= particle.speed.x;
-							prev.y -= particle.speed.y;
-							prev.z -= particle.speed.z;
-							
-							now = particle.getGlobalPosition(emitter);
+							now.set(particle.getGlobalPosition(emitter));
 
 							x = now.x - prev.x;
 							y = now.y - prev.y;
 							z = now.z - prev.z;
 							
+							aabb2 = new AxisAlignedBB(particle.position.x - r, particle.position.y - r, particle.position.z - r, particle.position.x + r, particle.position.y + r, particle.position.z + r);
 							aabb = new AxisAlignedBB(prev.x - r, prev.y - r, prev.z - r, prev.x + r, prev.y + r, prev.z + r);
 							
 							d0 = y;
 							origX = x;
 							origZ = z;
-				            	
-							/*Object[] offsetData = calculateOffsets(aabb, list, x, y, z);
-							aabb = (AxisAlignedBB) offsetData[0];
-							x = (double) offsetData[1];
-							y = (double) offsetData[2];
-							z = (double) offsetData[3];*/
+							
+							collision(particle, emitter, prev);
+							try {
+								if((aabb.minX<entityAABB.maxX && aabb.maxX>entityAABB.maxX) || (aabb.maxX>entityAABB.minX && aabb.minX<entityAABB.minX))
+								{
+									double delta = particle.position.x-entity.posX;
+									particle.position.x += delta>0 ? r : -r;
+									collisionHandler(particle, emitter, 'x', particle.position, prev, entities);
+								}
+								
+								if((aabb.minY<entityAABB.maxY && aabb.maxY>entityAABB.maxY) || (aabb.maxY>entityAABB.minY && aabb.minY<entityAABB.minY))
+								{
+									double delta = particle.position.y-entity.posY;
+									particle.position.y += delta>0 ? r : -r;
+									collisionHandler(particle, emitter, 'y', particle.position, prev, entities);
+								}
+								
+								if((aabb.minZ<entityAABB.maxZ && aabb.maxZ>entityAABB.maxZ) || (aabb.maxZ>entityAABB.minZ && aabb.minZ<entityAABB.minZ))
+								{
+									double delta = particle.position.z-entity.posZ;
+									particle.position.z += delta>0 ? r : -r;
+									collisionHandler(particle, emitter, 'z', particle.position, prev, entities);
+								}
+							} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
+									| IllegalAccessException e) {
+								e.printStackTrace();
+							}
+							
 						}
-					}
-					else list.add(entityAABB);
+					} else list.add(entityAABB);
 				}
 			}
-			
+
 			Object[] offsetData = calculateOffsets(aabb, list, x, y, z);
 			aabb = (AxisAlignedBB) offsetData[0];
 			x = (double) offsetData[1];
@@ -243,78 +245,50 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
 			if (d0 != y || origX != x || origZ != z)
 			{
-				System.out.println(origX+" "+x);
-				if(MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionTinting.class).enabled)) {
-					particle.collisionTinting = true;
-					particle.firstCollision = particle.age;
-				}
-				if(MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionAppearance.class).enabled)) {
-					particle.collisionTexture = true;
-					particle.firstCollision = particle.age;
-				}
-				if (this.expireOnImpact)
-				{
-					if(this.expirationDelay.get()!=0 && particle.expireAge==0)
-					{
-						particle.expireAge = (int) (particle.age+Math.abs(this.expirationDelay.get()));
-						particle.expirationDelay = (int) this.expirationDelay.get();
-					}
-					else if(this.expirationDelay.get()==0)
-					{
-						particle.dead = true;
-
-						return;
-					}
-				}
-
-				if (particle.relativePosition)
-				{
-					particle.relativePosition = false;
-					particle.prevPosition.set(prev);
-				}
+				collision(particle, emitter, prev);
 
 				now.set(aabb.minX + r, aabb.minY + r, aabb.minZ + r);
 				
 				if (d0 != y)
 				{
+					if(d0 < y) now.y = aabb.minY;
+					else now.y = aabb.maxY;
+					now.y += d0 < y ? r : -r;
+					
 					try {
-						collisionHandler(particle, emitter, 'y', d0, y, now, prev, entities);
+						collisionHandler(particle, emitter, 'y', now, prev, entities);
 					} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
 							| IllegalAccessException e) {
 						e.printStackTrace();
 					}
-					
-					if(d0 < y) now.y = aabb.minY;
-					else now.y = aabb.maxY;
-					now.y += d0 < y ? r : -r;
 				}
 				
 				if (origX != x)
 				{
+					if(origX < x) now.x = aabb.minX;
+					else now.x = aabb.maxX;
+					now.x += origX < x ? r : -r;
+					
 					try {
-						collisionHandler(particle, emitter, 'x', origX, x, now, prev, entities);
+						collisionHandler(particle, emitter, 'x', now, prev, entities);
 					} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
 							| IllegalAccessException e) {
 						e.printStackTrace();
 					}
-					
-					if(origX < x) now.x = aabb.minX;
-					else now.x = aabb.maxX;
-					now.x += origX < x ? r : -r;
 				}
 
 				if (origZ != z)
 				{
+					if(origZ < z) now.z = aabb.minZ;
+					else now.z = aabb.maxZ;
+					now.z += origZ < z ? r : -r;
+					
 					try {
-						collisionHandler(particle, emitter, 'z', origZ, z, now, prev, entities);
+						collisionHandler(particle, emitter, 'z', now, prev, entities);
 					} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
 							| IllegalAccessException e) {
 						e.printStackTrace();
 					}
-					
-					if(origZ < z) now.z = aabb.minZ;
-					else now.z = aabb.maxZ;
-					now.z += origZ < z ? r : -r;
 				}
 
 				particle.position.set(now);
@@ -326,8 +300,39 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		}
 	}
 	
+	public void collision(BedrockParticle particle, BedrockEmitter emitter, Vector3d prev) {
+		if(MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionTinting.class).enabled)) {
+			particle.collisionTinting = true;
+			particle.firstCollision = particle.age;
+		}
+		if(MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionAppearance.class).enabled)) {
+			particle.collisionTexture = true;
+			particle.firstCollision = particle.age;
+		}
+		if (this.expireOnImpact)
+		{
+			if(this.expirationDelay.get()!=0 && particle.expireAge==0)
+			{
+				particle.expireAge = (int) (particle.age+Math.abs(this.expirationDelay.get()));
+				particle.expirationDelay = (int) this.expirationDelay.get();
+			}
+			else if(this.expirationDelay.get()==0)
+			{
+				particle.dead = true;
+
+				return;
+			}
+		}
+
+		if (particle.relativePosition)
+		{
+			particle.relativePosition = false;
+			particle.prevPosition.set(prev);
+		}
+	}
+	
 	//with java reflect - code redundancy can be avoided quick and easily - may cost a little more performance?
-	public void collisionHandler(BedrockParticle particle, BedrockEmitter emitter, char component, double orig, double offset, Vector3d now, Vector3d prev, List<Entity> entities) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	public void collisionHandler(BedrockParticle particle, BedrockEmitter emitter, char component, Vector3d now, Vector3d prev, List<Entity> entities) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
 	{
 		if(!(component=='x' || component=='y' || component=='z')) 
 			throw new IllegalArgumentException("Illegal value of the component: "+component);
@@ -338,7 +343,6 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		float collisionTime = vector3fField.getFloat(particle.collisionTime);
 		float speed = vector3fField.getFloat(particle.speed);
 		float accelerationFactor = vector3fField.getFloat(particle.accelerationFactor);
-		
 		
 		/*realistic collision*/
 		if(this.realisticCollision) 
@@ -362,7 +366,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			/*split particles*/
 			if(this.splitParticleCount!=0) 
 			{
-				splitParticle(particle, emitter, component, orig, offset, now, prev);
+				splitParticle(particle, emitter, component, now, prev);
 			}
 			
 			/*damping*/
@@ -392,7 +396,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 		return vector;
 	}
 	
-	public void splitParticle(BedrockParticle particle, BedrockEmitter emitter, char component, double orig, double offset, Vector3d now, Vector3d prev) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public void splitParticle(BedrockParticle particle, BedrockEmitter emitter, char component, Vector3d now, Vector3d prev) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		if(!(component=='x' || component=='y' || component=='z')) 
 			throw new IllegalArgumentException("Illegal value of the component: "+component);
 
@@ -428,7 +432,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			if(!(Math.abs(speed)>Math.abs(this.splitParticleSpeedThreshold)))
 				return;
 			vector3fField.setFloat(splitParticle.collisionTime, particle.age);
-			vector3dField.setDouble(splitParticle.position, splitPosition + ((orig < offset) ? this.radius : -this.radius));
+			vector3dField.setDouble(splitParticle.position, splitPosition/* + ((orig < offset) ? this.radius : -this.radius)*/);
 
 			Vector3f randomSpeed = randomBounciness(particle.speed, component, (this.randomBounciness!=0) ? this.randomBounciness : 10);
 			randomSpeed.scale(1.0f/this.splitParticleCount);
