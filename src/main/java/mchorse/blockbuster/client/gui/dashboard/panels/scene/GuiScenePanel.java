@@ -164,7 +164,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.name = new GuiTextElement(mc, 80, (str) -> this.replay.name = str);
         this.name.tooltip(IKey.lang("blockbuster.gui.director.name_tooltip"), Direction.RIGHT);
         this.target = new GuiTextElement(mc, 80, (str) -> this.replay.target = str);
-        this.target.tooltip(IKey.lang("blockbuster.gui.director.target_tooltip"), Direction.LEFT);
+        this.target.tooltip(IKey.lang("blockbuster.gui.director.target_tooltip"), Direction.RIGHT);
         this.invincible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invincible"), false, (b) -> this.replay.invincible = b.isToggled());
         this.invisible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invisible"), false, (b) -> this.replay.invisible = b.isToggled());
         this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.enabled"), false, (b) -> this.replay.enabled = b.isToggled());
@@ -178,6 +178,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         left.add(this.recordingId, this.id);
         left.add(Elements.label(IKey.lang("blockbuster.gui.director.name")).color(0xcccccc), this.name);
         left.add(Elements.label(IKey.lang("blockbuster.gui.director.health")).color(0xcccccc), this.health, this.invincible, this.invisible, this.enabled, this.fake, this.teleportBack);
+        left.add(Elements.label(IKey.lang("blockbuster.gui.director.target"), 16).color(0xcccccc).anchor(0, 1), this.target);
         this.replays.add(this.selector, this.replayEditor);
 
         /* Toggle view button */
@@ -245,7 +246,6 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         }
 
         right.add(this.teleport);
-        right.add(Elements.label(IKey.lang("blockbuster.gui.director.target")).color(0xcccccc), this.target);
         this.replayEditor.add(this.pickMorph);
 
         /* Scene manager */

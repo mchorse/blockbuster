@@ -81,7 +81,7 @@ blockbuster.gui:
         name: Name tag
         name_tooltip: Name tag of the actor. You can use this to target this actor via commands (like @e[name=Test]) or just display name.\n\nYou can use [ as the section symbol for display name formatting. [cR[aG[1B[r becomes {c}R{a}G{1}B{r}.
         target: Target
-        target_tooltip: Here you can specify which player should be used to playback this replay
+        target_tooltip: Here you can specify which player should be used to playback this replay.\n\nAdditional target selectors can be used to pick players beside by their username. @r - random player, @{n}team{r} - where {n}team{r} is the name of the scoreboard team.
         invincible: Invincible
         invisible: Invisible
         enabled: Enabled
