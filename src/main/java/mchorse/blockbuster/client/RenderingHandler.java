@@ -11,7 +11,12 @@ import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRender
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordRecorder;
+import mchorse.blockbuster.recording.data.Frame;
+import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.mclib.utils.Interpolation;
+import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -21,11 +26,15 @@ import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -356,6 +365,45 @@ public class RenderingHandler
             ClientProxy.audio.pause(isPaused);
 
             this.wasPaused = isPaused;
+        }
+    }
+
+    @SubscribeEvent
+    public void onOrientCamera(EntityViewRenderEvent.CameraSetup event)
+    {
+        EntityPlayer thePlayer = Minecraft.getMinecraft().player;
+        RecordPlayer player = EntityUtils.getRecordPlayer(thePlayer);
+
+        if (player != null && player.record != null && !player.record.frames.isEmpty())
+        {
+            Frame frame = player.record.getFrameSafe(player.tick);
+            Frame prev = player.record.getFrameSafe(player.tick - 1);
+            float partial = (float) event.getRenderPartialTicks();
+
+            event.setYaw(Interpolations.lerp(prev.yawHead, frame.yawHead, partial) - 180);
+            event.setPitch(Interpolations.lerp(prev.pitch, frame.pitch, partial));
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onRenderHand(RenderHandEvent event)
+    {
+        EntityPlayer thePlayer = Minecraft.getMinecraft().player;
+        RecordPlayer player = EntityUtils.getRecordPlayer(thePlayer);
+
+        if (player != null && player.record != null && !player.record.frames.isEmpty())
+        {
+            Frame frame = player.record.getFrameSafe(player.tick);
+            Frame prev = player.record.getFrameSafe(player.tick - 1);
+
+            float partial = event.getPartialTicks();
+            float yaw = Interpolations.lerp(prev.yaw, frame.yaw, partial);
+            float pitch = Interpolations.lerp(prev.pitch, frame.pitch, partial);
+
+            thePlayer.rotationYaw = yaw;
+            thePlayer.rotationPitch = pitch;
+            thePlayer.prevRotationYaw = yaw;
+            thePlayer.prevRotationPitch = pitch;
         }
     }
 }

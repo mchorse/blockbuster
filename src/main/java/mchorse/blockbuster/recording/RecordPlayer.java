@@ -74,11 +74,20 @@ public class RecordPlayer
      */
     public Replay replay;
 
+    public boolean realPlayer;
+
     public RecordPlayer(Record record, Mode mode, EntityLivingBase actor)
     {
         this.record = record;
         this.mode = mode;
         this.actor = actor;
+    }
+
+    public RecordPlayer realPlayer()
+    {
+        this.realPlayer = true;
+
+        return this;
     }
 
     /**
@@ -230,7 +239,7 @@ public class RecordPlayer
 
         this.tick = original;
         this.record.resetUnload();
-        this.record.applyFrame(tick, this.actor, true);
+        this.record.applyFrame(tick, this.actor, true, this.realPlayer);
 
         if (actions)
         {
@@ -267,6 +276,7 @@ public class RecordPlayer
         this.sync = false;
 
         this.applyFrame(tick, this.actor, true);
+
         EntityUtils.setRecordPlayer(this.actor, this);
 
         if (this.actor instanceof EntityActor)
@@ -277,7 +287,10 @@ public class RecordPlayer
         {
             if (this.record.playerData != null)
             {
-                this.actor.readEntityFromNBT(this.record.playerData);
+                if (!this.realPlayer)
+                {
+                    this.actor.readEntityFromNBT(this.record.playerData);
+                }
 
                 if (MPMHelper.isLoaded() && this.record.playerData.hasKey("MPMData", NBT.TAG_COMPOUND))
                 {
@@ -285,10 +298,18 @@ public class RecordPlayer
                 }
             }
 
-            this.actor.world.getMinecraftServer().getPlayerList().playerLoggedIn((EntityPlayerMP) this.actor);
+            if (!this.realPlayer)
+            {
+                this.actor.world.getMinecraftServer().getPlayerList().playerLoggedIn((EntityPlayerMP) this.actor);
+            }
         }
 
-        Dispatcher.sendToTracked(this.actor, new PacketPlayback(this.actor.getEntityId(), true, filename));
+        Dispatcher.sendToTracked(this.actor, new PacketPlayback(this.actor.getEntityId(), true, this.realPlayer, filename));
+
+        if (this.realPlayer && this.actor instanceof EntityPlayerMP)
+        {
+            Dispatcher.sendTo(new PacketPlayback(this.actor.getEntityId(), true, this.realPlayer, filename), (EntityPlayerMP) this.actor);
+        }
     }
 
     /**
@@ -314,7 +335,7 @@ public class RecordPlayer
             tick = this.record.frames.size() - 1;
         }
 
-        this.record.applyFrame(tick, target, force);
+        this.record.applyFrame(tick, target, force, this.realPlayer);
     }
 
     public void applyAction(int tick, EntityLivingBase target, boolean safe)

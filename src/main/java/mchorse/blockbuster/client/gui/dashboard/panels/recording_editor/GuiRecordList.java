@@ -1,6 +1,5 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 
-import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.recording.scene.Replay;

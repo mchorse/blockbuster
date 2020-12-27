@@ -68,6 +68,11 @@ public class SubCommandRecordFade extends SubCommandRecordBase
             current.mountYaw = Interpolations.lerp(last.mountYaw, first.mountYaw, x);
             current.pitch = Interpolations.lerp(last.pitch, first.pitch, x);
             current.mountPitch = Interpolations.lerp(last.mountPitch, first.mountPitch, x);
+
+            if (current.hasBodyYaw && first.hasBodyYaw)
+            {
+                current.bodyYaw = Interpolations.lerpYaw(last.bodyYaw, first.bodyYaw, x);
+            }
         }
 
         try

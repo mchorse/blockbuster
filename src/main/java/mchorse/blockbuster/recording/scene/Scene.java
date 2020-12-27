@@ -28,6 +28,8 @@ import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CPacketClientSettings;
+import net.minecraft.scoreboard.Team;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.EnumHandSide;
@@ -41,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -234,7 +237,7 @@ public class Scene
 
 		for (RecordPlayer player : this.actors.values())
 		{
-			if (player.actor instanceof EntityPlayer)
+			if (!player.realPlayer && player.actor instanceof EntityPlayer)
 			{
 				((EntityPlayerMP) player.actor).onUpdateEntity();
 			}
@@ -267,9 +270,15 @@ public class Scene
 			{
 				actor.record.reset(actor.actor);
 				actor.tick = 0;
-				actor.record.applyFrame(0, actor.actor, true);
+				actor.record.applyFrame(0, actor.actor, true, actor.realPlayer);
 				actor.record.applyAction(0, actor.actor);
-				Dispatcher.sendToTracked(actor.actor, new PacketPlayback(actor.actor.getEntityId(), true, replay.id));
+				Dispatcher.sendToTracked(actor.actor, new PacketPlayback(actor.actor.getEntityId(), true, actor.realPlayer, replay.id));
+
+				if (actor.realPlayer)
+				{
+					Dispatcher.sendTo(new PacketPlayback(actor.actor.getEntityId(), true, actor.realPlayer, replay.id), (EntityPlayerMP) actor.actor);
+				}
+
 				CommonProxy.manager.players.put(actor.actor, actor);
 			}
 
@@ -514,8 +523,21 @@ public class Scene
 
 			World world = this.getWorld();
 			EntityLivingBase actor = null;
+			boolean real = false;
 
-			if (replay.fake)
+			/* Locate the target player */
+			if (!replay.target.isEmpty())
+			{
+				EntityPlayerMP player = this.getTargetPlayer(replay.target);
+
+				if (player != null)
+				{
+					actor = player;
+					real = true;
+				}
+			}
+
+			if (actor == null && replay.fake)
 			{
 				GameProfile profile = new GameProfile(new UUID(0, this.actorsCount), replay.name.isEmpty() ? "Player" : replay.name);
 
@@ -536,17 +558,12 @@ public class Scene
 					e.printStackTrace();
 				}
 
-				/* Stupid Mojang/Forge devs made the proper constructor
-				 * that allows to pass values into the CPacketClientSettings
-				 * client side only, what the fuck? There is no client
-				 * side code there, for fuck's sake, why?...
+				/* There is no way to construct a CPacketClientSettings on the
+				 * server side without using this hack, because the other constructor
+				 * is available only on the client side...
 				 */
 				PacketBuffer buffer = new PacketBuffer(Unpooled.buffer(64));
 
-				/* I have to use the fucking buffer like a retard in
-				 * order to pass the values I wanted to... At least I
-				 * didn't had to resort to reflection. Why you have to
-				 * be so overprotective of this shit? */
 				buffer.writeString("en_US");
 				buffer.writeByte((byte) 10);
 				buffer.writeEnumValue(EntityPlayer.EnumChatVisibility.FULL);
@@ -571,7 +588,7 @@ public class Scene
 				player.connection = new NetHandlerPlayServer(world.getMinecraftServer(), manager, player);
 				actor = player;
 			}
-			else
+			else if (actor == null)
 			{
 				EntityActor entity = new EntityActor(this.getWorld());
 
@@ -580,6 +597,11 @@ public class Scene
 			}
 
 			RecordPlayer player = CommonProxy.manager.play(replay.id, actor, Mode.BOTH, 0, true);
+
+			if (real)
+			{
+				player.realPlayer();
+			}
 
 			if (player != null)
 			{
@@ -595,6 +617,33 @@ public class Scene
 		{
 			lastUpdate = System.currentTimeMillis();
 		}
+	}
+
+	/**
+	 * Get target player
+	 */
+	private EntityPlayerMP getTargetPlayer(String target)
+	{
+		PlayerList list = this.world.getMinecraftServer().getPlayerList();
+
+		if (target.equals("@r"))
+		{
+			/* Pick a random player */
+			return list.getPlayers().get((int) (list.getPlayers().size() * Math.random()));
+		}
+		else if (target.startsWith("@"))
+		{
+			/* Pick the first player from given team */
+			Team team = this.world.getScoreboard().getTeam(target.substring(1));
+
+			if (team != null && !team.getMembershipCollection().isEmpty())
+			{
+				return list.getPlayerByUsername(team.getMembershipCollection().iterator().next());
+			}
+		}
+
+		/* Get the player by username */
+		return list.getPlayerByUsername(target);
 	}
 
 	public boolean isPlaying()

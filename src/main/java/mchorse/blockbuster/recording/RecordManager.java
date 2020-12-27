@@ -263,20 +263,32 @@ public class RecordManager
             if (actor.kill)
             {
                 actor.actor.dismountRidingEntity();
-                actor.actor.setDead();
 
-                if (actor.actor instanceof EntityPlayer)
+                if (actor.realPlayer)
                 {
-                    actor.actor.world.getMinecraftServer().getPlayerList().playerLoggedOut((EntityPlayerMP) actor.actor);
+                    if (actor.actor instanceof EntityPlayerMP)
+                    {
+                        Dispatcher.sendTo(new PacketPlayback(actor.actor.getEntityId(), false, actor.realPlayer, ""), (EntityPlayerMP) actor.actor);
+                    }
+                }
+                else
+                {
+                    actor.actor.setDead();
+
+                    if (actor.actor instanceof EntityPlayer)
+                    {
+                        actor.actor.world.getMinecraftServer().getPlayerList().playerLoggedOut((EntityPlayerMP) actor.actor);
+                    }
                 }
             }
             else
             {
-                Dispatcher.sendToTracked(actor.actor, new PacketPlayback(actor.actor.getEntityId(), false, ""));
+                Dispatcher.sendToTracked(actor.actor, new PacketPlayback(actor.actor.getEntityId(), false, actor.realPlayer, ""));
             }
         }
 
         this.players.remove(actor.actor);
+        EntityUtils.setRecordPlayer(actor.actor, null);
     }
 
     /**

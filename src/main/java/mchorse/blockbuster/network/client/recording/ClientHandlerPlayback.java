@@ -42,11 +42,20 @@ public class ClientHandlerPlayback extends ClientMessageHandler<PacketPlayback>
 
             if (recordPlayer == null)
             {
-                EntityUtils.setRecordPlayer(actor, new RecordPlayer(record, Mode.FRAMES, actor));
+                recordPlayer = new RecordPlayer(record, Mode.FRAMES, actor);
+
+                if (message.realPlayer)
+                {
+                    recordPlayer.realPlayer();
+                }
+
+                EntityUtils.setRecordPlayer(actor, recordPlayer);
             }
             else
             {
                 recordPlayer.record = record;
+                recordPlayer.realPlayer = message.realPlayer;
+                recordPlayer.tick = 0;
             }
 
             if (record == null)

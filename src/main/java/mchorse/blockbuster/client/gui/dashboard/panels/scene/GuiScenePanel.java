@@ -77,6 +77,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
     /* Replay fields */
     public GuiTextElement id;
     public GuiTextElement name;
+    public GuiTextElement target;
     public GuiToggleElement invincible;
     public GuiToggleElement invisible;
     public GuiToggleElement enabled;
@@ -162,6 +163,8 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         }).filename();
         this.name = new GuiTextElement(mc, 80, (str) -> this.replay.name = str);
         this.name.tooltip(IKey.lang("blockbuster.gui.director.name_tooltip"), Direction.RIGHT);
+        this.target = new GuiTextElement(mc, 80, (str) -> this.replay.target = str);
+        this.target.tooltip(IKey.lang("blockbuster.gui.director.target_tooltip"), Direction.LEFT);
         this.invincible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invincible"), false, (b) -> this.replay.invincible = b.isToggled());
         this.invisible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invisible"), false, (b) -> this.replay.invisible = b.isToggled());
         this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.enabled"), false, (b) -> this.replay.enabled = b.isToggled());
@@ -242,6 +245,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         }
 
         right.add(this.teleport);
+        right.add(Elements.label(IKey.lang("blockbuster.gui.director.target")).color(0xcccccc), this.target);
         this.replayEditor.add(this.pickMorph);
 
         /* Scene manager */
@@ -408,6 +412,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
 
         this.id.setText(this.replay.id);
         this.name.setText(this.replay.name);
+        this.target.setText(this.replay.target);
         this.invincible.toggled(this.replay.invincible);
         this.invisible.toggled(this.replay.invisible);
         this.enabled.toggled(this.replay.enabled);

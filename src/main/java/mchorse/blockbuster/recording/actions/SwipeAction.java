@@ -1,8 +1,12 @@
 package mchorse.blockbuster.recording.actions;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.recording.RecordPlayer;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.network.play.server.SPacketAnimation;
 import net.minecraft.util.EnumHand;
 
 /**
@@ -18,7 +22,15 @@ public class SwipeAction extends Action
     @Override
     public void apply(EntityLivingBase actor)
     {
+        RecordPlayer player = EntityUtils.getRecordPlayer(actor);
+
         actor.swingArm(EnumHand.MAIN_HAND);
+
+        /* Hack to swing the arm for the real player */
+        if (player != null && player.realPlayer)
+        {
+            ((EntityPlayerMP) player.actor).connection.sendPacket(new SPacketAnimation(player.actor, 0));
+        }
 
         if (Blockbuster.actorSwishSwipe.get())
         {

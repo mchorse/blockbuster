@@ -7,16 +7,21 @@ import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.scene.Replay;
+import mchorse.mclib.utils.MathUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.MovementInput;
+import net.minecraft.util.math.MathHelper;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
@@ -170,10 +175,15 @@ public class Record
         this.unload = Blockbuster.recordUnloadTime.get();
     }
 
+    public void applyFrame(int tick, EntityLivingBase actor, boolean force)
+    {
+        this.applyFrame(tick, actor, force, false);
+    }
+
     /**
      * Apply a frame at given tick on the given actor. 
      */
-    public void applyFrame(int tick, EntityLivingBase actor, boolean force)
+    public void applyFrame(int tick, EntityLivingBase actor, boolean force, boolean realPlayer)
     {
         if (tick >= this.frames.size() || tick < 0)
         {
@@ -184,6 +194,26 @@ public class Record
 
         frame.apply(actor, force);
 
+        if (realPlayer)
+        {
+            actor.setLocationAndAngles(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
+            actor.motionX = frame.motionX;
+            actor.motionY = frame.motionY;
+            actor.motionZ = frame.motionZ;
+
+            actor.onGround = frame.onGround;
+
+            if (actor instanceof EntityPlayerSP)
+            {
+                MovementInput input = ((EntityPlayerSP) actor).movementInput;
+
+                input.sneak = frame.isSneaking;
+            }
+
+            actor.setSneaking(frame.isSneaking);
+            actor.setSprinting(frame.isSprinting);
+        }
+
         if (actor.world.isRemote && Blockbuster.actorFixY.get())
         {
             actor.posY = frame.y;
@@ -193,19 +223,56 @@ public class Record
         {
             Frame prev = this.frames.get(tick - 1);
 
+            if (realPlayer)
+            {
+                actor.lastTickPosX = prev.x;
+                actor.lastTickPosY = prev.y;
+                actor.lastTickPosZ = prev.z;
+                actor.prevPosX = prev.x;
+                actor.prevPosY = prev.y;
+                actor.prevPosZ = prev.z;
+
+                actor.prevRotationYaw = prev.yaw;
+                actor.prevRotationPitch = prev.pitch;
+                actor.prevRotationYawHead = prev.yawHead;
+
+                if (prev.hasBodyYaw)
+                {
+                    actor.prevRenderYawOffset = prev.bodyYaw;
+                }
+            }
+
             /* Override fall distance, apparently fallDistance gets reset
              * faster than RecordRecorder can record both onGround and
              * fallDistance being correct for player, so we just hack */
             actor.fallDistance = prev.fallDistance;
+        }
 
-            /* TODO: do something about it, it literally fixes the issue with 
-             * floating actors, but at the cost of making the movement very 
-             * sharp instead of smooth */
-            if (actor.world.isRemote)
+        if (tick < this.frames.size() - 1)
+        {
+            Frame next = this.frames.get(tick + 1);
+
+            /* Walking sounds */
+            if (actor instanceof EntityPlayer)
             {
-                /* actor.lastTickPosY = actor.prevPosY = prev.y; */
+                double dx = next.x - frame.x;
+                double dy = next.y - frame.y;
+                double dz = next.z - frame.z;
+
+                actor.distanceWalkedModified = actor.distanceWalkedModified + MathHelper.sqrt(dx * dx + dz * dz) * 0.32F;
+                actor.distanceWalkedOnStepModified = actor.distanceWalkedOnStepModified + MathHelper.sqrt(dx * dx + dy * dy + dz * dz) * 0.32F;
             }
         }
+    }
+
+    public Frame getFrameSafe(int tick)
+    {
+        if (this.frames.isEmpty())
+        {
+            return null;
+        }
+
+        return this.frames.get(MathUtils.clamp(tick, 0, this.frames.size() - 1));
     }
 
     /**

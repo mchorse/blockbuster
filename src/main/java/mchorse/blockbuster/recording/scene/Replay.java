@@ -1,11 +1,9 @@
 package mchorse.blockbuster.recording.scene;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.actions.ChatAction;
-import mchorse.mclib.utils.NBTUtils;
 import mchorse.metamorph.api.MorphAPI;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -28,6 +26,7 @@ public class Replay
     /* Meta data */
     public String id = "";
     public String name = "";
+    public String target = "";
     public boolean invincible = false;
     public boolean teleportBack = true;
 
@@ -100,6 +99,7 @@ public class Replay
     {
         tag.setString("Id", this.id);
         tag.setString("Name", this.name);
+        tag.setString("Target", this.target);
 
         if (this.morph != null)
         {
@@ -118,6 +118,7 @@ public class Replay
     {
         this.id = tag.getString("Id");
         this.name = tag.getString("Name");
+        this.target = tag.getString("Target");
         this.morph = MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("Morph"));
         this.invincible = tag.getBoolean("Invincible");
         this.invisible = tag.getBoolean("Invisible");
@@ -134,6 +135,7 @@ public class Replay
     {
         ByteBufUtils.writeUTF8String(buf, this.id);
         ByteBufUtils.writeUTF8String(buf, this.name);
+        ByteBufUtils.writeUTF8String(buf, this.target);
         MorphUtils.morphToBuf(buf, this.morph);
 
         buf.writeBoolean(this.invincible);
@@ -148,6 +150,7 @@ public class Replay
     {
         this.id = ByteBufUtils.readUTF8String(buf);
         this.name = ByteBufUtils.readUTF8String(buf);
+        this.target = ByteBufUtils.readUTF8String(buf);
         this.morph = MorphUtils.morphFromBuf(buf);
 
         this.invincible = buf.readBoolean();
@@ -165,7 +168,12 @@ public class Replay
         {
             Replay replay = (Replay) obj;
 
-            return Objects.equal(replay.id, this.id) && Objects.equal(replay.name, this.name) && replay.invincible == this.invincible && replay.invisible == this.invisible && Objects.equal(replay.morph, this.morph);
+            return Objects.equal(replay.id, this.id)
+                && Objects.equal(replay.name, this.name)
+                && Objects.equal(replay.target, this.target)
+                && replay.invincible == this.invincible
+                && replay.invisible == this.invisible
+                && Objects.equal(replay.morph, this.morph);
         }
 
         return super.equals(obj);
@@ -177,6 +185,7 @@ public class Replay
 
         replay.id = this.id;
         replay.name = this.name;
+        replay.target = this.target;
         replay.morph = mchorse.metamorph.api.MorphUtils.copy(this.morph);
 
         replay.invincible = this.invincible;
@@ -187,11 +196,5 @@ public class Replay
         replay.health = this.health;
 
         return replay;
-    }
-
-    @Override
-    public String toString()
-    {
-        return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("invincible", this.invincible).add("morph", this.morph).add("invisible", this.invisible).toString();
     }
 }
