@@ -391,7 +391,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
 
         String audio = this.location.getScene().audio;
 
-        this.audio.setCurrent(audio == null || audio.isEmpty() ? this.noneAudioTrack.get() : audio);
+        this.audio.setCurrentScroll(audio == null || audio.isEmpty() ? this.noneAudioTrack.get() : audio);
 
         this.audioShift.setValue(this.location.getScene().audioShift);
 
