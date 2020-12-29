@@ -13,6 +13,17 @@ public class ServerHandlerPlaybackButton extends ServerMessageHandler<PacketPlay
     public void run(EntityPlayerMP player, PacketPlaybackButton message)
     {
         ItemStack stack = player.getHeldItemMainhand();
+
+        if (!(stack.getItem() instanceof ItemPlayback))
+        {
+            stack = player.getHeldItemOffhand();
+        }
+
+        if (!(stack.getItem() instanceof ItemPlayback))
+        {
+            return;
+        }
+
         NBTTagCompound compound = stack.getTagCompound();
 
         if (compound == null)
@@ -21,18 +32,9 @@ public class ServerHandlerPlaybackButton extends ServerMessageHandler<PacketPlay
             stack.setTagCompound(compound);
         }
 
-        if (!(stack.getItem() instanceof ItemPlayback))
-        {
-            return;
-        }
-
         compound.removeTag("CameraPlay");
         compound.removeTag("CameraProfile");
         compound.removeTag("Scene");
-
-        compound.removeTag("DirX");
-        compound.removeTag("DirY");
-        compound.removeTag("DirZ");
 
         if (message.location.isScene())
         {

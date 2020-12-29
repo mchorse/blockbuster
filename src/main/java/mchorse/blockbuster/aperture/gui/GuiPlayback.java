@@ -8,21 +8,21 @@ import mchorse.aperture.camera.destination.AbstractDestination;
 import mchorse.aperture.camera.destination.ClientDestination;
 import mchorse.aperture.client.gui.GuiProfilesManager;
 import mchorse.blockbuster.aperture.CameraHandler;
-import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
+import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,18 +41,21 @@ public class GuiPlayback extends GuiBase
     private String stringTitle = I18n.format("blockbuster.gui.playback.title");
     private String stringCameraMode = I18n.format("blockbuster.gui.playback.camera_mode");
     private String stringProfile = I18n.format("blockbuster.gui.playback.profile");
+    private String stringScene = I18n.format("blockbuster.gui.playback.scene");
 
     private GuiCirculateElement cameraMode;
     private GuiButtonElement done;
 
+    public GuiStringListElement scenes;
     public GuiListElement profiles;
     public Area frame = new Area();
 
-    private String profile;
-    private CameraProfile dummy = new CameraProfile(null);
     private SceneLocation location;
+    private int mode = 0;
+    private String profile = "";
 
     private boolean aperture;
+    private int frameWidth = 150;
 
     public GuiPlayback()
     {
@@ -60,26 +63,32 @@ public class GuiPlayback extends GuiBase
 
         this.aperture = CameraHandler.isApertureLoaded();
 
+        this.scenes = new GuiStringListElement(mc, (value) -> this.location = new SceneLocation(value.get(0)));
+        this.scenes.background().flex().relative(this.frame).y(35).w(1F).h(1F, -65);
+
         this.done = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.done"), (b) -> this.saveAndQuit());
-        this.done.flex().relative(this.frame).set(0, 0, 0, 20).y(1, -20).w(1, 0);
+        this.done.flex().relative(this.frame).set(0, 0, 0, 20).y(1, -20).w(1F, 0);
 
         if (this.aperture)
         {
+            this.frameWidth = 300;
+
             this.profiles = this.createListElement(mc);
-            this.profiles.background();
-            this.profiles.flex().set(0, 35, 0, 0).relative(this.frame).w(1, 0).h(1, -100);
+            this.profiles.background().flex().set(153, 35, 0, 0).relative(this.frame).w(147).h(1, -105);
+
+            this.scenes.flex().w(147);
 
             this.cameraMode = new GuiCirculateElement(mc, (b) -> this.setValue(this.cameraMode.getValue()));
             this.cameraMode.addLabel(IKey.lang("blockbuster.gui.playback.nothing"));
             this.cameraMode.addLabel(IKey.lang("blockbuster.gui.playback.play"));
             this.cameraMode.addLabel(IKey.lang("blockbuster.gui.playback.load_profile"));
-            this.cameraMode.flex().relative(this.frame).set(0, 0, 0, 20).y(1, -45).w(1, 0);
+            this.cameraMode.flex().relative(this.frame).set(153, 0, 0, 20).y(1, -50).w(147);
 
             this.root.add(this.profiles, this.cameraMode);
             this.fillData();
         }
 
-        this.root.add(this.done);
+        this.root.add(this.scenes, this.done);
     }
 
     /* Aperture specific methods */
@@ -179,9 +188,22 @@ public class GuiPlayback extends GuiBase
 
     /* Remaining methods */
 
-    public GuiPlayback setLocation(SceneLocation location)
+    public GuiPlayback setLocation(SceneLocation location, List<String> scenes)
     {
         this.location = location;
+
+        this.scenes.clear();
+        this.scenes.add(scenes);
+        this.scenes.sort();
+        this.scenes.setCurrentScroll(location.getFilename());
+
+        return this;
+    }
+
+    public GuiPlayback setMode(int mode, String profile)
+    {
+        this.mode = mode;
+        this.profile = profile;
 
         return this;
     }
@@ -226,7 +248,7 @@ public class GuiPlayback extends GuiBase
     @Override
     public void initGui()
     {
-        this.frame.set(this.width / 2 - 75, 10, 150, this.height - 20);
+        this.frame.set(this.width / 2 - this.frameWidth / 2, 10, this.frameWidth, this.height - 20);
 
         super.initGui();
     }
@@ -238,12 +260,18 @@ public class GuiPlayback extends GuiBase
 
         GuiDraw.drawCustomBackground(0, 0, this.width, this.height);
         this.drawString(this.fontRenderer, this.stringTitle, this.frame.x, this.frame.y, 0xffffffff);
-        this.drawString(this.fontRenderer, this.stringCameraMode, this.frame.x, this.cameraMode.area.y - 12, 0xffcccccc);
+
+        if (this.cameraMode != null)
+        {
+            this.drawString(this.fontRenderer, this.stringCameraMode, this.cameraMode.area.x, this.cameraMode.area.y - 12, 0xffcccccc);
+        }
 
         if (isCameraProfile)
         {
-            this.drawString(this.fontRenderer, this.stringProfile, this.frame.x, this.profiles.area.y - 12, 0xffcccccc);
+            this.drawString(this.fontRenderer, this.stringProfile, this.profiles.area.x, this.profiles.area.y - 12, 0xffcccccc);
         }
+
+        this.drawString(this.fontRenderer, this.stringScene, this.scenes.area.x, this.scenes.area.y - 12, 0xffcccccc);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }

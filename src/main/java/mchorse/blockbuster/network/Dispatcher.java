@@ -6,6 +6,7 @@ import mchorse.blockbuster.network.client.ClientHandlerActorPause;
 import mchorse.blockbuster.network.client.ClientHandlerCaption;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerModifyModelBlock;
+import mchorse.blockbuster.network.client.ClientHandlerPlaybackButton;
 import mchorse.blockbuster.network.client.ClientHandlerStructure;
 import mchorse.blockbuster.network.client.ClientHandlerStructureList;
 import mchorse.blockbuster.network.client.audio.ClientHandlerAudio;
@@ -178,6 +179,7 @@ public class Dispatcher
 
             /* Playback button */
             register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
+            register(PacketPlaybackButton.class, ClientHandlerPlaybackButton.class, Side.CLIENT);
 
             /* Audio */
             register(PacketAudio.class, ClientHandlerAudio.class, Side.CLIENT);

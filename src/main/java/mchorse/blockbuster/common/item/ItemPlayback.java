@@ -3,9 +3,13 @@ package mchorse.blockbuster.common.item;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketPlaybackButton;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -80,17 +84,31 @@ public class ItemPlayback extends Item
         {
             NBTTagCompound tag = stack.getTagCompound();
 
+            if (player.isSneaking())
+            {
+                if (tag == null)
+                {
+                    tag = new NBTTagCompound();
+                }
+
+                String profile = tag.getString("CameraProfile");
+                String scene = tag.getString("Scene");
+
+                Dispatcher.sendTo(new PacketPlaybackButton(new SceneLocation(scene), CameraHandler.getModeFromNBT(tag), profile).withScenes(CommonProxy.scenes.sceneFiles()), ((EntityPlayerMP) player));
+
+                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+            }
+
             if (tag == null)
             {
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }
 
-            if (stack.getTagCompound().hasKey("Scene"))
+            String scene = tag.getString("Scene");
+
+            if (!scene.isEmpty() && CommonProxy.scenes.toggle(scene, player.world) && CameraHandler.isApertureLoaded())
             {
-                if (CommonProxy.scenes.toggle(stack.getTagCompound().getString("Scene"), player.world) && CameraHandler.isApertureLoaded())
-                {
-                    CameraHandler.handlePlaybackItem(player, tag);
-                }
+                CameraHandler.handlePlaybackItem(player, tag);
             }
         }
 

@@ -54,6 +54,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -164,13 +165,27 @@ public class CameraHandler
         }
     }
 
+    public static int getModeFromNBT(NBTTagCompound tag)
+    {
+        if (tag.hasKey("CameraPlay"))
+        {
+            return 1;
+        }
+        else if (tag.hasKey("CameraProfile"))
+        {
+            return 2;
+        }
+
+        return 0;
+    }
+
     @SideOnly(Side.CLIENT)
     @Method(modid = Aperture.MOD_ID)
-	public static void attach(SceneLocation location)
+	public static void attach(SceneLocation location, List<String> scenes)
     {
         GuiPlayback playback = new GuiPlayback();
 
-        playback.setLocation(location);
+        playback.setLocation(location, scenes);
         Minecraft.getMinecraft().displayGuiScreen(playback);
 	}
 

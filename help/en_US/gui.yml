@@ -97,7 +97,7 @@ blockbuster.gui:
         rename_prefix_popup: "Enter a new prefix:"
 
         attach: Attach
-        attach_tooltip: Attach this scene to currently held playback button
+        attach_tooltip: Attach this scene to currently held playback button.\n\nAlternatively, you can also attach a playback button by holding it, and right clicking it while sneaking.
 
         camera: Edit camera
         tp: Teleport
@@ -257,6 +257,7 @@ blockbuster.gui:
         title: Playback configuration
         camera_mode: Camera mode
         profile: Profile filename
+        scene: Scene
 
         nothing: Do nothing
         play: Play only

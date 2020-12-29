@@ -540,7 +540,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
     {
         if (CameraHandler.isApertureLoaded())
         {
-            CameraHandler.attach(this.location);
+            CameraHandler.attach(this.location, this.scenes.sceneList.getList());
         }
         else
         {
