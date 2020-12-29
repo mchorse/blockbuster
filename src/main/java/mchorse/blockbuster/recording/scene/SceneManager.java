@@ -196,6 +196,14 @@ public class SceneManager
 	 */
 	public void save(String filename, Scene scene) throws IOException
 	{
+		Scene present = this.scenes.get(scene.getId());
+
+		if (present != null)
+		{
+			present.copy(scene);
+			present.reload(present.getCurrentTick());
+		}
+
 		File file = sceneFile(filename);
 		NBTTagCompound compound = new NBTTagCompound();
 

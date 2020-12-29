@@ -177,6 +177,19 @@ public class Scene
 		return this.tick;
 	}
 
+	public int getCurrentTick()
+	{
+		for (RecordPlayer player : this.actors.values())
+		{
+			if (!player.isFinished() && !player.actor.isDead)
+			{
+				return player.tick;
+			}
+		}
+
+		return 0;
+	}
+
 	/**
 	 * Set director command sender
 	 */
