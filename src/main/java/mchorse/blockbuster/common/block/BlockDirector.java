@@ -27,8 +27,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -119,7 +123,7 @@ public class BlockDirector extends Block implements ITileEntityProvider
     @Override
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] {PLAYING, HIDDEN});
+        return new BlockStateContainer(this, PLAYING, HIDDEN);
     }
 
     /* Redstone */
@@ -150,6 +154,15 @@ public class BlockDirector extends Block implements ITileEntityProvider
         if (!worldIn.isRemote)
         {
             EntityUtils.sendStatusMessage((EntityPlayerMP) playerIn, new TextComponentTranslation("blockbuster.bye_director_block"));
+
+            ITextComponent link = new TextComponentTranslation("blockbuster.bye_director_block_guide");
+            ITextComponent youtube = new TextComponentTranslation("blockbuster.bye_director_block_guide_watch");
+
+            youtube.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://youtu.be/nMOb8RnuyuE"));
+            youtube.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("https://youtu.be/nMOb8RnuyuE")));
+            youtube.getStyle().setColor(TextFormatting.GRAY).setUnderlined(true);
+
+            playerIn.sendMessage(link.appendSibling(youtube).appendSibling(new TextComponentString(".")));
         }
 
         return true;
