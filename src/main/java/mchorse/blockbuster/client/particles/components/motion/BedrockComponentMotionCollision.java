@@ -201,7 +201,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						if(d0 < y) now.y = aabb.minY;
 						else now.y = aabb.maxY;
 						now.y += d0 < y ? r : -r;
-						collisionHandler(particle, emitter, 'y', now, prev, entities);
+						collisionHandler(particle, emitter, 'y', now, prev);
 					}
 					
 					if (origX != x)
@@ -210,7 +210,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						else now.x = aabb.maxX;
 						now.x += origX < x ? r : -r;
 					
-						collisionHandler(particle, emitter, 'x', now, prev, entities);
+						collisionHandler(particle, emitter, 'x', now, prev);
 					}
 
 					if (origZ != z)
@@ -219,7 +219,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						else now.z = aabb.maxZ;
 						now.z += origZ < z ? r : -r;
 					
-						collisionHandler(particle, emitter, 'z', now, prev, entities);
+						collisionHandler(particle, emitter, 'z', now, prev);
 					}
 				} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
 						| IllegalAccessException e) 
@@ -259,9 +259,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 							float tmpTime = particle.collisionTime.x; //collisionTime should be not changed - otherwise the particles will stop when moving against moving entites
 							double delta = particle.position.x-entity.posX;
 							particle.position.x += delta>0 ? r : -r;
-							collisionHandler(particle, emitter, 'x', particle.position, prev, entities);
-							particle.collisionTime.x = tmpTime;
+							collisionHandler(particle, emitter, 'x', particle.position, prev);
 							
+							//collisionTime should not change or otherwise particles will lose their speed although they should be reflected
+							particle.collisionTime.x = tmpTime; 
+
 							//particle speed is always switched (realistcCollision==true), as it always collides with the entity, but it should only have one correct direction
 							if(particle.speed.x>0) {
 								if(speedEntity.x<0) particle.speed.x = -particle.speed.x;
@@ -277,7 +279,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 							float tmpTime = particle.collisionTime.y;
 							double delta = particle.position.y-entity.posY;
 							particle.position.y += delta>0 ? r : -r;
-							collisionHandler(particle, emitter, 'y', particle.position, prev, entities);
+							collisionHandler(particle, emitter, 'y', particle.position, prev);
+							
+							particle.collisionTime.y = tmpTime;
 							
 							if(particle.speed.y>0) {
 								if(speedEntity.y<0) particle.speed.y = -particle.speed.y;
@@ -290,9 +294,12 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						
 						if((aabb2.minZ<entityAABB.maxZ && aabb2.maxZ>entityAABB.maxZ) || (aabb2.maxZ>entityAABB.minZ && aabb2.minZ<entityAABB.minZ))
 						{
+							float tmpTime = particle.collisionTime.y;
 							double delta = particle.position.z-entity.posZ;
 							particle.position.z += delta>0 ? r : -r;
-							collisionHandler(particle, emitter, 'z', particle.position, prev, entities);
+							collisionHandler(particle, emitter, 'z', particle.position, prev);
+							
+							particle.collisionTime.z = tmpTime;
 							
 							if(particle.speed.z>0) {
 								if(speedEntity.z<0) particle.speed.z = -particle.speed.z;
@@ -343,7 +350,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 	}
 	
 	//with java reflect - code redundancy can be avoided quick and easily - may cost a little more performance?
-	public void collisionHandler(BedrockParticle particle, BedrockEmitter emitter, char component, Vector3d now, Vector3d prev, List<Entity> entities) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	public void collisionHandler(BedrockParticle particle, BedrockEmitter emitter, char component, Vector3d now, Vector3d prev) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
 	{
 		if(!(component=='x' || component=='y' || component=='z')) 
 			throw new IllegalArgumentException("Illegal value of the component: "+component);
