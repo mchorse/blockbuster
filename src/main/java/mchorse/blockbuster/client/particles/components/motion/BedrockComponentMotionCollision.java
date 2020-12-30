@@ -24,6 +24,8 @@ import javax.vecmath.Vector3f;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class BedrockComponentMotionCollision extends BedrockComponentBase implements IComponentParticleUpdate
@@ -145,7 +147,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			double origZ = z;
 			
 			List<Entity> entities = emitter.world.getEntitiesWithinAABB(Entity.class, aabb.expand(x, y, z));
-			List<AxisAlignedBB> entityAABBs = new ArrayList<AxisAlignedBB>();
+			HashMap<Entity, AxisAlignedBB> entityAABBs = new HashMap<Entity, AxisAlignedBB>();
 			//for own hitbox implementation: check for hitbox expanded for the previous position - prevent fast moving tunneling
 			List<AxisAlignedBB> list = emitter.world.getCollisionBoxes(null, aabb.expand(x, y, z));
 			
@@ -155,7 +157,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				{
 					AxisAlignedBB aabb2 = aabb;
 					AxisAlignedBB entityAABB = entity.getEntityBoundingBox();
-					entityAABBs.add(entityAABB);
+					
 					
 					double y2 = y, x2 = x, z2 = z;
 					
@@ -169,103 +171,15 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 					aabb2 = aabb2.offset(0.0D, 0.0D, z2);
 					
 					Vector3f speedEntity = new Vector3f((float)(entity.posX-entity.prevPosX), (float)(entity.posY-entity.prevPosY), (float)(entity.posZ-entity.prevPosZ));
-					Vector3f speedParticle = particle.speed;
+
 					if(this.momentum && this.entityCollision) {
 						particle.speed.x += 2*speedEntity.x;
 						particle.speed.y += 2*speedEntity.y;
 						particle.speed.z += 2*speedEntity.z;
 					}
 					
-					if(d0 == y2 && origX == x2 && origZ == z2) 
-					{
-						Vector3f ray = speedParticle;
-						if(speedEntity.x!=0 || speedEntity.y!=0 || speedEntity.z!=0) {
-							ray = speedEntity;
-						} else continue;
-						
-						Vector3d frac = intersect(ray, particle.getGlobalPosition(emitter), entityAABB);
-
-						if(frac!=null) {
-							frac.scale(1);
-
-							particle.position.add(frac);
-							
-							//recalculate the variables
-							prev.set(particle.getGlobalPosition(emitter));
-							//frac.scale(particle.speed.length()/frac.length());
-							//prev.x += frac.x;
-							//prev.y += frac.y;
-							//prev.z += frac.z;
-
-							now.set(particle.getGlobalPosition(emitter));
-
-							x = now.x - prev.x;
-							y = now.y - prev.y;
-							z = now.z - prev.z;
-							
-							aabb2 = new AxisAlignedBB(particle.position.x - r, particle.position.y - r, particle.position.z - r, particle.position.x + r, particle.position.y + r, particle.position.z + r);
-							aabb = new AxisAlignedBB(prev.x - r, prev.y - r, prev.z - r, prev.x + r, prev.y + r, prev.z + r);
-							
-							d0 = y;
-							origX = x;
-							origZ = z;
-
-							collision(particle, emitter, prev);
-							try {
-								if((aabb.minX<entityAABB.maxX && aabb.maxX>entityAABB.maxX) || (aabb.maxX>entityAABB.minX && aabb.minX<entityAABB.minX))
-								{
-									float tmpTime = particle.collisionTime.x; //collisionTime should be not changed - otherwise the particles will stop when moving against moving entites
-									double delta = particle.position.x-entity.posX;
-									particle.position.x += delta>0 ? r : -r;
-									collisionHandler(particle, emitter, 'x', particle.position, prev, entities);
-									particle.collisionTime.x = tmpTime;
-									
-									//particle speed is always switched (realistcCollision==true), as it always collides with the entity, but it should only have one correct direction
-									if(particle.speed.x>0) {
-										if(speedEntity.x<0) particle.speed.x = -particle.speed.x;
-									}
-									else if(particle.speed.x<0) {
-										if(speedEntity.x>0) particle.speed.x = -particle.speed.x;
-									}
-									particle.position.x += particle.speed.x/20;
-								}
-								
-								if((aabb.minY<entityAABB.maxY && aabb.maxY>entityAABB.maxY) || (aabb.maxY>entityAABB.minY && aabb.minY<entityAABB.minY))
-								{
-									float tmpTime = particle.collisionTime.y;
-									double delta = particle.position.y-entity.posY;
-									particle.position.y += delta>0 ? r : -r;
-									collisionHandler(particle, emitter, 'y', particle.position, prev, entities);
-									
-									if(particle.speed.y>0) {
-										if(speedEntity.y<0) particle.speed.y = -particle.speed.y;
-									}
-									else if(particle.speed.y<0) {
-										if(speedEntity.y>0) particle.speed.y = -particle.speed.y;
-									}
-									particle.position.y += particle.speed.y/20;
-								}
-								
-								if((aabb.minZ<entityAABB.maxZ && aabb.maxZ>entityAABB.maxZ) || (aabb.maxZ>entityAABB.minZ && aabb.minZ<entityAABB.minZ))
-								{
-									double delta = particle.position.z-entity.posZ;
-									particle.position.z += delta>0 ? r : -r;
-									collisionHandler(particle, emitter, 'z', particle.position, prev, entities);
-									
-									if(particle.speed.z>0) {
-										if(speedEntity.z<0) particle.speed.z = -particle.speed.z;
-									}
-									else if(particle.speed.z<0) {
-										if(speedEntity.z>0) particle.speed.z = -particle.speed.z;
-									}
-									particle.position.z += particle.speed.z/20;
-								}
-							} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
-									| IllegalAccessException e) {
-								e.printStackTrace();
-							}
-						}
-					} else list.add(entityAABB);
+					if(d0 == y2 && origX == x2 && origZ == z2) entityAABBs.put(entity, entityAABB);
+					else list.add(entityAABB);
 				}
 			}
 
@@ -287,10 +201,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						if(d0 < y) now.y = aabb.minY;
 						else now.y = aabb.maxY;
 						now.y += d0 < y ? r : -r;
-						
 						collisionHandler(particle, emitter, 'y', now, prev, entities);
 					}
-				
+					
 					if (origX != x)
 					{
 						if(origX < x) now.x = aabb.minX;
@@ -320,6 +233,81 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				if(!( (this.randomBounciness!=0 || this.realisticCollision) && Math.round(particle.speed.length())==0 )) 
 					particle.dragFactor += this.collissionDrag;
 			}
+			
+			for (HashMap.Entry<Entity, AxisAlignedBB> entry : entityAABBs.entrySet()) {
+
+		        AxisAlignedBB entityAABB = (AxisAlignedBB) entry.getValue();
+		        Entity entity = (Entity) entry.getKey();
+		        
+		        Vector3f speedEntity = new Vector3f((float)(entity.posX-entity.prevPosX), (float)(entity.posY-entity.prevPosY), (float)(entity.posZ-entity.prevPosZ));
+
+		        Vector3f ray = null;
+				if(speedEntity.x!=0 || speedEntity.y!=0 || speedEntity.z!=0) {
+					ray = speedEntity;
+				} else continue;
+				
+				Vector3d frac = intersect(ray, particle.getGlobalPosition(emitter), entityAABB);
+				if(frac!=null) {
+					particle.position.add(frac);
+					
+					AxisAlignedBB aabb2 = new AxisAlignedBB(particle.position.x - r, particle.position.y - r, particle.position.z - r, particle.position.x + r, particle.position.y + r, particle.position.z + r);
+
+					collision(particle, emitter, prev);
+					try {
+						if((aabb2.minX<entityAABB.maxX && aabb2.maxX>entityAABB.maxX) || (aabb2.maxX>entityAABB.minX && aabb2.minX<entityAABB.minX))
+						{
+							float tmpTime = particle.collisionTime.x; //collisionTime should be not changed - otherwise the particles will stop when moving against moving entites
+							double delta = particle.position.x-entity.posX;
+							particle.position.x += delta>0 ? r : -r;
+							collisionHandler(particle, emitter, 'x', particle.position, prev, entities);
+							particle.collisionTime.x = tmpTime;
+							
+							//particle speed is always switched (realistcCollision==true), as it always collides with the entity, but it should only have one correct direction
+							if(particle.speed.x>0) {
+								if(speedEntity.x<0) particle.speed.x = -particle.speed.x;
+							}
+							else if(particle.speed.x<0) {
+								if(speedEntity.x>0) particle.speed.x = -particle.speed.x;
+							}
+							particle.position.x += particle.speed.x/20; //otherwise particles would stick on the body and get reflected when entity stops
+						}
+						
+						if((aabb2.minY<entityAABB.maxY && aabb2.maxY>entityAABB.maxY) || (aabb2.maxY>entityAABB.minY && aabb2.minY<entityAABB.minY))
+						{
+							float tmpTime = particle.collisionTime.y;
+							double delta = particle.position.y-entity.posY;
+							particle.position.y += delta>0 ? r : -r;
+							collisionHandler(particle, emitter, 'y', particle.position, prev, entities);
+							
+							if(particle.speed.y>0) {
+								if(speedEntity.y<0) particle.speed.y = -particle.speed.y;
+							}
+							else if(particle.speed.y<0) {
+								if(speedEntity.y>0) particle.speed.y = -particle.speed.y;
+							}
+							particle.position.y += particle.speed.y/20;
+						}
+						
+						if((aabb2.minZ<entityAABB.maxZ && aabb2.maxZ>entityAABB.maxZ) || (aabb2.maxZ>entityAABB.minZ && aabb2.minZ<entityAABB.minZ))
+						{
+							double delta = particle.position.z-entity.posZ;
+							particle.position.z += delta>0 ? r : -r;
+							collisionHandler(particle, emitter, 'z', particle.position, prev, entities);
+							
+							if(particle.speed.z>0) {
+								if(speedEntity.z<0) particle.speed.z = -particle.speed.z;
+							}
+							else if(particle.speed.z<0) {
+								if(speedEntity.z>0) particle.speed.z = -particle.speed.z;
+							}
+							particle.position.z += particle.speed.z/20;
+						}
+					} catch (NoSuchFieldException | SecurityException | IllegalArgumentException
+							| IllegalAccessException e) {
+						e.printStackTrace();
+					}
+				}
+		    }
 		}
 	}
 	
