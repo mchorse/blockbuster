@@ -49,7 +49,7 @@ public class SubCommandModelConvertSkin extends CommandBase
     @Override
     public String getUsage(ICommandSender sender)
     {
-        return "blockbuster.commands.model.export.convert";
+        return "blockbuster.commands.model.convert";
     }
 
     @Override
