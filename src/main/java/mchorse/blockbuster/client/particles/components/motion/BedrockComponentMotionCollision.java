@@ -294,7 +294,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 						
 						if((aabb2.minZ<entityAABB.maxZ && aabb2.maxZ>entityAABB.maxZ) || (aabb2.maxZ>entityAABB.minZ && aabb2.minZ<entityAABB.minZ))
 						{
-							float tmpTime = particle.collisionTime.y;
+							float tmpTime = particle.collisionTime.z;
 							double delta = particle.position.z-entity.posZ;
 							particle.position.z += delta>0 ? r : -r;
 							collisionHandler(particle, emitter, 'z', particle.position, prev);
