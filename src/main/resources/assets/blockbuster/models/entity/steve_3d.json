@@ -2,8 +2,8 @@
     "scheme": "1.3",
     "name": "Steve 3D",
     "texture": [ 64, 32 ],
-    "skins": "steve",
     "default": "blockbuster:textures/entity/actor.png",
+    "skins": "steve",
     "scale": [ 0.9375, 0.9375, 0.9375 ],
     "limbs": {
         "head": {
@@ -38,6 +38,19 @@
             "swinging": true,
             "invert": true
         },
+        "left_leg_shoe": {
+            "size": [ 4, 12, 4 ],
+            "texture": [ 0, 16 ],
+            "anchor": [ 0.5, 0.0, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "sizeOffset": 0.25,
+            "slot": "left_foot",
+            "parent": "left_leg",
+            "opacity": 0.0,
+            "mirror": true,
+            "swinging": true,
+            "invert": true
+        },
         "left_arm": {
             "size": [ 4, 12, 4 ],
             "texture": [ 40, 16 ],
@@ -67,6 +80,18 @@
             "origin": [ 0.0, 0.0, 0.0 ],
             "opacity": 0.0
         },
+        "right_leg_shoe": {
+            "size": [ 4, 12, 4 ],
+            "texture": [ 0, 16 ],
+            "anchor": [ 0.5, 0.0, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "sizeOffset": 0.25,
+            "slot": "right_foot",
+            "parent": "right_leg",
+            "opacity": 0.0,
+            "swinging": true,
+            "invert": true
+        },
         "outer": {
             "size": [ 8, 8, 8 ],
             "texture": [ 32, 0 ],
@@ -75,6 +100,16 @@
             "sizeOffset": 0.25,
             "parent": "head",
             "is3D": true
+        },
+        "body_armor": {
+            "size": [ 8, 12, 4 ],
+            "texture": [ 16, 16 ],
+            "anchor": [ 0.5, 0.0, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "sizeOffset": 0.25,
+            "slot": "chest",
+            "parent": "body",
+            "opacity": 0.0
         },
         "body": {
             "size": [ 8, 12, 4 ],
@@ -120,7 +155,7 @@
             "limbs": {
                 "head": {
                     "translate": [ 0.0, 8.0, 0.0 ],
-                    "rotate": [ -45, 0.0, 0.0 ]
+                    "rotate": [ -45.0, 0.0, 0.0 ]
                 },
                 "right_arm": {
                     "translate": [ -6.0, -2.0, 0.0 ]
