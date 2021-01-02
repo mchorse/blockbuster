@@ -177,9 +177,9 @@ blockbuster:
 
             combine:
                 |
-                    {l}{6}/{r}model {8}combine{r} {7}[paths...]{r}
+                    {l}{6}/{r}model {8}combine{r} {7}<paths...>{r}
 
-                    {r}Creates combination of textures specified in {7}[paths...]{r} (relative to {7}config/blockbuster/models/{r}) into single skins.
+                    {r}Creates combination of textures specified in {7}<paths...>{r} (relative to {7}config/blockbuster/models/{r}) into single skins, and exports them to {7}config/blockbuster/export/{r}.
 
             convert:
                 |
