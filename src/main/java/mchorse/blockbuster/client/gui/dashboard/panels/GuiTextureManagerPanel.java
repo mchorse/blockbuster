@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.client.textures.MipmapTexture;
+import mchorse.blockbuster.utils.TextureUtils;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
@@ -108,7 +109,9 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
             return;
         }
 
-        File file = this.getFirstAvailableFile(FilenameUtils.getBaseName(location.getResourcePath()));
+        String name = FilenameUtils.getBaseName(location.getResourcePath());
+        File folder = new File(ClientProxy.configFile, "export");
+        File file = TextureUtils.getFirstAvailableFile(folder, name);
 
         this.mc.renderEngine.bindTexture(location);
 
@@ -155,21 +158,6 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
             e.printStackTrace();
             GuiModal.addFullModal(this, () -> new GuiMessageModal(this.mc, IKey.lang("blockbuster.gui.texture.export_error")));
         }
-    }
-
-    public File getFirstAvailableFile(String name)
-    {
-        File folder = new File(ClientProxy.configFile, "export");
-        File file = new File(folder, name + ".png");
-        int index = 0;
-
-        while (file.exists())
-        {
-            index += 1;
-            file = new File(folder, name + index + ".png");
-        }
-
-        return file;
     }
 
     private void pickRL(ResourceLocation rl)

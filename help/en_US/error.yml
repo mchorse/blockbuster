@@ -25,6 +25,9 @@ blockbuster.error:
 
         item_nbt_empty: "You don't hold any item in your hand..."
 
+        combining_empty: "{f}There are no folders found specified in the {7}[paths...]{r}..."
+        combining_folders_empty: "{f}There are no texture files found in specified {7}[paths...]{r} folders..."
+
     scene:
         playing: "{f}Scene by name %s{f} is playing!"
         stopped: "{f}Scene by name %s{f} is stopped!"

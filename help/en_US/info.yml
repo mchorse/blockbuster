@@ -14,6 +14,10 @@ blockbuster.info:
         restore_texture: "{f}Texture %s{f} was restored to its original state."
         
         not_loaded: "{f}Texture %s{f} isn't loaded."
+
+        started_combining: "{f}Started combining skins %s{f} skins..."
+        combined: "{f}Combined %s{f} skin."
+        finished_combining: "{f}Finishing combining skins!"
     
     models.loaded: "{f}Received %s{f} custom models and %s{f} skins from server."
     

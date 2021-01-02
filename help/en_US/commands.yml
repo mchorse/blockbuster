@@ -174,7 +174,13 @@ blockbuster:
                     {l}{6}/{r}model {8}clear_structures{r}
 
                     {r}Clears the structure morphs cache and reloads all of the structures.
-            
+
+            combine:
+                |
+                    {l}{6}/{r}model {8}combine{r} {7}[paths...]{r}
+
+                    {r}Creates combination of textures specified in {7}[paths...]{r} (relative to {7}config/blockbuster/models/{r}) into single skins.
+
             convert:
                 |
                     {l}{6}/{r}model {8}convert{r} {7}<steve|fred> <skin>{r}
