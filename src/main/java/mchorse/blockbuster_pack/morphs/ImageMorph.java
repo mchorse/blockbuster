@@ -284,16 +284,16 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         float oh = h;
 
         /* x = u1, y = u2, z = v1, w = v2 */
-        uv.x = 1.0F - this.image.crop.z / (double) w;
-        uv.y = this.image.crop.x / (double) w;
-        uv.z = 1.0F - this.image.crop.w / (double) h;
-        uv.w = this.image.crop.y / (double) h;
+        uv.x = this.image.crop.x / (double) w;
+        uv.y = 1.0F - this.image.crop.z / (double) w;
+        uv.z = this.image.crop.y / (double) h;
+        uv.w = 1.0F - this.image.crop.w / (double) h;
 
         finalUv.set(uv);
 
         if (this.resizeCrop)
         {
-            finalUv.set(1F, 0F, 1F, 0F);
+            finalUv.set(0F, 1F, 0F, 1F);
 
             w = w - this.image.crop.x - this.image.crop.z;
             h = h - this.image.crop.y - this.image.crop.w;
@@ -302,7 +302,7 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         double ratioX = w > h ? h / (double) w : 1D;
         double ratioY = h > w ? w / (double) h : 1D;
 
-        pos.set((finalUv.x - 0.5) * ratioY, (finalUv.y - 0.5) * ratioY, (finalUv.w - 0.5) * ratioX, (finalUv.z - 0.5) * ratioX);
+        pos.set(-(finalUv.x - 0.5) * ratioY, -(finalUv.y - 0.5) * ratioY, (finalUv.z - 0.5) * ratioX, (finalUv.w - 0.5) * ratioX);
         pos.scale(scale);
 
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
@@ -341,10 +341,10 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
 
         Color color = this.image.color;
 
-        buffer.pos(pos.x, pos.z, 0).tex(uv.y, uv.w).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.y, pos.z, 0).tex(uv.x, uv.w).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.y, pos.w, 0).tex(uv.x, uv.z).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.x, pos.w, 0).tex(uv.y, uv.z).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.x, pos.z, 0).tex(uv.x, uv.z).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.y, pos.z, 0).tex(uv.y, uv.z).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.y, pos.w, 0).tex(uv.y, uv.w).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.x, pos.w, 0).tex(uv.x, uv.w).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
 
         tessellator.draw();
 
