@@ -40,20 +40,25 @@ public abstract class Tint
 
 			if (hex.startsWith("#") && (hex.length() == 7 || hex.length() == 9))
 			{
+				boolean hasAlpha = hex.length() == 9;
+
 				try
 				{
-					int color = Integer.parseInt(hex.substring(1), 16);
+					/* Apparently, Integer.parseInt() can't parse hex
+					 * numbers that are longer than 6 hexadecimals... */
+					int color = Integer.parseInt(hex.substring(hasAlpha ? 3 : 1), 16);
 					float hr = (color >> 16 & 0xff) / 255F;
 					float hg = (color >> 8 & 0xff) / 255F;
 					float hb = (color & 0xff) / 255F;
-					float ha = hex.length() == 9 ? (color >> 24 & 0xff) : 1;
+					float ha = hasAlpha ? Integer.parseInt(hex.substring(1, 3), 16) / 255F : 1;
 
 					r = new MolangValue(parser, new Constant(hr));
 					g = new MolangValue(parser, new Constant(hg));
 					b = new MolangValue(parser, new Constant(hb));
 					a = new MolangValue(parser, new Constant(ha));
 				}
-				catch (Exception e) {}
+				catch (Exception e)
+				{}
 			}
 		}
 		else if (element.isJsonArray())
@@ -91,7 +96,9 @@ public abstract class Tint
 		{
 			for (Map.Entry<String, JsonElement> entry : gradient.getAsJsonObject().entrySet())
 			{
-				colorStops.add(new Tint.Gradient.ColorStop(Float.parseFloat(entry.getKey()), parseColor(entry.getValue(), parser)));
+				Tint.Solid stopColor = parseColor(entry.getValue(), parser);
+
+				colorStops.add(new Tint.Gradient.ColorStop(Float.parseFloat(entry.getKey()), stopColor));
 			}
 
 			Collections.sort(colorStops, (a, b) -> a.stop > b.stop ? 1 : -1);

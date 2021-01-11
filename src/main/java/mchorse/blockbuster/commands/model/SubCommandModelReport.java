@@ -2,7 +2,6 @@ package mchorse.blockbuster.commands.model;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderJSON;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderOBJ;
@@ -21,6 +20,12 @@ import net.minecraft.util.ResourceLocation;
 
 import java.io.File;
 
+/**
+ * /model report
+ *
+ * This command generates a report of all the files in config/blockbuster/models/
+ * and copies it to copy-paste buffer.
+ */
 public class SubCommandModelReport extends CommandBase
 {
 	@Override
