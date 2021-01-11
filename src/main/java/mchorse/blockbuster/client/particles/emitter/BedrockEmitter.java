@@ -89,6 +89,10 @@ public class BedrockEmitter
 	private Variable varEmitterRandom2;
 	private Variable varEmitterRandom3;
 	private Variable varEmitterRandom4;
+	private Variable varSpeedABS;
+	private Variable varSpeedX;
+	private Variable varSpeedY;
+	private Variable varSpeedZ;
 
 	public boolean isFinished()
 	{
@@ -149,6 +153,10 @@ public class BedrockEmitter
 	public void setupVariables()
 	{
 		this.varAge = this.scheme.parser.variables.get("variable.particle_age");
+		this.varSpeedABS = this.scheme.parser.variables.get("variable.particle_speed.length");
+		this.varSpeedX = this.scheme.parser.variables.get("variable.particle_speed.x");
+		this.varSpeedY = this.scheme.parser.variables.get("variable.particle_speed.y");
+		this.varSpeedZ = this.scheme.parser.variables.get("variable.particle_speed.z");
 		this.varLifetime = this.scheme.parser.variables.get("variable.particle_lifetime");
 		this.varRandom1 = this.scheme.parser.variables.get("variable.particle_random_1");
 		this.varRandom2 = this.scheme.parser.variables.get("variable.particle_random_2");
@@ -165,6 +173,10 @@ public class BedrockEmitter
 
 	public void setParticleVariables(BedrockParticle particle, float partialTicks)
 	{
+		if (this.varSpeedABS != null) this.varSpeedABS.set(particle.speed.length());
+		if (this.varSpeedX != null) this.varSpeedX.set(particle.speed.x);
+		if (this.varSpeedY != null) this.varSpeedY.set(particle.speed.y);
+		if (this.varSpeedZ != null) this.varSpeedZ.set(particle.speed.z);
 		if (this.varAge != null) this.varAge.set(particle.getAge(partialTicks));
 		if (this.varLifetime != null) this.varLifetime.set(particle.lifetime / 20.0);
 		if (this.varRandom1 != null) this.varRandom1.set(particle.random1);
