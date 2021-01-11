@@ -8,7 +8,8 @@ blockbuster.success:
         
         convert_skin: "{f}Successfully converted %s{r}/%s{r} skin!"
 
-        item_nbt: "The NBT data of the held item was copied to the clipboard!"
+        item_nbt: "{f}The NBT data of the held item was copied to the clipboard!"
+        model_report: "{f}Model folder report was successfully copied to your copy-paste buffer!"
 
     scene:
         play: "{f}Scene by name %s{f} has started playing!"

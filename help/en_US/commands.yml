@@ -192,12 +192,12 @@ blockbuster:
                     {l}{6}/{r}model {8}reload{r} {7}[force]{r}
                     
                     {r}Forces the client and server to reload models (server-side only for OP users) with optional {7}[force]{r} argument which if is {7}true{r} will reload all models surpassing cached non-modified files timestamp.
-                    
-            replace_texture:
+
+            report:
                 |
-                    {l}{6}/{r}model {8}replace_texture{r} {7}<target> [replace]{r}
-                    
-                    {r}Replaces a texture by ResourceLocation {7}<target>{r} to texture by ResourceLocation {7}[replace]{r}. If {7}[replace]{r} isn't specified, then original {7}<target>{r}'s original texture will be restored.
+                    {l}{6}/{r}model {8}report{r}
+
+                    {r}This command creates a report about which models and skins are present, and which loaded by Minecraft, and copies it to the copy-paste buffer. This command is for assistance purposes only.
 
         # Action's commands
         action:

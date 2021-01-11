@@ -7,6 +7,7 @@ import mchorse.blockbuster.commands.model.SubCommandModelConvertSkin;
 import mchorse.blockbuster.commands.model.SubCommandModelExport;
 import mchorse.blockbuster.commands.model.SubCommandModelExportObj;
 import mchorse.blockbuster.commands.model.SubCommandModelReload;
+import mchorse.blockbuster.commands.model.SubCommandModelReport;
 
 /**
  * Command /model
@@ -29,6 +30,7 @@ public class CommandModel extends SubCommandBase
         this.add(new SubCommandModelExport());
         this.add(new SubCommandModelExportObj());
         this.add(new SubCommandModelReload());
+        this.add(new SubCommandModelReport());
     }
 
     @Override
