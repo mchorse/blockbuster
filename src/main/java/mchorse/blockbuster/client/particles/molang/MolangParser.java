@@ -30,6 +30,7 @@ public class MolangParser extends MathBuilder
 	public static final String RETURN = "return ";
 
 	private MolangMultiStatement currentStatement;
+	private boolean registerAsGlobals;
 
 	public MolangParser()
 	{
@@ -127,6 +128,17 @@ public class MolangParser extends MathBuilder
 		return ZERO;
 	}
 
+	public MolangExpression parseGlobalJson(JsonElement element) throws MolangException
+	{
+		this.registerAsGlobals = true;
+
+		MolangExpression expression = parseJson(element);
+
+		this.registerAsGlobals = false;
+
+		return expression;
+	}
+
 	/**
 	 * Parse a molang expression
 	 */
@@ -201,7 +213,7 @@ public class MolangParser extends MathBuilder
 
 				Variable variable = null;
 
-				if (!this.variables.containsKey(name) && !this.currentStatement.locals.containsKey(name))
+				if (!this.registerAsGlobals && !this.variables.containsKey(name) && !this.currentStatement.locals.containsKey(name))
 				{
 					variable = new Variable(name, 0);
 					this.currentStatement.locals.put(name, variable);

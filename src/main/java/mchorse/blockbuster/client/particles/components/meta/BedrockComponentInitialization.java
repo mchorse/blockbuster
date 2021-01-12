@@ -21,8 +21,8 @@ public class BedrockComponentInitialization extends BedrockComponentBase impleme
 
 		JsonObject element = elem.getAsJsonObject();
 
-		if (element.has("creation_expression")) this.creation = parser.parseJson(element.get("creation_expression"));
-		if (element.has("per_update_expression")) this.update = parser.parseJson(element.get("per_update_expression"));
+		if (element.has("creation_expression")) this.creation = parser.parseGlobalJson(element.get("creation_expression"));
+		if (element.has("per_update_expression")) this.update = parser.parseGlobalJson(element.get("per_update_expression"));
 
 		return super.fromJson(element, parser);
 	}
