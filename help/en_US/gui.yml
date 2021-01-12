@@ -392,7 +392,7 @@ blockbuster.gui:
             rotation: Local rotation
             direction: Local direction
             acceleration: Local acceleration
-            gravity: gravity
+            gravity: Gravity
 
         initialization:
             title: Initialization expressions

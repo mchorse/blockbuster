@@ -107,8 +107,8 @@ public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>
 		this.components.put("minecraft:particle_appearance_billboard", BedrockComponentAppearanceBillboard.class);
 		this.components.put("minecraft:particle_appearance_lighting", BedrockComponentAppearanceLighting.class);
 		this.components.put("minecraft:particle_appearance_tinting", BedrockComponentAppearanceTinting.class);
-		this.components.put("minecraft:particle_collision_appearance", BedrockComponentCollisionAppearance.class);
-		this.components.put("minecraft:particle_collision_tinting", BedrockComponentCollisionTinting.class);
+		this.components.put("blockbuster:particle_collision_appearance", BedrockComponentCollisionAppearance.class);
+		this.components.put("blockbuster:particle_collision_tinting", BedrockComponentCollisionTinting.class);
 		
 		/* Motion & Rotation */
 		this.components.put("minecraft:particle_initial_speed", BedrockComponentInitialSpeed.class);

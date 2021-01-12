@@ -192,11 +192,11 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		this.expire.toggled(this.component.expireOnImpact);
 		this.set(this.expirationDelay, this.component.expirationDelay);
 		
-		if(this.entityCollision.isToggled()) {
+		if (this.entityCollision.isToggled()) {
 			this.controlToggleElements.add(momentum);
 		}
 		
-		if(this.randomBounciness.value!=0 && this.bounciness.value==0) {
+		if (this.randomBounciness.value!=0 && this.bounciness.value==0) {
 			this.randomBouncinessRow.add(preserveEnergy);
 		}
 		this.resizeParent();

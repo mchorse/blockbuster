@@ -13,9 +13,12 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
+import org.apache.commons.lang3.ArrayUtils;
 
 public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<BedrockComponentAppearanceBillboard>
 {
+	public static final CameraFacing[] SORTED_FACING_MODES = {CameraFacing.DIRECTION_X, CameraFacing.DIRECTION_Y, CameraFacing.DIRECTION_Z, CameraFacing.LOOKAT_XYZ, CameraFacing.LOOKAT_Y, CameraFacing.ROTATE_XYZ, CameraFacing.ROTATE_Y};
+
 	public GuiCirculateElement mode;
 	public GuiLabel modeLabel;
 	
@@ -35,9 +38,6 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
 	public GuiTextElement max;
 	public GuiToggleElement stretch;
 	public GuiToggleElement loop;
-
-	public CameraFacing[] facingModes = {CameraFacing.DIRECTION_X, CameraFacing.DIRECTION_Y, CameraFacing.DIRECTION_Z, CameraFacing.LOOKAT_XYZ,
-										 CameraFacing.LOOKAT_Y, CameraFacing.ROTATE_XYZ, CameraFacing.ROTATE_Y};
 	
 	public GuiSnowstormAppearanceSection(Minecraft mc, GuiSnowstorm parent)
 	{
@@ -55,7 +55,7 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
 		
 		this.facingMode = new GuiCirculateElement(mc, (b) ->
 		{
-			this.component.facing = facingModes[this.facingMode.getValue()];
+			this.component.facing = SORTED_FACING_MODES[this.facingMode.getValue()];
 			this.parent.dirty();
 		});
 		this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.direction_x"));
@@ -160,16 +160,7 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
 		super.fillData();
 
 		this.mode.setValue(this.component.flipbook ? 1 : 0);
-		int facingModeI = -1;
-		for(int i = 0; i<this.facingModes.length; i++)
-		{
-			if(this.facingModes[i]==this.component.facing)
-			{
-				facingModeI = i;
-				break;
-			}
-		}
-		this.facingMode.setValue(facingModeI);
+		this.facingMode.setValue(ArrayUtils.indexOf(SORTED_FACING_MODES, this.component.facing));
 		this.set(this.sizeW, this.component.sizeW);
 		this.set(this.sizeH, this.component.sizeH);
 		this.set(this.uvX, this.component.uvX);

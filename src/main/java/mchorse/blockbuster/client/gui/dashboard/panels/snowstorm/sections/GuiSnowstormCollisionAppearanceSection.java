@@ -3,10 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockMaterial;
 import mchorse.blockbuster.client.particles.BedrockScheme;
-import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceBillboard;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
-import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionTinting;
-import mchorse.blockbuster.client.particles.components.appearance.CameraFacing;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -21,12 +18,13 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 
 public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponentSection<BedrockComponentCollisionAppearance>
 {
-	//inheriting this throughout the structure would make things less copy and paste
-	public static final String GUIPATH = "blockbuster.gui.snowstorm.appearance";
+	/* inheriting this throughout the structure would make things less copy and paste */
+	public static final String GUI_PATH = "blockbuster.gui.snowstorm.appearance";
 	
 	public GuiToggleElement enabled;
 	public GuiButtonElement pick;
@@ -52,9 +50,6 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 	public GuiTextElement max;
 	public GuiToggleElement stretch;
 	public GuiToggleElement loop;
-	
-	public CameraFacing[] facingModes = {CameraFacing.DIRECTION_X, CameraFacing.DIRECTION_Y, CameraFacing.DIRECTION_Z, CameraFacing.LOOKAT_XYZ,
-			 CameraFacing.LOOKAT_Y, CameraFacing.ROTATE_XYZ, CameraFacing.ROTATE_Y};
 	
 	public GuiSnowstormCollisionAppearanceSection(Minecraft mc, GuiSnowstorm parent)
 	{
@@ -100,13 +95,13 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 			this.updateElements();
 			this.parent.dirty();
 		});
-		this.mode.addLabel(IKey.lang(GUIPATH+".regular"));
-		this.mode.addLabel(IKey.lang(GUIPATH+".animated"));
+		this.mode.addLabel(IKey.lang(GUI_PATH +".regular"));
+		this.mode.addLabel(IKey.lang(GUI_PATH +".animated"));
 		this.modeLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"), 20).anchor(0, 0.5F);
 
 		this.facingMode = new GuiCirculateElement(mc, (b) ->
 		{
-			this.component.facing = facingModes[this.facingMode.getValue()];
+			this.component.facing = GuiSnowstormAppearanceSection.SORTED_FACING_MODES[this.facingMode.getValue()];
 			this.parent.dirty();
 		});
 		this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.direction_x"));
@@ -119,56 +114,56 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 		this.facingModeLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.label"), 20).anchor(0, 0.5F);
 		
 		this.sizeW = new GuiTextElement(mc, 10000, (str) -> this.component.sizeW = this.parse(str, this.sizeW, this.component.sizeW));
-		this.sizeW.tooltip(IKey.lang(GUIPATH+".width"));
+		this.sizeW.tooltip(IKey.lang(GUI_PATH +".width"));
 		this.sizeH = new GuiTextElement(mc, 10000, (str) -> this.component.sizeH = this.parse(str, this.sizeH, this.component.sizeH));
-		this.sizeH.tooltip(IKey.lang(GUIPATH+".height"));
+		this.sizeH.tooltip(IKey.lang(GUI_PATH +".height"));
 
 		this.uvX = new GuiTextElement(mc, 10000, (str) -> this.component.uvX = this.parse(str, this.uvX, this.component.uvX));
-		this.uvX.tooltip(IKey.lang(GUIPATH+".uv_x"));
+		this.uvX.tooltip(IKey.lang(GUI_PATH +".uv_x"));
 		this.uvY = new GuiTextElement(mc, 10000, (str) -> this.component.uvY = this.parse(str, this.uvY, this.component.uvY));
-		this.uvY.tooltip(IKey.lang(GUIPATH+".uv_y"));
+		this.uvY.tooltip(IKey.lang(GUI_PATH +".uv_y"));
 		this.uvW = new GuiTextElement(mc, 10000, (str) -> this.component.uvW = this.parse(str, this.uvW, this.component.uvW));
-		this.uvW.tooltip(IKey.lang(GUIPATH+".uv_w"));
+		this.uvW.tooltip(IKey.lang(GUI_PATH +".uv_w"));
 		this.uvH = new GuiTextElement(mc, 10000, (str) -> this.component.uvH = this.parse(str, this.uvH, this.component.uvH));
-		this.uvH.tooltip(IKey.lang(GUIPATH+".uv_h"));
+		this.uvH.tooltip(IKey.lang(GUI_PATH +".uv_h"));
 
 		this.stepX = new GuiTrackpadElement(mc, (value) ->
 		{
 			this.component.stepX = value.floatValue();
 			this.parent.dirty();
 		});
-		this.stepX.tooltip(IKey.lang(GUIPATH+".step_x"));
+		this.stepX.tooltip(IKey.lang(GUI_PATH +".step_x"));
 		this.stepY = new GuiTrackpadElement(mc, (value) ->
 		{
 			this.component.stepY = value.floatValue();
 			this.parent.dirty();
 		});
-		this.stepY.tooltip(IKey.lang(GUIPATH+".step_y"));
+		this.stepY.tooltip(IKey.lang(GUI_PATH +".step_y"));
 		this.fps = new GuiTrackpadElement(mc, (value) ->
 		{
 			this.component.fps = value.floatValue();
 			this.parent.dirty();
 		});
-		this.fps.tooltip(IKey.lang(GUIPATH+".fps"));
+		this.fps.tooltip(IKey.lang(GUI_PATH +".fps"));
 		this.max = new GuiTextElement(mc, 10000, (str) -> this.component.maxFrame = this.parse(str, this.max, this.component.maxFrame));
-		this.max.tooltip(IKey.lang(GUIPATH+".max"));
+		this.max.tooltip(IKey.lang(GUI_PATH +".max"));
 
-		this.stretch = new GuiToggleElement(mc, IKey.lang(GUIPATH+".stretch"), (b) ->
+		this.stretch = new GuiToggleElement(mc, IKey.lang(GUI_PATH +".stretch"), (b) ->
 		{
 			this.component.stretchFPS = b.isToggled();
 			this.parent.dirty();
 		});
-		this.stretch.tooltip(IKey.lang(GUIPATH+".stretch_tooltip"));
-		this.loop = new GuiToggleElement(mc, IKey.lang(GUIPATH+".loop"), (b) ->
+		this.stretch.tooltip(IKey.lang(GUI_PATH +".stretch_tooltip"));
+		this.loop = new GuiToggleElement(mc, IKey.lang(GUI_PATH +".loop"), (b) ->
 		{
 			this.component.loop = b.isToggled();
 			this.parent.dirty();
 		});
-		this.loop.tooltip(IKey.lang(GUIPATH+".loop_tooltip"));
+		this.loop.tooltip(IKey.lang(GUI_PATH +".loop_tooltip"));
 
 		this.flipbook = new GuiElement(mc);
 		this.flipbook.flex().column(5).vertical().stretch();
-		this.flipbook.add(Elements.label(IKey.lang(GUIPATH+".animated"), 20).anchor(0, 1F));
+		this.flipbook.add(Elements.label(IKey.lang(GUI_PATH +".animated"), 20).anchor(0, 1F));
 		this.flipbook.add(Elements.row(mc, 5, 0, 20, this.stepX, this.stepY));
 		this.flipbook.add(Elements.row(mc, 5, 0, 20, this.fps, this.max));
 		this.flipbook.add(Elements.row(mc, 5, 0, 20, this.stretch, this.loop));
@@ -177,9 +172,9 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 		this.fields.add(Elements.row(mc, 5, 0, 20, this.pick, this.material));
 		this.fields.add(Elements.row(mc, 5, 0, 20, this.modeLabel, this.mode));
 		this.fields.add(Elements.row(mc, 5, 0, 20, this.facingModeLabel, this.facingMode));
-		this.fields.add(Elements.label(IKey.lang(GUIPATH+".size"), 20).anchor(0, 1F));
+		this.fields.add(Elements.label(IKey.lang(GUI_PATH +".size"), 20).anchor(0, 1F));
 		this.fields.add(this.sizeW, this.sizeH);
-		this.fields.add(Elements.label(IKey.lang(GUIPATH+".mapping"), 20).anchor(0, 1F));
+		this.fields.add(Elements.label(IKey.lang(GUI_PATH +".mapping"), 20).anchor(0, 1F));
 		this.fields.add(this.uvX, this.uvY, this.uvW, this.uvH);
 	}
 
@@ -242,16 +237,7 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
 
 		this.enabled.toggled(MolangExpression.isOne(component.enabled));
 		this.mode.setValue(this.component.flipbook ? 1 : 0);
-		int facingModeI = -1;
-		for(int i = 0; i<this.facingModes.length; i++)
-		{
-			if(this.facingModes[i]==this.component.facing)
-			{
-				facingModeI = i;
-				break;
-			}
-		}
-		this.facingMode.setValue(facingModeI);
+		this.facingMode.setValue(ArrayUtils.indexOf(GuiSnowstormAppearanceSection.SORTED_FACING_MODES, this.component.facing));
 		this.set(this.sizeW, this.component.sizeW);
 		this.set(this.sizeH, this.component.sizeH);
 		this.set(this.uvX, this.component.uvX);

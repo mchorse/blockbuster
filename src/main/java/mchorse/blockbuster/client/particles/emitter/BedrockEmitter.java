@@ -2,11 +2,8 @@ package mchorse.blockbuster.client.particles.emitter;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.particles.BedrockScheme;
-import mchorse.blockbuster.client.particles.components.IComponentEmitterInitialize;
-import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
-import mchorse.blockbuster.client.particles.components.IComponentParticleInitialize;
-import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
-import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
+import mchorse.blockbuster.client.particles.components.*;
+import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceBillboard;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.mclib.math.IValue;
@@ -19,6 +16,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
@@ -26,17 +24,13 @@ import org.lwjgl.opengl.GL11;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 
 public class BedrockEmitter
 {
 	public BedrockScheme scheme;
 	public List<BedrockParticle> particles = new ArrayList<BedrockParticle>();
+	public List<BedrockParticle> collidedParticles = new ArrayList<BedrockParticle>();
 	public List<BedrockParticle> splitParticles = new ArrayList<BedrockParticle>();
 	public Map<String, IValue> variables;
 
@@ -289,7 +283,7 @@ public class BedrockEmitter
 	 */
 	private void updateParticles()
 	{
-		ListIterator<BedrockParticle> it = this.particles.listIterator();
+		Iterator<BedrockParticle> it = this.particles.iterator();
 
 		while (it.hasNext())
 		{
@@ -302,15 +296,11 @@ public class BedrockEmitter
 				it.remove();
 			}
 		}
-		if(!this.splitParticles.isEmpty()) 
+
+		if (!this.splitParticles.isEmpty())
 		{
-			Iterator<BedrockParticle> it1 = this.splitParticles.iterator();
-			while (it1.hasNext())
-			{
-				BedrockParticle splitParticle = it1.next();
-				this.particles.add(splitParticle);
-				it1.remove();
-			}
+			this.particles.addAll(this.splitParticles);
+			this.splitParticles.clear();
 		}
 	}
 
@@ -432,7 +422,6 @@ public class BedrockEmitter
 
 		this.setupCameraProperties(partialTicks);
 
-		BufferBuilder builder = Tessellator.getInstance().getBuffer();
 		List<IComponentParticleRender> renders = this.scheme.particleRender;
 
 		for (IComponentParticleRender component : renders)
@@ -462,38 +451,56 @@ public class BedrockEmitter
 				});
 			}
 
-			
-			for (BedrockParticle particle : this.particles)
+			BedrockComponentCollisionAppearance component = this.scheme.get(BedrockComponentCollisionAppearance.class);
+
+			this.renderParticles(this.scheme.texture, false, partialTicks);
+
+			if (component != null && component.texture != null)
 			{
-				//another possible implementation, without rendering for each iteration of the loop, would be to create a list of particles
-				//with collisionTexture on and one with particles without collisionTexture and render them with two loops...
-				if(!particle.collisionTexture) GifTexture.bindTexture(this.scheme.texture, this.age, partialTicks);
-				
-				builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
-				this.setEmitterVariables(partialTicks);
-				this.setParticleVariables(particle, partialTicks);
-
-				for (IComponentParticleRender component : renders)
-				{
-					/*
-					 * if collisionTexture or collisionTinting is true - means that those options are enabled
-					 * therefore the old Billboardappearance should not be called
-					 * because collisionAppearance.class is rendering
-					 */
-					if(!((particle.collisionTexture || particle.collisionTinting) && component.getClass().getName().contains("BedrockComponentAppearanceBillboard")))
-					{
-						component.render(this, particle, builder, partialTicks);
-					}	
-				}
-				Tessellator.getInstance().draw();
+				this.renderParticles(component.texture, true, partialTicks);
 			}
-
 		}
 
 		for (IComponentParticleRender component : renders)
 		{
 			component.postRender(this, partialTicks);
 		}
+	}
+
+	private void renderParticles(ResourceLocation texture, boolean collided, float partialTicks)
+	{
+		BufferBuilder builder = Tessellator.getInstance().getBuffer();
+
+		GifTexture.bindTexture(texture, this.age, partialTicks);
+
+		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
+
+		for (BedrockParticle particle : this.particles)
+		{
+			boolean collisionStuff = particle.collisionTexture || particle.collisionTinting;
+
+			if (collisionStuff != collided)
+			{
+				continue;
+			}
+
+			this.setEmitterVariables(partialTicks);
+			this.setParticleVariables(particle, partialTicks);
+
+			for (IComponentParticleRender component : this.scheme.particleRender)
+			{
+				/* if collisionTexture or collisionTinting is true - means that those options are enabled
+				 * therefore the old Billboardappearance should not be called
+				 * because collisionAppearance.class is rendering
+				 */
+				if (!(collisionStuff && component.getClass() == BedrockComponentAppearanceBillboard.class))
+				{
+					component.render(this, particle, builder, partialTicks);
+				}
+			}
+		}
+
+		Tessellator.getInstance().draw();
 	}
 
 	public void setupCameraProperties(float partialTicks)

@@ -136,17 +136,23 @@ public class BedrockParticle
 			this.rotation = this.initialRotation + this.rotationVelocity * this.age;
 
 			/* Position */
-			if(this.relativeDirection && this.age==0) {
+			if (this.relativeDirection && this.age == 0)
+			{
 				emitter.rotation.transform(this.speed);
 			}
-			if(this.relativeAcceleration) {
+
+			if (this.relativeAcceleration)
+			{
 				emitter.rotation.transform(this.acceleration);
 			}
 			
 			Vector3f vec = new Vector3f(this.speed);
 			vec.scale(-(this.drag + this.dragFactor));
 			
-			if(this.gravity) this.acceleration.y -= 9.81;
+			if (this.gravity)
+			{
+				this.acceleration.y -= 9.81;
+			}
 			
 			this.acceleration.add(vec);
 			this.acceleration.scale(1 / 20F);
