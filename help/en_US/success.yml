@@ -39,3 +39,4 @@ blockbuster.success:
         calculate_body_yaw: "{f}Player recording %s{f}'s body yaw was successfully auto calculated!"
         remove_body_yaw: "{f}Player recording %s{f}'s body yaw was remove!"
         renamed: "{f}Player recording %s{f} was successfully renamed to %s{f}!"
+        camera: "{f}Player recording %s{f} was successfully generated out of camera profile %s{f}!"

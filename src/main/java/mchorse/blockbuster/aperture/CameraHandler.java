@@ -199,13 +199,14 @@ public class CameraHandler
         return false;
     }
 
-    @Method(modid = Aperture.MOD_ID)
     @SideOnly(Side.CLIENT)
+    @Method(modid = Aperture.MOD_ID)
     private static boolean isCurrentScreenCameraEditor()
     {
         return Minecraft.getMinecraft().currentScreen instanceof GuiCameraEditor;
     }
 
+    @SideOnly(Side.CLIENT)
 	public static float getRoll()
     {
         if (isApertureLoaded())
@@ -216,6 +217,7 @@ public class CameraHandler
         return 0;
 	}
 
+    @SideOnly(Side.CLIENT)
     public static float getRoll(float partialTicks)
     {
         if (isApertureLoaded())
@@ -226,18 +228,21 @@ public class CameraHandler
         return 0;
     }
 
+    @SideOnly(Side.CLIENT)
     @Method(modid = Aperture.MOD_ID)
     private static float getApertureRoll()
     {
         return ClientProxy.control.roll;
     }
 
+    @SideOnly(Side.CLIENT)
     @Method(modid = Aperture.MOD_ID)
     private static float getApertureRoll(float partialTicks)
     {
         return ClientProxy.control.getRoll(partialTicks);
     }
 
+    @SideOnly(Side.CLIENT)
     public static void setRoll(float prevRoll, float roll)
     {
         if (isApertureLoaded())
@@ -246,12 +251,14 @@ public class CameraHandler
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Method(modid = Aperture.MOD_ID)
     private static void setApertureRoll(float prevRoll, float roll)
     {
         ClientProxy.control.setRoll(prevRoll, roll);
     }
 
+    @SideOnly(Side.CLIENT)
     public static void resetRoll()
     {
         if (isApertureLoaded())
@@ -260,6 +267,7 @@ public class CameraHandler
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Method(modid = Aperture.MOD_ID)
     private static void resetApertureRoll()
     {

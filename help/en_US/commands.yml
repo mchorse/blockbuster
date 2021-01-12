@@ -24,6 +24,12 @@ blockbuster:
 
                     {r}Automatically calculates body yaw for given player recording{r}.
 
+            camera:
+                |
+                    {l}{6}/{r}record {8}camera{r} {7}<filename> <camera_profile>{r}
+
+                    {r}Generates a new (or updates exisitng) player recording named {7}<filename>{r} using the the data from server side {7}<camera_profile>{r}.
+
             clean:
                 |
                     {l}{6}/{r}record {8}clean{r} {7}<filename> <property> [value] [from] [to]{r}

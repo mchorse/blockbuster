@@ -46,12 +46,12 @@ public class SubCommandRecordReverse extends SubCommandRecordBase
 		{
 			RecordUtils.saveRecord(record);
 
-			L10n.success(sender, "record.reversed", args[0]);
+			L10n.success(sender, "record.reversed", filename);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			L10n.error(sender, "record.couldnt_save", args[1]);
+			L10n.error(sender, "record.couldnt_save", filename);
 		}
 	}
 }

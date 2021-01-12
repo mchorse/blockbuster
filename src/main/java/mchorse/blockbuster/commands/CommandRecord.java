@@ -3,8 +3,10 @@ package mchorse.blockbuster.commands;
 import java.io.FileNotFoundException;
 
 import mchorse.blockbuster.CommonProxy;
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.commands.record.SubCommandRecordAdd;
 import mchorse.blockbuster.commands.record.SubCommandRecordCalculateBodyYaw;
+import mchorse.blockbuster.commands.record.SubCommandRecordCamera;
 import mchorse.blockbuster.commands.record.SubCommandRecordClean;
 import mchorse.blockbuster.commands.record.SubCommandRecordCut;
 import mchorse.blockbuster.commands.record.SubCommandRecordDupe;
@@ -40,6 +42,12 @@ public class CommandRecord extends SubCommandBase
         /* Register sub-commands */
         this.add(new SubCommandRecordAdd());
         this.add(new SubCommandRecordCalculateBodyYaw());
+
+        if (CameraHandler.isApertureLoaded())
+        {
+            this.add(new SubCommandRecordCamera());
+        }
+
         this.add(new SubCommandRecordClean());
         this.add(new SubCommandRecordCut());
         this.add(new SubCommandRecordDupe());
