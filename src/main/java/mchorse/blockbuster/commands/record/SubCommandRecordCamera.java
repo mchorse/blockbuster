@@ -11,6 +11,7 @@ import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -52,7 +53,11 @@ public class SubCommandRecordCamera extends SubCommandRecordBase
 
 		try
 		{
-			Record record = this.generate(filename, args[1]);
+			float x = args.length >= 3 ? (float) CommandBase.parseDouble(args[2]) : 0;
+			float y = args.length >= 4 ? (float) CommandBase.parseDouble(args[3]) : 0;
+			float z = args.length >= 5 ? (float) CommandBase.parseDouble(args[4]) : 0;
+
+			Record record = this.generate(filename, args[1], x, y, z);
 
 			CommonProxy.manager.records.put(filename, record);
 			RecordUtils.saveRecord(record);
@@ -66,25 +71,25 @@ public class SubCommandRecordCamera extends SubCommandRecordBase
 		}
 	}
 
-	private Record generate(String filename, String profile) throws Exception
+	private Record generate(String filename, String profile, float x, float y, float z) throws Exception
 	{
 		if (CameraHandler.isApertureLoaded())
 		{
-			return this.generateProfile(filename, profile);
+			return this.generateProfile(filename, profile, x, y, z);
 		}
 
 		throw new IllegalStateException("/record camera can't be used, because Aperture mod isn't installed!");
 	}
 
 	@Optional.Method(modid = Aperture.MOD_ID)
-	private Record generateProfile(String filename, String profile) throws Exception
+	private Record generateProfile(String filename, String profile, float x, float y, float z) throws Exception
 	{
 		Record record = new Record(filename);
 		CameraProfile camera = CameraUtils.readProfile(profile);
 		Position prev = new Position();
 		Position position = new Position();
 
-		for (int i = 0, c = (int) camera.getDuration(); i < c; i++)
+		for (int i = 0, c = (int) camera.getDuration(); i <= c; i++)
 		{
 			Frame frame = new Frame();
 
@@ -95,9 +100,9 @@ public class SubCommandRecordCamera extends SubCommandRecordBase
 				prev.copy(position);
 			}
 
-			frame.x = position.point.x;
-			frame.y = position.point.y;
-			frame.z = position.point.z;
+			frame.x = position.point.x + x;
+			frame.y = position.point.y + y;
+			frame.z = position.point.z + z;
 			frame.yaw = position.angle.yaw;
 			frame.yawHead = position.angle.yaw;
 			frame.bodyYaw = position.angle.yaw;

@@ -26,9 +26,9 @@ blockbuster:
 
             camera:
                 |
-                    {l}{6}/{r}record {8}camera{r} {7}<filename> <camera_profile>{r}
+                    {l}{6}/{r}record {8}camera{r} {7}<filename> <camera_profile> [x] [y] [z]{r}
 
-                    {r}Generates a new (or updates exisitng) player recording named {7}<filename>{r} using the the data from server side {7}<camera_profile>{r}.
+                    {r}Generates a new (or updates exisitng) player recording named {7}<filename>{r} using the the data from server side {7}<camera_profile>{r}. Optional offset {7}[x]{r}, {7}[y]{r} and {7}[z]{r} can be provided that will shift the position by given XYZ offset.
 
             clean:
                 |
