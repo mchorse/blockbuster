@@ -65,6 +65,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
     private GuiToggleElement invert;
     private GuiToggleElement wheel;
     private GuiToggleElement wing;
+    private GuiToggleElement roll;
 
     public GuiModelLimbs(Minecraft mc, GuiModelEditorPanel panel)
     {
@@ -216,6 +217,11 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.limb.wing = b.isToggled();
             this.panel.dirty();
         });
+        this.roll = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.roll"), false, (b) ->
+        {
+            this.panel.limb.roll = b.isToggled();
+            this.panel.dirty();
+        });
 
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size")).background(0x88000000), this.size);
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size_offset")).background(0x88000000), this.sizeOffset);
@@ -236,6 +242,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         animation.add(this.swinging, this.invert);
         animation.add(this.swiping, this.hold);
         animation.add(this.wheel, this.wing);
+        animation.add(this.roll);
 
         this.scroll.add(Elements.row(mc, 5, this.slot, this.holding));
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.appearance"), 24).anchor(0, 1).background(0x88000000), appearance, this.color);
@@ -394,5 +401,6 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.invert.toggled(limb.invert);
         this.wheel.toggled(limb.wheel);
         this.wing.toggled(limb.wing);
+        this.roll.toggled(limb.roll);
     }
 }

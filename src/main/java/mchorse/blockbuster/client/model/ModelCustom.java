@@ -9,6 +9,7 @@ import mchorse.blockbuster.api.ModelLimb.Holding;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.api.formats.obj.ShapeKey;
+import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
@@ -338,6 +339,11 @@ public class ModelCustom extends ModelBiped
                 {
                     limb.rotateAngleY = wingFactor;
                 }
+            }
+
+            if (limb.limb.roll)
+            {
+                limb.rotateAngleZ = -EntityUtils.getRoll(entityIn, ageInTicks % 1) / 180F * PI;
             }
         }
     }

@@ -105,6 +105,9 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     public int pausePreviousOffset = -1;
     public boolean forceMorph = false;
 
+    public float prevRoll;
+    public float roll;
+
     public EntityActor(World worldIn)
     {
         super(worldIn);

@@ -206,6 +206,66 @@ public class CameraHandler
         return Minecraft.getMinecraft().currentScreen instanceof GuiCameraEditor;
     }
 
+	public static float getRoll()
+    {
+        if (isApertureLoaded())
+        {
+            return getApertureRoll();
+        }
+
+        return 0;
+	}
+
+    public static float getRoll(float partialTicks)
+    {
+        if (isApertureLoaded())
+        {
+            return getApertureRoll(partialTicks);
+        }
+
+        return 0;
+    }
+
+    @Method(modid = Aperture.MOD_ID)
+    private static float getApertureRoll()
+    {
+        return ClientProxy.control.roll;
+    }
+
+    @Method(modid = Aperture.MOD_ID)
+    private static float getApertureRoll(float partialTicks)
+    {
+        return ClientProxy.control.getRoll(partialTicks);
+    }
+
+    public static void setRoll(float prevRoll, float roll)
+    {
+        if (isApertureLoaded())
+        {
+            setApertureRoll(prevRoll, roll);
+        }
+    }
+
+    @Method(modid = Aperture.MOD_ID)
+    private static void setApertureRoll(float prevRoll, float roll)
+    {
+        ClientProxy.control.setRoll(prevRoll, roll);
+    }
+
+    public static void resetRoll()
+    {
+        if (isApertureLoaded())
+        {
+            resetApertureRoll();
+        }
+    }
+
+    @Method(modid = Aperture.MOD_ID)
+    private static void resetApertureRoll()
+    {
+        ClientProxy.control.resetRoll();
+    }
+
     /* Event listeners */
 
     @SubscribeEvent

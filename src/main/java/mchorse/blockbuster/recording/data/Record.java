@@ -1,15 +1,19 @@
 package mchorse.blockbuster.recording.data;
 
+import mchorse.aperture.ClientProxy;
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.scene.Replay;
+import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,6 +26,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
@@ -212,6 +218,11 @@ public class Record
 
             actor.setSneaking(frame.isSneaking);
             actor.setSprinting(frame.isSprinting);
+
+            if (actor.world.isRemote)
+            {
+                this.applyFrameClient(actor, null, frame);
+            }
         }
 
         if (actor.world.isRemote && Blockbuster.actorFixY.get())
@@ -240,6 +251,15 @@ public class Record
                 {
                     actor.prevRenderYawOffset = prev.bodyYaw;
                 }
+
+                if (actor.world.isRemote)
+                {
+                    this.applyFrameClient(actor, prev, frame);
+                }
+            }
+            else if (actor instanceof EntityActor)
+            {
+                ((EntityActor) actor).prevRoll = prev.roll;
             }
 
             /* Override fall distance, apparently fallDistance gets reset
@@ -262,6 +282,17 @@ public class Record
                 actor.distanceWalkedModified = actor.distanceWalkedModified + MathHelper.sqrt(dx * dx + dz * dz) * 0.32F;
                 actor.distanceWalkedOnStepModified = actor.distanceWalkedOnStepModified + MathHelper.sqrt(dx * dx + dy * dy + dz * dz) * 0.32F;
             }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void applyFrameClient(EntityLivingBase actor, Frame prev, Frame frame)
+    {
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
+
+        if (actor == player)
+        {
+            CameraHandler.setRoll(prev == null ? frame.roll : prev.roll, frame.roll);
         }
     }
 

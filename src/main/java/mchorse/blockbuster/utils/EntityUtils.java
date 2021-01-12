@@ -1,9 +1,12 @@
 package mchorse.blockbuster.utils;
 
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.RecordPlayer;
+import mchorse.mclib.utils.Interpolations;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -113,5 +116,21 @@ public class EntityUtils
         }
 
         return null;
+    }
+
+    public static float getRoll(Entity entity, float partialTicks)
+    {
+        if (entity instanceof EntityActor)
+        {
+            EntityActor actor = (EntityActor) entity;
+
+            return Interpolations.lerp(actor.prevRoll, actor.roll, partialTicks);
+        }
+        else if (entity == Minecraft.getMinecraft().player)
+        {
+            return CameraHandler.getRoll(partialTicks);
+        }
+
+        return 0;
     }
 }

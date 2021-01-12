@@ -42,6 +42,7 @@ public class ModelLimb
     public boolean invert;
     public boolean wheel;
     public boolean wing;
+    public boolean roll;
 
     /* OBJ */
     public float[] origin = new float[] {0F, 0F, 0F};
@@ -87,6 +88,7 @@ public class ModelLimb
         b.invert = this.invert;
         b.wheel = this.wheel;
         b.wing = this.wing;
+        b.roll = this.roll;
 
         b.origin = new float[] {this.origin[0], this.origin[1], this.origin[2]};
 

@@ -36,6 +36,7 @@ blockbuster.gui.me:
         invert: Invert
         wheel: Wheel
         wing: Wing
+        roll: Roll
         
         rename: Rename
         parent: Parent

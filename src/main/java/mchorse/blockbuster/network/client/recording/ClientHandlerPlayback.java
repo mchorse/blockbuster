@@ -1,6 +1,7 @@
 package mchorse.blockbuster.network.client.recording;
 
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
@@ -9,6 +10,7 @@ import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.mclib.network.ClientMessageHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
@@ -66,6 +68,11 @@ public class ClientHandlerPlayback extends ClientMessageHandler<PacketPlayback>
         else
         {
             EntityUtils.setRecordPlayer(actor, null);
+
+            if (actor == Minecraft.getMinecraft().player)
+            {
+                CameraHandler.resetRoll();
+            }
         }
     }
 }

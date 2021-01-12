@@ -8,13 +8,18 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.common.entity.EntityActor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.EnumHand;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Recording frame class
@@ -59,6 +64,9 @@ public class Frame
     public boolean isSprinting;
     public boolean onGround;
     public boolean flyingElytra;
+
+    /* Client data */
+    public float roll;
 
     /* Active hand */
     public int activeHands;
@@ -110,6 +118,22 @@ public class Frame
 
         /* Active hands */
         this.activeHands = player.isHandActive() ? (player.getActiveHand() == EnumHand.OFF_HAND ? 2 : 1) : 0;
+
+        if (player.world.isRemote)
+        {
+            this.fromPlayerClient(player);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void fromPlayerClient(EntityPlayer player)
+    {
+        EntityPlayerSP local = Minecraft.getMinecraft().player;
+
+        if (player == local)
+        {
+            this.roll = CameraHandler.getRoll();
+        }
     }
 
     /**
@@ -131,7 +155,10 @@ public class Frame
 
         if (actor instanceof EntityActor)
         {
-            ((EntityActor) actor).isMounted = this.isMounted;
+            EntityActor theActor = (EntityActor) actor;
+
+            theActor.isMounted = this.isMounted;
+            theActor.roll = this.roll;
         }
 
         /* This is most important part of the code that makes the recording
@@ -285,6 +312,8 @@ public class Frame
 
         frame.activeHands = this.activeHands;
 
+        frame.roll = this.roll;
+
         return frame;
     }
 
@@ -332,6 +361,8 @@ public class Frame
         out.writeBoolean(this.flyingElytra);
 
         out.writeByte(this.activeHands);
+
+        out.writeFloat(this.roll);
     }
 
     /**
@@ -375,6 +406,8 @@ public class Frame
         this.flyingElytra = in.readBoolean();
 
         this.activeHands = in.readByte();
+
+        this.roll = in.readFloat();
     }
 
     /**
@@ -421,6 +454,11 @@ public class Frame
         {
             tag.setByte("Hands", (byte) this.activeHands);
         }
+
+        if (this.roll != 0)
+        {
+            tag.setFloat("Roll", this.roll);
+        }
     }
 
     /**
@@ -466,6 +504,11 @@ public class Frame
         if (tag.hasKey("Hands"))
         {
             this.activeHands = tag.getByte("Hands");
+        }
+
+        if (tag.hasKey("Roll"))
+        {
+            this.roll = tag.getFloat("Roll");
         }
     }
 }
