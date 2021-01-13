@@ -14,21 +14,23 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordRecorder;
 import mchorse.blockbuster.recording.data.Frame;
+import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.mclib.utils.Color;
+import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Interpolation;
 import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -39,12 +41,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Rendering handler
@@ -58,6 +57,7 @@ public class RenderingHandler
     private static TileEntityModelItemStackRenderer model = new TileEntityModelItemStackRenderer();
     private static TileEntityGunItemStackRenderer gun = new TileEntityGunItemStackRenderer();
     private static EntityLivingBase lastItemHolder;
+    public static Set<Record> recordsToRender = new HashSet<Record>();
 
     private boolean wasPaused;
 
@@ -365,6 +365,80 @@ public class RenderingHandler
             ClientProxy.audio.pause(isPaused);
 
             this.wasPaused = isPaused;
+        }
+
+        if (mc.gameSettings.showDebugInfo && !recordsToRender.isEmpty())
+        {
+            renderPaths(event, recordsToRender);
+        }
+
+        recordsToRender.clear();
+    }
+
+    private void renderPaths(RenderWorldLastEvent event, Set<Record> recordsToRender)
+    {
+        int shader = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+
+        if (shader != 0)
+        {
+            OpenGlHelper.glUseProgram(0);
+        }
+
+        final int delta = 2;
+        Color color = ColorUtils.COLOR;
+        Entity player = Minecraft.getMinecraft().getRenderViewEntity();
+        Random random = new Random();
+
+        double playerX = player.prevPosX + (player.posX - player.prevPosX) * event.getPartialTicks();
+        double playerY = player.prevPosY + (player.posY - player.prevPosY) * event.getPartialTicks();
+        double playerZ = player.prevPosZ + (player.posZ - player.prevPosZ) * event.getPartialTicks();
+
+        GlStateManager.glLineWidth(2F);
+        GlStateManager.disableLighting();
+        GlStateManager.disableTexture2D();
+
+        for (Record record : recordsToRender)
+        {
+            int length = record.frames.size();
+
+            if (length < delta + 1)
+            {
+                continue;
+            }
+
+            random.setSeed(record.filename.hashCode());
+            random.setSeed(random.nextLong());
+
+            int hex = MathHelper.hsvToRGB(random.nextFloat(), 1F, 1F);
+
+            color.set(hex, false);
+
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder builder = tessellator.getBuffer();
+
+            builder.setTranslation(-playerX, -playerY, -playerZ);
+            builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+
+            for (int i = delta; i < length; i += delta)
+            {
+                Frame prev = record.frames.get(i - delta);
+                Frame current = record.frames.get(i);
+
+                builder.pos(prev.x, prev.y + 1F, prev.z).color(color.r, color.g, color.b, color.a).endVertex();
+                builder.pos(current.x, current.y + 1F, current.z).color(color.r, color.g, color.b, color.a).endVertex();
+            }
+
+            builder.setTranslation(0, 0, 0);
+            tessellator.draw();
+        }
+
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableLighting();
+        GlStateManager.glLineWidth(1F);
+
+        if (shader != 0)
+        {
+            OpenGlHelper.glUseProgram(shader);
         }
     }
 

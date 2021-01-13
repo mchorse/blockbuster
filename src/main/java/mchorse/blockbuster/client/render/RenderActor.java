@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.render;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -97,6 +98,11 @@ public class RenderActor extends RenderLiving<EntityActor>
 
         this.renderLeash(entity, x, y, z, entityYaw, partialTicks);
         this.renderPlayerRecordingName(entity, x, y, z);
+
+        if (entity.playback != null && entity.playback.record != null)
+        {
+            RenderingHandler.recordsToRender.add(entity.playback.record);
+        }
     }
 
     /**
