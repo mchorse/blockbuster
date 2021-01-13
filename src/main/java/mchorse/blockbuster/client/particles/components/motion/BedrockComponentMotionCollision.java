@@ -25,11 +25,13 @@ import java.util.List;
 
 public class BedrockComponentMotionCollision extends BedrockComponentBase implements IComponentParticleUpdate
 {
+    private static final CollisionOffset OFFSET = new CollisionOffset();
+
     public MolangExpression enabled = MolangParser.ONE;
     public MolangExpression preserveEnergy = MolangParser.ZERO;
     public boolean entityCollision;
     public boolean momentum;
-    public float collissionDrag = 0;
+    public float collisionDrag = 0;
     public float bounciness = 1;
     public float randomBounciness = 0;
     public float randomDamp = 0;
@@ -42,7 +44,6 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
     public boolean realisticCollision;
 
     /* Runtime options */
-    public boolean json;
     private Vector3d previous = new Vector3d();
     private Vector3d current = new Vector3d();
     private BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
@@ -117,7 +118,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
         if (element.has("enabled")) this.enabled = parser.parseJson(element.get("enabled"));
         if (element.has("entityCollision")) this.entityCollision = element.get("entityCollision").getAsBoolean();
         if (element.has("momentum")) this.momentum = element.get("momentum").getAsBoolean();
-        if (element.has("collision_drag")) this.collissionDrag = element.get("collision_drag").getAsFloat();
+        if (element.has("collision_drag")) this.collisionDrag = element.get("collision_drag").getAsFloat();
         if (element.has("coefficient_of_restitution")) this.bounciness = element.get("coefficient_of_restitution").getAsFloat();
         if (element.has("bounciness_randomness")) this.randomBounciness = element.get("bounciness_randomness").getAsFloat();
         if (element.has("preserveEnergy")) this.preserveEnergy = parser.parseJson(element.get("preserveEnergy"));
@@ -138,16 +139,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
     {
         JsonObject object = new JsonObject();
 
-        if (MolangExpression.isZero(this.enabled))
-        {
-            return object;
-        }
-
         if (!MolangExpression.isOne(this.enabled)) object.add("enabled", this.enabled.toJson());
         if (this.realisticCollision) object.addProperty("realisticCollision", true);
         if (this.entityCollision) object.addProperty("entityCollision", true);
         if (this.momentum) object.addProperty("momentum", true);
-        if (this.collissionDrag != 0) object.addProperty("collision_drag", this.collissionDrag);
+        if (this.collisionDrag != 0) object.addProperty("collision_drag", this.collisionDrag);
         if (this.bounciness != 1) object.addProperty("coefficient_of_restitution", this.bounciness);
         if (this.randomBounciness != 0) object.addProperty("bounciness_randomness", this.randomBounciness);
         if (MolangExpression.isOne(this.preserveEnergy)) object.add("preserveEnergy", this.preserveEnergy.toJson());
@@ -236,11 +232,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
                 }
             }
 
-            Object[] offsetData = calculateOffsets(aabb, list, x, y, z);
-            aabb = (AxisAlignedBB) offsetData[0];
-            x = (double) offsetData[1];
-            y = (double) offsetData[2];
-            z = (double) offsetData[3];
+            CollisionOffset offsetData = calculateOffsets(aabb, list, x, y, z);
+            aabb = offsetData.aabb;
+            x = offsetData.x;
+            y = offsetData.y;
+            z = offsetData.z;
 
             if (d0 != y || origX != x || origZ != z)
             {
@@ -280,7 +276,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 				 * prevent particles from accelerating away when randomBounciness is active */
                 if (!((this.randomBounciness != 0 || this.realisticCollision) && Math.round(particle.speed.length()) == 0))
                 {
-                    particle.dragFactor += this.collissionDrag;
+                    particle.dragFactor += this.collisionDrag;
                 }
             }
 
@@ -463,6 +459,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
             {
                 particle.speed = damping(particle.speed);
             }
+        }
+
+        if (collisionTime != particle.age - 1)
+        {
+            particle.bounces++;
         }
 
         setComponent(particle.collisionTime, component, particle.age);
@@ -656,7 +657,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
      * @param xyz origins
      * @return Object Array {aabb, x, y, z}
      */
-    public Object[] calculateOffsets(AxisAlignedBB aabb, List<AxisAlignedBB> list, double x, double y, double z)
+    public CollisionOffset calculateOffsets(AxisAlignedBB aabb, List<AxisAlignedBB> list, double x, double y, double z)
     {
         for (AxisAlignedBB axisalignedbb : list)
         {
@@ -679,12 +680,30 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
         aabb = aabb.offset(0.0D, 0.0D, z);
 
-        return new Object[] {aabb, x, y, z};
+        return OFFSET.set(aabb, x, y, z);
     }
 
     @Override
     public int getSortingIndex()
     {
         return 50;
+    }
+
+    public static class CollisionOffset
+    {
+        public AxisAlignedBB aabb;
+        public double x;
+        public double y;
+        public double z;
+
+        public CollisionOffset set(AxisAlignedBB aabb, double x, double y, double z)
+        {
+            this.aabb = aabb;
+            this.x = x;
+            this.y = y;
+            this.z = z;
+
+            return this;
+        }
     }
 }

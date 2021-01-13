@@ -1,7 +1,5 @@
 package mchorse.blockbuster.client.particles.emitter;
 
-import mchorse.mclib.utils.Interpolations;
-
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
@@ -17,18 +15,21 @@ public class BedrockParticle
 	/* States */
 	public int age;
 	public int lifetime;
-	public int expireAge; //age when the particle should expire
-	public int expirationDelay; //used to determine lifetime when expirationDelay is on
+	/* Age when the particle should expire */
+	public int expireAge;
+	/* Used to determine lifetime when expirationDelay is on */
+	public int expirationDelay;
 	public boolean dead;
 	public boolean relativePosition;
 	public boolean relativeRotation;
 	public boolean relativeDirection;
 	public boolean relativeAcceleration;
-	public boolean gravity; //works best with relativeDirection
+	/* Works best with relativeDirection */
+	public boolean gravity;
 	public boolean manual;
 	
-	/*
-	 * this is used to estimate whether an object is only bouncing or lying on a surface
+	/**
+	 * This is used to estimate whether an object is only bouncing or lying on a surface
 	 *
 	 * CollisionTime won't work when e.g. the particle bounces of the surface and directly in the next
 	 * update cycle hits the same surface side, like from top of the block to bottom of the block...
@@ -37,7 +38,12 @@ public class BedrockParticle
 	public Vector3f collisionTime = new Vector3f(-2f, -2f,-2f);
 	public boolean collisionTexture;
 	public boolean collisionTinting;
-	public int firstCollision = -1; //for collision Appearance needed for animation
+	public int bounces;
+
+	/**
+	 * For collision Appearance needed for animation
+	 */
+	public int firstCollision = -1;
 	
 	/* Rotation */
 	public float rotation;
