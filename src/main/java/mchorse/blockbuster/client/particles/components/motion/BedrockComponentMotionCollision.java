@@ -26,7 +26,7 @@ import java.util.List;
 public class BedrockComponentMotionCollision extends BedrockComponentBase implements IComponentParticleUpdate
 {
     private static final CollisionOffset OFFSET = new CollisionOffset();
-
+    
     public MolangExpression enabled = MolangParser.ONE;
     public MolangExpression preserveEnergy = MolangParser.ZERO;
     public boolean entityCollision;
@@ -77,6 +77,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
             vector.z = value;
         }
     }
+    
+    public static void negateComponent(Vector3f vector, EnumFacing.Axis component) 
+    {
+    	setComponent(vector, component, -getComponent(vector, component));
+    }
 
     public static double getComponent(Vector3d vector, EnumFacing.Axis component)
     {
@@ -106,6 +111,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
         {
             vector.z = value;
         }
+    }
+    
+    public static void negateComponent(Vector3d vector, EnumFacing.Axis component) 
+    {
+    	setComponent(vector, component, -getComponent(vector, component));
     }
 
     @Override
@@ -295,7 +305,16 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
                 }
                 else
                 {
-                    continue;
+                	/* fixes the issue of particles falling through the entity 
+                	 * when they lie on the surface while the hitbox changes 
+                	 * downside: the position is not always accurate depending on the movement*/ 
+                	
+                	/*Vector3f particleMotion = new Vector3f(); 
+                	particleMotion.x = (float) (particle.prevPosition.x - particle.position.x);
+                	particleMotion.y = (float) (particle.prevPosition.y - particle.position.y);
+                	particleMotion.z = (float) (particle.prevPosition.z - particle.position.z);
+                	ray = particleMotion;*/
+                	continue;
                 }
 
                 Vector3d frac = intersect(ray, particle.getGlobalPosition(emitter), entityAABB);
@@ -309,69 +328,17 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
                     if ((aabb2.minX < entityAABB.maxX && aabb2.maxX > entityAABB.maxX) || (aabb2.maxX > entityAABB.minX && aabb2.minX < entityAABB.minX))
                     {
-                        /* collisionTime should be not changed - otherwise the particles will stop when moving against moving entites */
-                        float tmpTime = particle.collisionTime.x;
-                        double delta = particle.position.x - entity.posX;
-                        particle.position.x += delta > 0 ? r : -r;
-                        collisionHandler(particle, emitter, EnumFacing.Axis.X, particle.position, prev);
-
-                        /* collisionTime should not change or otherwise particles will lose their speed although they should be reflected */
-                        particle.collisionTime.x = tmpTime;
-
-                        /* particle speed is always switched (realistcCollision==true), as it always collides with the entity, but it should only have one correct direction */
-                        if (particle.speed.x > 0)
-                        {
-                            if (speedEntity.x < 0) particle.speed.x = -particle.speed.x;
-                        }
-                        else if (particle.speed.x < 0)
-                        {
-                            if (speedEntity.x > 0) particle.speed.x = -particle.speed.x;
-                        }
-
-                        /* otherwise particles would stick on the body and get reflected when entity stops */
-                        particle.position.x += particle.speed.x / 20F;
+                    	entityCollision(particle, emitter, entity, EnumFacing.Axis.X, prev);
                     }
 
                     if ((aabb2.minY < entityAABB.maxY && aabb2.maxY > entityAABB.maxY) || (aabb2.maxY > entityAABB.minY && aabb2.minY < entityAABB.minY))
                     {
-                        float tmpTime = particle.collisionTime.y;
-                        double delta = particle.position.y - entity.posY;
-                        particle.position.y += delta > 0 ? r : -r;
-                        collisionHandler(particle, emitter, EnumFacing.Axis.Y, particle.position, prev);
-
-                        particle.collisionTime.y = tmpTime;
-
-                        if (particle.speed.y > 0)
-                        {
-                            if (speedEntity.y < 0) particle.speed.y = -particle.speed.y;
-                        }
-                        else if (particle.speed.y < 0)
-                        {
-                            if (speedEntity.y > 0) particle.speed.y = -particle.speed.y;
-                        }
-
-                        particle.position.y += particle.speed.y / 20F;
+                    	entityCollision(particle, emitter, entity, EnumFacing.Axis.Y, prev);
                     }
 
                     if ((aabb2.minZ < entityAABB.maxZ && aabb2.maxZ > entityAABB.maxZ) || (aabb2.maxZ > entityAABB.minZ && aabb2.minZ < entityAABB.minZ))
                     {
-                        float tmpTime = particle.collisionTime.z;
-                        double delta = particle.position.z - entity.posZ;
-                        particle.position.z += delta > 0 ? r : -r;
-                        collisionHandler(particle, emitter, EnumFacing.Axis.Z, particle.position, prev);
-
-                        particle.collisionTime.z = tmpTime;
-
-                        if (particle.speed.z > 0)
-                        {
-                            if (speedEntity.z < 0) particle.speed.z = -particle.speed.z;
-                        }
-                        else if (particle.speed.z < 0)
-                        {
-                            if (speedEntity.z > 0) particle.speed.z = -particle.speed.z;
-                        }
-
-                        particle.position.z += particle.speed.z / 20F;
+                    	entityCollision(particle, emitter, entity, EnumFacing.Axis.Z, prev);
                     }
                 }
             }
@@ -412,6 +379,35 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
             particle.relativePosition = false;
             particle.prevPosition.set(prev);
         }
+    }
+    
+    public void entityCollision(BedrockParticle particle, BedrockEmitter emitter, Entity entity, EnumFacing.Axis component, Vector3d prev) 
+    {
+        Vector3f entitySpeed = new Vector3f((float) (entity.posX - entity.prevPosX), (float) (entity.posY - entity.prevPosY), (float) (entity.posZ - entity.prevPosZ));
+        Vector3d entityPosition = new Vector3d(entity.posX, entity.posY,entity.posZ);
+
+    	/* collisionTime should be not changed - otherwise the particles will stop when moving against moving entites */
+        float tmpTime = getComponent(particle.collisionTime, component);
+        double delta = getComponent(particle.position, component) - getComponent(entityPosition, component);
+        setComponent(particle.position, component, getComponent(particle.position, component) + (delta > 0 ? this.radius : -this.radius));
+        
+        collisionHandler(particle, emitter, component, particle.position, prev);
+
+        /* collisionTime should not change or otherwise particles will lose their speed although they should be reflected */
+        setComponent(particle.collisionTime, component, tmpTime);
+
+        /* particle speed is always switched (realistcCollision==true), as it always collides with the entity, but it should only have one correct direction */
+        if (getComponent(particle.speed, component) > 0)
+        {
+            if (getComponent(entitySpeed, component) < 0) negateComponent(particle.speed, component);
+        }
+        else if (getComponent(particle.speed, component) < 0)
+        {
+            if (getComponent(entitySpeed, component) > 0) negateComponent(particle.speed, component);
+        }
+
+        /* otherwise particles would stick on the body and get reflected when entity stops */
+        setComponent(particle.position, component, getComponent(particle.position, component) + getComponent(particle.speed, component) / 20F);
     }
 
     public void collisionHandler(BedrockParticle particle, BedrockEmitter emitter, EnumFacing.Axis component, Vector3d now, Vector3d prev)
