@@ -38,6 +38,6 @@ public class SubCommandRecordInfo extends SubCommandRecordBase
         String filename = args[0];
         Record record = CommandRecord.getRecord(filename);
 
-        L10n.info(sender, "record.info", args[0], record.version, record.frames.size(), record.delay, record.unload);
+        L10n.info(sender, "record.info", args[0], record.version, record.frames.size(), record.unload);
     }
 }

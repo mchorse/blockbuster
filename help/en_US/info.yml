@@ -30,7 +30,6 @@ blockbuster.info:
                 
                 {7}*{f} Recording version: %s
                 {7}*{f} Length of recording in ticks: %s
-                {7}*{f} Frame delay: %s
                 {7}*{f} Ticks before unload: %s
         
         search_type: "{f}Search for action with type %s{f}:"

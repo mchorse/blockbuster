@@ -30,7 +30,6 @@ blockbuster.config:
         tooltip: Here is everything related to player recording system
 
         recording_countdown: Recording countdown
-        recording_delay: Recording frame skip
         record_unload_time: Automatic record unload time
         record_unload: Automatic record unloading
         record_sync_rate: Record tick sync rate

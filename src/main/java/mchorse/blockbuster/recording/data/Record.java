@@ -69,11 +69,6 @@ public class Record
     public short version = SIGNATURE;
 
     /**
-     * Delay between recording frames
-     */
-    public int delay = 1;
-
-    /**
      * Pre-delay same thing as post-delay but less useful
      */
     public int preDelay = 0;
@@ -112,7 +107,6 @@ public class Record
     public Record(String filename)
     {
         this.filename = filename;
-        this.delay = Blockbuster.recordingDelay.get();
         this.resetUnload();
     }
 
@@ -627,7 +621,6 @@ public class Record
         Record record = new Record(this.filename);
 
         record.version = this.version;
-        record.delay = this.delay;
         record.preDelay = this.preDelay;
         record.postDelay = this.postDelay;
 
@@ -696,7 +689,6 @@ public class Record
 
         /* Version of the recording */
         compound.setShort("Version", SIGNATURE);
-        compound.setByte("Delay", (byte) this.delay);
         compound.setInteger("PreDelay", this.preDelay);
         compound.setInteger("PostDelay", this.postDelay);
         compound.setTag("Actions", this.createActionMap());
@@ -819,7 +811,6 @@ public class Record
         NBTTagCompound map = null;
 
         this.version = compound.getShort("Version");
-        this.delay = compound.getByte("Delay");
         this.preDelay = compound.getInteger("PreDelay");
         this.postDelay = compound.getInteger("PostDelay");
 

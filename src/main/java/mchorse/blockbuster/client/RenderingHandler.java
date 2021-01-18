@@ -339,7 +339,7 @@ public class RenderingHandler
 
         if (recorder != null)
         {
-            list.add("Recording frame " + recorder.tick + " (delay: " + recorder.delay + ")");
+            list.add("Recording frame " + recorder.tick);
         }
     }
 

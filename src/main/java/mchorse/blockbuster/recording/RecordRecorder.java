@@ -48,11 +48,6 @@ public class RecordRecorder
     public int previousTick = 0;
 
     /**
-     * Delay between recording ticks
-     */
-    public int delay = 1;
-
-    /**
      * Whether recorded player should be teleported back
      */
     public boolean teleportBack;
@@ -87,11 +82,6 @@ public class RecordRecorder
      */
     public void record(EntityPlayer player)
     {
-        if (--this.delay > 0)
-        {
-            return;
-        }
-
         boolean both = this.mode == Mode.BOTH;
 
         if (this.mode == Mode.FRAMES || both)
@@ -120,7 +110,6 @@ public class RecordRecorder
         }
 
         this.tick++;
-        this.delay = this.record.delay;
     }
 
 	public void stop(EntityPlayer player)

@@ -26,7 +26,6 @@ public class ClientHandlerSyncTick extends ClientMessageHandler<PacketSyncTick>
         if (playback != null && playback.record != null)
         {
             playback.tick = message.tick;
-            playback.delay = playback.record != null ? playback.delay : playback.recordDelay;
 
             if (!playback.playing)
             {

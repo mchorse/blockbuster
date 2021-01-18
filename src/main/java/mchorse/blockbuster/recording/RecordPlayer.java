@@ -45,16 +45,6 @@ public class RecordPlayer
     public int tick = 0;
 
     /**
-     * Speed of playback (or delay between frames) in frames
-     */
-    public int delay = 1;
-
-    /**
-     * Temporary speed of playback. This is used only when record is absent
-     */
-    public int recordDelay = 1;
-
-    /**
      * Whether to kill an actor when player finished playing
      */
     public boolean kill = false;
@@ -139,7 +129,7 @@ public class RecordPlayer
             this.record.resetUnload();
         }
 
-        if (!this.playing || this.isFinished() || --this.delay > 0)
+        if (!this.playing || this.isFinished())
         {
             return;
         }
@@ -151,12 +141,7 @@ public class RecordPlayer
             if (this.mode == Mode.ACTIONS || both) this.applyAction(this.tick, actor, false);
             if (this.mode == Mode.FRAMES || both) this.applyFrame(this.tick, actor, false);
 
-            this.delay = this.record.delay;
             this.record.resetUnload();
-        }
-        else
-        {
-            this.delay = this.recordDelay;
         }
 
         /* Align the body with the head on spawn */

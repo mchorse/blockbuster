@@ -601,7 +601,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         {
             buffer.writeBoolean(this.playback.playing);
             buffer.writeInt(this.playback.tick);
-            buffer.writeByte(this.playback.recordDelay);
             ByteBufUtils.writeUTF8String(buffer, this.playback.record.filename);
         }
 
@@ -640,7 +639,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             if (this.playback != null)
             {
                 this.playback.tick = tick;
-                this.playback.recordDelay = delay;
                 this.playback.playing = playing;
             }
         }

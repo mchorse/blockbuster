@@ -156,7 +156,6 @@ public class Blockbuster
     public static ValueBoolean modelBlockResetOnPlayback;
 
     public static ValueFloat recordingCountdown;
-    public static ValueInt recordingDelay;
     public static ValueInt recordUnloadTime;
     public static ValueBoolean recordUnload;
     public static ValueInt recordSyncRate;
@@ -229,7 +228,6 @@ public class Blockbuster
 
         /* Recording */
         recordingCountdown = builder.category("recording").getFloat("recording_countdown", 1.5F, 0, 10);
-        recordingDelay = builder.getInt("recording_delay", 1, 1, 10);
         recordUnloadTime = builder.getInt("record_unload_time", 2400, 600, 72000);
         recordUnload = builder.getBoolean("record_unload", true);
         recordSyncRate = builder.getInt("record_sync_rate", 6, 1, 30);

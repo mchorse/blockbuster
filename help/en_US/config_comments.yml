@@ -18,7 +18,6 @@ blockbuster.config.comments:
 
     recording:
         recording_countdown: Recording countdown (in seconds)
-        recording_delay: Frame delay for recording
         record_unload_time: How long does it take to unload a record (in ticks)
         record_unload: Enable automatic record unloading?
         record_sync_rate: How often a recording is going to synchronize with the server?
