@@ -398,7 +398,7 @@ public class Scene
 
 		this.setPlaying(true);
 		this.sendCommand(this.startCommand);
-		this.sendAudio(AudioState.REWIND);
+		this.sendAudio(AudioState.REWIND, tick);
 		this.wasRecording = true;
 		this.paused = false;
 		this.tick = tick;
