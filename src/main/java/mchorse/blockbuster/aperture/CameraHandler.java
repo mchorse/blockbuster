@@ -23,6 +23,7 @@ import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
 import mchorse.blockbuster.network.common.scene.sync.PacketSceneGoto;
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
@@ -272,6 +273,64 @@ public class CameraHandler
     private static void resetApertureRoll()
     {
         ClientProxy.control.resetRoll();
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static int getOffset()
+    {
+        if (isApertureLoaded())
+        {
+            return getCameraOffset();
+        }
+
+        return -1;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Method(modid = Aperture.MOD_ID)
+    private static int getCameraOffset()
+    {
+        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+
+        if (screen instanceof GuiCameraEditor)
+        {
+            return ((GuiCameraEditor) screen).timeline.value;
+        }
+
+        return -1;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void startRecording(String record, int offset)
+    {
+        if (isApertureLoaded())
+        {
+            startRecordingWithOffset(record, offset);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Method(modid = Aperture.MOD_ID)
+    private static void startRecordingWithOffset(String record, int offset)
+    {
+        SceneLocation scene = get();
+
+        if (scene != null)
+        {
+            GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+
+            if (screen instanceof GuiCameraEditor)
+            {
+                ((GuiCameraEditor) screen).closeThisScreen();
+            }
+            else
+            {
+                Minecraft.getMinecraft().displayGuiScreen(null);
+            }
+
+            Dispatcher.sendToServer(new PacketScenePlay(scene, PacketScenePlay.STOP, 0));
+            Dispatcher.sendToServer(new PacketSceneRecord(scene, record, offset));
+        }
     }
 
     /* Event listeners */

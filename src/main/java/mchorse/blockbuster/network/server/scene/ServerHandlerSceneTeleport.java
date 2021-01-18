@@ -15,7 +15,7 @@ public class ServerHandlerSceneTeleport extends ServerMessageHandler<PacketScene
 		try
 		{
 			String filename = message.id;
-			int tick = 0;
+			int tick = message.offset;
 			Record record = CommandRecord.getRecord(filename);
 
 			Frame frame = record.frames.get(tick);

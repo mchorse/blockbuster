@@ -7,9 +7,17 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 public class PacketSceneRecord extends PacketScene
 {
     public String record = "";
+    public int offset;
 
     public PacketSceneRecord()
     {}
+
+    public PacketSceneRecord(SceneLocation location, String record, int offset)
+    {
+        this(location, record);
+
+        this.offset = offset;
+    }
 
     public PacketSceneRecord(SceneLocation location, String record)
     {
@@ -24,6 +32,7 @@ public class PacketSceneRecord extends PacketScene
         super.fromBytes(buf);
 
         this.record = ByteBufUtils.readUTF8String(buf);
+        this.offset = buf.readInt();
     }
 
     @Override
@@ -32,5 +41,6 @@ public class PacketSceneRecord extends PacketScene
         super.toBytes(buf);
 
         ByteBufUtils.writeUTF8String(buf, this.record);
+        buf.writeInt(this.offset);
     }
 }

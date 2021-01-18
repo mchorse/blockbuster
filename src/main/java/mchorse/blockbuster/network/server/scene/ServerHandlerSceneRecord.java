@@ -15,6 +15,6 @@ public class ServerHandlerSceneRecord extends ServerMessageHandler<PacketSceneRe
             return;
         }
 
-        CommonProxy.scenes.record(message.location.getFilename(), message.record, player);
+        CommonProxy.scenes.record(message.location.getFilename(), message.record, message.offset, player);
     }
 }

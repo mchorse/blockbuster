@@ -119,4 +119,30 @@ public class RecordRecorder
             ((EntityPlayerMP) player).connection.setPlayerLocation(this.first.x, this.first.y, this.first.z, this.first.yaw, this.first.pitch);
         }
 	}
+
+    public void applyOld(Record oldRecord)
+    {
+        this.record.frames.addAll(oldRecord.frames);
+
+        if (this.offset > 0)
+        {
+            List<List<Action>> actions = this.record.actions;
+            int newSize = this.offset + actions.size();
+
+            this.record.actions = oldRecord.actions;
+
+            if (this.record.actions.size() < newSize)
+            {
+                while (this.record.actions.size() < newSize)
+                {
+                    this.record.actions.add(null);
+                }
+            }
+
+            for (int i = 0; i < actions.size(); i++)
+            {
+                this.record.addActions(this.offset + i, actions.get(i));
+            }
+        }
+    }
 }

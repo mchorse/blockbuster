@@ -80,11 +80,27 @@ public class RecordManager
      */
     public boolean record(String filename, EntityPlayer player, Mode mode, boolean teleportBack, boolean notify, int offset, Runnable runnable)
     {
+        Runnable proxy = () ->
+        {
+            if (offset > 0 && this.records.get(filename) != null)
+            {
+                RecordPlayer recordPlayer = this.play(filename, player, Mode.ACTIONS, false);
+
+                recordPlayer.tick = offset;
+                EntityUtils.setRecordPlayer(player, recordPlayer.realPlayer());
+            }
+
+            if (runnable != null)
+            {
+                runnable.run();
+            }
+        };
+
         float countdown = Blockbuster.recordingCountdown.get();
 
-        if (runnable != null && (countdown <= 0 || this.recorders.containsKey(player)))
+        if ((countdown <= 0 || this.recorders.containsKey(player)))
         {
-            runnable.run();
+            proxy.run();
         }
 
         if (filename.isEmpty() || this.halt(player, false, notify))
@@ -140,7 +156,7 @@ public class RecordManager
         }
         else
         {
-            this.scheduled.put(player, new ScheduledRecording(recorder, player, runnable, (int) (countdown * 20), offset));
+            this.scheduled.put(player, new ScheduledRecording(recorder, player, proxy, (int) (countdown * 20), offset));
         }
 
         return true;
@@ -179,27 +195,27 @@ public class RecordManager
                 recorder.stop(player);
             }
 
+            /* Remove action preview for previously recorded actions */
+            RecordPlayer recordPlayer = this.players.get(player);
+
+            if (recordPlayer != null && recordPlayer.realPlayer)
+            {
+                this.players.remove(player);
+
+                EntityUtils.setRecordPlayer(player, null);
+            }
+
+            /*  */
             try
             {
                 Record oldRecord = this.get(filename);
 
-                record.frames.addAll(oldRecord.frames);
-
-                if (recorder.offset > 0)
-                {
-                    List<List<Action>> newActions = new ArrayList<List<Action>>();
-
-                    for (int i = 0, c = Math.min(recorder.offset, record.actions.size()); i < c; i++)
-                    {
-                        newActions.add(oldRecord.actions.get(i));
-                    }
-
-                    newActions.addAll(record.actions);
-                    record.actions = newActions;
-                }
+                recorder.applyOld(oldRecord);
             }
             catch (Exception e)
-            {}
+            {
+                e.printStackTrace();
+            }
 
             this.records.put(filename, record);
             this.recorders.remove(player);

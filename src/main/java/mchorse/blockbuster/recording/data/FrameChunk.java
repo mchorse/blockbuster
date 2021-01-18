@@ -71,15 +71,43 @@ public class FrameChunk
 
         if (this.offset > 0)
         {
-            for (int i = 0, c = Math.min(this.offset, oldFrames.size()); i < c; i++)
+            List<Frame> merged = new ArrayList<Frame>();
+
+            for (List<Frame> frames : this.frames)
             {
-                output.add(oldFrames.get(i));
+                merged.addAll(frames);
+            }
+
+            int newSize = this.offset + merged.size();
+
+            for (int i = 0, c = Math.max(newSize, oldFrames.size()); i < c; i++)
+            {
+                Frame frame;
+
+                if (i < this.offset)
+                {
+                    frame = i < oldFrames.size() ? oldFrames.get(i) : merged.get(0).clone();
+                }
+                else if (i > newSize)
+                {
+                    frame = oldFrames.get(i);
+                }
+                else
+                {
+                    int index = i - this.offset;
+
+                    frame =  index < merged.size() ? merged.get(index) : oldFrames.get(i);
+                }
+
+                output.add(frame);
             }
         }
-
-        for (List<Frame> frames : this.frames)
+        else
         {
-            output.addAll(frames);
+            for (List<Frame> frames : this.frames)
+            {
+                output.addAll(frames);
+            }
         }
 
         return output;

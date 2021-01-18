@@ -1,6 +1,5 @@
 package mchorse.blockbuster.recording.data;
 
-import mchorse.aperture.ClientProxy;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -9,7 +8,6 @@ import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.scene.Replay;
-import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
@@ -562,6 +560,25 @@ public class Record
             actions.add(action);
 
             this.actions.set(tick, actions);
+        }
+    }
+
+    public void addActions(int tick, List<Action> actions)
+    {
+        if (tick < 0 || tick >= this.actions.size())
+        {
+            return;
+        }
+
+        List<Action> present = this.actions.get(tick);
+
+        if (present == null)
+        {
+            this.actions.set(tick, actions);
+        }
+        else if (actions != null)
+        {
+            present.addAll(actions);
         }
     }
 

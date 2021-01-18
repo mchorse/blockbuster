@@ -172,6 +172,8 @@ blockbuster.gui:
         cut: Cut action
         copy: Copy action
         paste: Paste action
+        capture: Record from cursor
+        teleport: Teleport at cursor
 
         drop: Drop block
         damage: Damage

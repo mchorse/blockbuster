@@ -1,60 +1,31 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiBlockActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiBreakBlockActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiBreakBlockAnimationPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiChatActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiCommandActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiDamageActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiDropActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiEmptyActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiEquipActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiInteractEntityActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiItemUseActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiItemUseBlockActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiMorphActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiMountingActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiPlaceBlockActionPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiShootArrowActionPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.*;
 import mchorse.blockbuster.events.ActionPanelRegisterEvent;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.actions.PacketAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
-import mchorse.blockbuster.recording.actions.Action;
-import mchorse.blockbuster.recording.actions.ActionRegistry;
-import mchorse.blockbuster.recording.actions.AttackAction;
-import mchorse.blockbuster.recording.actions.BreakBlockAction;
-import mchorse.blockbuster.recording.actions.BreakBlockAnimation;
-import mchorse.blockbuster.recording.actions.ChatAction;
-import mchorse.blockbuster.recording.actions.CommandAction;
-import mchorse.blockbuster.recording.actions.DamageAction;
-import mchorse.blockbuster.recording.actions.DropAction;
-import mchorse.blockbuster.recording.actions.EquipAction;
-import mchorse.blockbuster.recording.actions.InteractBlockAction;
-import mchorse.blockbuster.recording.actions.InteractEntityAction;
-import mchorse.blockbuster.recording.actions.ItemUseAction;
-import mchorse.blockbuster.recording.actions.ItemUseBlockAction;
-import mchorse.blockbuster.recording.actions.MorphAction;
-import mchorse.blockbuster.recording.actions.MountingAction;
-import mchorse.blockbuster.recording.actions.PlaceBlockAction;
-import mchorse.blockbuster.recording.actions.ShootArrowAction;
+import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
+import mchorse.blockbuster.network.common.scene.PacketSceneTeleport;
+import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
+import mchorse.blockbuster.recording.actions.*;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.blockbuster.recording.scene.SceneLocation;
+import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiLabelSearchListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
-import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.Label;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -78,10 +49,12 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
     public GuiIconElement add;
     public GuiIconElement dupe;
     public GuiIconElement remove;
+    public GuiIconElement capture;
 
     public GuiIconElement cut;
     public GuiIconElement copy;
     public GuiIconElement paste;
+    public GuiIconElement teleport;
 
     public GuiIconElement open;
     public GuiLabelSearchListElement<String> list;
@@ -115,9 +88,6 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 
         this.selector = new GuiRecordSelector(mc, this, this::selectAction);
         this.selector.setVisible(false);
-        this.selector.keys().register(IKey.lang("blockbuster.gui.aperture.keys.add_morph_action"), Keyboard.KEY_M, () -> this.createAction("morph"))
-            .held(Keyboard.KEY_LCONTROL)
-            .category(IKey.lang("blockbuster.gui.aperture.keys.category"));
         this.records = new GuiRecordList(mc, this);
         this.editor = new GuiDelegateElement<GuiActionPanel<? extends Action>>(mc, null);
 
@@ -128,6 +98,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.dupe.tooltip(IKey.lang("blockbuster.gui.duplicate"), Direction.LEFT);
         this.remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeAction());
         this.remove.tooltip(IKey.lang("blockbuster.gui.remove"), Direction.LEFT);
+        this.capture = new GuiIconElement(mc, Icons.SPHERE, (b) -> this.capture());
+        this.capture.tooltip(IKey.lang("blockbuster.gui.record_editor.capture"), Direction.LEFT);
 
         this.cut = new GuiIconElement(mc, Icons.CUT, (icon) -> this.cutAction());
         this.cut.tooltip(IKey.lang("blockbuster.gui.record_editor.cut"), Direction.RIGHT);
@@ -135,6 +107,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.copy.tooltip(IKey.lang("blockbuster.gui.record_editor.copy"), Direction.RIGHT);
         this.paste = new GuiIconElement(mc, Icons.PASTE, (b) -> this.pasteAction());
         this.paste.tooltip(IKey.lang("blockbuster.gui.record_editor.paste"), Direction.RIGHT);
+        this.teleport = new GuiIconElement(mc, Icons.MOVE_TO, (b) -> this.teleport());
+        this.teleport.tooltip(IKey.lang("blockbuster.gui.record_editor.teleport"), Direction.RIGHT);
 
         this.list = new GuiLabelSearchListElement<String>(mc, (str) -> this.createAction(str.get(0).value));
         this.list.label(IKey.lang("blockbuster.gui.search"));
@@ -152,16 +126,27 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.add.flex().relative(this.selector).x(1F);
         this.dupe.flex().relative(this.add.resizer()).y(20);
         this.remove.flex().relative(this.dupe.resizer()).y(20);
+        this.capture.flex().relative(this.remove.resizer()).y(20);
         this.cut.flex().relative(this.selector).x(-20);
         this.copy.flex().relative(this.cut.resizer()).y(20);
         this.paste.flex().relative(this.copy.resizer()).y(20);
+        this.teleport.flex().relative(this.paste.resizer()).y(20);
         this.list.flex().set(0, 0, 80, 80).relative(this.selector.area).x(1, -80);
 
         this.open = new GuiIconElement(mc, Icons.MORE, (b) -> this.records.toggleVisible());
         this.open.flex().relative(this.area).set(0, 2, 24, 24).x(1, -28);
 
         this.add(this.open);
-        this.selector.add(this.add, this.dupe, this.remove, this.cut, this.copy, this.paste, this.list);
+        this.selector.add(this.add, this.dupe, this.remove, this.capture, this.cut, this.copy, this.paste, this.teleport, this.list);
+
+        IKey category = IKey.lang("blockbuster.gui.aperture.keys.category");
+
+        this.selector.keys().register(IKey.lang("blockbuster.gui.aperture.keys.add_morph_action"), Keyboard.KEY_M, () -> this.createAction("morph"))
+            .held(Keyboard.KEY_LCONTROL).category(category);
+        this.selector.keys().register(IKey.lang("blockbuster.gui.record_editor.capture"), Keyboard.KEY_R, this::capture)
+            .held(Keyboard.KEY_LCONTROL).category(category);
+        this.selector.keys().register(IKey.lang("blockbuster.gui.record_editor.teleport"), Keyboard.KEY_T, this::teleport)
+            .held(Keyboard.KEY_LCONTROL).category(category);
     }
 
     private void cutAction()
@@ -304,6 +289,49 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, null));
     }
 
+    private void capture()
+    {
+        if (this.record == null)
+        {
+            return;
+        }
+
+        int offset = this.getOffset();
+
+        if (offset >= 0 && CameraHandler.isApertureLoaded())
+        {
+            CameraHandler.startRecording(this.record.filename, offset);
+        }
+    }
+
+    private void teleport()
+    {
+        if (this.record == null)
+        {
+            return;
+        }
+
+        int offset = this.getOffset();
+
+        if (offset >= 0)
+        {
+            SceneLocation scene = CameraHandler.get();
+
+            if (scene != null)
+            {
+                Dispatcher.sendToServer(new PacketScenePlay(scene, PacketScenePlay.STOP, 0));
+            }
+
+            GuiBase.getCurrent().screen.closeThisScreen();
+            Dispatcher.sendToServer(new PacketSceneTeleport(this.record.filename, offset));
+        }
+    }
+
+    private int getOffset()
+    {
+        return this.selector.tick;
+    }
+
     @Override
     public void open()
     {
@@ -319,6 +347,11 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 
         this.prepend(this.records);
         this.add(this.editor, this.selector);
+
+        if (this.record != null && this.record != ClientProxy.manager.records.get(this.record.filename))
+        {
+            this.selectRecord(this.record.filename);
+        }
 
         if (this.panels.isEmpty())
         {
