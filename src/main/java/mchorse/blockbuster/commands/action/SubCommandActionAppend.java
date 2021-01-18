@@ -11,47 +11,47 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
 /**
- * Sub-command /action record
+ * Sub-command /action append
  *
- * This sub-command is responsible for starting recording given filename'd
- * action with optionally provided scene.
+ * This sub-command is responsible for starting recording given
  */
-public class SubCommandActionRecord extends CommandBase
+public class SubCommandActionAppend extends CommandBase
 {
     @Override
     public String getName()
     {
-        return "record";
+        return "append";
     }
 
     @Override
     public String getUsage(ICommandSender sender)
     {
-        return "blockbuster.commands.action.record";
+        return "blockbuster.commands.action.append";
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        if (args.length < 1)
+        if (args.length < 2)
         {
             throw new WrongUsageException(this.getUsage(sender));
         }
 
         EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+        int offset = CommandBase.parseInt(args[1], 0);
 
-        if (args.length >= 2)
+        if (args.length >= 3)
         {
-            Scene scene = CommonProxy.scenes.get(args[1], sender.getEntityWorld());
+            Scene scene = CommonProxy.scenes.get(args[2], sender.getEntityWorld());
 
             if (scene != null)
             {
-                CommonProxy.scenes.record(args[1], args[0], player);
+                CommonProxy.scenes.record(args[2], args[0], offset, player);
             }
         }
         else
         {
-            CommonProxy.manager.record(args[0], player, Mode.ACTIONS, true, true, null);
+            CommonProxy.manager.record(args[0], player, Mode.ACTIONS, true, true, offset, null);
         }
     }
 }

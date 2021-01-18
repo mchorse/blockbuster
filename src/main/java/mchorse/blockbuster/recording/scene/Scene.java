@@ -29,7 +29,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CPacketClientSettings;
 import net.minecraft.scoreboard.Team;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.EnumHandSide;
@@ -43,7 +42,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -367,7 +365,12 @@ public class Scene
 		this.sendAudio(AudioState.REWIND);
 		this.wasRecording = false;
 		this.paused = false;
-		this.tick = 0;
+		this.tick = tick;
+	}
+
+	public void startPlayback(String exception)
+	{
+		this.startPlayback(exception);
 	}
 
 	/**
@@ -376,7 +379,7 @@ public class Scene
 	 *
 	 * Used by recording code.
 	 */
-	public void startPlayback(String exception)
+	public void startPlayback(String exception, int tick)
 	{
 		if (this.getWorld().isRemote || this.playing)
 		{
@@ -390,7 +393,7 @@ public class Scene
 			Replay replay = entry.getKey();
 			RecordPlayer actor = entry.getValue();
 
-			actor.startPlaying(replay.id, true);
+			actor.startPlaying(replay.id, tick, true);
 		}
 
 		this.setPlaying(true);
@@ -398,7 +401,7 @@ public class Scene
 		this.sendAudio(AudioState.REWIND);
 		this.wasRecording = true;
 		this.paused = false;
-		this.tick = 0;
+		this.tick = tick;
 	}
 
 	/**

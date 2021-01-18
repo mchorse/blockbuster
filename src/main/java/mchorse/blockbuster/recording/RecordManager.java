@@ -1,13 +1,5 @@
 package mchorse.blockbuster.recording;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.network.Dispatcher;
@@ -27,6 +19,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Record manager
@@ -73,10 +70,15 @@ public class RecordManager
         return recorder == null ? null : recorder.actions;
     }
 
+    public boolean record(String filename, EntityPlayer player, Mode mode, boolean teleportBack, boolean notify, Runnable runnable)
+    {
+        return this.record(filename, player, mode, teleportBack, notify, 0, runnable);
+    }
+
     /**
      * Start recording given player to record with given filename
      */
-    public boolean record(String filename, EntityPlayer player, Mode mode, boolean teleportBack, boolean notify, Runnable runnable)
+    public boolean record(String filename, EntityPlayer player, Mode mode, boolean teleportBack, boolean notify, int offset, Runnable runnable)
     {
         float countdown = Blockbuster.recordingCountdown.get();
 
@@ -108,6 +110,7 @@ public class RecordManager
         RecordRecorder recorder = new RecordRecorder(new Record(filename), mode, player, teleportBack);
         NBTTagCompound tag = new NBTTagCompound();
 
+        recorder.offset = offset;
         player.writeEntityToNBT(tag);
         recorder.record.playerData = tag;
 
@@ -132,12 +135,12 @@ public class RecordManager
 
             if (notify)
             {
-                Dispatcher.sendTo(new PacketPlayerRecording(true, filename), (EntityPlayerMP) player);
+                Dispatcher.sendTo(new PacketPlayerRecording(true, filename, offset), (EntityPlayerMP) player);
             }
         }
         else
         {
-            this.scheduled.put(player, new ScheduledRecording(recorder, player, runnable, (int) (countdown * 20)));
+            this.scheduled.put(player, new ScheduledRecording(recorder, player, runnable, (int) (countdown * 20), offset));
         }
 
         return true;
@@ -176,6 +179,28 @@ public class RecordManager
                 recorder.stop(player);
             }
 
+            try
+            {
+                Record oldRecord = this.get(filename);
+
+                record.frames.addAll(oldRecord.frames);
+
+                if (recorder.offset > 0)
+                {
+                    List<List<Action>> newActions = new ArrayList<List<Action>>();
+
+                    for (int i = 0, c = Math.min(recorder.offset, record.actions.size()); i < c; i++)
+                    {
+                        newActions.add(oldRecord.actions.get(i));
+                    }
+
+                    newActions.addAll(record.actions);
+                    record.actions = newActions;
+                }
+            }
+            catch (Exception e)
+            {}
+
             this.records.put(filename, record);
             this.recorders.remove(player);
             MorphAPI.demorph(player);
@@ -184,7 +209,7 @@ public class RecordManager
             {
                 CommonProxy.damage.restoreDamageControl(recorder, player.world);
 
-                Dispatcher.sendTo(new PacketPlayerRecording(false, ""), (EntityPlayerMP) player);
+                Dispatcher.sendTo(new PacketPlayerRecording(false, "", 0), (EntityPlayerMP) player);
             }
 
             return true;
@@ -425,7 +450,7 @@ public class RecordManager
             {
                 record.run();
                 this.recorders.put(record.player, record.recorder);
-                Dispatcher.sendTo(new PacketPlayerRecording(true, record.recorder.record.filename), (EntityPlayerMP) record.player);
+                Dispatcher.sendTo(new PacketPlayerRecording(true, record.recorder.record.filename, record.offset), (EntityPlayerMP) record.player);
 
                 it.remove();
 

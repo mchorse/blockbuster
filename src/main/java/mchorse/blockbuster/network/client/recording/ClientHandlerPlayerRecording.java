@@ -7,6 +7,7 @@ import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketFramesChunk;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
+import mchorse.blockbuster.recording.RecordRecorder;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
@@ -32,11 +33,11 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
 
         if (message.recording)
         {
-            ClientProxy.manager.record(message.filename, player, Mode.FRAMES, false, false, null);
+            ClientProxy.manager.record(message.filename, player, Mode.FRAMES, false, false, message.offset, null);
         }
         else
         {
-            this.sendFrames(ClientProxy.manager.recorders.get(player).record);
+            this.sendFrames(ClientProxy.manager.recorders.get(player));
             ClientProxy.manager.halt(player, false, false);
         }
     }
@@ -44,18 +45,21 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
     /**
      * Send frames to the server
      *
-     * Send chunked frames to the server.
+     * Send chunked frames to the server
      */
     @SideOnly(Side.CLIENT)
-    private void sendFrames(Record record)
+    private void sendFrames(RecordRecorder recorder)
     {
+        Record record = recorder.record;
+
         int cap = 400;
         int length = record.getLength();
+        int offset = recorder.offset;
 
         /* Send only one message if it's below 500 frames */
         if (length < cap)
         {
-            Dispatcher.sendToServer(new PacketFramesChunk(0, 1, record.filename, record.frames));
+            Dispatcher.sendToServer(new PacketFramesChunk(0, 1, offset, record.filename, record.frames));
 
             return;
         }
@@ -70,7 +74,7 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
                 frames.add(record.frames.get(j + i * cap));
             }
 
-            Dispatcher.sendToServer(new PacketFramesChunk(i, c, record.filename, frames));
+            Dispatcher.sendToServer(new PacketFramesChunk(i, c, offset, record.filename, frames));
         }
     }
 }

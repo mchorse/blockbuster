@@ -619,7 +619,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         {
             boolean playing = buffer.readBoolean();
             int tick = buffer.readInt();
-            int delay = buffer.readByte();
             String filename = ByteBufUtils.readUTF8String(buffer);
 
             if (this.playback == null)

@@ -208,7 +208,13 @@ blockbuster:
         # Action's commands
         action:
             help: "{r}{o}Action command{r}. This command provides few sub-commands for managing player recording actions."
-            
+
+            append:
+                |
+                    {l}{6}/{r}action {8}append{r} {7}<filename> <offset> [scene]{r}
+
+                    {r}Records an action from current player into given {7}<filename>{r} with {7}<offset>{r} tick which will overwrite given frames after given offset tick. You can also optionally specify {7}[scene]{r} name. Supplying scene name, helps out with synchronizing the actors.
+
             clear:
                 |
                     {l}{6}/{r}action {8}clear{r}

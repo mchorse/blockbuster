@@ -9,16 +9,18 @@ public class PacketFramesChunk extends PacketFrames
 {
     public int index;
     public int count;
+    public int offset;
 
     public PacketFramesChunk()
     {}
 
-    public PacketFramesChunk(int index, int count, String filename, List<Frame> frames)
+    public PacketFramesChunk(int index, int count, int offset, String filename, List<Frame> frames)
     {
         super(filename, 0, 0, frames);
 
         this.index = index;
         this.count = count;
+        this.offset = offset;
     }
 
     @Override
@@ -26,6 +28,7 @@ public class PacketFramesChunk extends PacketFrames
     {
         this.index = buf.readInt();
         this.count = buf.readInt();
+        this.offset = buf.readInt();
 
         super.fromBytes(buf);
     }
@@ -35,6 +38,7 @@ public class PacketFramesChunk extends PacketFrames
     {
         buf.writeInt(this.index);
         buf.writeInt(this.count);
+        buf.writeInt(this.offset);
 
         super.toBytes(buf);
     }

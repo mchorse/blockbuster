@@ -89,10 +89,15 @@ public class SceneManager
 		return true;
 	}
 
+	public void record(String filename, String record, EntityPlayerMP player)
+	{
+		this.record(filename, record, 0, player);
+	}
+
 	/**
 	 * Record the player
 	 */
-	public void record(String filename, String record, EntityPlayerMP player)
+	public void record(String filename, String record, int offset, EntityPlayerMP player)
 	{
 		final Scene scene = this.get(filename, player.world);
 
@@ -104,12 +109,12 @@ public class SceneManager
 
 			if (replay != null)
 			{
-				CommonProxy.manager.record(replay.id, player, Mode.ACTIONS, replay.teleportBack, true, () ->
+				CommonProxy.manager.record(replay.id, player, Mode.ACTIONS, replay.teleportBack, true, offset, () ->
 				{
 					if (!CommonProxy.manager.recorders.containsKey(player))
 					{
 						this.scenes.put(filename, scene);
-						scene.startPlayback(record);
+						scene.startPlayback(record, offset);
 					}
 					else
 					{

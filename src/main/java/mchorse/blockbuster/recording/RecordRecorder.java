@@ -43,9 +43,9 @@ public class RecordRecorder
     public int tick = 0;
 
     /**
-     * Used by camera marker
+     * Recording offset
      */
-    public int previousTick = 0;
+    public int offset = 0;
 
     /**
      * Whether recorded player should be teleported back
@@ -114,7 +114,7 @@ public class RecordRecorder
 
 	public void stop(EntityPlayer player)
     {
-        if (this.teleportBack && player instanceof EntityPlayer)
+        if (this.teleportBack && player instanceof EntityPlayerMP)
         {
             ((EntityPlayerMP) player).connection.setPlayerLocation(this.first.x, this.first.y, this.first.z, this.first.yaw, this.first.pitch);
         }

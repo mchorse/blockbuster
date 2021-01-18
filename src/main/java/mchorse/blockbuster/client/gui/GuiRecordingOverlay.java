@@ -71,7 +71,7 @@ public class GuiRecordingOverlay extends Gui
 
             if (recorder != null)
             {
-                caption += "§r (§l" + recorder.tick + "§r)";
+                caption += "§r (§l" + (recorder.tick + recorder.offset) + "§r)";
             }
         }
 

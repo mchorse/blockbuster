@@ -8,14 +8,16 @@ public class PacketPlayerRecording implements IMessage
 {
     public boolean recording;
     public String filename;
+    public int offset;
 
     public PacketPlayerRecording()
     {}
 
-    public PacketPlayerRecording(boolean recording, String filename)
+    public PacketPlayerRecording(boolean recording, String filename, int offset)
     {
         this.recording = recording;
         this.filename = filename;
+        this.offset = offset;
     }
 
     @Override
@@ -23,6 +25,7 @@ public class PacketPlayerRecording implements IMessage
     {
         this.recording = buf.readBoolean();
         this.filename = ByteBufUtils.readUTF8String(buf);
+        this.offset = buf.readInt();
     }
 
     @Override
@@ -30,5 +33,6 @@ public class PacketPlayerRecording implements IMessage
     {
         buf.writeBoolean(this.recording);
         ByteBufUtils.writeUTF8String(buf, this.filename);
+        buf.writeInt(this.offset);
     }
 }

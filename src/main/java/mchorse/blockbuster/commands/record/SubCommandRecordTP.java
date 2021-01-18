@@ -43,9 +43,9 @@ public class SubCommandRecordTP extends SubCommandRecordBase
         int tick = args.length > 1 ? CommandBase.parseInt(args[1], 0) : 0;
         Record record = CommandRecord.getRecord(filename);
 
-        if (tick < 0 || tick >= record.actions.size())
+        if (tick < 0 || tick >= record.frames.size())
         {
-            throw new CommandException("record.tick_out_range", tick, record.actions.size() - 1);
+            throw new CommandException("record.tick_out_range", tick, record.frames.size() - 1);
         }
 
         EntityPlayer player = getCommandSenderAsPlayer(sender);

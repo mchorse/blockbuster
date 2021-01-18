@@ -914,6 +914,14 @@ public class Record
         Collections.reverse(this.actions);
     }
 
+    public void fillMissingActions()
+    {
+        while (this.actions.size() < this.frames.size())
+        {
+            this.actions.add(null);
+        }
+    }
+
     public static class FoundAction
     {
         public int tick;

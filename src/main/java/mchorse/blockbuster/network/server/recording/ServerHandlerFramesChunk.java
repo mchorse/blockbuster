@@ -26,7 +26,7 @@ public class ServerHandlerFramesChunk extends ServerMessageHandler<PacketFramesC
 
         if (chunk == null)
         {
-            chunk = new FrameChunk(message.count);
+            chunk = new FrameChunk(message.count, message.offset);
 
             CommonProxy.manager.chunks.put(message.filename, chunk);
         }
@@ -39,8 +39,9 @@ public class ServerHandlerFramesChunk extends ServerMessageHandler<PacketFramesC
             {
                 Recording.get(player).addRecording(message.filename, System.currentTimeMillis());
 
-                serverRecord.frames = chunk.compile();
+                serverRecord.frames = chunk.compile(serverRecord.frames);
                 serverRecord.save(RecordUtils.replayFile(message.filename));
+                serverRecord.fillMissingActions();
 
                 CommonProxy.manager.chunks.remove(message.filename);
             }

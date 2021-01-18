@@ -21,10 +21,16 @@ public class FrameChunk
      */
     public int count;
 
-    public FrameChunk(int count)
+    /**
+     * Recording offset
+     */
+    public int offset;
+
+    public FrameChunk(int count, int offset)
     {
         this.frames = new ArrayList<List<Frame>>(count);
         this.count = count;
+        this.offset = offset;
 
         for (int i = 0; i < count; i++)
         {
@@ -59,9 +65,17 @@ public class FrameChunk
     /**
      * Compile all frames into one list
      */
-    public List<Frame> compile()
+    public List<Frame> compile(List<Frame> oldFrames)
     {
         List<Frame> output = new ArrayList<Frame>();
+
+        if (this.offset > 0)
+        {
+            for (int i = 0, c = Math.min(this.offset, oldFrames.size()); i < c; i++)
+            {
+                output.add(oldFrames.get(i));
+            }
+        }
 
         for (List<Frame> frames : this.frames)
         {
