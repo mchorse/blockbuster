@@ -1,6 +1,7 @@
 package mchorse.blockbuster;
 
 import mchorse.blockbuster.commands.CommandAction;
+import mchorse.blockbuster.commands.CommandDamage;
 import mchorse.blockbuster.commands.CommandModelBlock;
 import mchorse.blockbuster.commands.CommandOnHead;
 import mchorse.blockbuster.commands.CommandRecord;
@@ -47,23 +48,23 @@ import org.apache.logging.log4j.Logger;
  * </p>
  *
  * <ul>
- *     <li>Jabelar's and TGG's minecraft modding tutorials</li>
- *     <li>AnimalBikes and Mocap mods (EchebKeso)</li>
- *     <li>MinecraftByExample</li>
- *     <li>Ernio for helping with camera attributes sync, sharing with his own
- *         network abstract layer code, and fixing the code so it would work on
- *         dedicated server</li>
- *     <li>diesieben07 for giving idea for actor skins</li>
- *     <li>Choonster for pointing out that processInteract triggers for each
- *         hand + TestMod3 config example</li>
- *     <li>Lightwave for porting some of the code to 1.9.4</li>
- *     <li>NlL5 for a lot of testing, giving lots of feedback and ideas for
- *         Blockbuster mod</li>
- *     <li>daipenger for giving me consultation on how to make cameras and
- *         actors frame-based</li>
- *     <li>TheImaginationCrafter for suggesting the OBJ feature which made
- *          Blockbuster super popular and also more customizable (in terms 
- *          of custom models)</li>
+ * <li>Jabelar's and TGG's minecraft modding tutorials</li>
+ * <li>AnimalBikes and Mocap mods (EchebKeso)</li>
+ * <li>MinecraftByExample</li>
+ * <li>Ernio for helping with camera attributes sync, sharing with his own
+ * network abstract layer code, and fixing the code so it would work on
+ * dedicated server</li>
+ * <li>diesieben07 for giving idea for actor skins</li>
+ * <li>Choonster for pointing out that processInteract triggers for each
+ * hand + TestMod3 config example</li>
+ * <li>Lightwave for porting some of the code to 1.9.4</li>
+ * <li>NlL5 for a lot of testing, giving lots of feedback and ideas for
+ * Blockbuster mod</li>
+ * <li>daipenger for giving me consultation on how to make cameras and
+ * actors frame-based</li>
+ * <li>TheImaginationCrafter for suggesting the OBJ feature which made
+ * Blockbuster super popular and also more customizable (in terms
+ * of custom models)</li>
  * </ul>
  */
 @Mod(modid = Blockbuster.MOD_ID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, dependencies = "after:aperture@[%APERTURE,);required-after:metamorph@[%METAMORPH%,);required-after:mclib@[%MCLIB%,);required-after:forge@[14.23.2.2638,)", updateJSON = "https://raw.githubusercontent.com/mchorse/blockbuster/1.12/version.json")
@@ -198,7 +199,7 @@ public class Blockbuster
     }
 
     /**
-     * Reloads server side models 
+     * Reloads server side models
      */
     public static void reloadServerModels(boolean force)
     {
@@ -300,6 +301,7 @@ public class Blockbuster
 
         /* Register commands */
         event.registerServerCommand(new CommandAction());
+        event.registerServerCommand(new CommandDamage());
         event.registerServerCommand(new CommandRecord());
         event.registerServerCommand(new CommandOnHead());
         event.registerServerCommand(new CommandSpectate());

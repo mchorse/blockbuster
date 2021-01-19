@@ -247,6 +247,13 @@ blockbuster:
                 {l}{6}/{r}item_nbt {7}<give_command>{r}{r}
 
                 {r}Item NBT command allows to copy current held item's NBT tag to the clipboard. If you provide {7}<give_command>{r} as {7}true{r} or {7}1{r} it will copy to clipboard a proper {7}/give{r} command to give that item. You'll most likely need a command block for that...
+
+        damage.help:
+            |
+                {l}{6}/{r}damage {7}<entity> <amount>{r}
+
+                {r}Inflicts {7}<amount>{r} damage to {7}<entity>{r}. If {7}<damage{r} is negative then all {7}<entity>{r} matched by target selector will be healed.
+
         spectate.help: 
             |
                 {r}{o}Spectate command{r}. This command allows making given player to spectate given entity.
