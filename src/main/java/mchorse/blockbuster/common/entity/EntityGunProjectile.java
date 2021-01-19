@@ -34,8 +34,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Gun projectile entity
- * 
- * This bad boy is responsible for being a gun projectile. It works in a 
+ * <p>
+ * This bad boy is responsible for being a gun projectile. It works in a
  * similar fashion as a snowball, but holds a morph
  */
 public class EntityGunProjectile extends EntityThrowable implements IEntityAdditionalSpawnData
@@ -46,7 +46,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     public int timer;
     public int hits;
     public int impact;
-	public boolean vanish;
+    public boolean vanish;
     public int vanishDelay;
     public boolean stuck;
 
@@ -57,10 +57,10 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     public double targetZ;
 
     public double initMX;
-	public double initMY;
-	public double initMZ;
+    public double initMY;
+    public double initMZ;
 
-	public boolean setInit;
+    public boolean setInit;
 
     public EntityGunProjectile(World worldIn)
     {
@@ -83,25 +83,25 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         this.impact = -1;
     }
 
-	public void setInitialMotion()
-	{
-		this.initMX = this.motionX;
-		this.initMY = this.motionY;
-		this.initMZ = this.motionZ;
-	}
+    public void setInitialMotion()
+    {
+        this.initMX = this.motionX;
+        this.initMY = this.motionY;
+        this.initMZ = this.motionZ;
+    }
 
     @Override
     public void onUpdate()
     {
-    	if (!this.world.isRemote && this.vanish)
-	    {
-		    if (this.vanishDelay <= 0)
-		    {
-		    	this.setDead();
-		    }
+        if (!this.world.isRemote && this.vanish)
+        {
+            if (this.vanishDelay <= 0)
+            {
+                this.setDead();
+            }
 
-		    this.vanishDelay --;
-	    }
+            this.vanishDelay--;
+        }
 
         if (!this.world.isBlockLoaded(this.getPosition(), false))
         {
@@ -118,118 +118,118 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         }
         else if (!this.setInit)
         {
-        	this.setInit = true;
-        	this.motionX = this.initMX;
-	        this.motionY = this.initMY;
-	        this.motionZ = this.initMZ;
+            this.setInit = true;
+            this.motionX = this.initMX;
+            this.motionY = this.initMY;
+            this.motionZ = this.initMZ;
         }
 
         this.onEntityUpdate();
 
         if (!this.stuck)
         {
-	        /* Ray trace for impact */
-	        Vec3d position = new Vec3d(this.posX, this.posY, this.posZ);
-	        Vec3d next = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-	        RayTraceResult result = this.world.rayTraceBlocks(position, next);
+            /* Ray trace for impact */
+            Vec3d position = new Vec3d(this.posX, this.posY, this.posZ);
+            Vec3d next = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+            RayTraceResult result = this.world.rayTraceBlocks(position, next);
 
-	        if (result != null)
-	        {
-		        next = new Vec3d(result.hitVec.x, result.hitVec.y, result.hitVec.z);
-	        }
+            if (result != null)
+            {
+                next = new Vec3d(result.hitVec.x, result.hitVec.y, result.hitVec.z);
+            }
 
-	        Entity entity = null;
-	        List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1.0D));
-	        double dist = 0.0D;
+            Entity entity = null;
+            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1.0D));
+            double dist = 0.0D;
 
-	        for (int i = 0; i < list.size(); ++i)
-	        {
-		        Entity current = list.get(i);
+            for (int i = 0; i < list.size(); ++i)
+            {
+                Entity current = list.get(i);
 
-		        if (current.canBeCollidedWith())
-		        {
-			        AxisAlignedBB box = current.getEntityBoundingBox().grow(0.30000001192092896D);
-			        RayTraceResult ray = box.calculateIntercept(position, next);
+                if (current.canBeCollidedWith())
+                {
+                    AxisAlignedBB box = current.getEntityBoundingBox().grow(0.30000001192092896D);
+                    RayTraceResult ray = box.calculateIntercept(position, next);
 
-			        if (ray != null)
-			        {
-				        double d1 = position.squareDistanceTo(ray.hitVec);
+                    if (ray != null)
+                    {
+                        double d1 = position.squareDistanceTo(ray.hitVec);
 
-				        if (d1 < dist || dist == 0.0D)
-				        {
-					        entity = current;
-					        dist = d1;
-				        }
-			        }
-		        }
-	        }
+                        if (d1 < dist || dist == 0.0D)
+                        {
+                            entity = current;
+                            dist = d1;
+                        }
+                    }
+                }
+            }
 
-	        if (entity != null)
-	        {
-		        result = new RayTraceResult(entity);
-	        }
+            if (entity != null)
+            {
+                result = new RayTraceResult(entity);
+            }
 
-	        /* Update position */
-	        this.posX += this.motionX;
-	        this.posY += this.motionY;
-	        this.posZ += this.motionZ;
+            /* Update position */
+            this.posX += this.motionX;
+            this.posY += this.motionY;
+            this.posZ += this.motionZ;
 
-	        if (result != null)
-	        {
-		        if (result.typeOfHit == RayTraceResult.Type.BLOCK && this.world.getBlockState(result.getBlockPos()).getBlock() == Blocks.PORTAL)
-		        {
-			        this.setPortal(result.getBlockPos());
-		        }
-		        else
-		        {
-			        if (!net.minecraftforge.common.ForgeHooks.onThrowableImpact(this, result)) this.onImpact(result);
-		        }
-	        }
+            if (result != null)
+            {
+                if (result.typeOfHit == RayTraceResult.Type.BLOCK && this.world.getBlockState(result.getBlockPos()).getBlock() == Blocks.PORTAL)
+                {
+                    this.setPortal(result.getBlockPos());
+                }
+                else
+                {
+                    if (!net.minecraftforge.common.ForgeHooks.onThrowableImpact(this, result)) this.onImpact(result);
+                }
+            }
 
-	        /* Update position, motion and rotation */
-	        float distance = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
-	        this.rotationYaw = (float) (MathHelper.atan2(this.motionX, this.motionZ) * (180D / Math.PI));
+            /* Update position, motion and rotation */
+            float distance = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+            this.rotationYaw = (float) (MathHelper.atan2(this.motionX, this.motionZ) * (180D / Math.PI));
 
-	        for (this.rotationPitch = (float) (MathHelper.atan2(this.motionY, distance) * (180D / Math.PI)); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
-	        {}
+            for (this.rotationPitch = (float) (MathHelper.atan2(this.motionY, distance) * (180D / Math.PI)); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
+            {}
 
-	        while (this.rotationPitch - this.prevRotationPitch >= 180.0F)
-		        this.prevRotationPitch += 360.0F;
-	        while (this.rotationYaw - this.prevRotationYaw < -180.0F)
-		        this.prevRotationYaw -= 360.0F;
-	        while (this.rotationYaw - this.prevRotationYaw >= 180.0F)
-		        this.prevRotationYaw += 360.0F;
+            while (this.rotationPitch - this.prevRotationPitch >= 180.0F)
+                this.prevRotationPitch += 360.0F;
+            while (this.rotationYaw - this.prevRotationYaw < -180.0F)
+                this.prevRotationYaw -= 360.0F;
+            while (this.rotationYaw - this.prevRotationYaw >= 180.0F)
+                this.prevRotationYaw += 360.0F;
 
-	        this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
-	        this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
-	        float friction = this.props == null ? 1 : this.props.friction;
+            this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
+            this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
+            float friction = this.props == null ? 1 : this.props.friction;
 
-	        if (this.isInWater())
-	        {
-		        for (int j = 0; j < 4; ++j)
-		        {
-			        this.world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * 0.25D, this.posY - this.motionY * 0.25D, this.posZ - this.motionZ * 0.25D, this.motionX, this.motionY, this.motionZ, new int[0]);
-		        }
+            if (this.isInWater())
+            {
+                for (int j = 0; j < 4; ++j)
+                {
+                    this.world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * 0.25D, this.posY - this.motionY * 0.25D, this.posZ - this.motionZ * 0.25D, this.motionX, this.motionY, this.motionZ, new int[0]);
+                }
 
-		        friction *= 0.8F;
-	        }
+                friction *= 0.8F;
+            }
 
-	        if (this.onGround)
-	        {
-		        friction *= 0.9F;
-	        }
+            if (this.onGround)
+            {
+                friction *= 0.9F;
+            }
 
-	        this.motionX *= friction;
-	        this.motionY *= friction;
-	        this.motionZ *= friction;
+            this.motionX *= friction;
+            this.motionY *= friction;
+            this.motionZ *= friction;
 
-	        if (!this.hasNoGravity())
-	        {
-		        this.motionY -= this.getGravityVelocity();
-	        }
+            if (!this.hasNoGravity())
+            {
+                this.motionY -= this.getGravityVelocity();
+            }
 
-	        if (this.hits > this.props.hits)
-	        {
+            if (this.hits > this.props.hits)
+            {
                 double diff = this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ;
 
                 if (diff < 100 * 100)
@@ -240,18 +240,18 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 {
                     this.setDead();
                 }
-	        }
-	        else
-	        {
-		        this.setPosition(this.posX, this.posY, this.posZ);
-	        }
+            }
+            else
+            {
+                this.setPosition(this.posX, this.posY, this.posZ);
+            }
         }
 
         this.updateProjectile();
     }
 
     /**
-     * Update projectile's properties 
+     * Update projectile's properties
      */
     private void updateProjectile()
     {
@@ -335,27 +335,27 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 if (axis == Axis.Y) this.motionY *= factor;
                 if (axis == Axis.Z) this.motionZ *= factor;
 
-	            this.motionX *= this.props.bounceFactor;
-	            this.motionY *= this.props.bounceFactor;
-	            this.motionZ *= this.props.bounceFactor;
+                this.motionX *= this.props.bounceFactor;
+                this.motionY *= this.props.bounceFactor;
+                this.motionZ *= this.props.bounceFactor;
 
                 this.posX = result.hitVec.x + this.width / 2 * result.sideHit.getFrontOffsetX();
                 this.posY = result.hitVec.y - this.height * (result.sideHit == EnumFacing.DOWN ? 1 : 0);
                 this.posZ = result.hitVec.z + this.width / 2 * result.sideHit.getFrontOffsetZ();
 
-	            if (this.props.sticks)
-	            {
-		            this.stuck = true;
+                if (this.props.sticks)
+                {
+                    this.stuck = true;
 
-		            if (!this.world.isRemote)
-		            {
-						if (result.sideHit == EnumFacing.WEST || result.sideHit == EnumFacing.EAST) this.posX += this.props.penetration * result.sideHit.getFrontOffsetX();
-			            else if (result.sideHit == EnumFacing.UP || result.sideHit == EnumFacing.DOWN) this.posY += this.props.penetration * result.sideHit.getFrontOffsetY();
-			            else if (result.sideHit == EnumFacing.NORTH || result.sideHit == EnumFacing.SOUTH) this.posZ += this.props.penetration * result.sideHit.getFrontOffsetZ();
+                    if (!this.world.isRemote)
+                    {
+                        if (result.sideHit == EnumFacing.WEST || result.sideHit == EnumFacing.EAST) this.posX += this.props.penetration * result.sideHit.getFrontOffsetX();
+                        else if (result.sideHit == EnumFacing.UP || result.sideHit == EnumFacing.DOWN) this.posY += this.props.penetration * result.sideHit.getFrontOffsetY();
+                        else if (result.sideHit == EnumFacing.NORTH || result.sideHit == EnumFacing.SOUTH) this.posZ += this.props.penetration * result.sideHit.getFrontOffsetZ();
 
-			            Dispatcher.sendToTracked(this, new PacketGunStuck(this.getEntityId(), (float) this.posX, (float) this.posY, (float) this.posZ));
-		            }
-	            }
+                        Dispatcher.sendToTracked(this, new PacketGunStuck(this.getEntityId(), (float) this.posX, (float) this.posY, (float) this.posZ));
+                    }
+                }
             }
 
             if (!this.world.isRemote)
@@ -435,8 +435,8 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         }
 
         buffer.writeDouble(this.initMX);
-	    buffer.writeDouble(this.initMY);
-	    buffer.writeDouble(this.initMZ);
+        buffer.writeDouble(this.initMY);
+        buffer.writeDouble(this.initMZ);
     }
 
     @Override
@@ -454,12 +454,12 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         }
 
         this.initMX = additionalData.readDouble();
-	    this.initMY = additionalData.readDouble();
-	    this.initMZ = additionalData.readDouble();
+        this.initMY = additionalData.readDouble();
+        this.initMZ = additionalData.readDouble();
     }
 
     /**
-     * Don't restore the entity from NBT, kill the projectile immediately 
+     * Don't restore the entity from NBT, kill the projectile immediately
      */
     @Override
     public void readEntityFromNBT(NBTTagCompound compound)
@@ -472,8 +472,8 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     /* Client side methods */
 
     /**
-     * Update position from the server, only in case if there is a big 
-     * desync enough to be noticeable 
+     * Update position from the server, only in case if there is a big
+     * desync enough to be noticeable
      */
     @Override
     @SideOnly(Side.CLIENT)
@@ -506,8 +506,8 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
     /**
      * Is projectile in range in render distance
-     *
-     * This method is responsible for checking if this entity is 
+     * <p>
+     * This method is responsible for checking if this entity is
      * available for rendering. Rendering range is configurable.
      */
     @SideOnly(Side.CLIENT)
