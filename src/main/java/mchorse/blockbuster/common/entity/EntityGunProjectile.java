@@ -230,7 +230,16 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
 	        if (this.hits > this.props.hits)
 	        {
-		        this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+                double diff = this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ;
+
+                if (diff < 100 * 100)
+                {
+                    this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+                }
+                else
+                {
+                    this.setDead();
+                }
 	        }
 	        else
 	        {
