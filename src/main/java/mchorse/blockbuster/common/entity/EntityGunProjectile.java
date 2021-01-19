@@ -43,7 +43,6 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     public GunProps props;
     public AbstractMorph original;
     public Morph morph = new Morph();
-    public int timer;
     public int hits;
     public int impact;
     public boolean vanish;
@@ -61,6 +60,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     public double initMZ;
 
     public boolean setInit;
+    public boolean invisible;
 
     public EntityGunProjectile(World worldIn)
     {
@@ -228,7 +228,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 this.motionY -= this.getGravityVelocity();
             }
 
-            if (this.hits > this.props.hits)
+            if (this.hits < this.props.hits)
             {
                 double diff = this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ;
 
@@ -244,6 +244,11 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             else
             {
                 this.setPosition(this.posX, this.posY, this.posZ);
+
+                if (this.ticksExisted > 4 && !this.invisible)
+                {
+                    this.invisible = true;
+                }
             }
         }
 
@@ -265,8 +270,6 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             this.setPosition(d0, d1, d2);
         }
 
-        this.timer++;
-
         AbstractMorph morph = this.morph.get();
 
         if (morph != null)
@@ -283,7 +286,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             return;
         }
 
-        if (this.timer > this.props.lifeSpan)
+        if (this.ticksExisted > this.props.lifeSpan)
         {
             this.setDead();
 
@@ -293,7 +296,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             }
         }
 
-        if (this.props.ticking > 0 && this.timer % this.props.ticking == 0 && !this.props.tickCommand.isEmpty())
+        if (this.props.ticking > 0 && this.ticksExisted % this.props.ticking == 0 && !this.props.tickCommand.isEmpty())
         {
             this.getServer().commandManager.executeCommand(this, this.props.tickCommand);
         }
@@ -302,7 +305,6 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         {
             if (this.impact == 0)
             {
-                boolean remote = this.world.isRemote;
                 AbstractMorph original = MorphUtils.copy(this.original);
 
                 this.morph.set(original);
@@ -322,8 +324,10 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             return;
         }
 
-        if (this.props != null && this.timer >= 2)
+        if (this.props != null && this.ticksExisted >= 4)
         {
+            this.hits++;
+
             boolean shouldDie = this.props.vanish && this.hits >= this.props.hits;
 
             if (result.typeOfHit == Type.BLOCK)
@@ -405,8 +409,6 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 }
             }
         }
-
-        this.hits++;
     }
 
     @Override
@@ -488,14 +490,9 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         double dy = this.posY - y;
         double dz = this.posZ - z;
         double dist = dx * dx + dy * dy + dz * dz;
-        double threshold = this.props == null ? 1 : this.props.speed * this.props.speed;
+        double syncDistance = Blockbuster.bbGunSyncDistance.get();
 
-        if (threshold < 1)
-        {
-            threshold = 1;
-        }
-
-        if (dist > 2 * 2)
+        if (syncDistance > 0 && dist > syncDistance * syncDistance)
         {
             this.updatePos = posRotationIncrements;
             this.targetX = x;

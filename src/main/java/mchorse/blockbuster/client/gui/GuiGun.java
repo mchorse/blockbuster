@@ -483,7 +483,7 @@ public class GuiGun extends GuiBase
         @Override
         protected void drawUserModel(GuiContext context)
         {
-            this.projectile.timer = this.projectile.props.fadeIn;
+            this.projectile.ticksExisted = this.projectile.props.fadeIn;
             this.mc.getRenderManager().renderEntity(this.projectile, 0, 0.5F, 0, 0, context.partialTicks, false);
 
             GlStateManager.disableTexture2D();

@@ -9,6 +9,7 @@ blockbuster.config.comments:
         url_skins_sync_download: Synchronous downloading of URL skins. It makes it work URL skins with 3D outer layers at cost of freezing the game to download a skin
         add_utility_blocks: Add blocks such as command and structure blocks to Blockbuster's creative tab to simplify access to these items
         cached_structure_rendering: If enabled, structure morph will be using more performant way of rendering structures, however, some mods' blocks, like Chisel&Bits', will be invisible
+        bb_gun_sync_distance: If it's greater than 0, this option enables BB gun projectile synchronization, which makes projectile sync with the server, but at the cost of jittery teleportation
 
     model_block:
         model_block_disable_rendering: Whether model blocks should be rendered

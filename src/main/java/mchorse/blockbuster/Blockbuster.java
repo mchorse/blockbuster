@@ -149,6 +149,7 @@ public class Blockbuster
     public static ValueBoolean syncedURLTextureDownload;
     public static ValueBoolean addUtilityBlocks;
     public static ValueBoolean cachedStructureRendering;
+    public static ValueFloat bbGunSyncDistance;
 
     public static ValueBoolean modelBlockDisableRendering;
     public static ValueBoolean modelBlockDisableItemRendering;
@@ -219,6 +220,7 @@ public class Blockbuster
         syncedURLTextureDownload = builder.getBoolean("url_skins_sync_download", true);
         addUtilityBlocks = builder.getBoolean("add_utility_blocks", false);
         cachedStructureRendering = builder.getBoolean("cached_structure_rendering", true);
+        bbGunSyncDistance = builder.getFloat("bb_gun_sync_distance", 0, 0, 100);
 
         /* Model block */
         modelBlockDisableRendering = builder.category("model_block").getBoolean("model_block_disable_rendering", false);

@@ -47,10 +47,10 @@ public class RenderGunProjectile extends Render<EntityGunProjectile>
     {
         AbstractMorph morph = entity.morph.get();
 
-        if (entity.props != null && morph != null)
+        if (entity.props != null && morph != null && !entity.invisible)
         {
             int length = entity.props.lifeSpan;
-            float timer = entity.timer + partialTicks;
+            float timer = entity.ticksExisted + partialTicks;
             float scale = Interpolations.envelope(timer > length ? length : timer, 0, entity.props.fadeIn, length - entity.props.fadeOut, length);
 
             /* A small scale factor to avoid Z fighting */
