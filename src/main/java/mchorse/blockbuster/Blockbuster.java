@@ -78,7 +78,7 @@ public class Blockbuster
     @SideOnly(Side.CLIENT)
     public static String WIKI_URL()
     {
-        return langOrDefault("blockbuster.gui.links.wiki", "https://github.com/mchorse/blockbuster/wiki/");
+        return langOrDefault("blockbuster.gui.links.wiki", "https://mchorses-blockbuster-mod.fandom.com/wiki/Mchorse%27s_Blockbuster_Mod_Wiki");
     }
 
     @SideOnly(Side.CLIENT)
