@@ -113,6 +113,7 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
         File folder = new File(ClientProxy.configFile, "export");
         File file = TextureUtils.getFirstAvailableFile(folder, name);
 
+        folder.mkdirs();
         this.mc.renderEngine.bindTexture(location);
 
         int w = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);

@@ -147,6 +147,7 @@ public class SubCommandModelCombine extends CommandBase
                     File folder = new File(ClientProxy.configFile, "export");
                     File file = TextureUtils.getFirstAvailableFile(folder, "combined_" + i);
 
+                    folder.mkdirs();
                     ImageIO.write(image, "png", file);
 
                     L10n.info(this.sender, "commands.combined", i);
