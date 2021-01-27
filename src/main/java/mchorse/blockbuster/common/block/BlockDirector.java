@@ -1,5 +1,6 @@
 package mchorse.blockbuster.common.block;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
@@ -157,15 +158,53 @@ public class BlockDirector extends Block implements ITileEntityProvider
 
             ITextComponent link = new TextComponentTranslation("blockbuster.bye_director_block_guide");
             ITextComponent youtube = new TextComponentTranslation("blockbuster.bye_director_block_guide_watch");
+            String url = getUrl(playerIn);
 
-            youtube.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://youtu.be/nMOb8RnuyuE"));
-            youtube.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("https://youtu.be/nMOb8RnuyuE")));
+            youtube.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
+            youtube.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(url)));
             youtube.getStyle().setColor(TextFormatting.GRAY).setUnderlined(true);
 
             playerIn.sendMessage(link.appendSibling(youtube).appendSibling(new TextComponentString(".")));
         }
 
         return true;
+    }
+
+    /**
+     * Get video URL based on language, for Chinese users it uses Bilibili video link
+     */
+    private String getUrl(EntityPlayer playerIn)
+    {
+        Field field = null;
+
+        for (Field member : EntityPlayerMP.class.getDeclaredFields())
+        {
+            if (member.getType() == String.class)
+            {
+                field = member;
+
+                break;
+            }
+        }
+
+        if (field != null)
+        {
+            try
+            {
+                field.setAccessible(true);
+
+                String language = (String) field.get(playerIn);
+
+                if (language.startsWith("zh_"))
+                {
+                    return "https://www.bilibili.com/video/BV1SV41117Pm";
+                }
+            }
+            catch (Exception e)
+            {}
+        }
+
+        return "https://youtu.be/nMOb8RnuyuE";
     }
 
     @Override
