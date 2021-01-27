@@ -4,7 +4,7 @@ key:
         # Categories
         category: Блокбастер
         
-        plause_director: Проиграть/Остановить блок режиссёра
-        record_director: Записать воспроизведение в блок режиссёра
-        pause_director: Остановить воспроизведение в блоке режиссёра
+        plause_director: Проиграть/Остановить сцену
+        record_director: Записать воспроизведение в сцену
+        pause_director: Остановить воспроизведение в сцене
         open_gun: Настроить оружие
