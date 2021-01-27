@@ -14,6 +14,8 @@ blockbuster.config:
         green_screen_sky_color: Цвет хроманеба
         url_skins_sync_download: Синхронная загрузка ссылок
         add_utility_blocks: Добавить полезные блоки
+        cached_structure_rendering: Кэшированное отображение структур
+        bb_gun_sync_distance: Дистанция синхронизации ББ Оружия
     
     model_block:
         title: Блоки-модели
@@ -29,7 +31,6 @@ blockbuster.config:
         tooltip: Параметры конфигурации, относящиеся к системе записи игрока
 
         recording_countdown: Отсчёт до начала записи
-        recording_delay: Пропуск кадров записей
         record_unload_time: Автоматическая регулировка времени выгрузки записей
         record_unload: Автоматическая выгрузка записей
         record_sync_rate: Индикатор синхронизации тиков
