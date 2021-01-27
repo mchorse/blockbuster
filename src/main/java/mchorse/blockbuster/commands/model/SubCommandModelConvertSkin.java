@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.commands.SubCommandBase;
 import mchorse.mclib.McLib;
 import mchorse.mclib.utils.files.GlobalTree;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
@@ -61,7 +62,7 @@ public class SubCommandModelConvertSkin extends CommandBase
         }
 
         String model = args[0];
-        String skin = args[1];
+        String skin = String.join(" ", SubCommandBase.dropFirstArgument(args));
 
         if (!(model.equals("steve") || model.equals("fred")))
         {
@@ -164,9 +165,9 @@ public class SubCommandModelConvertSkin extends CommandBase
             return getListOfStringsMatchingLastWord(args, "steve", "fred");
         }
 
-        if (args.length == 2 && Arrays.asList("steve", "fred").contains(args[0]))
+        if (args.length >= 2 && Arrays.asList("steve", "fred").contains(args[0]))
         {
-            String skin = args[1];
+            String skin = String.join(" ", SubCommandBase.dropFirstArgument(args));
             String path = "b.a/" + args[0] + "/skins/" + skin;
             FolderEntry skins = GlobalTree.TREE.getByPath(path, null);
             String name = FilenameUtils.getBaseName(FilenameUtils.getPathNoEndSeparator(path));
