@@ -196,14 +196,19 @@ public class SceneManager
 		return scene;
 	}
 
+	public void save(String filename, Scene scene) throws IOException
+	{
+		this.save(filename, scene, true);
+	}
+
 	/**
 	 * Save a scene by given filename
 	 */
-	public void save(String filename, Scene scene) throws IOException
+	public void save(String filename, Scene scene, boolean reload) throws IOException
 	{
 		Scene present = this.scenes.get(scene.getId());
 
-		if (present != null)
+		if (reload && present != null)
 		{
 			present.copy(scene);
 			present.reload(present.getCurrentTick());

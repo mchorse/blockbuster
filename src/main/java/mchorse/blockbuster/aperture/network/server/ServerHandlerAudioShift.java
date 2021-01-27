@@ -21,7 +21,7 @@ public class ServerHandlerAudioShift extends ServerMessageHandler<PacketAudioShi
 
 			try
 			{
-				CommonProxy.scenes.save(scene.getId(), scene);
+				CommonProxy.scenes.save(scene.getId(), scene, false);
 			}
 			catch (Exception e)
 			{}
