@@ -22,7 +22,24 @@ public class ChatAction extends Action
 
     public static String processNameTag(String name)
     {
-        return name.replace('[', '§');
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 0, c = name.length(); i < c; i++)
+        {
+            char character = name.charAt(i);
+
+            if (character == '\\' && i < c - 1 && name.charAt(i + 1) == '[')
+            {
+                builder.append('[');
+                i += 1;
+            }
+            else
+            {
+                builder.append(character == '[' ? '§' : character);
+            }
+        }
+
+        return builder.toString();
     }
 
     public ChatAction(String message)
