@@ -71,6 +71,6 @@ blockbuster.error:
         empty_filename: "{f}Невозможно сделать запись игрока с пустым {7}ID Записи{f}."
         empty_record: "{f}Невозможно воспроизвести запись %s{f}, потому что она пустая!"
 
-        modelblock:
+    modelblock:
 
         wrong_property: "{f}Блок-модель не имеет свойства %s{f}!"
