@@ -6,8 +6,10 @@ blockbuster.config.comments:
         debug_playback_ticks: 当场景播放时，将 Tick 时间写入日志文件
         green_screen_sky: 将天空变为纯色，实现用于色键的目的
         green_screen_sky_color: 指定天空颜色，用于色度天空功能
-        url_skins_sync_download: 同步下载来自 URL 的皮肤。这能让 URL 皮肤也能够实现 3D 外层功能，代价是冻结游戏进程（假死）进行下载。
+        url_skins_sync_download: 同步下载来自 URL 的皮肤。这能让 URL 皮肤也能够实现 3D 外层功能，代价是冻结游戏进程（假死）进行下载
         add_utility_blocks: 在 Blockbuster 的创造模式选项卡中添加命令和结构块等方块，以简化获取这些物品的过程
+        cached_structure_rendering: 启用后，结构伪装系统将使用更高性能的方式来渲染结构，但会造成一些来自模组的方块消失，例如 Chisel&Bits
+        bb_gun_sync_distance: 若距离大于 0，该选项会启用 BB 枪的炮弹同步功能，使炮弹与服务器同步，但代价是会产生抖动传送
 
     model_block:
         model_block_disable_rendering: 是否渲染模型方块
@@ -17,7 +19,6 @@ blockbuster.config.comments:
 
     recording:
         recording_countdown: 录制倒计时（秒）
-        recording_delay: 录制的帧延迟
         record_unload_time: 卸载一个回放需要多久（Tick）
         record_unload: 启用自动卸载回放？
         record_sync_rate: 与服务器同步一个回放的频率是？

@@ -15,6 +15,10 @@ blockbuster.info:
         
         not_loaded: "{f}材質 %s{f} 沒有加載。"
 
+        started_combining: "{f}開始合並 %s{f} 中的皮膚..."
+        combined: "{f}已合並皮膚 %s{f}。"
+        finished_combining: "{f}已完成皮膚合並！"
+
     models.loaded: "{f}已從服務器收到 %s{f} 個自定義模型和 %s{f} 個皮膚。"
 
     record:
@@ -26,7 +30,6 @@ blockbuster.info:
 
                 {7}*{f} 回放版本：%s
                 {7}*{f} 回放的時長：%s
-                {7}*{f} 延時幀：%s
                 {7}*{f} 卸載前的時長：%s
 
         search_type: "{f}以類型 %s{f} 搜索動作："

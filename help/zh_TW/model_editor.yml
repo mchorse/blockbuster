@@ -34,9 +34,10 @@ blockbuster.gui.me:
         swinging: 跑動
         idle: 靜止
         invert: 反轉
-        wheel: 旋轉
+        wheel: 轉輪
         wing: 振翅
-        
+        roll: 翻滾
+
         rename: 重命名
         parent: 父級
         
@@ -82,6 +83,7 @@ blockbuster.gui.me:
     poses:
         title: 姿勢
         new_pose: "為新姿勢命名："
+        paste_pose: "為粘貼的姿勢命名："
         import_pose: "在此輸入姿勢的 NBT 數據來導入它到當前的姿勢："
         import_pose_tooltip: "使用 NBT 標簽來導入姿勢的屬性"
         copy_pose: "選擇要復制的當前肢體屬性的姿勢。"
@@ -90,7 +92,11 @@ blockbuster.gui.me:
         apply_pose_tooltip: "將當前肢體的姿勢應用至其他姿勢上"
         standard: "您無法移除必須的姿勢..."
         hitbox: 碰撞箱尺寸
-    
+
+        context:
+            copy: 拷貝姿勢
+            paste: 粘貼姿勢
+
     tooltips:
         save: 保存模型
 
