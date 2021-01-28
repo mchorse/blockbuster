@@ -7,7 +7,6 @@ import mchorse.blockbuster.api.ModelLimb.Holding;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTextureCanvas;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
-import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
@@ -59,7 +58,8 @@ public class GuiModelLimbs extends GuiModelEditorTab
     private GuiCirculateElement slot;
     private GuiToggleElement hold;
     private GuiToggleElement swiping;
-    private GuiToggleElement looking;
+    private GuiToggleElement lookX;
+    private GuiToggleElement lookY;
     private GuiToggleElement swinging;
     private GuiToggleElement idle;
     private GuiToggleElement invert;
@@ -187,9 +187,14 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.limb.swiping = b.isToggled();
             this.panel.dirty();
         });
-        this.looking = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.looking"), false, (b) ->
+        this.lookX = new GuiToggleElement(mc, IKey.comp(IKey.lang("blockbuster.gui.me.limbs.looking"), IKey.str(" X")), false, (b) ->
         {
-            this.panel.limb.looking = b.isToggled();
+            this.panel.limb.lookX = b.isToggled();
+            this.panel.dirty();
+        });
+        this.lookY = new GuiToggleElement(mc, IKey.comp(IKey.lang("blockbuster.gui.me.limbs.looking"), IKey.str(" Y")), false, (b) ->
+        {
+            this.panel.limb.lookY = b.isToggled();
             this.panel.dirty();
         });
         this.swinging = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.swinging"), false, (b) ->
@@ -238,11 +243,11 @@ public class GuiModelLimbs extends GuiModelEditorTab
         GuiElement animation = new GuiElement(mc);
 
         animation.flex().grid(5).items(2).resizes(true);
-        animation.add(this.looking, this.idle);
-        animation.add(this.swinging, this.invert);
-        animation.add(this.swiping, this.hold);
-        animation.add(this.wheel, this.wing);
-        animation.add(this.roll);
+        animation.add(this.lookX, this.lookY);
+        animation.add(this.idle, this.swinging);
+        animation.add(this.invert, this.swiping);
+        animation.add(this.hold, this.wheel);
+        animation.add(this.wing, this.roll);
 
         this.scroll.add(Elements.row(mc, 5, this.slot, this.holding));
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.appearance"), 24).anchor(0, 1).background(0x88000000), appearance, this.color);
@@ -395,7 +400,8 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.slot.setValue(limb.slot.ordinal());
         this.hold.toggled(limb.hold);
         this.swiping.toggled(limb.swiping);
-        this.looking.toggled(limb.looking);
+        this.lookX.toggled(limb.lookX);
+        this.lookY.toggled(limb.lookY);
         this.swinging.toggled(limb.swinging);
         this.idle.toggled(limb.idle);
         this.invert.toggled(limb.invert);

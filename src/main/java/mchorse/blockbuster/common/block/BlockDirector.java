@@ -197,7 +197,7 @@ public class BlockDirector extends Block implements ITileEntityProvider
 
                 if (language.startsWith("zh_"))
                 {
-                    return "https://www.bilibili.com/video/BV1SV41117Pm";
+                    return "https://bilibili.com/video/BV1SV41117Pm";
                 }
             }
             catch (Exception e)

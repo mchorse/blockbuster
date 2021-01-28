@@ -217,17 +217,23 @@ public class ModelCustom extends ModelBiped
             /* Reseting the angles */
             this.applyLimbPose(limb);
 
-            if (limb.limb.looking && !limb.limb.wheel)
+            if ((limb.limb.lookX || limb.limb.lookY) && !limb.limb.wheel)
             {
-                limb.rotateAngleX += headPitch * 0.017453292F;
-
-                if (invert)
+                if (limb.limb.lookX)
                 {
-                    limb.rotateAngleZ += netHeadYaw * 0.017453292F;
+                    limb.rotateAngleX += headPitch * 0.017453292F;
                 }
-                else
+
+                if (limb.limb.lookY)
                 {
-                    limb.rotateAngleY += netHeadYaw * 0.017453292F;
+                    if (invert)
+                    {
+                        limb.rotateAngleZ += netHeadYaw * 0.017453292F;
+                    }
+                    else
+                    {
+                        limb.rotateAngleY += netHeadYaw * 0.017453292F;
+                    }
                 }
             }
 
@@ -321,7 +327,7 @@ public class ModelCustom extends ModelBiped
             {
                 limb.rotateAngleX += limbSwing * factor;
 
-                if (limb.limb.looking)
+                if (limb.limb.lookY)
                 {
                     limb.rotateAngleY = netHeadYaw / 180 * (float) Math.PI;
                 }

@@ -70,7 +70,8 @@ public class ModelLimbAdapter implements JsonSerializer<ModelLimb>, JsonDeserial
 
         this.addBoolean(map, "hold", src.hold, true);
         this.addBoolean(map, "mirror", src.mirror, false);
-        this.addBoolean(map, "looking", src.looking, false);
+        this.addBoolean(map, "lookX", src.lookX, false);
+        this.addBoolean(map, "lookY", src.lookY, false);
         this.addBoolean(map, "idle", src.idle, false);
         this.addBoolean(map, "swinging", src.swinging, false);
         this.addBoolean(map, "swiping", src.swiping, false);
@@ -93,7 +94,14 @@ public class ModelLimbAdapter implements JsonSerializer<ModelLimb>, JsonDeserial
         ModelLimb limb = ModelAdapter.plainGSON.fromJson(json, ModelLimb.class);
         JsonObject object = json.getAsJsonObject();
 
-        if (object.has("holding"))
+        if (object.has("looking") && object.get("looking").isJsonPrimitive())
+        {
+            boolean looking = object.get("looking").getAsBoolean();
+
+            limb.lookX = limb.lookY = looking;
+        }
+
+        if (object.has("holding") && object.get("holding").isJsonPrimitive())
         {
             String holding = object.get("holding").getAsString();
 

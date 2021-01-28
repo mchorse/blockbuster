@@ -36,7 +36,8 @@ public class ModelLimb
     public ArmorSlot slot = ArmorSlot.NONE;
     public boolean hold = true;
     public boolean swiping;
-    public boolean looking;
+    public boolean lookX;
+    public boolean lookY;
     public boolean swinging;
     public boolean idle;
     public boolean invert;
@@ -82,7 +83,8 @@ public class ModelLimb
         b.slot = this.slot;
         b.hold = this.hold;
         b.swiping = this.swiping;
-        b.looking = this.looking;
+        b.lookX = this.lookX;
+        b.lookY = this.lookY;
         b.swinging = this.swinging;
         b.idle = this.idle;
         b.invert = this.invert;
