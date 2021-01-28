@@ -234,7 +234,7 @@ public class Blockbuster
         recordUnloadTime = builder.getInt("record_unload_time", 2400, 600, 72000);
         recordUnload = builder.getBoolean("record_unload", true);
         recordSyncRate = builder.getInt("record_sync_rate", 6, 1, 30);
-        recordAttackOnSwipe = builder.getBoolean("record_attack_on_swipe", false);
+        recordAttackOnSwipe = builder.getBoolean("record_attack_on_swipe", true);
         recordCommands = builder.getBoolean("record_commands", true);
         recordChatPrefix = builder.getString("record_chat_prefix", "");
         recordPausePreview = builder.getBoolean("record_pause_preview", true);
