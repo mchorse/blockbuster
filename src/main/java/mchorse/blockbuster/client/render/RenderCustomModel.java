@@ -2,12 +2,18 @@ package mchorse.blockbuster.client.render;
 
 import java.util.Map;
 
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector4f;
+
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
+import mchorse.blockbuster_pack.morphs.SnowstormMorph;
 import mchorse.mclib.utils.MatrixUtils;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
@@ -191,6 +197,30 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     @Override
     protected void applyRotations(EntityLivingBase entity, float pitch, float yaw, float partialTicks)
     {
+    	Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
+		Matrix4f matrix4f = MatrixUtils.readModelView(SnowstormMorph.getMatrix());
+		
+		parent.invert();
+		parent.mul(matrix4f);
+
+		Vector4f zero = SnowstormMorph.calculateGlobal(parent, entity, 0, 0, 0, partialTicks);
+
+		for(ModelLimb limb : this.current.model.limbs.values()) 
+		{	
+			limb.obb.center.x = zero.x;
+			limb.obb.center.y = zero.y;
+			limb.obb.center.z = zero.z;
+			double radians = Math.toRadians(-yaw);
+			double sinY = Math.sin(radians);
+			double cosY = Math.cos(radians);
+			Matrix4d matrix = new Matrix4d(cosY, 0F, sinY, 0F,
+										   0F, 1F, 0F, 0F,
+										   -sinY, 0F, cosY, 0F,
+										   0F, 0F, 0F, 1F);
+			//limb.obb.rotation.mul(matrix);
+			limb.obb.buildCorners();
+		}
+		
         if (entity.isEntityAlive() && entity.isPlayerSleeping())
         {
             /* Nap time! */

@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.google.common.base.MoreObjects;
 
+import mchorse.blockbuster.common.OrientedBB;
 import net.minecraft.inventory.EntityEquipmentSlot;
 
 /**
@@ -13,7 +14,9 @@ import net.minecraft.inventory.EntityEquipmentSlot;
  * It contains meta data and data about visuals and game play.
  */
 public class ModelLimb
-{
+{	
+	/*OrientedBoundingBox*/
+	public OrientedBB obb = new OrientedBB(2F, 1F, 1F);
     /* Meta data */
     public String name = "";
     public String parent = "";
