@@ -1,11 +1,16 @@
 package mchorse.blockbuster.client.model;
 
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector4f;
+
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
+import mchorse.mclib.utils.MatrixUtils;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -165,7 +170,38 @@ public class ModelCustomRenderer extends ModelRenderer
                 {
                     this.compileDisplayList(scale);
                 }
-
+                double angleX = Math.toRadians(2*rotateAngleX/scale);
+                double angleY = Math.toRadians(-2*rotateAngleY/scale);
+                double angleZ = Math.toRadians(-2*rotateAngleZ/scale);
+                double sinX = Math.sin(angleX);
+                double cosX = Math.cos(angleX);
+                double sinY = Math.sin(angleY);
+                double cosY = Math.cos(angleY);
+                double sinZ = Math.sin(angleZ);
+                double cosZ = Math.cos(angleZ);
+                Matrix4d rotateX = new Matrix4d(1, 0, 0, 0,
+						   						0, cosX, -sinX, 0,
+						   						0, sinX, cosX, 0,
+						   						0, 0, 0, 1);
+    			Matrix4d rotateY = new Matrix4d(cosY, 0, sinY, 0,
+    										    0, 1, 0, 0,
+    										    -sinY, 0, cosY, 0,
+    										    0, 0, 0, 1);
+    			Matrix4d rotateZ = new Matrix4d(cosZ, -sinZ, 0, 0,
+						   						sinZ, cosZ, 0, 0,
+						   						0, 0, 1, 0,
+						   						0, 0, 0, 1);
+    			
+    			this.limb.obb.rotation.set(rotateX);
+    			this.limb.obb.rotation.mul(rotateY);
+    			this.limb.obb.rotation.mul(rotateZ);
+    			//this.limb.obb.offset.set(localPosX * scale, localPosY * scale, localPosZ * scale);
+    			this.limb.obb.anchorOffset.set((limb.anchor[0]-0.5) * limb.size[0]*scale,(limb.anchor[1]-0.5) * limb.size[1]*scale, (limb.anchor[2]-0.5) * limb.size[2]*scale);
+    			
+    			this.limb.obb.hw = this.limb.size[0]*scale/2;
+    			this.limb.obb.hu = this.limb.size[1]*scale/2;
+    			this.limb.obb.hv = this.limb.size[2]*scale/2;
+    			
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(this.offsetX, this.offsetY, this.offsetZ);
 
@@ -231,7 +267,17 @@ public class ModelCustomRenderer extends ModelRenderer
                         }
                     }
                 }
+                if(MatrixUtils.matrix!=null) 
+                {
+                	Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
+        			Matrix4f matrix4f3 = MatrixUtils.readModelView(this.limb.obb.modelView);
 
+        			parent.invert();
+        			parent.mul(matrix4f3);
+        			Vector4f vector4f = new Vector4f(0,0,0,1);
+                    parent.transform(vector4f);
+                    this.limb.obb.offset.set(vector4f.x, vector4f.y, vector4f.z);
+                }
                 GlStateManager.translate(-this.offsetX, -this.offsetY, -this.offsetZ);
                 GlStateManager.popMatrix();
             }
