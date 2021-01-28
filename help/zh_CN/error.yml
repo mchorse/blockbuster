@@ -25,6 +25,9 @@ blockbuster.error:
 
         item_nbt_empty: "你的手里没有拿着任何东西..."
 
+        combining_empty: "{f}在 {7}[路径...]{r} 中没有找到指定的文件夹..."
+        combining_folders_empty: "{f}在 {7}[路径...]{r} 中没有找到指定的材质文件..."
+
     scene:
         playing: "{f}场景 %s{f} 正在播放！"
         stopped: "{f}场景 %s{f} 已停止播放！"
@@ -67,3 +70,7 @@ blockbuster.error:
         fill_filename: "{f}请填写{7}回放 ID{f}框！"
         empty_filename: "{f}无法在{7}回放 ID{f}为空的情况下录制玩家回放."
         empty_record: "{f}无法播放回放 %s{f}，因为是空的！"
+
+    modelblock:
+
+        wrong_property: "{f}模型方块不存在 %s{f} 属性！"

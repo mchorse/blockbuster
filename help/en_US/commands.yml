@@ -252,7 +252,7 @@ blockbuster:
             |
                 {l}{6}/{r}damage {7}<entity> <amount>{r}
 
-                {r}Inflicts {7}<amount>{r} damage to {7}<entity>{r}. If {7}<damage{r} is negative then all {7}<entity>{r} matched by target selector will be healed.
+                {r}Inflicts {7}<amount>{r} damage to {7}<entity>{r}. If {7}<amount>{r} is negative then all {7}<entity>{r} matched by target selector will be healed.
 
         spectate.help: 
             |

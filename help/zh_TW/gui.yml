@@ -86,6 +86,9 @@ blockbuster.gui:
 
         id: 回放 ID
         name: 名稱標簽
+        name_tooltip: 演員的名稱標簽。妳可以通過這壹參數，並結合命令（比如 @e[name]=Test）來鎖定該演員，或知識單純讓演員顯示名稱。\n\n妳可以使用 [ 作為顯示名稱的格式化代碼。如 [cR[aG[1B[r 會變成 {c}R{a}G{1}B{r}.
+        target: 目標
+        target_tooltip: 妳可以在此指定需要哪個玩家來播放這段回放。\n\n額外的目標選擇器可以用來選擇玩家的用戶名. @r - 隨機玩家, @{n}team{r} - 其中 {n}team{r} 是計分板中的隊伍名稱.
         invincible: 無敵
         invisible: 隱身
         enabled: 啟用
@@ -101,7 +104,7 @@ blockbuster.gui:
         rename_prefix_popup: "輸入壹個新的前綴："
 
         attach: 鏈接
-        attach_tooltip: 將該場景鏈接到當前手持的播放按鈕上
+        attach_tooltip: 將該場景鏈接到當前手持的播放按鈕上。\n\n另外，妳也可以通過手持播放按鈕，並在潛行的同時，右鍵點擊播放按鈕實現對它的鏈接。
 
         camera: 編輯相機
         tp: 傳送
@@ -176,6 +179,8 @@ blockbuster.gui:
         cut: 剪切動作
         copy: 拷貝動作
         paste: 粘貼動作
+        capture: 從光標處開始錄制
+        teleport: 從光標處進行傳送
 
         drop: 掉落方塊
         damage: 傷害
@@ -261,6 +266,7 @@ blockbuster.gui:
         title: 播放設定
         camera_mode: 相機模式
         profile: 相機配置文件名稱
+        scene: 場景
 
         nothing: 什麽都不做
         play: 僅播放
@@ -283,6 +289,17 @@ blockbuster.gui:
         limbs: 肢體
         body_parts: 身體部分
         use_target: 使用目標
+
+        shape_keys: 形態鍵
+        shape_keys_factor: 形態鍵系數
+        shape_keys_factor_tooltip: 該參數決定了應用於形態鍵的系數量級（0 = 無影響，1 = 完全變形）
+        relative: 相對
+        relative_tooltip: 該選項可以將形變相對地應用到當前的形變之上
+
+        context:
+            add: 添加形態鍵...
+            add_to: "添加形態鍵 \"%s\""
+            remove: 移除該形態鍵
 
     image:
         crop: 裁剪
@@ -308,6 +325,12 @@ blockbuster.gui:
         morphs: 偽裝
         random_order: 隨機順序
         ticks: Ticks
+
+        preview_tick: 該序列偽裝的預覽 Tick 數
+
+        keys:
+            toggle: 播放/暫停播放序列
+            stop: 停止播放序列
 
     particle:
         tooltip: 常規屬性
@@ -376,6 +399,9 @@ blockbuster.gui:
 
             position: 相對位置
             rotation: 相對旋轉
+            direction: 相對方向
+            acceleration: 相對加速度
+            gravity: 重力
 
         initialization:
             title: 初始化表達式
@@ -467,6 +493,17 @@ blockbuster.gui:
             regular: 普通
             animated: 動畫
 
+            cameraFacing:
+                label: 朝向模式
+
+                direction_x: 方向 X
+                direction_y: 方向 Y
+                direction_z: 方向 Z
+                lookat_xyz: 看向 XYZ
+                lookat_y: 看向 Y
+                rotate_xyz: 旋轉 XYZ
+                rotate_y: 旋轉 Y
+
             size: 告示板尺寸
             width: 寬度
             height: 高度
@@ -502,10 +539,30 @@ blockbuster.gui:
             title: 碰撞
 
             enabled: 啟用
+            realisticCollision: 真實碰撞
+            preserveEnergy: 保存能量
+            entityCollision: 與實體碰撞
+            momentum: 實體碰撞動量
             drag: 在粒子與世界中的方塊碰撞後，碰撞阻力所增加的阻力（減速）大小
             bounciness: 碰撞後粒子的加速度乘以彈性
+            randomDirection: 隨機方向 - 隨機化方向矢量。該參數不影響速度。
+            damping:
+                title: 阻尼
+                strength: 阻尼 - 減少撞擊時的速度。有效值在 0 和 1 之間。1 = 最大阻尼 -> 完全降低速度。
+                randomness: 隨機調整阻尼
+            splitParticle:
+                title: 分裂粒子
+
+                count: 粒子在撞擊時會分裂出的數量 - 分裂後的速度為 分裂前速度/數量
+                speedThreshold: 激活分裂過程中的速度閾值
             radius: 粒子命中箱半徑
             expire: 接觸時失效
+            expirationDelay: 延遲失效的時間。以 Tick 為單位 - 20 T = 1 秒
+
+            appearance:
+                title: 碰撞時的材質
+            lighting:
+                title: 碰撞時的發光
 
     record_morph:
         random_skip: 隨機跳過
@@ -519,6 +576,11 @@ blockbuster.gui:
         mipmap_tooltip: 啟用後，從遠處看不會有那麽多噪點
         replace: 替換
         replace_modal: "輸入您想要替換的 {l}已加載的{r} 材質資源的位置："
+        export: 保存材質
+        export_modal: "所選材質已被成功導出為 {7}%s{r}!"
+        export_error: "該材質無法導出... 請檢查運行日誌以查看錯誤信息！"
+        open_folder: "打開導出文件夾..."
+        copy: "將當前所選的材質復制為文字路徑（域:路徑）"
         
     gun:
         title: 槍配置

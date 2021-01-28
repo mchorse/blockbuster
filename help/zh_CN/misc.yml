@@ -9,10 +9,12 @@ blockbuster:
     "yes": "是"
     "no": "否"
     morph_error: 未找到模型
-    start_recording: "现在开始录制 {7}%s{r}, 在 {7}%s{r}"
+    start_recording: "即将开始录制 {7}%s{r}，距开始还有 {7}%s{r}"
 
-    bye_director_block: 导演方块现已被废弃。存储在该方块内的数据会被转换为场景。
-    bye_register_item: 导演块现已被废弃。这个物品现在已经没用了...
+    bye_director_block: 导演方块已被移除。该导演方块已被转换为场景。请使用场景进行拍摄。
+    bye_director_block_guide: "要了解更多关于本次改动的信息，"
+    bye_director_block_guide_watch: "请看本视频"
+    bye_register_item: 导演方块已被移除。这个物品现在已经没用了...
 
 # Metamorph
 morph.section.blockbuster: Blockbuster 模型

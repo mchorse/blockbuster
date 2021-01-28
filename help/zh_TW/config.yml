@@ -14,6 +14,8 @@ blockbuster.config:
         green_screen_sky_color: 色度天空顏色
         url_skins_sync_download: 同步的 URL 下載
         add_utility_blocks: 添加實用方塊
+        cached_structure_rendering: 緩存結構渲染
+        bb_gun_sync_distance: BB 槍距離同步
         
     model_block:
         title: 模型方塊
@@ -29,7 +31,6 @@ blockbuster.config:
         tooltip: 所有與玩家回放系統相關的選項
 
         recording_countdown: 錄制倒計時
-        recording_delay: 錄制跳過幀
         record_unload_time: 自動卸載錄制的時間
         record_unload: 自動卸載錄制
         record_sync_rate: 錄制 Tick 的同步率

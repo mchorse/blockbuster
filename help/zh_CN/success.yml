@@ -8,7 +8,8 @@ blockbuster.success:
         
         convert_skin: "{f}成功转换 %s{r}/%s{r} 皮肤！"
 
-        item_nbt: "所持物品的 NBT 数据已复制到剪贴板！"
+        item_nbt: "{f}所持物品的 NBT 数据已复制到剪贴板！"
+        model_report: "{f}模型文件夹的报告已成功复制到您的剪贴板！"
 
     scene:
         play: "{f}场景 %s{f} 已开始播放！"
@@ -37,3 +38,5 @@ blockbuster.success:
         process: "{f}玩家回放 %s{f} 的 %s{f} 属性中的 %s{f} 至 %s{f} 部分已处理成功！"
         calculate_body_yaw: "{f}玩家回放 %s{f} 的身体偏航已被成功自动计算！"
         remove_body_yaw: "{f}玩家回放 %s{f} 的身体偏航已被移除！"
+        renamed: "{f}玩家回放 %s{f} 已成功重命名为 %s{f}！"
+        camera: "{f}玩家回放 %s{f} 已成功生成相机配置文件 %s{f}！"
