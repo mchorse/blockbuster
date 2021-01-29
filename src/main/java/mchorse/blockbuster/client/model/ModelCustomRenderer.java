@@ -2,6 +2,9 @@ package mchorse.blockbuster.client.model;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4d;
 import javax.vecmath.Vector4f;
 
 import org.lwjgl.opengl.GL11;
@@ -192,11 +195,11 @@ public class ModelCustomRenderer extends ModelRenderer
 						   						0, 0, 1, 0,
 						   						0, 0, 0, 1);
     			
-    			this.limb.obb.rotation.set(rotateX);
-    			this.limb.obb.rotation.mul(rotateY);
-    			this.limb.obb.rotation.mul(rotateZ);
+    			//this.limb.obb.rotation.set(rotateX);
+    			//this.limb.obb.rotation.mul(rotateY);
+    			//this.limb.obb.rotation.mul(rotateZ);
     			//this.limb.obb.offset.set(localPosX * scale, localPosY * scale, localPosZ * scale);
-    			this.limb.obb.anchorOffset.set((limb.anchor[0]-0.5) * limb.size[0]*scale,(limb.anchor[1]-0.5) * limb.size[1]*scale, (limb.anchor[2]-0.5) * limb.size[2]*scale);
+    			//this.limb.obb.anchorOffset.set(-(limb.anchor[0]-0.5),-(limb.anchor[1]-0.5), -(limb.anchor[2]-0.5));
     			
     			this.limb.obb.hw = this.limb.size[0]*scale/2;
     			this.limb.obb.hu = this.limb.size[1]*scale/2;
@@ -204,7 +207,7 @@ public class ModelCustomRenderer extends ModelRenderer
     			
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(this.offsetX, this.offsetY, this.offsetZ);
-
+                
                 if (this.rotateAngleX == 0.0F && this.rotateAngleY == 0.0F && this.rotateAngleZ == 0.0F)
                 {
                     if (this.rotationPointX == 0.0F && this.rotationPointY == 0.0F && this.rotationPointZ == 0.0F)
@@ -270,13 +273,23 @@ public class ModelCustomRenderer extends ModelRenderer
                 if(MatrixUtils.matrix!=null) 
                 {
                 	Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
-        			Matrix4f matrix4f3 = MatrixUtils.readModelView(this.limb.obb.modelView);
+        			Matrix4f matrix4f = new Matrix4f(MatrixUtils.readModelView(this.limb.obb.modelView));
 
         			parent.invert();
-        			parent.mul(matrix4f3);
+        			parent.mul(matrix4f);
         			Vector4f vector4f = new Vector4f(0,0,0,1);
                     parent.transform(vector4f);
                     this.limb.obb.offset.set(vector4f.x, vector4f.y, vector4f.z);
+                    Vector4d ax = new Vector4d(parent.m00, parent.m01, parent.m02, 0);
+        			Vector4d ay = new Vector4d(parent.m10, parent.m11, parent.m12, 0);
+        			Vector4d az = new Vector4d(parent.m20, parent.m21, parent.m22, 0);
+        			ax.normalize();
+        			ay.normalize();
+        			az.normalize();
+        			this.limb.obb.rotation.setIdentity();
+        			this.limb.obb.rotation.setRow(0, ax);
+        			this.limb.obb.rotation.setRow(1, ay);
+        			this.limb.obb.rotation.setRow(2, az);
                 }
                 GlStateManager.translate(-this.offsetX, -this.offsetY, -this.offsetZ);
                 GlStateManager.popMatrix();

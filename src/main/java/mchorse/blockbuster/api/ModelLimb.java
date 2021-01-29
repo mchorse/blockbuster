@@ -16,7 +16,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 public class ModelLimb
 {	
 	/*OrientedBoundingBox*/
-	public OrientedBB obb = new OrientedBB(2F, 1F, 1F);
+	public OrientedBB obb = new OrientedBB();
     /* Meta data */
     public String name = "";
     public String parent = "";

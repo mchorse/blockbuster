@@ -7,6 +7,7 @@ import javax.vecmath.Matrix4f;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
@@ -31,33 +32,33 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 public class OrientedBB
-{
-
-	public double yawTMP = 0; //just for testing and fun
-	public double[] rotationPoint = {0,0,0}; //testing position
-	
-	public Matrix4d rotation = new Matrix4d();
-	public static Matrix4f modelView = new Matrix4f();
-	/* global center point (not the anchor)*/
-	public Vector3d center;
+{	
+	private final double random1 = Math.random();
+	private final double random2 = Math.random();
+	private final double random3 = Math.random();
+	private final double random4 = Math.random();
 	
 	/*local basis vectors*/
 	private Vector3d w = new Vector3d(1,0,0); //x
 	private Vector3d u = new Vector3d(0,1,0); //y
 	private Vector3d v = new Vector3d(0,0,1); //z
 	
+	public static Matrix4f modelView = new Matrix4f();
+	
+	public Matrix4d rotation = new Matrix4d();
+	/*initial rotation*/
+	public Matrix4d rotation0 = new Matrix4d();
+	
+	/*global center point (not the anchor)*/
+	public Vector3d center = new Vector3d();
+	
 	/*half-width, half-height, half-depth*/
 	public float hw;
 	public float hu;
 	public float hv;
 	
-	private final double random1 = Math.random();
-	private final double random2 = Math.random();
-	private final double random3 = Math.random();
-	private final double random4 = Math.random();
-	
-	/* corners - starting from maxXYZ (1,1,1) going clockwise
-	 * same thing for bottom - starting at maxXminYmaxZ */
+	/*corners - starting from maxXYZ (1,1,1) going clockwise
+	 *same thing for bottom - starting at maxXminYmaxZ */
 	public Corner[] corners = new Corner[8];
 	
 	public Vector3d anchorOffset = new Vector3d();
@@ -65,25 +66,33 @@ public class OrientedBB
 	/*offset from main entity*/
 	public Vector3d offset = new Vector3d();
 	
-	public OrientedBB(Vector3d center, float width, float height, float depth) 
+	/*offset from limb MAYBE IT IS REDUNDAND TO ANCHOROFFSET.... CONFUSING*/
+	public Vector3d offsetLimb = new Vector3d();
+	
+	public OrientedBB(@Nullable Vector3d center, @Nullable Matrix4d rotation, float width, float height, float depth) 
 	{
-		setup(width, height, depth);
+		if(center==null)
+		{
+			center = new Vector3d();
+		}
+		if(rotation==null)
+		{
+			rotation = new Matrix4d();
+			rotation.setIdentity();
+		}
+		setup(rotation, width, height, depth);
 		this.center.set(center);
-		buildCorners();
 	}
 	
 	public OrientedBB()
 	{
-		setup(0, 0, 0);
-	}
-	
-	public OrientedBB(float width, float height, float depth) 
-	{
-		setup(width, height, depth);
+		Matrix4d rotation = new Matrix4d();
+		rotation.setIdentity();
+		setup(rotation, 0, 0, 0);
 		buildCorners();
 	}
 	
-	public void setup(float width, float height, float depth) 
+	public void setup(Matrix4d rotation0, float width, float height, float depth) 
 	{
 		this.center = new Vector3d();
 		this.hw = Math.abs(width)/2;
@@ -91,33 +100,7 @@ public class OrientedBB
 		this.hv = Math.abs(depth)/2;
 		RenderingHandler.obbsToRender.add(this);
 		this.rotation.setIdentity();
-	}
-	
-	public void update(EntityLivingBase target, float partialTicks) 
-	{
-		/*Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
-		parent.invert();
-		
-		Vector4f zero = SnowstormMorph.calculateGlobal(parent, target, 0, 0, 0, partialTicks);
-
-		System.out.println(zero+"\n");
-		this.rotation.setIdentity();
-
-		Vector3f ax = new Vector3f(parent.m00, parent.m01, parent.m02);
-		Vector3f ay = new Vector3f(parent.m10, parent.m11, parent.m12);
-		Vector3f az = new Vector3f(parent.m20, parent.m21, parent.m22);
-
-		ax.normalize();
-		ay.normalize();
-		az.normalize();
-
-		this.rotation.setRow(0, ax);
-		this.rotation.setRow(1, ay);
-		this.rotation.setRow(2, az);
-		
-		//this.center.set(zero.x, zero.y, zero.z);
-		rotate(this.rotation);
-		buildCorners();*/
+		this.rotation0.set(rotation0);
 	}
 	
 	public void render(RenderWorldLastEvent event)
@@ -189,14 +172,19 @@ public class OrientedBB
 	    anchorOffset.w = 1;
 	    Vector4d offset = new Vector4d(this.offset);
 	    offset.w = 1;
+	    Vector4d offsetLimb = new Vector4d(this.offsetLimb);
+	    offsetLimb.w = 1;
 	    
-	    //this.rotation.transform(anchorOffset);
-	    //this.rotation.transform(width0);
-	    //this.rotation.transform(height0);
-	    //this.rotation.transform(depth0);
+	    //does this anchorOffset work...mhhmhmhmh
+	    this.rotation.transform(anchorOffset);
+	    this.rotation.transform(offsetLimb);
+	    this.rotation.transform(width0);
+	    this.rotation.transform(height0);
+	    this.rotation.transform(depth0);
 	    
 	    Vector4d center0 = new Vector4d(this.center);
 	    center0.add(anchorOffset);
+	    center0.add(offsetLimb);
 	    center0.add(offset);
 	    
 	    Vector3d center = new Vector3d(center0.x, center0.y, center0.z);
@@ -294,28 +282,41 @@ public class OrientedBB
 		 * corners inside this list also have a connection to this corner*/
 		private List<Corner> connections;
 		
-		public Corner(Vector3d pos, List<Corner> connections)
-		{
-			this.position = new Vector3d(pos);
-			this.connections = new ArrayList<Corner>();
-			this.connections.addAll(connections);
-		}
-		
 		public Corner(Vector3d pos)
 		{
 			this.position = new Vector3d(pos);
 			this.connections = new ArrayList<Corner>();
 		}
 		
-		private void addConnection(Corner corner) 
+		/*
+		 * method connects corner with this corner. It adds both elements to both connections lists
+		 * @return boolean if connection was established. False means no connection was made as both lists contain already the corners
+		 */
+		public boolean connect(Corner corner) 
 		{
-			this.connections.add(corner);
+			if(!corner.connections.contains(this) && !this.connections.contains(corner))
+			{
+				corner.connections.add(this);
+				this.connections.add(corner);
+				return true;
+			}
+			else if(!corner.connections.contains(this))
+			{
+				corner.connections.add(this);
+				return true;
+			}
+			else if(!this.connections.contains(corner))
+			{
+				this.connections.add(corner);
+				return true;
+			}
+			return false;
 		}
 		
-		public void connect(Corner corner) 
+		public void disconnect(Corner corner)
 		{
-			corner.addConnection(this);
-			addConnection(corner);
+			corner.connections.remove(this);
+			this.connections.remove(corner);
 		}
 	}
 }
