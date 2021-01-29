@@ -393,7 +393,7 @@ public class RenderingHandler
         double playerY = player.prevPosY + (player.posY - player.prevPosY) * event.getPartialTicks();
         double playerZ = player.prevPosZ + (player.posZ - player.prevPosZ) * event.getPartialTicks();
 
-        GlStateManager.glLineWidth(2F);
+        GlStateManager.glLineWidth(4F);
         GlStateManager.disableLighting();
         GlStateManager.disableTexture2D();
 
