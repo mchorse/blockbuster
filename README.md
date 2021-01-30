@@ -45,6 +45,7 @@ Blockbuster mod provides you with lots of features to create outstanding machini
 * **Animations** — with animated poses and image morph animations, you can add animation to your actors and sets.
 * **[Minema](https://github.com/daipenger/minema/releases) compatability** – thanks to frame-based player recording and cameras, you can convert your in-game machinimas to videos with a press of a button.
 * **In-game audio synchronization** – if you have an .wav audio track, you can load it into Blockbuster, which will make actor and camera synchronization so much easier! Everytime you'll record an actor, play the scene or edit the camera, an audio waveform preview will be visible, which will make any kind of timing synchronizations a breeze!
+* **First-person playback** — with new **Target** option of scene's replays, it's possible to make any player to be an actor. This could be useful for creation of reproducible first-person roleplays, or locking the player in a cinematic within adventure map.
 * **Speaks multiple languages** – besides English, Blockbuster is also translated into Russian and Chinese thanks to [Andruxioid](https://www.youtube.com/channel/UCnHOceBjwMyqCR5oYOoNqhQ) and [ycwei982](https://www.youtube.com/channel/UCfUDMSGlXUblXimkvNl_7Ww), respectively.
 
 ## Videos
@@ -53,7 +54,7 @@ Blockbuster mod provides you with lots of features to create outstanding machini
 
 This is change logs playlist. Almost every update (for exception of patches with bug fixes and minor features) comes with a change log video which showcases new features, and briefly shows how to use them.
 
-<a href="https://youtu.be/NmGz3SVs6Gs?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/NmGz3SVs6Gs/0.jpg"></a> 
+<a href="https://youtu.be/ioHMMEhxgkE?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/ioHMMEhxgkE/0.jpg"></a> 
 
 Here is also a playlist of tutorials directly or indirectly related to Blockbuster/Minecraft machinima creation. Make sure to check it out, as it consists out of tutorials such as basics of Blockbuster mod, how to import OBJ models, etc.
 
@@ -79,7 +80,9 @@ Also, I would really appreciate if you will support me on Patreon!
 
 ## Bug reports
 
-If you found a bug, or this mod crashed your game. I'll appreciate if you could report a bug or a crash to me either on [issue tracker](https://github.com/mchorse/blockbuster/issues/), on PM or on [Twitter](https://twitter.com/McHorsy). Please, make sure to attach a crash log ([pastebin](http://pastebin.com) please) and description of a bug or crash and the way to reproduce it. Thanks! 
+If you found a bug, or this mod crashed your game, make sure to check this [compatibility table and incompatible mod list](https://github.com/mchorse/mclib/wiki/Compatibility-table-of-McHorse%27s-mods) page. The most frequent issue people encounter is that they didn't install the compatible versions of my mods. Or updated only one mod while using older version of my other mods.
+
+If the versions of the mod are correct, then you can report a bug or a crash to me either on [issue tracker](https://github.com/mchorse/blockbuster/issues/), or on my [Discord server](https://discord.gg/qfxrqUF). Please, make sure to attach a crash log ([pastebin](http://pastebin.com) please) and description of a bug or crash and the way to reproduce it. Thanks! 
 
 ## License
 

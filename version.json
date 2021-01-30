@@ -1,6 +1,7 @@
 {
     "homepage": "https://curseforge.com/minecraft/mc-mods/blockbuster/",
     "1.12.2": {
+        "2.2": "This huge update features lots of new cool features like first person player playback, easier animation of body parts and sequencers and lots of quality of life features and tweaks, and bug fixes.",
         "2.1.1": "This small patch update features texture coordinates preview in the model editor, a bug fix for extruded models and updated the tutorial link to the new version of tutorial series.",
         "2.1": "This update is focused on simplifying some aspects of recording actors, and editing the player recordings. This update features a game changer feature called in-game audio synchronization. Director blocks' functionality was removed.",
         "2.0.2": "This is a patch update that features a lot of fixes made to Snowstorm particle system, and to other parts of the mod. A couple of GUI keybinds were added, and a couple of useful /record sub-commands were added.",
@@ -48,8 +49,8 @@
         "1.4.10": "Patch 1.4.10 adds few nice misc. features (model block and OBJ loading without JSON model) which generally should improve UX a bit and simplify decorating set with Blockbuster models/Metamorph morphs, and lay down a foundation for future new features (which involves removing old useless code)."
     },
     "promos": {
-        "1.12.2-latest": "2.1.1",
-        "1.12.2-recommended": "2.1.1",
+        "1.12.2-latest": "2.2",
+        "1.12.2-recommended": "2.2",
         "1.11.2-latest": "1.6.6",
         "1.11.2-recommended": "1.6.6",
         "1.10.2-latest": "1.6.6",

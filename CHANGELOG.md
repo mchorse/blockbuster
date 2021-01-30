@@ -1,3 +1,81 @@
+## Version 2.2
+
+This huge update features lots of new cool features like first person player playback, easier animation of body parts and sequencers and lots of quality of life features and tweaks, and bug fixes.
+
+**Compatible** with McLib `2.2`, Metamorph `1.2.5` and Aperture `1.5.1`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+<a href="https://youtu.be/ioHMMEhxgkE"><img src="https://img.youtube.com/vi/ioHMMEhxgkE/0.jpg"></a> 
+
+* Added shape key feature to OBJ model loading (it allows creating animations based on different states of OBJ models in model's `shapes` folder)
+* Added support for local variables in particle system
+* Added **use target** option to BB gun, to be able to use particle morph inside of BB gun's default and firing morphs (suggested by Centryfuga)
+* Added **save texture** (suggested by edgyhumanzombieninja) and **copy path** buttons to texture manager panel
+* Added `/modelblock` command which allows to edit model blocks (suggested by Crazy)
+	* `/modelblock morph <x> <y> <z> [morph_nbt]` changes morph of the model block at XYZ
+	* `/modelblock property <x> <y> <z> <property:enabled> <value>` changes a property of the model block at XYZ
+* Added **Cached structure rendering** mod option
+* Added animation preview into sequencer's morph editor (suggested by MaiZhi)
+* Added a feature to set colorful name tags for actors (suggested by Mopolo)
+* Added `/record rename <filename> <new_filename>` command
+* Added **Copy pose** and **Paste pose** context menu to pose editor's limb list and pose list in model editor's pose panel (suggested by Joziah2)
+* Added **Target** option to scene's replay, which allows playing back replays with a real actor
+* Added a feature that automatically reloads a scene if a scene gets edited when it's already playing
+* Added configuration of playback button upon sneak + right click (suggested by Mopolo)
+* Added `/model combine <paths...>` command which allows creating permutations of skins in given folders relative to `config/blockbuster/models/` (suggested by Tossler)
+* Added `/model report` command which allows creating a report about models and skins
+* Added **Roll** option to limbs, which allows rolling the limb based on actor's or player's roll 
+* Added `roll` property to player recording (suggested by Chryfi)
+* Added `/record camera <filename> <camera_profile> [x] [y] [z]` command which updates, or generates a new, player recording based on motion in `<camera_profile>`
+* Added `variable.particle_bounces` variable to particles of particle system (helped by Chryfi)
+* Added actor path rendering in F3 screen (suggested by noob and Andruxioid)
+* Added `/action append <filename> <offset> [scene]` command, which allows to start recording at desired `<offset>` tick
+* Added **Teleport to tick** (`Ctrl + T` key combo) and **Record at tick** (`Ctrl + R` key combo) buttons to player recording editor
+* Added **BB gun sync distance** mod option
+* Added `/damage <entity> <amount>` command (suggested by Centryfuga)
+* Changed sequencer morph's **set duration** option to be off by default
+* Changed `/action play`'s command syntax to `/action play <filename> [invincibility] [morph_nbt]` (suggested by Centryfuga)
+* Changed the way player recordings are getting saved upon modifying them with commands and player recordings to being able restore previous versions (reported by Ethobot)
+* Change the wording of director block outdated messages (and send video link in the chat)
+* Fixed incorrectly calculated bottom face in UV editor
+* Fixed structure morph's lighting bug (glowing in the dark)
+* Fixed crash when putting `/scene play` command into command on stop playback of another scene (reported by Crazy)
+* Fixed **Edit camera** and **Teleport** buttons going off screen with large GUI scale
+* Fixed audio gets resumed after pausing it when it was already paused
+* Fixed extruded layers disappearing at random (reported by Warkanam)
+* Fixed structure morphs not correctly appearing after Minecraft resources reload (reported by Joziah2)
+* Fixed actors not having more than 20 health when setting custom health value above 20 (reported by Amin)
+* Fixed new `"x"`, `"y"` and `"z"` values for disc shape's normal breaking the particle effect for particle system (reported by agirres)
+* Fixed GIF texture not resetting playback upon model block update 
+* Fixed audio file is not being scrolled upon picking a different scene
+* Fixed `/model convert`'s help message (reported by Andruxioid)
+* Fixed `steve` and `steve_3d` not having chestplate and boots (reported by Miscodes)
+* Fixed inconsistency with vertical and horizontal image morph's cropping (reported by TimeShadow Studios)
+* Removed **Recording frame skip** mod option
+
+### Chryfi's particle system extension
+
+Besides all that cool stuff in the list above, [Chryfi](https://www.youtube.com/Chryfi) worked for more than 3 months adding a lot of mind blowing features to the particle system. All of these additions below are Chryfi's outstanding work:
+
+* Added variables `variable.particle_speed.length`, `variable.particle_speed.x`, `variable.particle_speed.y` and `variable.particle_speed.z`. Could be used for motionblur like effect.
+* Added Сamera facing mode button to Appearance section
+* Added more options to Local space section:
+    * Relative direction: when enabled, it rotates the direction vector when spawning according to the rotation of the emitter/body part. Example: make particles shoot out of a body part like blood.
+    * Relative acceleration: when enabled, it rotates the acceleration vector throughout the whole lifetime of a particle according to the body part's local rotation.
+    * Gravity: when enabled, it vertically accelerates every particle by `-9.81` which won't be affected by the local acceleration.
+* Added more options to Collision section:
+    * Realistic collision: the direction vector will be mirrored on collision. Example: together with gravity particles can now bounce realistically like a bouncy rubber ball.
+    * Random direction: this randomizes the direction on collision. It can be used with realistic collision on or off. It doesn't affect the speed, it only changes the direction. When bounciness is `0` this still changes the direction just without reflecting on the surface. This could be used for force fields.
+        * Preserve energy: when bounciness is `0` and random bounciness is not `0`, an enabled preserve energy would ignore that the vector component responsible for colliding will be `0`. Enabled preserve energy will make the particles fast.
+    * Split particles: this splits the particles into a given amount on impact. Their speed will change according to the number of splits e.g. `4` splits => `speed / 4`.
+    * Split particles speed threshold: this is the speed threshold for activating the split process.
+    * Damping: reduce the velocity of the particles on impact. Valid range `0..1`, `1` being the highest damping (`1` reduces the velocity completely).
+    * Random damping: randomize the damping. Values are `0..1`. Example: damping of `1.0` and random damping of `0.5` means the damping will vary between `0.5` and `1.5`.
+    * Change texture/appearance on collision.
+    * Change tint and lighting on collision.
+    * Expire on impact delay: would be also useful for texture on impact. It can be used with Molang expressions like `math.random()`, negative values will be turned into positive values.
+    * Collision with entity's hitboxes.
+    * Collision with entity pseudo momentum.
+
 ## Version 2.1.1
 
 This small patch update features texture coordinates preview in the model editor, a bug fix for extruded models and updated the tutorial link to the new version of tutorial series.
