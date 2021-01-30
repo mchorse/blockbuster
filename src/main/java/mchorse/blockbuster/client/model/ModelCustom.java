@@ -349,7 +349,7 @@ public class ModelCustom extends ModelBiped
 
             if (limb.limb.roll)
             {
-                limb.rotateAngleZ = -EntityUtils.getRoll(entityIn, ageInTicks % 1) / 180F * PI;
+                limb.rotateAngleZ += -EntityUtils.getRoll(entityIn, ageInTicks % 1) / 180F * PI;
             }
         }
     }
