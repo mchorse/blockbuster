@@ -112,7 +112,7 @@ public class MolangParser extends MathBuilder
 			{
 				try
 				{
-					return new MolangValue(this, new Constant(Float.parseFloat(primitive.getAsString())));
+					return new MolangValue(this, new Constant(Double.parseDouble(primitive.getAsString())));
 				}
 				catch (Exception e)
 				{}
