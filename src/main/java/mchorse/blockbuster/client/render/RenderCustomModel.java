@@ -15,6 +15,7 @@ import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.SnowstormMorph;
 import mchorse.mclib.utils.MatrixUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -219,6 +220,10 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 										   0F, 0F, 0F, 1F);
 			//limb.obb.rotation.mul(matrix);
 			limb.obb.buildCorners();
+			if(Minecraft.getMinecraft().gameSettings.showDebugInfo)
+			{
+				//limb.obb.render();
+			}
 		}
 		
         if (entity.isEntityAlive() && entity.isPlayerSleeping())
