@@ -383,6 +383,7 @@ public class RenderingHandler
             	obb.render(event);
             }
         }
+        obbsToRender.clear();
     }
 
     private void renderPaths(RenderWorldLastEvent event, Set<Record> recordsToRender)

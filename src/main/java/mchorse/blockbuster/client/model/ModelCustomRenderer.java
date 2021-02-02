@@ -198,12 +198,6 @@ public class ModelCustomRenderer extends ModelRenderer
     			//this.limb.obb.rotation.set(rotateX);
     			//this.limb.obb.rotation.mul(rotateY);
     			//this.limb.obb.rotation.mul(rotateZ);
-    			//this.limb.obb.offset.set(localPosX * scale, localPosY * scale, localPosZ * scale);
-    			//this.limb.obb.anchorOffset.set(-(limb.anchor[0]-0.5),-(limb.anchor[1]-0.5), -(limb.anchor[2]-0.5));
-    			
-    			this.limb.obb.hw = this.limb.size[0]*scale/2;
-    			this.limb.obb.hu = this.limb.size[1]*scale/2;
-    			this.limb.obb.hv = this.limb.size[2]*scale/2;
     			
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(this.offsetX, this.offsetY, this.offsetZ);
@@ -222,6 +216,7 @@ public class ModelCustomRenderer extends ModelRenderer
                                 this.childModels.get(k).render(scale);
                             }
                         }
+                        updateObb(scale);
                     }
                     else
                     {
@@ -236,7 +231,7 @@ public class ModelCustomRenderer extends ModelRenderer
                                 this.childModels.get(j).render(scale);
                             }
                         }
-
+                        updateObb(scale);
                         GlStateManager.translate(-this.rotationPointX * scale, -this.rotationPointY * scale, -this.rotationPointZ * scale);
                     }
                 }
@@ -269,31 +264,43 @@ public class ModelCustomRenderer extends ModelRenderer
                             this.childModels.get(i).render(scale);
                         }
                     }
+                    updateObb(scale);
                 }
-                if(MatrixUtils.matrix!=null) 
-                {
-                	Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
-        			Matrix4f matrix4f = new Matrix4f(MatrixUtils.readModelView(this.limb.obb.modelView));
-
-        			parent.invert();
-        			parent.mul(matrix4f);
-        			Vector4f vector4f = new Vector4f(0,0,0,1);
-                    parent.transform(vector4f);
-                    this.limb.obb.offset.set(vector4f.x, vector4f.y, vector4f.z);
-                    Vector4d ax = new Vector4d(parent.m00, parent.m01, parent.m02, 0);
-        			Vector4d ay = new Vector4d(parent.m10, parent.m11, parent.m12, 0);
-        			Vector4d az = new Vector4d(parent.m20, parent.m21, parent.m22, 0);
-        			ax.normalize();
-        			ay.normalize();
-        			az.normalize();
-        			this.limb.obb.rotation.setIdentity();
-        			this.limb.obb.rotation.setRow(0, ax);
-        			this.limb.obb.rotation.setRow(1, ay);
-        			this.limb.obb.rotation.setRow(2, az);
-                }
+                
                 GlStateManager.translate(-this.offsetX, -this.offsetY, -this.offsetZ);
+                
                 GlStateManager.popMatrix();
             }
+        }
+    }
+    
+    public void updateObb(float scale)
+    {
+    	this.limb.obb.hw = this.limb.size[0]*scale/2;
+		this.limb.obb.hu = this.limb.size[1]*scale/2;
+		this.limb.obb.hv = this.limb.size[2]*scale/2;
+		this.limb.obb.anchorOffset.set(-(limb.anchor[0]-0.5)*this.limb.size[0]*scale, -(limb.anchor[1]-0.5)*this.limb.size[1]*scale, -(limb.anchor[2]-0.5)*this.limb.size[2]*scale);
+        if(MatrixUtils.matrix!=null) 
+        {
+        	Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
+			Matrix4f matrix4f = new Matrix4f(MatrixUtils.readModelView(this.limb.obb.modelView));
+
+			parent.invert();
+			parent.mul(matrix4f);
+			Vector4f vector4f = new Vector4f(0,0,0,1);
+            parent.transform(vector4f);
+            this.limb.obb.offset.set(vector4f.x, vector4f.y, vector4f.z);
+            Vector4d ax = new Vector4d(parent.m00, parent.m01, parent.m02, 0);
+			Vector4d ay = new Vector4d(parent.m10, parent.m11, parent.m12, 0);
+			Vector4d az = new Vector4d(parent.m20, parent.m21, parent.m22, 0);
+			ax.normalize();
+			ay.normalize();
+			az.normalize();
+			this.limb.obb.rotation.setIdentity();
+			this.limb.obb.rotation.setRow(0, ax);
+			this.limb.obb.rotation.setRow(1, ay);
+			this.limb.obb.rotation.setRow(2, az);
+			this.limb.obb.modelView.setIdentity();
         }
     }
 
@@ -329,10 +336,10 @@ public class ModelCustomRenderer extends ModelRenderer
                 }
 
                 GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
-                this.renderRenderer();
                 GlStateManager.popMatrix();
             }
         }
+        
     }
 
     /**

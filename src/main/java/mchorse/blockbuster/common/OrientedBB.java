@@ -12,6 +12,7 @@ import javax.vecmath.Matrix3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4d;
+import javax.vecmath.Vector4f;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -51,6 +52,9 @@ public class OrientedBB
 	
 	/*global center point (not the anchor)*/
 	public Vector3d center = new Vector3d();
+	
+	/*global anchor point*/
+	public Vector3d anchor = new Vector3d();
 	
 	/*half-width, half-height, half-depth*/
 	public float hw;
@@ -105,6 +109,7 @@ public class OrientedBB
 	
 	public void render(RenderWorldLastEvent event)
     { 
+		buildCorners();
 		int shader = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
 
         if (shader != 0)
@@ -114,7 +119,7 @@ public class OrientedBB
 
         Color color = ColorUtils.COLOR;
         Entity player = Minecraft.getMinecraft().getRenderViewEntity();
-
+        
         double playerX = player.prevPosX + (player.posX - player.prevPosX) * event.getPartialTicks();
         double playerY = player.prevPosY + (player.posY - player.prevPosY) * event.getPartialTicks();
         double playerZ = player.prevPosZ + (player.posZ - player.prevPosZ) * event.getPartialTicks();
@@ -140,13 +145,18 @@ public class OrientedBB
     	        builder.pos(end.position.x, end.position.y, end.position.z).color(color.r, color.g, color.b, color.a).endVertex();
         	}
         }
-        
+        //if(this.hu>0.3) System.out.println("render "+anchor);
+		renderCross(builder, color, anchor);
+		
+		renderCross(builder, color, center);
+		
         builder.setTranslation(0, 0, 0);
         tessellator.draw();
         
+        
         GlStateManager.enableTexture2D();
         GlStateManager.enableLighting();
-        GlStateManager.glLineWidth(1F);
+        GlStateManager.glLineWidth(2F);
 
         if (shader != 0)
         {
@@ -154,8 +164,20 @@ public class OrientedBB
         }
     }
 	
+	public void renderCross(BufferBuilder builder, Color color, Vector3d center0)
+	{
+		builder.pos(center0.x+0.075, center0.y, center0.z).color(color.r, color.g, color.b, color.a).endVertex();
+		builder.pos(center0.x-0.075,center0.y, center0.z).color(color.r, color.g, color.b, color.a).endVertex();
+		builder.pos(center0.x, center0.y+0.075, center0.z).color(color.r, color.g, color.b, color.a).endVertex();
+		builder.pos(center0.x,center0.y-0.075, center0.z).color(color.r, color.g, color.b, color.a).endVertex();
+		builder.pos(center0.x, center0.y, center0.z+0.075).color(color.r, color.g, color.b, color.a).endVertex();
+		builder.pos(center0.x,center0.y, center0.z-0.075).color(color.r, color.g, color.b, color.a).endVertex();
+	
+	}
+	
 	public void buildCorners() 
 	{
+		if(!RenderingHandler.obbsToRender.contains(this)) RenderingHandler.obbsToRender.add(this);
 	    Vector4d width0 = new Vector4d(this.w);
 	    width0.scale(this.hw);
 	    width0.w = 1;
@@ -167,23 +189,23 @@ public class OrientedBB
 	    Vector4d depth0 = new Vector4d(this.v);
 	    depth0.scale(this.hv);
 	    depth0.w = 1;
-	    
-	    Vector4d anchorOffset = new Vector4d(this.anchorOffset);
-	    anchorOffset.w = 1;
+
+	    Vector4d anchorOffset0 = new Vector4d(this.anchorOffset);
+	    anchorOffset0.w = 1;
 	    Vector4d offset = new Vector4d(this.offset);
 	    offset.w = 1;
 	    Vector4d offsetLimb = new Vector4d(this.offsetLimb);
 	    offsetLimb.w = 1;
 	    
 	    //does this anchorOffset work...mhhmhmhmh
-	    this.rotation.transform(anchorOffset);
+	    this.rotation.transform(anchorOffset0);
 	    this.rotation.transform(offsetLimb);
 	    this.rotation.transform(width0);
 	    this.rotation.transform(height0);
 	    this.rotation.transform(depth0);
 	    
 	    Vector4d center0 = new Vector4d(this.center);
-	    center0.add(anchorOffset);
+	    center0.add(anchorOffset0);
 	    center0.add(offsetLimb);
 	    center0.add(offset);
 	    
@@ -191,7 +213,8 @@ public class OrientedBB
 	    Vector3d width = new Vector3d(width0.x, width0.y, width0.z);
 	    Vector3d height = new Vector3d(height0.x, height0.y, height0.z);
 	    Vector3d depth = new Vector3d(depth0.x, depth0.y, depth0.z);
-
+	    this.anchor.set(center);
+	    
 	    /*calculate the corners*/
         Vector3d pos = new Vector3d(center);
         pos.add(width);
@@ -265,6 +288,35 @@ public class OrientedBB
         maxXminYZ.connect(maxXYminZ);
         maxXminYZ.connect(minXYZ);
         maxXminYZ.connect(maxXminYmaxZ);
+	}
+	
+	public Matrix4d anglesToMatrix(double angleX, double angleY, double angleZ) 
+	{
+		angleX = Math.toRadians(angleX);
+        angleY = Math.toRadians(angleY);
+        angleZ = Math.toRadians(angleZ);
+        double sinX = Math.sin(angleX);
+        double cosX = Math.cos(angleX);
+        double sinY = Math.sin(angleY);
+        double cosY = Math.cos(angleY);
+        double sinZ = Math.sin(angleZ);
+        double cosZ = Math.cos(angleZ);
+        Matrix4d rotateX = new Matrix4d(1, 0, 0, 0,
+				   						0, cosX, -sinX, 0,
+				   						0, sinX, cosX, 0,
+				   						0, 0, 0, 1);
+		Matrix4d rotateY = new Matrix4d(cosY, 0, sinY, 0,
+									    0, 1, 0, 0,
+									    -sinY, 0, cosY, 0,
+									    0, 0, 0, 1);
+		Matrix4d rotateZ = new Matrix4d(cosZ, -sinZ, 0, 0,
+				   						sinZ, cosZ, 0, 0,
+				   						0, 0, 1, 0,
+				   						0, 0, 0, 1);
+		Matrix4d rotation = new Matrix4d(rotateX);
+		rotation.mul(rotateY);
+		rotation.mul(rotateZ);
+		return rotation;
 	}
 	
 	@Override
