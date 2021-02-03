@@ -279,7 +279,8 @@ public class ModelCustomRenderer extends ModelRenderer
     	this.limb.obb.hw = this.limb.size[0]*scale/2;
 		this.limb.obb.hu = this.limb.size[1]*scale/2;
 		this.limb.obb.hv = this.limb.size[2]*scale/2;
-		this.limb.obb.anchorOffset.set(-(limb.anchor[0]-0.5)*this.limb.size[0]*scale, -(limb.anchor[1]-0.5)*this.limb.size[1]*scale, -(limb.anchor[2]-0.5)*this.limb.size[2]*scale);
+		this.limb.obb.limbOffset.set(-(limb.anchor[0]-0.5)*this.limb.size[0]*scale, -(limb.anchor[1]-0.5)*this.limb.size[1]*scale, -(limb.anchor[2]-0.5)*this.limb.size[2]*scale);
+        
         if(MatrixUtils.matrix!=null) 
         {
         	Matrix4f parent = new Matrix4f(MatrixUtils.matrix);

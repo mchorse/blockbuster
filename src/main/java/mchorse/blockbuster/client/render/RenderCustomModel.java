@@ -211,19 +211,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 			limb.obb.center.x = zero.x;
 			limb.obb.center.y = zero.y;
 			limb.obb.center.z = zero.z;
-			double radians = Math.toRadians(-yaw);
-			double sinY = Math.sin(radians);
-			double cosY = Math.cos(radians);
-			Matrix4d matrix = new Matrix4d(cosY, 0F, sinY, 0F,
-										   0F, 1F, 0F, 0F,
-										   -sinY, 0F, cosY, 0F,
-										   0F, 0F, 0F, 1F);
-			//limb.obb.rotation.mul(matrix);
 			limb.obb.buildCorners();
-			if(Minecraft.getMinecraft().gameSettings.showDebugInfo)
-			{
-				//limb.obb.render();
-			}
 		}
 		
         if (entity.isEntityAlive() && entity.isPlayerSleeping())
