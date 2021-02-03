@@ -225,7 +225,6 @@ public class OrientedBB
 		
 		builder.pos(center0.x+axisX3.x, center0.y+axisX3.y, center0.z+axisX3.z).color(color.r, color.g, color.b, color.a).endVertex();
 		builder.pos(center0.x-axisX3.x,center0.y-axisX3.y, center0.z-axisX3.z).color(color.r, color.g, color.b, color.a).endVertex();
-	
 	}
 	
 	/**
@@ -234,7 +233,6 @@ public class OrientedBB
 	 */
 	public void buildCorners() 
 	{
-		this.rotation0.mul(anglesToMatrix(0, 0, 0.75));
 		if(!RenderingHandler.obbsToRender.contains(this)) RenderingHandler.obbsToRender.add(this);
 		
 	    Vector4d width0 = new Vector4d(this.w);
@@ -258,8 +256,8 @@ public class OrientedBB
 	    Vector4d offset = new Vector4d(this.offset);
 	    offset.w = 1;
 	    
-	    Matrix4d rotation1 = new Matrix4d(rotation);
-	    rotation1.mul(this.rotation0);
+	    Matrix4d rotation1 = new Matrix4d(rotation0);
+	    rotation1.mul(this.rotation);
 	    
 	    this.rotation.transform(limbOffset0);
 	    rotation1.transform(anchorOffset0); //not entirely sure if that is correct - testing later in gui
