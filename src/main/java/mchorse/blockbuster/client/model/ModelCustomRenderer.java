@@ -288,12 +288,15 @@ public class ModelCustomRenderer extends ModelRenderer
 
 			parent.invert();
 			parent.mul(matrix4f);
+			
 			Vector4f vector4f = new Vector4f(0,0,0,1);
+			
             parent.transform(vector4f);
             this.limb.obb.offset.set(vector4f.x, vector4f.y, vector4f.z);
             Vector3d ax = new Vector3d(parent.m00, parent.m01, parent.m02);
 			Vector3d ay = new Vector3d(parent.m10, parent.m11, parent.m12);
 			Vector3d az = new Vector3d(parent.m20, parent.m21, parent.m22);
+			
 			ax.normalize();
 			ay.normalize();
 			az.normalize();
