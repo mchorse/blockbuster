@@ -18,6 +18,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import mchorse.blockbuster.client.RenderingHandler;
+import mchorse.mclib.client.Draw;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.MathUtils;
@@ -75,36 +76,38 @@ public class OrientedBB
 	
 	public static Matrix4f modelView = new Matrix4f();
 	
-	public Matrix4d rotation = new Matrix4d();
+	public Matrix3d rotation = new Matrix3d();
 	
-	/*initial rotation*/
-	public Matrix4d rotation0 = new Matrix4d();
+	/** initial rotation defined at the beginning of model creation*/
+	public Matrix3d rotation0 = new Matrix3d();
 	
-	/*global center point (not the anchor)*/
+	/** global center point (not the anchor)*/
 	public Vector3d center = new Vector3d();
 	
-	/*global anchor point - mostly for rendering anchorpoints*/
+	/** global anchor point - mostly for rendering anchorpoints*/
 	private Vector3d anchorPoint = new Vector3d();
 	
-	/*half-width, half-height, half-depth*/
+	/** half-width*/
 	public double hw;
+	/** half-height*/
 	public double hu;
+	/** half-depth*/
 	public double hv;
 	
-	/*corners - starting from maxXYZ (1,1,1) going clockwise
-	 *same thing for bottom - starting at maxXminYmaxZ */
+	/** corners - starting from maxXYZ (1,1,1) going clockwise
+	 * same thing for bottom - starting at maxXminYmaxZ */
 	public Corner[] corners = new Corner[8];
 	
-	/*offset from limb (calculated through modelview)*/
+	/** offset from limb (calculated through modelview)*/
 	public Vector3d limbOffset = new Vector3d();
 	
-	/*anchor of the obb - for initialrotation*/
+	/** anchor of the obb - for initialrotation*/
 	public Vector3d anchorOffset = new Vector3d();
 	
-	/*offset from main entity*/
+	/** offset from main entity*/
 	public Vector3d offset = new Vector3d();
 	
-	public OrientedBB(@Nullable Vector3d center, @Nullable Matrix4d rotation, float width, float height, float depth) 
+	public OrientedBB(@Nullable Vector3d center, @Nullable Matrix3d rotation, float width, float height, float depth) 
 	{
 		if(center==null)
 		{
@@ -112,7 +115,7 @@ public class OrientedBB
 		}
 		if(rotation==null)
 		{
-			rotation = new Matrix4d();
+			rotation = new Matrix3d();
 			rotation.setIdentity();
 		}
 		setup(rotation, width, height, depth);
@@ -121,15 +124,13 @@ public class OrientedBB
 	
 	public OrientedBB()
 	{
-		Matrix4d rotation = new Matrix4d();
+		Matrix3d rotation = new Matrix3d();
 		rotation.setIdentity();
 		setup(rotation, 0, 0, 0);
-		this.anchorOffset.set(0, (Math.random()*2-1)/2, 0);
-		this.rotation0.set(anglesToMatrix(0, (Math.random()*2-1)*1, (Math.random()*2-1)*1));
 		buildCorners();
 	}
 	
-	public void setup(Matrix4d rotation0, float width, float height, float depth) 
+	public void setup(Matrix3d rotation0, float width, float height, float depth) 
 	{
 		this.center = new Vector3d();
 		this.hw = Math.abs(width)/2;
@@ -161,7 +162,7 @@ public class OrientedBB
         GlStateManager.disableLighting();
         GlStateManager.disableTexture2D();
         
-        color.set((float)random1+0.25F,(float)random2+0.25F,(float)random3+0.25F,1F);
+        color.set((float)random1+0.1F,(float)random2+0.1F,(float)random3+0.1F,1F);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
@@ -235,45 +236,35 @@ public class OrientedBB
 	{
 		if(!RenderingHandler.obbsToRender.contains(this)) RenderingHandler.obbsToRender.add(this);
 		
-	    Vector4d width0 = new Vector4d(this.w);
-	    width0.scale(this.hw);
-	    width0.w = 1;
+	    Vector3d width = new Vector3d(this.w);
+	    width.scale(this.hw);
 	    
-	    Vector4d height0 = new Vector4d(this.u);
-	    height0.scale(this.hu);
-	    height0.w = 1;
+	    Vector3d height = new Vector3d(this.u);
+	    height.scale(this.hu);
 	    
-	    Vector4d depth0 = new Vector4d(this.v);
-	    depth0.scale(this.hv);
-	    depth0.w = 1;
+	    Vector3d depth = new Vector3d(this.v);
+	    depth.scale(this.hv);
 
-	    Vector4d limbOffset0 = new Vector4d(this.limbOffset);
-	    limbOffset0.w = 1;
+	    Vector3d limbOffset0 = new Vector3d(this.limbOffset);
 	    
-	    Vector4d anchorOffset0 = new Vector4d(this.anchorOffset);
-	    anchorOffset0.w = 1;
+	    Vector3d anchorOffset0 = new Vector3d(this.anchorOffset);
 	    
-	    Vector4d offset = new Vector4d(this.offset);
-	    offset.w = 1;
+	    Vector3d offset0 = new Vector3d(this.offset);
 	    
-	    Matrix4d rotation1 = new Matrix4d(rotation0);
+	    Matrix3d rotation1 = new Matrix3d(rotation0);
 	    rotation1.mul(this.rotation);
 	    
 	    this.rotation.transform(limbOffset0);
 	    rotation1.transform(anchorOffset0); //not entirely sure if that is correct - testing later in gui
-	    rotation1.transform(width0);
-	    rotation1.transform(height0);
-	    rotation1.transform(depth0);
+	    rotation1.transform(width);
+	    rotation1.transform(height);
+	    rotation1.transform(depth);
 	    
-	    Vector4d center0 = new Vector4d(this.center);
-	    center0.add(limbOffset0);
-	    center0.add(anchorOffset0);
-	    center0.add(offset);
+	    Vector3d center = new Vector3d(this.center);
+	    center.add(limbOffset0);
+	    center.add(anchorOffset0);
+	    center.add(offset0);
 	    
-	    Vector3d center = new Vector3d(center0.x, center0.y, center0.z);
-	    Vector3d width = new Vector3d(width0.x, width0.y, width0.z);
-	    Vector3d height = new Vector3d(height0.x, height0.y, height0.z);
-	    Vector3d depth = new Vector3d(depth0.x, depth0.y, depth0.z);
 	    this.anchorPoint.set(center);
 	    
 	    /*calculate the corners*/
@@ -352,38 +343,29 @@ public class OrientedBB
 	}
 	
 	/**
-	 * This method converts the given angles into one single rotation 4x4 rotation matrix
+	 * This method converts the given angles into one single rotation 3x3 rotation matrix
+	 * The rotation mode is ZYX
 	 * @param angleX rotation around X
 	 * @param angleY rotation around Y (Minecraft height axis)
 	 * @param angleZ rotation around Z
-	 * @return Matrix4d the complete rotation
+	 * @return Matrix3d the complete rotation
 	 */
-	public Matrix4d anglesToMatrix(double angleX, double angleY, double angleZ) 
+	public static Matrix3d anglesToMatrix(double angleX, double angleY, double angleZ) 
 	{
-		angleX = Math.toRadians(angleX);
-        angleY = Math.toRadians(angleY);
-        angleZ = Math.toRadians(angleZ);
-        double sinX = Math.sin(angleX);
-        double cosX = Math.cos(angleX);
-        double sinY = Math.sin(angleY);
-        double cosY = Math.cos(angleY);
-        double sinZ = Math.sin(angleZ);
-        double cosZ = Math.cos(angleZ);
-        Matrix4d rotateX = new Matrix4d( 1,   0 ,    0 , 0,
-				   						 0, cosX, -sinX, 0,
-				   						 0, sinX,  cosX, 0,
-				   						 0,   0 ,    0 , 1);
-		Matrix4d rotateY = new Matrix4d( cosY, 0, sinY, 0,
-									       0 , 1,   0 , 0,
-									    -sinY, 0, cosY, 0,
-									       0 , 0,   0 , 1);
-		Matrix4d rotateZ = new Matrix4d( cosZ, -sinZ, 0, 0,
-				   						 sinZ,  cosZ, 0, 0,
-				   						   0 ,    0 , 1, 0,
-				   						   0 ,    0 , 0, 1);
-		Matrix4d rotation = new Matrix4d(rotateX);
-		rotation.mul(rotateY);
-		rotation.mul(rotateZ);
+		double radX = Math.toRadians(angleX);
+        double radY = Math.toRadians(angleY);
+        double radZ = Math.toRadians(angleZ);
+        Matrix3d rotation = new Matrix3d();
+        Matrix3d rot = new Matrix3d();
+        
+        rotation.setIdentity();
+        rot.rotZ(radZ);
+        rotation.mul(rot);
+        rot.rotZ(radY);
+        rotation.mul(rot);
+        rot.rotZ(radX);
+        rotation.mul(rot);
+        
 		return rotation;
 	}
 	
