@@ -12,6 +12,7 @@ import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
+import mchorse.blockbuster.common.OrientedBB;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.SnowstormMorph;
 import mchorse.mclib.utils.MatrixUtils;
@@ -208,10 +209,14 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 
         for (ModelLimb limb : this.current.model.limbs.values())
         {
-            limb.obb.center.x = zero.x;
-            limb.obb.center.y = zero.y;
-            limb.obb.center.z = zero.z;
-            limb.obb.buildCorners();
+            for(OrientedBB obb : limb.obbs)
+            {
+                obb.center.x = zero.x;
+                obb.center.y = zero.y;
+                obb.center.z = zero.z;
+                
+                obb.buildCorners();
+            }
         }
 
         if (entity.isEntityAlive() && entity.isPlayerSleeping())

@@ -1,7 +1,5 @@
 package mchorse.blockbuster.common;
 
-import javax.vecmath.Matrix3f;
-import javax.vecmath.Matrix4d;
 import javax.vecmath.Matrix4f;
 
 import java.util.ArrayList;
@@ -10,19 +8,13 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4d;
-import javax.vecmath.Vector4f;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import mchorse.blockbuster.client.RenderingHandler;
-import mchorse.mclib.client.Draw;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.ColorUtils;
-import mchorse.mclib.utils.MathUtils;
-import mchorse.mclib.utils.MatrixUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,20 +22,17 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLEvent;
 
 /**
  * This is an implentation of an oriented bounding box.
  * 
  * The implementation is specifically designed for the Minecraft Blockbuster
  * mod, created by McHorse. Special attributes or functions that are used for
- * the Blockbuster mod are for example: - an initial rotation, which can be
- * changed in the GUI of the model editor. - limb and anchor offset: limb offset
- * defines the offset from a selected object part. The anchor offset is used for
- * the initial rotation, to rotate around a certain point.
+ * the Blockbuster mod are for example: initial rotation (which can be
+ * changed in the GUI of the model editor), limb and anchor offsets. 
+ * Limb offset defines the offset from a selected object part. 
+ * The anchor offset is used for the initial rotation, to rotate around a certain point.
  * <p>
  * How it works (currently): Inside the render() method of ModelCustomRenderer
  * the modelview of the limb is computated and calculates the relative offset to
@@ -57,15 +46,16 @@ import net.minecraftforge.fml.common.event.FMLEvent;
  * according to the offsets, rotations and other transformations. This should be
  * called at least once somewhere before the collision is tested.
  * <p>
- * Some of the learning sources that were used for the general concept of an OBB
- * implementation:
+ * The learning sources that were used for the general concept 
+ * of an OBB implementation:
  * 
- * @see http://www.cie.bgu.tum.de/publications/bachelorthesis/2014_Engeser.pdf
- * @see https://www.sciencedirect.com/topics/computer-science/oriented-bounding-box
- *      <p>
+ *      http://www.cie.bgu.tum.de/publications/bachelorthesis/2014_Engeser.pdf
+ *      https://www.sciencedirect.com/topics/computer-science/oriented-bounding-box
+ * <p>
  * @author Christian F. (known as Chryfi)
  * @see https://github.com/Chryfi
  * @see https://www.youtube.com/Chryfi
+ * @see https://twitter.com/Chryfi
  */
 public class OrientedBB
 {
@@ -74,13 +64,21 @@ public class OrientedBB
     private final double random3 = Math.random();
     private final double random4 = Math.random();
 
-    /* local basis vectors */
-    private Vector3d w = new Vector3d(1, 0, 0); // x
-    private Vector3d u = new Vector3d(0, 1, 0); // y
-    private Vector3d v = new Vector3d(0, 0, 1); // z
+    /** local basis vector x */
+    private Vector3d w = new Vector3d(1, 0, 0);
+    /** local basis vector y */
+    private Vector3d u = new Vector3d(0, 1, 0);
+    /** local basis vector z */
+    private Vector3d v = new Vector3d(0, 0, 1);
 
+    /** global anchor point - mostly for rendering anchorpoints */
+    private Vector3d anchorPoint = new Vector3d();
+    
     public static Matrix4f modelView = new Matrix4f();
 
+    /** scale factor determined by modelView and other scaling factors */
+    public Matrix3d scale = new Matrix3d();
+    
     public Matrix3d rotation = new Matrix3d();
 
     /** initial rotation defined at the beginning of model creation */
@@ -89,9 +87,6 @@ public class OrientedBB
     /** global center point (not the anchor) */
     public Vector3d center = new Vector3d();
 
-    /** global anchor point - mostly for rendering anchorpoints */
-    private Vector3d anchorPoint = new Vector3d();
-
     /** half-width */
     public double hw;
     /** half-height */
@@ -99,16 +94,13 @@ public class OrientedBB
     /** half-depth */
     public double hv;
 
-    /**
-     * corners - starting from maxXYZ (1,1,1) going clockwise same thing for bottom
-     * - starting at maxXminYmaxZ
-     */
+    /** corners - starting from maxXYZ (1,1,1) going clockwise same thing for bottom - starting at maxXminYmaxZ */
     public Corner[] corners = new Corner[8];
 
     /** offset from limb (calculated through modelview) */
     public Vector3d limbOffset = new Vector3d();
 
-    /** anchor of the obb - for initialrotation */
+    /** anchor of the obb - for initial rotation */
     public Vector3d anchorOffset = new Vector3d();
 
     /** offset from main entity */
@@ -120,12 +112,14 @@ public class OrientedBB
         {
             center = new Vector3d();
         }
+        
         if (rotation == null)
         {
             rotation = new Matrix3d();
 
             rotation.setIdentity();
         }
+        
         setup(rotation, width, height, depth);
         this.center.set(center);
     }
@@ -149,11 +143,11 @@ public class OrientedBB
         RenderingHandler.obbsToRender.add(this);
         this.rotation.setIdentity();
         this.rotation0.set(rotation0);
+        this.scale.setIdentity();
     }
 
     public void render(RenderWorldLastEvent event)
     {
-        buildCorners();
         int shader = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
 
         if (shader != 0)
@@ -181,19 +175,18 @@ public class OrientedBB
         builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
         Corner[] startCorners = { this.corners[0], this.corners[2], this.corners[5], this.corners[7] };
+        
         for (Corner start : startCorners)
         {
             for (Corner end : start.connections)
             {
-                builder.pos(start.position.x, start.position.y, start.position.z)
-                        .color(color.r, color.g, color.b, color.a).endVertex();
-                builder.pos(end.position.x, end.position.y, end.position.z).color(color.r, color.g, color.b, color.a)
-                        .endVertex();
+                builder.pos(start.position.x, start.position.y, start.position.z).color(color.r, color.g, color.b, color.a).endVertex();
+                builder.pos(end.position.x, end.position.y, end.position.z).color(color.r, color.g, color.b, color.a).endVertex();
             }
         }
-        drawPlainAxis(builder, color, anchorPoint, 6, true);
+        drawAxes(builder, color, this.anchorPoint, 6, true);
 
-        drawPlainAxis(builder, color, center, 11, false);
+        drawAxes(builder, color, this.center, 10, false);
 
         builder.setTranslation(0, 0, 0);
         tessellator.draw();
@@ -209,42 +202,39 @@ public class OrientedBB
     }
 
     /**
-     * this draws a plainaxis - three lines in total
+     * This method draws 3 axes. If wanted, it can rotate according to the rotation matrices in the OBB.
      * 
      * @param center0 the center of the plain Axis
      * @param length  the half-length of the axis measured in Minecraft pixels
-     * @param rotate  - if true the plain axis will be rotated by rotation0 and
-     *                rotaion
+     * @param rotate  - if true the plain axis will be rotated by rotation0 and rotation
      */
-    public void drawPlainAxis(BufferBuilder builder, Color color, Vector3d center0, double length, boolean rotate)
+    public void drawAxes(BufferBuilder builder, Color color, Vector3d center0, double length, boolean rotate)
     {
         length /= 32; // 1 <=> 1 pixel => divide by 16 and by 2 as it's half length
         Vector3d axisX1 = new Vector3d(length, 0, 0);
         Vector3d axisX2 = new Vector3d(0, length, 0);
         Vector3d axisX3 = new Vector3d(0, 0, length);
+        
         if (rotate)
         {
-            this.rotation0.transform(axisX1);
             this.rotation.transform(axisX1);
-            this.rotation0.transform(axisX2);
+            this.rotation0.transform(axisX1);
+            
             this.rotation.transform(axisX2);
-            this.rotation0.transform(axisX3);
+            this.rotation0.transform(axisX2);
+            
             this.rotation.transform(axisX3);
+            this.rotation0.transform(axisX3);
         }
-        builder.pos(center0.x + axisX1.x, center0.y + axisX1.y, center0.z + axisX1.z)
-                .color(color.r, color.g, color.b, color.a).endVertex();
-        builder.pos(center0.x - axisX1.x, center0.y - axisX1.y, center0.z - axisX1.z)
-                .color(color.r, color.g, color.b, color.a).endVertex();
+        
+        builder.pos(center0.x + axisX1.x, center0.y + axisX1.y, center0.z + axisX1.z).color(color.r, color.g, color.b, color.a).endVertex();
+        builder.pos(center0.x - axisX1.x, center0.y - axisX1.y, center0.z - axisX1.z).color(color.r, color.g, color.b, color.a).endVertex();
 
-        builder.pos(center0.x + axisX2.x, center0.y + axisX2.y, center0.z + axisX2.z)
-                .color(color.r, color.g, color.b, color.a).endVertex();
-        builder.pos(center0.x - axisX2.x, center0.y - axisX2.y, center0.z - axisX2.z)
-                .color(color.r, color.g, color.b, color.a).endVertex();
+        builder.pos(center0.x + axisX2.x, center0.y + axisX2.y, center0.z + axisX2.z).color(color.r, color.g, color.b, color.a).endVertex();
+        builder.pos(center0.x - axisX2.x, center0.y - axisX2.y, center0.z - axisX2.z).color(color.r, color.g, color.b, color.a).endVertex();
 
-        builder.pos(center0.x + axisX3.x, center0.y + axisX3.y, center0.z + axisX3.z)
-                .color(color.r, color.g, color.b, color.a).endVertex();
-        builder.pos(center0.x - axisX3.x, center0.y - axisX3.y, center0.z - axisX3.z)
-                .color(color.r, color.g, color.b, color.a).endVertex();
+        builder.pos(center0.x + axisX3.x, center0.y + axisX3.y, center0.z + axisX3.z).color(color.r, color.g, color.b, color.a).endVertex();
+        builder.pos(center0.x - axisX3.x, center0.y - axisX3.y, center0.z - axisX3.z).color(color.r, color.g, color.b, color.a).endVertex();
     }
 
     /**
@@ -255,33 +245,39 @@ public class OrientedBB
     public void buildCorners()
     {
         if (!RenderingHandler.obbsToRender.contains(this))
+        {
             RenderingHandler.obbsToRender.add(this);
+        }
 
         Vector3d width = new Vector3d(this.w);
-        width.scale(this.hw);
-
         Vector3d height = new Vector3d(this.u);
-        height.scale(this.hu);
-
         Vector3d depth = new Vector3d(this.v);
+        
+        width.scale(this.hw);
+        height.scale(this.hu);
         depth.scale(this.hv);
-
+        
         Vector3d limbOffset0 = new Vector3d(this.limbOffset);
 
         Vector3d anchorOffset0 = new Vector3d(this.anchorOffset);
 
         Vector3d offset0 = new Vector3d(this.offset);
 
-        Matrix3d rotation1 = new Matrix3d(rotation0);
-        rotation1.mul(this.rotation);
-
+        Matrix3d rotation1 = new Matrix3d(this.rotation);
+        
+        rotation1.mul(this.rotation0);
+        rotation1.mul(this.scale);
+        
         this.rotation.transform(limbOffset0);
+        this.scale.transform(limbOffset0);
+        
         rotation1.transform(anchorOffset0); // not entirely sure if that is correct - testing later in gui
         rotation1.transform(width);
         rotation1.transform(height);
         rotation1.transform(depth);
 
         Vector3d center = new Vector3d(this.center);
+        
         center.add(limbOffset0);
         center.add(anchorOffset0);
         center.add(offset0);
@@ -293,6 +289,7 @@ public class OrientedBB
         pos.add(width);
         pos.add(height);
         pos.add(depth);
+        
         Corner maxXYZ = new Corner(pos);
         this.corners[0] = maxXYZ;
 
@@ -300,6 +297,7 @@ public class OrientedBB
         pos.sub(width);
         pos.add(height);
         pos.add(depth);
+        
         Corner minXmaxYZ = new Corner(pos);
         this.corners[1] = minXmaxYZ;
 
@@ -307,6 +305,7 @@ public class OrientedBB
         pos.sub(width);
         pos.add(height);
         pos.sub(depth);
+        
         Corner minXmaxYminZ = new Corner(pos);
         this.corners[2] = minXmaxYminZ;
 
@@ -314,6 +313,7 @@ public class OrientedBB
         pos.add(width);
         pos.add(height);
         pos.sub(depth);
+        
         Corner maxXYminZ = new Corner(pos);
         this.corners[3] = maxXYminZ;
 
@@ -321,6 +321,7 @@ public class OrientedBB
         pos.add(width);
         pos.sub(height);
         pos.add(depth);
+        
         Corner maxXminYmaxZ = new Corner(pos);
         this.corners[4] = maxXminYmaxZ;
 
@@ -328,6 +329,7 @@ public class OrientedBB
         pos.sub(width);
         pos.sub(height);
         pos.add(depth);
+        
         Corner minXYmaxZ = new Corner(pos);
         this.corners[5] = minXYmaxZ;
 
@@ -335,6 +337,7 @@ public class OrientedBB
         pos.sub(width);
         pos.sub(height);
         pos.sub(depth);
+        
         Corner minXYZ = new Corner(pos);
         this.corners[6] = minXYZ;
 
@@ -342,6 +345,7 @@ public class OrientedBB
         pos.add(width);
         pos.sub(height);
         pos.sub(depth);
+        
         Corner maxXminYZ = new Corner(pos);
         this.corners[7] = maxXminYZ;
 
@@ -364,13 +368,13 @@ public class OrientedBB
     }
 
     /**
-     * This method converts the given angles into one single rotation 3x3 rotation
-     * matrix The rotation mode is ZYX
+     * This method converts the given angles into one single 3x3 rotation matrix.
+     * The rotation mode is XYZ
      * 
      * @param angleX rotation around X
      * @param angleY rotation around Y (Minecraft height axis)
      * @param angleZ rotation around Z
-     * @return Matrix3d the complete rotation
+     * @return the complete rotation Matrix3d
      */
     public static Matrix3d anglesToMatrix(double angleX, double angleY, double angleZ)
     {
@@ -381,13 +385,13 @@ public class OrientedBB
         Matrix3d rot = new Matrix3d();
 
         rotation.setIdentity();
+        rot.rotX(radX);
+        rotation.mul(rot);
+        rot.rotY(radY);
+        rotation.mul(rot);
         rot.rotZ(radZ);
         rotation.mul(rot);
-        rot.rotZ(radY);
-        rotation.mul(rot);
-        rot.rotZ(radX);
-        rotation.mul(rot);
-
+        
         return rotation;
     }
 
@@ -399,27 +403,27 @@ public class OrientedBB
 
     private class Corner
     {
-        /* global position (could it also be local???) */
+        /** global position (could it be also local???) */
         public Vector3d position;
 
-        /*
-         * List of corners that should be connected with this corner corners inside this
-         * list also have a connection to this corner
+        /**
+         * List of corners that should be connected with this corner. 
+         * Corners inside this list should also have a connection to this corner
          */
         private List<Corner> connections;
 
         public Corner(Vector3d pos)
         {
             this.position = new Vector3d(pos);
-            this.connections = new ArrayList<Corner>();
+            this.connections = new ArrayList<>();
         }
 
         /**
-         * method connects corner with this corner. It adds both elements to both
-         * connections lists
+         * This method connects the given corner with this corner. 
+         * It adds given corner to this connection list and this corner to given corner's connection list.
          * 
-         * @return boolean true if connection was established. False means that no
-         *         connection was made as both lists contain already the corners
+         * @param corner
+         * @return true if connection was established. False means that no connection was made as both lists contain already the corners
          */
         public boolean connect(Corner corner)
         {
@@ -427,23 +431,54 @@ public class OrientedBB
             {
                 corner.connections.add(this);
                 this.connections.add(corner);
+                
                 return true;
-            } else if (!corner.connections.contains(this))
+            } 
+            else if (!corner.connections.contains(this))
             {
                 corner.connections.add(this);
+                
                 return true;
-            } else if (!this.connections.contains(corner))
+            } 
+            else if (!this.connections.contains(corner))
             {
                 this.connections.add(corner);
+                
                 return true;
             }
+            
             return false;
         }
 
-        public void disconnect(Corner corner)
+        /**
+         * This method removes the given corner and this corner from both connection lists.
+         * 
+         * @param corner
+         * @return false if both connection lists don't have the corners.
+         */
+        public boolean disconnect(Corner corner)
         {
-            corner.connections.remove(this);
-            this.connections.remove(corner);
+            if (corner.connections.contains(this) && this.connections.contains(corner))
+            {
+                corner.connections.remove(this);
+                this.connections.remove(corner);
+                
+                return true;
+            } 
+            else if (corner.connections.contains(this))
+            {
+                corner.connections.remove(this);
+                
+                return true;
+            } 
+            else if (this.connections.contains(corner))
+            {
+                this.connections.remove(corner);
+                
+                return true;
+            }
+            
+            return false;
         }
     }
 }

@@ -1,7 +1,13 @@
 package mchorse.blockbuster.api.json;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -13,6 +19,7 @@ import com.google.gson.JsonSerializer;
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelLimb.ArmorSlot;
 import mchorse.blockbuster.api.ModelLimb.Holding;
+import mchorse.blockbuster.common.OrientedBB;
 
 /**
  * Model limb adapter
@@ -94,6 +101,47 @@ public class ModelLimbAdapter implements JsonSerializer<ModelLimb>, JsonDeserial
         ModelLimb limb = ModelAdapter.plainGSON.fromJson(json, ModelLimb.class);
         JsonObject object = json.getAsJsonObject();
 
+        if(object.has("orientedBBs"))
+        {
+            JsonArray obbs = object.getAsJsonArray("orientedBBs");
+            
+            for(JsonElement element : obbs) 
+            {
+                JsonObject jsonOBB = element.getAsJsonObject();
+                OrientedBB obb = new OrientedBB();
+                
+                if(jsonOBB.has("size"))
+                {
+                    obb.hw = jsonOBB.getAsJsonArray("size").get(0).getAsDouble() / 32D;
+                    obb.hu = jsonOBB.getAsJsonArray("size").get(1).getAsDouble() / 32D;
+                    obb.hv = jsonOBB.getAsJsonArray("size").get(2).getAsDouble() / 32D;
+                }
+                
+                if(jsonOBB.has("anchor"))
+                {
+                    obb.anchorOffset.x = jsonOBB.getAsJsonArray("anchor").get(0).getAsDouble() / 16D;
+                    obb.anchorOffset.y = jsonOBB.getAsJsonArray("anchor").get(1).getAsDouble() / 16D;
+                    obb.anchorOffset.z = jsonOBB.getAsJsonArray("anchor").get(2).getAsDouble() / 16D;
+                }
+                
+                if(jsonOBB.has("translate"))
+                {
+                    obb.limbOffset.x = jsonOBB.getAsJsonArray("translate").get(0).getAsDouble() / 16D;
+                    obb.limbOffset.y = jsonOBB.getAsJsonArray("translate").get(1).getAsDouble() / 16D;
+                    obb.limbOffset.z = jsonOBB.getAsJsonArray("translate").get(2).getAsDouble() / 16D;
+                }
+                
+                if(jsonOBB.has("rotate"))
+                {
+                    obb.rotation0.set(OrientedBB.anglesToMatrix(jsonOBB.getAsJsonArray("rotate").get(0).getAsDouble(), 
+                                                                jsonOBB.getAsJsonArray("rotate").get(1).getAsDouble(), 
+                                                                jsonOBB.getAsJsonArray("rotate").get(2).getAsDouble()));
+                }
+                
+                limb.obbs.add(obb);
+            }
+        }
+        
         if (object.has("looking") && object.get("looking").isJsonPrimitive())
         {
             boolean looking = object.get("looking").getAsBoolean();
