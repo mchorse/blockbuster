@@ -13,6 +13,7 @@ import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
+import mchorse.blockbuster.common.OrientedBB;
 import mchorse.mclib.utils.MatrixUtils;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -173,31 +174,6 @@ public class ModelCustomRenderer extends ModelRenderer
                 {
                     this.compileDisplayList(scale);
                 }
-                double angleX = Math.toRadians(2*rotateAngleX/scale);
-                double angleY = Math.toRadians(-2*rotateAngleY/scale);
-                double angleZ = Math.toRadians(-2*rotateAngleZ/scale);
-                double sinX = Math.sin(angleX);
-                double cosX = Math.cos(angleX);
-                double sinY = Math.sin(angleY);
-                double cosY = Math.cos(angleY);
-                double sinZ = Math.sin(angleZ);
-                double cosZ = Math.cos(angleZ);
-                Matrix4d rotateX = new Matrix4d(1, 0, 0, 0,
-						   						0, cosX, -sinX, 0,
-						   						0, sinX, cosX, 0,
-						   						0, 0, 0, 1);
-    			Matrix4d rotateY = new Matrix4d(cosY, 0, sinY, 0,
-    										    0, 1, 0, 0,
-    										    -sinY, 0, cosY, 0,
-    										    0, 0, 0, 1);
-    			Matrix4d rotateZ = new Matrix4d(cosZ, -sinZ, 0, 0,
-						   						sinZ, cosZ, 0, 0,
-						   						0, 0, 1, 0,
-						   						0, 0, 0, 1);
-    			
-    			//this.limb.obb.rotation.set(rotateX);
-    			//this.limb.obb.rotation.mul(rotateY);
-    			//this.limb.obb.rotation.mul(rotateZ);
     			
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(this.offsetX, this.offsetY, this.offsetZ);
@@ -216,7 +192,8 @@ public class ModelCustomRenderer extends ModelRenderer
                                 this.childModels.get(k).render(scale);
                             }
                         }
-                        updateObb(scale);
+                        
+                        updateObbs();
                     }
                     else
                     {
@@ -231,7 +208,8 @@ public class ModelCustomRenderer extends ModelRenderer
                                 this.childModels.get(j).render(scale);
                             }
                         }
-                        updateObb(scale);
+                        
+                        updateObbs();
                         GlStateManager.translate(-this.rotationPointX * scale, -this.rotationPointY * scale, -this.rotationPointZ * scale);
                     }
                 }
@@ -264,7 +242,8 @@ public class ModelCustomRenderer extends ModelRenderer
                             this.childModels.get(i).render(scale);
                         }
                     }
-                    updateObb(scale);
+                    
+                    updateObbs();
                 }
                 
                 GlStateManager.translate(-this.offsetX, -this.offsetY, -this.offsetZ);
@@ -274,37 +253,48 @@ public class ModelCustomRenderer extends ModelRenderer
         }
     }
     
-    public void updateObb(float scale)
+    public void updateObbs()
     {
-    	this.limb.obb.hw = this.limb.size[0]*scale/2;
-		this.limb.obb.hu = this.limb.size[1]*scale/2;
-		this.limb.obb.hv = this.limb.size[2]*scale/2;
-		this.limb.obb.limbOffset.set(-(limb.anchor[0]-0.5)*this.limb.size[0]*scale, -(limb.anchor[1]-0.5)*this.limb.size[1]*scale, -(limb.anchor[2]-0.5)*this.limb.size[2]*scale);
-        
-        if(MatrixUtils.matrix!=null) 
+        for(OrientedBB obb : this.limb.obbs)
         {
-        	Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
-			Matrix4f matrix4f = new Matrix4f(MatrixUtils.readModelView(this.limb.obb.modelView));
+            /*obb.hw = this.limb.size[0] / 32D;
+            obb.hu = this.limb.size[1] / 32D;
+            obb.hv = this.limb.size[2] / 32D;
+            
+            obb.limbOffset.set(-(limb.anchor[0] - 0.5) * this.limb.size[0] / 16D,
+                               -(limb.anchor[1] - 0.5) * this.limb.size[1] / 16D,
+                               -(limb.anchor[2] - 0.5) * this.limb.size[2] / 16D);*/
 
-			parent.invert();
-			parent.mul(matrix4f);
-			
-			Vector4f vector4f = new Vector4f(0,0,0,1);
-			
-            parent.transform(vector4f);
-            this.limb.obb.offset.set(vector4f.x, vector4f.y, vector4f.z);
-            Vector3d ax = new Vector3d(parent.m00, parent.m01, parent.m02);
-			Vector3d ay = new Vector3d(parent.m10, parent.m11, parent.m12);
-			Vector3d az = new Vector3d(parent.m20, parent.m21, parent.m22);
-			
-			ax.normalize();
-			ay.normalize();
-			az.normalize();
-			this.limb.obb.rotation.setIdentity();
-			this.limb.obb.rotation.setRow(0, ax);
-			this.limb.obb.rotation.setRow(1, ay);
-			this.limb.obb.rotation.setRow(2, az);
-			this.limb.obb.modelView.setIdentity();
+            obb.scale.m00 = this.model.model.scale[0];
+            obb.scale.m11 = this.model.model.scale[1];
+            obb.scale.m22 = this.model.model.scale[2];
+            
+            if (MatrixUtils.matrix != null)
+            {
+                Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
+                Matrix4f matrix4f = new Matrix4f(MatrixUtils.readModelView(obb.modelView));
+
+                parent.invert();
+                parent.mul(matrix4f);
+
+                Vector4f vector4f = new Vector4f(0, 0, 0, 1);
+
+                parent.transform(vector4f);
+                obb.offset.set(vector4f.x, vector4f.y, vector4f.z);
+                
+                Vector3d ax = new Vector3d(parent.m00, parent.m01, parent.m02);
+                Vector3d ay = new Vector3d(parent.m10, parent.m11, parent.m12);
+                Vector3d az = new Vector3d(parent.m20, parent.m21, parent.m22);
+
+                ax.normalize();
+                ay.normalize();
+                az.normalize();
+                obb.rotation.setIdentity();
+                obb.rotation.setRow(0, ax);
+                obb.rotation.setRow(1, ay);
+                obb.rotation.setRow(2, az);
+                obb.modelView.setIdentity();
+            }
         }
     }
 
