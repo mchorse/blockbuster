@@ -40,6 +40,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
     /* First category */
     private GuiThreeElement size;
     private GuiTrackpadElement sizeOffset;
+    private GuiTrackpadElement itemScale;
     private GuiButtonElement texture;
     private GuiThreeElement anchor;
     private GuiThreeElement origin;
@@ -97,6 +98,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.limb.sizeOffset = value.floatValue();
             this.panel.rebuildModel();
         });
+        this.itemScale = new GuiTrackpadElement(mc, (value) -> this.panel.limb.itemScale = value.floatValue());
         this.texture = new GuiButtonElement(mc, IKey.comp(IKey.lang("blockbuster.gui.edit"), IKey.str("...")), (b) ->
         {
             this.textureEditor.toggleVisible();
@@ -230,6 +232,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size")).background(0x88000000), this.size);
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size_offset")).background(0x88000000), this.sizeOffset);
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.item_scale")).background(0x88000000), this.itemScale);
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.texture"), 24).anchor(0, 1).background(0x88000000), Elements.row(mc, 5, 0, 20, this.texture, this.mirror));
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.anchor"), 24).anchor(0, 1).background(0x88000000), this.anchor);
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.origin")).background(0x88000000), this.origin);
@@ -387,6 +390,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         this.size.setValues(limb.size[0], limb.size[1], limb.size[2]);
         this.sizeOffset.setValue(limb.sizeOffset);
+        this.itemScale.setValue(limb.itemScale);
         this.anchor.setValues(limb.anchor[0], limb.anchor[1], limb.anchor[2]);
         this.origin.setValues(limb.origin[0], limb.origin[1], limb.origin[2]);
         this.color.picker.setColor(limb.color[0], limb.color[1], limb.color[2], limb.opacity);

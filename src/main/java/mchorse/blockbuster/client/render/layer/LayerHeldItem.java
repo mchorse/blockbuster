@@ -121,6 +121,8 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
             GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
         }
 
+        GlStateManager.scale(arm.limb.itemScale, arm.limb.itemScale, arm.limb.itemScale);
+
         /* if (p_188358_1_.isSneaking())
         {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);

@@ -26,6 +26,7 @@ public class ModelLimbAdapter implements JsonSerializer<ModelLimb>, JsonDeserial
         JsonObject map = serial.getAsJsonObject();
 
         map.remove("sizeOffset");
+        map.remove("itemScale");
         map.remove("holding");
         map.remove("slot");
         map.remove("parent");
@@ -36,6 +37,11 @@ public class ModelLimbAdapter implements JsonSerializer<ModelLimb>, JsonDeserial
         if (src.sizeOffset != 0)
         {
             map.addProperty("sizeOffset", src.sizeOffset);
+        }
+
+        if (src.itemScale != 1F)
+        {
+            map.addProperty("itemScale", src.itemScale);
         }
 
         if (src.holding != Holding.NONE)
