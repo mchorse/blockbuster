@@ -9,6 +9,7 @@ blockbuster.gui.me:
         
         size: Размер конечности
         size_offset: Независимый масштаб
+        item_scale: Размер предмета
         texture: Смещение текстуры
         anchor: Якорная точка
         origin: Точка OBJ/VOX
@@ -37,6 +38,7 @@ blockbuster.gui.me:
         wheel: Колесо
         wing: Крыло
         roll: Крутится
+        cape: Cape
         
         rename: Переименовать
         parent: Привязать
