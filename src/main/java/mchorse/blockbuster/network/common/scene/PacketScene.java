@@ -32,12 +32,20 @@ public abstract class PacketScene implements IMessage
     @Override
     public void fromBytes(ByteBuf buf)
     {
-		this.location.fromByteBuf(buf);
+        if (buf.readBoolean())
+        {
+            this.location.fromByteBuf(buf);
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-		this.location.toByteBuf(buf);
+        buf.writeBoolean(this.location != null);
+
+        if (this.location != null)
+        {
+            this.location.toByteBuf(buf);
+        }
     }
 }

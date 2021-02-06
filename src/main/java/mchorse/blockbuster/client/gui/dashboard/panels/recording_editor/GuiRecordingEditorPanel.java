@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 
+import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
@@ -26,6 +27,7 @@ import mchorse.mclib.client.gui.utils.Label;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -298,9 +300,18 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 
         int offset = this.getOffset();
 
-        if (offset >= 0 && CameraHandler.isApertureLoaded())
+        if (offset >= 0)
         {
-            CameraHandler.startRecording(this.record.filename, offset);
+            SceneLocation scene = CameraHandler.isCameraEditorOpen() ? CameraHandler.get() : null;
+
+            CameraHandler.closeScreenOrCameraEditor();
+
+            if (scene != null)
+            {
+                Dispatcher.sendToServer(new PacketScenePlay(scene, PacketScenePlay.STOP, 0));
+            }
+
+            Dispatcher.sendToServer(new PacketSceneRecord(scene, this.record.filename, offset));
         }
     }
 
