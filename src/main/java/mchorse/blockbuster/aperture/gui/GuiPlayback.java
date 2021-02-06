@@ -51,7 +51,6 @@ public class GuiPlayback extends GuiBase
     public Area frame = new Area();
 
     private SceneLocation location;
-    private int mode = 0;
     private String profile = "";
 
     private boolean aperture;
@@ -200,14 +199,6 @@ public class GuiPlayback extends GuiBase
         return this;
     }
 
-    public GuiPlayback setMode(int mode, String profile)
-    {
-        this.mode = mode;
-        this.profile = profile;
-
-        return this;
-    }
-
     public void setValue(int value)
     {
         this.cameraMode.setValue(value);
@@ -256,19 +247,17 @@ public class GuiPlayback extends GuiBase
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        boolean isCameraProfile = this.cameraMode.getValue() == 2 && this.aperture;
-
         GuiDraw.drawCustomBackground(0, 0, this.width, this.height);
         this.drawString(this.fontRenderer, this.stringTitle, this.frame.x, this.frame.y, 0xffffffff);
 
         if (this.cameraMode != null)
         {
             this.drawString(this.fontRenderer, this.stringCameraMode, this.cameraMode.area.x, this.cameraMode.area.y - 12, 0xffcccccc);
-        }
 
-        if (isCameraProfile)
-        {
-            this.drawString(this.fontRenderer, this.stringProfile, this.profiles.area.x, this.profiles.area.y - 12, 0xffcccccc);
+            if (this.cameraMode.getValue() == 2)
+            {
+                this.drawString(this.fontRenderer, this.stringProfile, this.profiles.area.x, this.profiles.area.y - 12, 0xffcccccc);
+            }
         }
 
         this.drawString(this.fontRenderer, this.stringScene, this.scenes.area.x, this.scenes.area.y - 12, 0xffcccccc);
