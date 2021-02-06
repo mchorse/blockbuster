@@ -43,7 +43,7 @@ blockbuster.config:
         title: Сцены
         tooltip: Здесь находится всё, что относится ко сценам
 
-        save_update: Обновить после сохранения
+        save_update: Обновлять после сохранения
     
     actor:
         title: Актёры
