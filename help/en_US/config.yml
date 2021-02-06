@@ -38,7 +38,13 @@ blockbuster.config:
         record_commands: Record commands
         record_chat_prefix: Chat action prefix
         record_pause_preview: Better preview
-    
+
+    scenes:
+        title: Scenes
+        tooltip: Here is everything related to scenes
+
+        save_update: Update scene after saving
+
     actor:
         title: Actor
         tooltip: Actor entity configuration option (not related to fake player)

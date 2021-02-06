@@ -1,5 +1,6 @@
 package mchorse.blockbuster.recording.scene;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
@@ -198,7 +199,7 @@ public class SceneManager
 
 	public void save(String filename, Scene scene) throws IOException
 	{
-		this.save(filename, scene, true);
+		this.save(filename, scene, Blockbuster.sceneSaveUpdate.get());
 	}
 
 	/**

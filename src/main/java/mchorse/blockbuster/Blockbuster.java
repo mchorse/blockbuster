@@ -166,6 +166,8 @@ public class Blockbuster
     public static ValueString recordChatPrefix;
     public static ValueBoolean recordPausePreview;
 
+    public static ValueBoolean sceneSaveUpdate;
+
     public static ValueBoolean actorFallDamage;
     public static ValueInt actorTrackingRange;
     public static ValueInt actorRenderingRange;
@@ -238,6 +240,9 @@ public class Blockbuster
         recordCommands = builder.getBoolean("record_commands", true);
         recordChatPrefix = builder.getString("record_chat_prefix", "");
         recordPausePreview = builder.getBoolean("record_pause_preview", true);
+
+        /* Scene */
+        sceneSaveUpdate = builder.category("scenes").getBoolean("save_update", true);
 
         /* Actor */
         actorFallDamage = builder.category("actor").getBoolean("actor_fall_damage", true);
