@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.model;
 
+import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3d;
@@ -254,46 +255,50 @@ public class ModelCustomRenderer extends ModelRenderer
     }
     
     public void updateObbs()
-    {
-        for(OrientedBB obb : this.limb.obbs)
+    {  
+        if(this.model != null && this.model.current != null && this.model.current.orientedBBlimbs != null )
         {
-            /*obb.hw = this.limb.size[0] / 32D;
-            obb.hu = this.limb.size[1] / 32D;
-            obb.hv = this.limb.size[2] / 32D;
-            
-            obb.limbOffset.set(-(limb.anchor[0] - 0.5) * this.limb.size[0] / 16D,
-                               -(limb.anchor[1] - 0.5) * this.limb.size[1] / 16D,
-                               -(limb.anchor[2] - 0.5) * this.limb.size[2] / 16D);*/
-
-            obb.scale.m00 = this.model.model.scale[0];
-            obb.scale.m11 = this.model.model.scale[1];
-            obb.scale.m22 = this.model.model.scale[2];
-            
-            if (MatrixUtils.matrix != null)
+            if(this.model.current.orientedBBlimbs.get(this.limb) != null)
             {
-                Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
-                Matrix4f matrix4f = new Matrix4f(MatrixUtils.readModelView(obb.modelView));
+                for(OrientedBB obb : this.model.current.orientedBBlimbs.get(this.limb))
+                {
+                    if (MatrixUtils.matrix != null)
+                    {
+                        Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
+                        Matrix4f matrix4f = new Matrix4f(MatrixUtils.readModelView(obb.modelView));
 
-                parent.invert();
-                parent.mul(matrix4f);
+                        parent.invert();
+                        parent.mul(matrix4f);
+                        
+                        obb.offset.set(parent.m03, parent.m13, parent.m23);
+                        
+                        Vector3d ax = new Vector3d(parent.m00, parent.m01, parent.m02);
+                        Vector3d ay = new Vector3d(parent.m10, parent.m11, parent.m12);
+                        Vector3d az = new Vector3d(parent.m20, parent.m21, parent.m22);
 
-                Vector4f vector4f = new Vector4f(0, 0, 0, 1);
-
-                parent.transform(vector4f);
-                obb.offset.set(vector4f.x, vector4f.y, vector4f.z);
-                
-                Vector3d ax = new Vector3d(parent.m00, parent.m01, parent.m02);
-                Vector3d ay = new Vector3d(parent.m10, parent.m11, parent.m12);
-                Vector3d az = new Vector3d(parent.m20, parent.m21, parent.m22);
-
-                ax.normalize();
-                ay.normalize();
-                az.normalize();
-                obb.rotation.setIdentity();
-                obb.rotation.setRow(0, ax);
-                obb.rotation.setRow(1, ay);
-                obb.rotation.setRow(2, az);
-                obb.modelView.setIdentity();
+                        ax.normalize();
+                        ay.normalize();
+                        az.normalize();
+                        obb.rotation.setIdentity();
+                        obb.rotation.setRow(0, ax);
+                        obb.rotation.setRow(1, ay);
+                        obb.rotation.setRow(2, az);
+                        
+                        Matrix3f rotation = new Matrix3f(obb.rotation);
+                        Matrix3f rotscale = new Matrix3f(parent.m00, parent.m01, parent.m02,
+                                                         parent.m10, parent.m11, parent.m12,
+                                                         parent.m20, parent.m21, parent.m22);
+                        
+                        rotation.invert();
+                        rotscale.mul(rotation);
+                        
+                        obb.scale.m00 = rotscale.m00;
+                        obb.scale.m11 = rotscale.m11;
+                        obb.scale.m22 = rotscale.m22;
+                        
+                        obb.modelView.setIdentity();
+                    }
+                }
             }
         }
     }
