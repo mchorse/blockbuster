@@ -38,6 +38,12 @@ blockbuster.config:
         record_commands: Запись команд
         record_chat_prefix: Префикс действия в чате
         record_pause_preview: Улучшенный предпросмотр
+
+    scenes:
+        title: Сцены
+        tooltip: Здесь находится всё ,что относится ко сценам
+
+        save_update: Обновить после сохранения
     
     actor:
         title: Актёры
