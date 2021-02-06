@@ -24,7 +24,7 @@ import net.minecraft.util.math.BlockPos;
  */
 public class SubCommandRecordClean extends SubCommandRecordBase
 {
-    public static final Set<String> PROPERTIES = ImmutableSet.of("x", "y", "z", "yaw", "yaw_head", "pitch", "fall_distance", "sprinting", "sneaking", "active_hands", "mounted");
+    public static final Set<String> PROPERTIES = ImmutableSet.of("x", "y", "z", "yaw", "yaw_head", "body_yaw", "pitch", "fall_distance", "sprinting", "sneaking", "active_hands", "mounted", "roll");
 
     public static double get(String property, Frame frame)
     {
@@ -47,6 +47,10 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         else if (property.equals("yaw_head"))
         {
             return frame.yawHead;
+        }
+        else if (property.equals("body_yaw"))
+        {
+            return frame.bodyYaw;
         }
         else if (property.equals("pitch"))
         {
@@ -71,6 +75,10 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         else if (property.equals("mounted"))
         {
             return frame.isMounted ? 1 : 0;
+        }
+        else if (property.equals("roll"))
+        {
+            return frame.roll;
         }
 
         return 0;
@@ -98,6 +106,11 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         {
             frame.yawHead = (float) value;
         }
+        else if (property.equals("body_yaw"))
+        {
+            frame.hasBodyYaw = true;
+            frame.bodyYaw = (float) value;
+        }
         else if (property.equals("pitch"))
         {
             frame.pitch = (float) value;
@@ -121,6 +134,10 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         else if (property.equals("mounted"))
         {
             frame.isMounted = value == 1;
+        }
+        else if (property.equals("roll"))
+        {
+            frame.roll = (float) value;
         }
     }
 
