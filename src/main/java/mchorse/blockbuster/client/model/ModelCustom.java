@@ -11,11 +11,13 @@ import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.api.formats.obj.ShapeKey;
 import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
@@ -216,6 +218,41 @@ public class ModelCustom extends ModelBiped
 
             /* Reseting the angles */
             this.applyLimbPose(limb);
+
+            if (limb.limb.cape && entityIn instanceof EntityLivingBase && this.current != null)
+            {
+                float partialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
+                EntityLivingBase living = (EntityLivingBase) entityIn;
+
+                double dX = this.current.prevCapeX + (this.current.capeX - this.current.prevCapeX) * partialTicks - (living.prevPosX + (living.posX - living.prevPosX) * partialTicks);
+                double dY = this.current.prevCapeY + (this.current.capeY - this.current.prevCapeY) * partialTicks - (living.prevPosY + (living.posY - living.prevPosY) * partialTicks);
+                double dZ = this.current.prevCapeZ + (this.current.capeZ - this.current.prevCapeZ) * partialTicks - (living.prevPosZ + (living.posZ - living.prevPosZ) * partialTicks);
+                float bodyYaw = living.prevRenderYawOffset + (living.renderYawOffset - living.prevRenderYawOffset) * partialTicks;
+                double sin = MathHelper.sin(bodyYaw / 180 * PI);
+                double cos = -MathHelper.cos(bodyYaw / 180 * PI);
+                float h = (float) MathHelper.clamp(dY * 10.0F, -6.0F, 32.0F);
+                float pitch = (float) (dX * sin + dZ * cos) * 100.0F;
+                float yaw = (float) (dX * cos - dZ * sin) * 100.0F;
+
+                if (pitch > 0.0F)
+                {
+                    pitch = -pitch;
+                }
+
+                float cameraYaw = 0;
+
+                if (living instanceof EntityPlayer)
+                {
+                    EntityPlayer player = (EntityPlayer) living;
+
+                    cameraYaw = player.prevCameraYaw + (player.cameraYaw - player.prevCameraYaw) * partialTicks;
+                }
+
+                h += MathHelper.sin((living.prevDistanceWalkedModified + (living.distanceWalkedModified - living.prevDistanceWalkedModified) * partialTicks) * 6.0F) * 32.0F * cameraYaw;
+
+                limb.rotateAngleX += (6.0F + pitch / 2.0F + h) / 180 * PI;
+                limb.rotateAngleY += (yaw / 2.0F * 0) / 180 * PI;
+            }
 
             if ((limb.limb.lookX || limb.limb.lookY) && !limb.limb.wheel)
             {

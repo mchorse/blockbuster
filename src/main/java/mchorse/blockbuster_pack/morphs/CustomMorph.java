@@ -125,6 +125,14 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
     private long lastUpdate;
 
+    /* Cape variables */
+    public double prevCapeX;
+    public double prevCapeY;
+    public double prevCapeZ;
+    public double capeX;
+    public double capeY;
+    public double capeZ;
+
     /**
      * Make hands true!
      */
@@ -470,6 +478,65 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         this.parts.updateBodyLimbs(this, target);
 
         super.update(target);
+
+        if (target.world.isRemote)
+        {
+            this.updateCape(target);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void updateCape(EntityLivingBase target)
+    {
+        this.prevCapeX = this.capeX;
+        this.prevCapeY = this.capeY;
+        this.prevCapeZ = this.capeZ;
+
+        double dX = target.posX - this.capeX;
+        double dY = target.posY - this.capeY;
+        double dZ = target.posZ - this.capeZ;
+        double distance = 10.0D;
+        double multiplier = 0.25D;
+
+        if (dX > distance)
+        {
+            this.capeX = target.posX;
+            this.prevCapeX = this.capeX;
+        }
+
+        if (dZ > distance)
+        {
+            this.capeZ = target.posZ;
+            this.prevCapeZ = this.capeZ;
+        }
+
+        if (dY > distance)
+        {
+            this.capeY = target.posY;
+            this.prevCapeY = this.capeY;
+        }
+
+        if (dX < -distance)
+        {
+            this.capeX = target.posX;
+            this.prevCapeX = this.capeX;
+        }
+
+        if (dZ < -distance)
+        {
+            this.capeZ = target.posZ;
+            this.prevCapeZ = this.capeZ;
+        }
+
+        if (dY < -distance)
+        {
+            this.capeY = target.posY;
+            this.prevCapeY = this.capeY;
+        }
+
+        this.capeX += dX * multiplier;
+        this.capeZ += dZ * multiplier;
+        this.capeY += dY * multiplier;
     }
 
     @Override

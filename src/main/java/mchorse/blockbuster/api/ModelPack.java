@@ -138,6 +138,7 @@ public class ModelPack
             this.addDefaultModel("fred");
             this.addDefaultModel("fred_3d");
             this.addDefaultModel("empty");
+            this.addDefaultModel("cape");
         }
         catch (Exception e)
         {

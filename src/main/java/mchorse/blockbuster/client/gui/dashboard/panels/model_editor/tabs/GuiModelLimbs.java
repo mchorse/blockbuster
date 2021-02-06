@@ -67,6 +67,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
     private GuiToggleElement wheel;
     private GuiToggleElement wing;
     private GuiToggleElement roll;
+    private GuiToggleElement cape;
 
     public GuiModelLimbs(Minecraft mc, GuiModelEditorPanel panel)
     {
@@ -98,7 +99,11 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.limb.sizeOffset = value.floatValue();
             this.panel.rebuildModel();
         });
-        this.itemScale = new GuiTrackpadElement(mc, (value) -> this.panel.limb.itemScale = value.floatValue());
+        this.itemScale = new GuiTrackpadElement(mc, (value) ->
+        {
+            this.panel.limb.itemScale = value.floatValue();
+            this.panel.dirty();
+        });
         this.texture = new GuiButtonElement(mc, IKey.comp(IKey.lang("blockbuster.gui.edit"), IKey.str("...")), (b) ->
         {
             this.textureEditor.toggleVisible();
@@ -229,6 +234,11 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.limb.roll = b.isToggled();
             this.panel.dirty();
         });
+        this.cape = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.cape"), false, (b) ->
+        {
+            this.panel.limb.cape = b.isToggled();
+            this.panel.dirty();
+        });
 
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size")).background(0x88000000), this.size);
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size_offset")).background(0x88000000), this.sizeOffset);
@@ -251,6 +261,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         animation.add(this.invert, this.swiping);
         animation.add(this.hold, this.wheel);
         animation.add(this.wing, this.roll);
+        animation.add(this.cape);
 
         this.scroll.add(Elements.row(mc, 5, this.slot, this.holding));
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.appearance"), 24).anchor(0, 1).background(0x88000000), appearance, this.color);
@@ -412,5 +423,6 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.wheel.toggled(limb.wheel);
         this.wing.toggled(limb.wing);
         this.roll.toggled(limb.roll);
+        this.cape.toggled(limb.cape);
     }
 }

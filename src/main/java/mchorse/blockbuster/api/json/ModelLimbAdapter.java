@@ -85,6 +85,7 @@ public class ModelLimbAdapter implements JsonSerializer<ModelLimb>, JsonDeserial
         this.addBoolean(map, "wheel", src.wheel, false);
         this.addBoolean(map, "wing", src.wing, false);
         this.addBoolean(map, "roll", src.roll, false);
+        this.addBoolean(map, "cape", src.cape, false);
 
         if (!ModelPoseAdapter.isDefault(src.origin, 0F))
         {

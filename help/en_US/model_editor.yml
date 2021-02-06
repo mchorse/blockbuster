@@ -38,6 +38,7 @@ blockbuster.gui.me:
         wheel: Wheel
         wing: Wing
         roll: Roll
+        cape: Cape
         
         rename: Rename
         parent: Parent

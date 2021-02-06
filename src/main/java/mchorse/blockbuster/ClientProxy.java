@@ -162,6 +162,7 @@ public class ClientProxy extends CommonProxy
             new File(path + "/models/alex/skins").mkdirs();
             new File(path + "/models/fred/skins").mkdirs();
             new File(path + "/models/image/skins").mkdirs();
+            new File(path + "/models/cape/skins").mkdirs();
         }
         catch (Exception e)
         {
