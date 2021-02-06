@@ -11,8 +11,12 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.ScrollArea;
 import mchorse.mclib.client.gui.utils.ScrollDirection;
 import mchorse.mclib.utils.MathUtils;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
+import mchorse.metamorph.bodypart.BodyPart;
+import mchorse.metamorph.bodypart.BodyPartManager;
+import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -383,23 +387,7 @@ public class GuiRecordSelector extends GuiElement
         if (action instanceof MorphAction)
         {
             MorphAction morphAction = (MorphAction) action;
-            int ticks = 0;
-
-            if (morphAction.morph instanceof IAnimationProvider)
-            {
-                Animation animation = ((IAnimationProvider) morphAction.morph).getAnimation();
-
-                if (animation.animates)
-                {
-                    ticks = animation.duration;
-                }
-            }
-            else if (morphAction.morph instanceof SequencerMorph)
-            {
-                SequencerMorph morph = (SequencerMorph) morphAction.morph;
-
-                ticks = (int) morph.getDuration();
-            }
+            int ticks = this.getLength(morphAction.morph);
 
             if (ticks > 1)
             {
@@ -413,5 +401,41 @@ public class GuiRecordSelector extends GuiElement
 
             this.adaptiveMaxIndex = Math.max(ticks, this.adaptiveMaxIndex);
         }
+    }
+
+    private int getLength(AbstractMorph morph)
+    {
+        int ticks = 0;
+
+        if (morph instanceof IAnimationProvider)
+        {
+            Animation animation = ((IAnimationProvider) morph).getAnimation();
+
+            if (animation.animates)
+            {
+                ticks = animation.duration;
+            }
+        }
+        else if (morph instanceof SequencerMorph)
+        {
+            SequencerMorph sequencerMorph = (SequencerMorph) morph;
+
+            ticks = (int) sequencerMorph.getDuration();
+        }
+
+        if (morph instanceof IBodyPartProvider)
+        {
+            BodyPartManager manager = ((IBodyPartProvider) morph).getBodyPart();
+
+            for (BodyPart part : manager.parts)
+            {
+                if (!part.morph.isEmpty() && part.limb != null && !part.limb.isEmpty())
+                {
+                    ticks = Math.max(ticks, this.getLength(part.morph.get()));
+                }
+            }
+        }
+
+        return ticks;
     }
 }
