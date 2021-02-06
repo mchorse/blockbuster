@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.render;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.vecmath.Matrix4d;
@@ -207,9 +208,9 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 
         Vector4f zero = SnowstormMorph.calculateGlobal(parent, entity, 0, 0, 0, partialTicks);
 
-        for (ModelLimb limb : this.current.model.limbs.values())
+        for (List<OrientedBB> obbs : this.current.orientedBBlimbs.values())
         {
-            for(OrientedBB obb : limb.obbs)
+            for(OrientedBB obb : obbs)
             {
                 obb.center.x = zero.x;
                 obb.center.y = zero.y;

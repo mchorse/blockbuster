@@ -59,11 +59,6 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
  */
 public class OrientedBB
 {
-    private final double random1 = Math.random();
-    private final double random2 = Math.random();
-    private final double random3 = Math.random();
-    private final double random4 = Math.random();
-
     /** local basis vector x */
     private Vector3d w = new Vector3d(1, 0, 0);
     /** local basis vector y */
@@ -166,7 +161,7 @@ public class OrientedBB
         GlStateManager.disableLighting();
         GlStateManager.disableTexture2D();
 
-        color.set((float) random1 + 0.1F, (float) random2 + 0.1F, (float) random3 + 0.1F, 1F);
+        color.set(1F, 1F, 1F, 1F);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
@@ -263,27 +258,27 @@ public class OrientedBB
 
         Vector3d offset0 = new Vector3d(this.offset);
 
-        Matrix3d rotation1 = new Matrix3d(this.rotation);
+        Matrix3d rotscale = new Matrix3d(this.scale);
         
-        rotation1.mul(this.rotation0);
-        rotation1.mul(this.scale);
+        rotscale.mul(this.rotation);
+        rotscale.mul(this.rotation0);
         
         this.rotation.transform(limbOffset0);
         this.scale.transform(limbOffset0);
         
-        rotation1.transform(anchorOffset0); // not entirely sure if that is correct - testing later in gui
-        rotation1.transform(width);
-        rotation1.transform(height);
-        rotation1.transform(depth);
+        rotscale.transform(anchorOffset0); // not entirely sure if that is correct - testing later in gui
+        rotscale.transform(width);
+        rotscale.transform(height);
+        rotscale.transform(depth);
 
         Vector3d center = new Vector3d(this.center);
         
         center.add(limbOffset0);
-        center.add(anchorOffset0);
+        
         center.add(offset0);
 
         this.anchorPoint.set(center);
-
+        center.add(anchorOffset0);
         /* calculate the corners */
         Vector3d pos = new Vector3d(center);
         pos.add(width);
@@ -393,6 +388,22 @@ public class OrientedBB
         rotation.mul(rot);
         
         return rotation;
+    }
+    
+    public OrientedBB dupe()
+    {
+        OrientedBB d = new OrientedBB();
+        d.hu = this.hu;
+        d.hw = this.hw;
+        d.hv = this.hv;
+        d.anchorOffset.set(this.anchorOffset);
+        d.offset.set(this.offset);
+        d.center.set(this.center);
+        d.limbOffset.set(this.limbOffset);
+        d.rotation.set(this.rotation);
+        d.rotation0.set(this.rotation0);
+        d.scale.set(this.scale);
+        return d;
     }
 
     @Override
