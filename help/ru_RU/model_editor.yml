@@ -38,7 +38,7 @@ blockbuster.gui.me:
         wheel: Колесо
         wing: Крыло
         roll: Крутится
-        cape: Cape
+        cape: Плащ
         
         rename: Переименовать
         parent: Привязать
