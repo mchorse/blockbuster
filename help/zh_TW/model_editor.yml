@@ -10,6 +10,7 @@ blockbuster.gui.me:
         size: 肢體尺寸
         size_offset: 尺寸偏移
         texture: 材質偏移
+        item_scale: 物品縮放
         anchor: 錨點
         origin: OBJ/VOX 源
         slot: 盔甲槽
