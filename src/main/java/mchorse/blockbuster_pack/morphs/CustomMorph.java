@@ -246,7 +246,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     {
         ModelPose pose = this.getCurrentPose(target, ignoreCustom);
 
-        if (this.animation.isInProgress())
+        if (this.animation.isInProgress() && pose != null)
         {
             return this.animation.calculatePose(pose, partialTicks);
         }
@@ -481,12 +481,12 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
         if (target.world.isRemote)
         {
-            this.updateCape(target);
+            this.updateCapeVariables(target);
         }
     }
 
     @SideOnly(Side.CLIENT)
-    private void updateCape(EntityLivingBase target)
+    private void updateCapeVariables(EntityLivingBase target)
     {
         this.prevCapeX = this.capeX;
         this.prevCapeY = this.capeY;
@@ -495,48 +495,29 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         double dX = target.posX - this.capeX;
         double dY = target.posY - this.capeY;
         double dZ = target.posZ - this.capeZ;
-        double distance = 10.0D;
         double multiplier = 0.25D;
 
-        if (dX > distance)
+        if (Math.abs(dX) > 10)
         {
             this.capeX = target.posX;
             this.prevCapeX = this.capeX;
         }
 
-        if (dZ > distance)
-        {
-            this.capeZ = target.posZ;
-            this.prevCapeZ = this.capeZ;
-        }
-
-        if (dY > distance)
+        if (Math.abs(dY) > 10)
         {
             this.capeY = target.posY;
             this.prevCapeY = this.capeY;
         }
 
-        if (dX < -distance)
-        {
-            this.capeX = target.posX;
-            this.prevCapeX = this.capeX;
-        }
-
-        if (dZ < -distance)
+        if (Math.abs(dZ) > 10)
         {
             this.capeZ = target.posZ;
             this.prevCapeZ = this.capeZ;
-        }
-
-        if (dY < -distance)
-        {
-            this.capeY = target.posY;
-            this.prevCapeY = this.capeY;
         }
 
         this.capeX += dX * multiplier;
-        this.capeZ += dZ * multiplier;
         this.capeY += dY * multiplier;
+        this.capeZ += dZ * multiplier;
     }
 
     @Override
