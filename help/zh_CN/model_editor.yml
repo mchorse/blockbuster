@@ -9,6 +9,7 @@ blockbuster.gui.me:
         
         size: 肢体尺寸
         size_offset: 尺寸偏移
+        item_scale: 物品缩放
         texture: 材质偏移
         anchor: 锚点
         origin: OBJ/VOX 源
@@ -37,6 +38,7 @@ blockbuster.gui.me:
         wheel: 转轮
         wing: 振翅
         roll: 翻滚
+        cape: 披风
 
         rename: 重命名
         parent: 父级
