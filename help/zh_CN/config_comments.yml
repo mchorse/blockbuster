@@ -27,6 +27,9 @@ blockbuster.config.comments:
         record_chat_prefix: 将会在确切要执行的命令之前预先用的前缀（%%NAME%% 通配符可用于指向演员的名称）
         record_pause_preview: 该选项启用了包含动画的伪装预览功能，例如图像伪装的动画，回放伪装以及序列。这会影响服务端的性能。
 
+    scenes:
+        save_update: 如果正在运行，在退出仪表盘 GUI 保存场景后，是否会重新加载场景。
+
     actor:
         actor_fall_damage: 演员是否会受到跌落伤害？
         actor_tracking_range: 演员跟踪会多远？ 需要重启游戏。

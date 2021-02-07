@@ -38,7 +38,13 @@ blockbuster.config:
         record_commands: 录制命令
         record_chat_prefix: 聊天动作前缀
         record_pause_preview: 更好的预览
-        
+
+    scenes:
+        title: 场景
+        tooltip: 所有与场景相关的选项 
+
+        save_update: 保存后更新场景
+
     actor:
         title: 演员
         tooltip: 演员实体配置选项（与假玩家无关）

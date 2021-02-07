@@ -37,6 +37,7 @@ blockbuster.gui.me:
         wheel: 轉輪
         wing: 振翅
         roll: 翻滾
+        cape: 披風
 
         rename: 重命名
         parent: 父級
