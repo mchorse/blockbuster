@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.vecmath.Matrix3d;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -40,6 +42,57 @@ public class ModelLimbAdapter implements JsonSerializer<ModelLimb>, JsonDeserial
         map.remove("opacity");
         map.remove("color");
 
+        if(!src.obbs.isEmpty())
+        {
+            JsonArray jsonOBBs = new JsonArray();
+            
+            for(OrientedBB obb : src.obbs) 
+            {
+                JsonObject jsonOBB = new JsonObject();
+ 
+                JsonArray size = new JsonArray();
+                
+                size.add(obb.hw * 32D);
+                size.add(obb.hu * 32D);
+                size.add(obb.hv * 32D);
+                jsonOBB.add("size", size);
+                
+                if(obb.anchorOffset.x != 0 || obb.anchorOffset.y != 0 || obb.anchorOffset.z != 0)
+                {
+                    JsonArray anchor = new JsonArray();
+                    
+                    anchor.add(obb.anchorOffset.x * 16D);
+                    anchor.add(obb.anchorOffset.y * 16D);
+                    anchor.add(obb.anchorOffset.z * 16D);
+                    jsonOBB.add("anchor", anchor);
+                }
+                
+                if(obb.limbOffset.x != 0 || obb.limbOffset.y != 0 || obb.limbOffset.z != 0)
+                {
+                    JsonArray translate = new JsonArray();
+                    
+                    translate.add(obb.limbOffset.x * 16D);
+                    translate.add(obb.limbOffset.y * 16D);
+                    translate.add(obb.limbOffset.z * 16D);
+                    jsonOBB.add("translate", translate);
+                }
+                
+                if(obb.rotation0[0] != 0 || obb.rotation0[1] != 0 || obb.rotation0[2] != 0)
+                {
+                    JsonArray rotation = new JsonArray();
+                    
+                    rotation.add(obb.rotation0[0]);
+                    rotation.add(obb.rotation0[1]);
+                    rotation.add(obb.rotation0[2]);
+                    jsonOBB.add("rotate", rotation);
+                }
+                
+                jsonOBBs.add(jsonOBB);
+            }
+            
+            map.add("orientedBBs", jsonOBBs);
+        }
+        
         if (src.sizeOffset != 0)
         {
             map.addProperty("sizeOffset", src.sizeOffset);
@@ -133,9 +186,9 @@ public class ModelLimbAdapter implements JsonSerializer<ModelLimb>, JsonDeserial
                 
                 if(jsonOBB.has("rotate"))
                 {
-                    obb.rotation0.set(OrientedBB.anglesToMatrix(jsonOBB.getAsJsonArray("rotate").get(0).getAsDouble(), 
-                                                                jsonOBB.getAsJsonArray("rotate").get(1).getAsDouble(), 
-                                                                jsonOBB.getAsJsonArray("rotate").get(2).getAsDouble()));
+                    obb.rotation0[0] = jsonOBB.getAsJsonArray("rotate").get(0).getAsDouble();
+                    obb.rotation0[1] = jsonOBB.getAsJsonArray("rotate").get(1).getAsDouble();
+                    obb.rotation0[2] = jsonOBB.getAsJsonArray("rotate").get(2).getAsDouble();
                 }
                 
                 limb.obbs.add(obb);

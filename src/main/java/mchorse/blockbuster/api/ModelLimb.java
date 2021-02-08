@@ -71,6 +71,14 @@ public class ModelLimb
     {
         ModelLimb b = new ModelLimb();
 
+        if(!this.obbs.isEmpty()) 
+        {
+            for(OrientedBB obb : this.obbs)
+            {
+                b.obbs.add(obb.clone());
+            }
+        }
+        
         b.name = this.name;
         b.parent = this.parent;
 
