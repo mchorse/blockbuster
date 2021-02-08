@@ -153,10 +153,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     
     /**
      * This method fills the obbsLimb Map with data from the model blueprint.
+     * @param force if true it ignores that orientedBBlimbs might already be filled
      */
-    public void fillObbs()
+    public void fillObbs(boolean force)
     {
-        if(this.orientedBBlimbs == null)
+        if(this.orientedBBlimbs == null || force)
         {
             this.orientedBBlimbs = new HashMap<>();
             
@@ -166,7 +167,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                 
                 for(OrientedBB obb : limb.obbs)
                 {
-                    newObbs.add(obb.dupe()); 
+                    newObbs.add(obb.clone()); 
                 }
                 
                 this.orientedBBlimbs.put(limb, newObbs);
@@ -253,6 +254,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         this.name = "blockbuster." + model;
         this.key = null;
         this.model = Blockbuster.proxy.models.models.get(model);
+        
+        fillObbs(true);
     }
 
     @Override
@@ -330,6 +333,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         {
             this.lastUpdate = ModelHandler.lastUpdate;
             this.model = Blockbuster.proxy.models.models.get(this.getKey());
+
+            fillObbs(true);
         }
     }
 
@@ -345,7 +350,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     {
         if(this.model != null)
         {
-            fillObbs();
+            fillObbs(false);
         }
         
         this.updateModel();
@@ -477,7 +482,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     {
         if(this.model != null)
         {
-            fillObbs();
+            fillObbs(false);
         }
         
         this.updateModel();

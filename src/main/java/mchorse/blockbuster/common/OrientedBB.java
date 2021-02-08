@@ -77,7 +77,7 @@ public class OrientedBB
     public Matrix3d rotation = new Matrix3d();
 
     /** initial rotation defined at the beginning of model creation */
-    public Matrix3d rotation0 = new Matrix3d();
+    public double[] rotation0 = { 0, 0, 0 };
 
     /** global center point (not the anchor) */
     public Vector3d center = new Vector3d();
@@ -101,43 +101,41 @@ public class OrientedBB
     /** offset from main entity */
     public Vector3d offset = new Vector3d();
 
-    public OrientedBB(@Nullable Vector3d center, @Nullable Matrix3d rotation, float width, float height, float depth)
+    public OrientedBB(@Nullable Vector3d center, @Nullable double[] rotation0, float width, float height, float depth)
     {
         if (center == null)
         {
             center = new Vector3d();
         }
         
-        if (rotation == null)
+        if (rotation0 == null)
         {
-            rotation = new Matrix3d();
-
-            rotation.setIdentity();
+            rotation0 = new double[3];
         }
         
-        setup(rotation, width, height, depth);
+        setup(rotation0, width, height, depth);
         this.center.set(center);
     }
 
     public OrientedBB()
     {
-        Matrix3d rotation = new Matrix3d();
+        double[] rotation0 = new double[3];
 
         rotation.setIdentity();
-        setup(rotation, 0, 0, 0);
+        setup(rotation0, 0, 0, 0);
         buildCorners();
     }
 
-    public void setup(Matrix3d rotation0, float width, float height, float depth)
+    public void setup(double[] rotation0, float width, float height, float depth)
     {
         this.center = new Vector3d();
         this.hw = Math.abs(width) / 2;
         this.hu = Math.abs(height) / 2;
         this.hv = Math.abs(depth) / 2;
-
+        this.rotation0 = rotation0;
+        
         RenderingHandler.obbsToRender.add(this);
         this.rotation.setIdentity();
-        this.rotation0.set(rotation0);
         this.scale.setIdentity();
     }
 
@@ -160,7 +158,7 @@ public class OrientedBB
         GlStateManager.glLineWidth(3F);
         GlStateManager.disableLighting();
         GlStateManager.disableTexture2D();
-
+        
         color.set(1F, 1F, 1F, 1F);
 
         Tessellator tessellator = Tessellator.getInstance();
@@ -179,16 +177,15 @@ public class OrientedBB
                 builder.pos(end.position.x, end.position.y, end.position.z).color(color.r, color.g, color.b, color.a).endVertex();
             }
         }
-        drawAxes(builder, color, this.anchorPoint, 6, true);
-
-        drawAxes(builder, color, this.center, 10, false);
-
+        
         builder.setTranslation(0, 0, 0);
         tessellator.draw();
-
+        
+        renderAxes(new double[]{-playerX, -playerY, -playerZ}, color, this.anchorPoint, 4, true, false);
+        
         GlStateManager.enableTexture2D();
         GlStateManager.enableLighting();
-        GlStateManager.glLineWidth(2F);
+        GlStateManager.glLineWidth(1F);
 
         if (shader != 0)
         {
@@ -197,14 +194,33 @@ public class OrientedBB
     }
 
     /**
-     * This method draws 3 axes. If wanted, it can rotate according to the rotation matrices in the OBB.
+     * This method renders 3 axes. If wanted, it can rotate according to the rotation matrices in the OBB.
      * 
+     * @param translation for OpenGL translation (usually player position)
+     * @param color the color of the axes
      * @param center0 the center of the plain Axis
      * @param length  the half-length of the axis measured in Minecraft pixels
-     * @param rotate  - if true the plain axis will be rotated by rotation0 and rotation
+     * @param rotate  if true the plain axis will be rotated by rotation0 and rotation
+     * @param depth control GlStateManager depth
      */
-    public void drawAxes(BufferBuilder builder, Color color, Vector3d center0, double length, boolean rotate)
+    public void renderAxes(double[] translation, Color color, Vector3d center0, double length, boolean rotate, boolean depth)
     {
+        GlStateManager.glLineWidth(2F);
+        GlStateManager.disableLighting();
+        GlStateManager.disableTexture2D();
+        
+        if(!depth)
+        {
+            GlStateManager.disableDepth();
+        }
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder builder = tessellator.getBuffer();
+
+        builder.setTranslation(translation[0], translation[1], translation[2]);
+        builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+
+        Matrix3d rotation0 = anglesToMatrix(this.rotation0[0], this.rotation0[1], this.rotation0[2]);
         length /= 32; // 1 <=> 1 pixel => divide by 16 and by 2 as it's half length
         Vector3d axisX1 = new Vector3d(length, 0, 0);
         Vector3d axisX2 = new Vector3d(0, length, 0);
@@ -213,13 +229,13 @@ public class OrientedBB
         if (rotate)
         {
             this.rotation.transform(axisX1);
-            this.rotation0.transform(axisX1);
+            rotation0.transform(axisX1);
             
             this.rotation.transform(axisX2);
-            this.rotation0.transform(axisX2);
+            rotation0.transform(axisX2);
             
             this.rotation.transform(axisX3);
-            this.rotation0.transform(axisX3);
+            rotation0.transform(axisX3);
         }
         
         builder.pos(center0.x + axisX1.x, center0.y + axisX1.y, center0.z + axisX1.z).color(color.r, color.g, color.b, color.a).endVertex();
@@ -230,6 +246,14 @@ public class OrientedBB
 
         builder.pos(center0.x + axisX3.x, center0.y + axisX3.y, center0.z + axisX3.z).color(color.r, color.g, color.b, color.a).endVertex();
         builder.pos(center0.x - axisX3.x, center0.y - axisX3.y, center0.z - axisX3.z).color(color.r, color.g, color.b, color.a).endVertex();
+        
+        builder.setTranslation(0, 0, 0);
+        tessellator.draw();
+        
+        if(!depth)
+        {
+            GlStateManager.enableDepth();
+        }
     }
 
     /**
@@ -247,6 +271,7 @@ public class OrientedBB
         Vector3d width = new Vector3d(this.w);
         Vector3d height = new Vector3d(this.u);
         Vector3d depth = new Vector3d(this.v);
+        Matrix3d rotation0 = anglesToMatrix(this.rotation0[0], this.rotation0[1], this.rotation0[2]);
         
         width.scale(this.hw);
         height.scale(this.hu);
@@ -261,7 +286,7 @@ public class OrientedBB
         Matrix3d rotscale = new Matrix3d(this.scale);
         
         rotscale.mul(this.rotation);
-        rotscale.mul(this.rotation0);
+        rotscale.mul(rotation0);
         
         this.rotation.transform(limbOffset0);
         this.scale.transform(limbOffset0);
@@ -273,12 +298,12 @@ public class OrientedBB
 
         Vector3d center = new Vector3d(this.center);
         
-        center.add(limbOffset0);
-        
         center.add(offset0);
-
         this.anchorPoint.set(center);
         center.add(anchorOffset0);
+        center.add(limbOffset0);
+        
+        
         /* calculate the corners */
         Vector3d pos = new Vector3d(center);
         pos.add(width);
@@ -390,7 +415,7 @@ public class OrientedBB
         return rotation;
     }
     
-    public OrientedBB dupe()
+    public OrientedBB clone()
     {
         OrientedBB d = new OrientedBB();
         d.hu = this.hu;
@@ -401,7 +426,7 @@ public class OrientedBB
         d.center.set(this.center);
         d.limbOffset.set(this.limbOffset);
         d.rotation.set(this.rotation);
-        d.rotation0.set(this.rotation0);
+        d.rotation0 = this.rotation0;
         d.scale.set(this.scale);
         return d;
     }
