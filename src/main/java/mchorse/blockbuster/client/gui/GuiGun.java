@@ -24,6 +24,7 @@ import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsMenu;
 import mchorse.metamorph.client.gui.creative.GuiMorphRenderer;
@@ -412,6 +413,7 @@ public class GuiGun extends GuiBase
         if (this.index == 1)
         {
             this.props.defaultMorph = morph;
+            this.props.setCurrent(MorphUtils.copy(morph));
             this.pickDefault.setMorph(morph);
         }
         else if (this.index == 2)

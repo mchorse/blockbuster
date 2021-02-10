@@ -87,6 +87,11 @@ public class GunProps
         this.fromNBT(tag);
     }
 
+    public void setCurrent(AbstractMorph morph)
+    {
+        this.current.setDirect(morph);
+    }
+
     public void shot()
     {
         if (this.delay <= 0)
