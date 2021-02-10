@@ -9,8 +9,10 @@ import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.client.gui.utils.Elements;
+import mchorse.mclib.math.Operation;
 import net.minecraft.client.Minecraft;
 
 public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<BedrockComponentMotionCollision>
@@ -35,6 +37,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 	public GuiElement randomBouncinessRow;
 
 	private boolean wasPresent;
+	private boolean updateButtons;
 
 	public GuiSnowstormCollisionSection(Minecraft mc, GuiSnowstorm parent)
 	{
@@ -52,6 +55,8 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		{
 			this.component.entityCollision = b.isToggled();
 			this.parent.dirty();
+
+			this.updateButtons();
 		});
 		
 		this.momentum = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.momentum"), (b) ->
@@ -71,6 +76,8 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		{
 			this.component.bounciness = value.floatValue();
 			this.parent.dirty();
+
+			this.updateButtons = true;
 		});
 		this.bounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.bounciness"));
 		
@@ -78,6 +85,8 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		{
 			this.component.randomBounciness = (float) Math.abs(value);
 			this.parent.dirty();
+
+			this.updateButtons = true;
 		});
 		this.randomBounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.randomDirection"));
 		
@@ -173,9 +182,6 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 	@Override
 	protected void fillData()
 	{
-		this.preserveEnergy.removeFromParent();
-		this.momentum.removeFromParent();
-		
 		this.enabled.toggled(MolangExpression.isOne(this.component.enabled));
 		this.realisticCollision.toggled(this.component.realisticCollision);
 		this.entityCollision.toggled(this.component.entityCollision);
@@ -192,16 +198,36 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		this.expire.toggled(this.component.expireOnImpact);
 		this.set(this.expirationDelay, this.component.expirationDelay);
 		
+		this.updateButtons();
+	}
+
+	private void updateButtons()
+	{
+		this.preserveEnergy.removeFromParent();
+		this.momentum.removeFromParent();
+
 		if (this.entityCollision.isToggled())
 		{
-			this.controlToggleElements.add(momentum);
+			this.controlToggleElements.add(this.momentum);
 		}
-		
-		if (this.randomBounciness.value!=0 && this.bounciness.value == 0)
+
+		if (!Operation.equals(this.randomBounciness.value, 0) && Operation.equals(this.bounciness.value, 0))
 		{
-			this.randomBouncinessRow.add(preserveEnergy);
+			this.randomBouncinessRow.add(this.preserveEnergy);
 		}
 
 		this.resizeParent();
+	}
+
+	@Override
+	public void draw(GuiContext context)
+	{
+		super.draw(context);
+
+		if (this.updateButtons)
+		{
+			this.updateButtons();
+			this.updateButtons = false;
+		}
 	}
 }
