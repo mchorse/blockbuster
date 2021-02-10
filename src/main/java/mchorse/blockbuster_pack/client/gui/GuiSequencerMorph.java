@@ -116,8 +116,10 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             {
                 if (!this.list.isDeselected())
                 {
-                    this.list.getList().remove(this.list.getCurrentFirst());
-                    this.list.setIndex(this.list.getIndex() - 1);
+                    int index = this.list.getIndex();
+
+                    this.list.getList().remove(index);
+                    this.list.setIndex(index - 1);
 
                     this.select(this.list.getCurrentFirst());
                     this.list.update();
