@@ -540,7 +540,8 @@ blockbuster.gui:
 
             enabled: 啟用
             realisticCollision: 真實碰撞
-            preserveEnergy: 保存能量
+            preserveEnergy: 保留能量
+            preserveEnergy_tooltip: 保留能量選項可用於保留粒子在碰撞後的速度
             entityCollision: 與實體碰撞
             momentum: 實體碰撞動量
             drag: 在粒子與世界中的方塊碰撞後，碰撞阻力所增加的阻力（減速）大小
@@ -627,6 +628,16 @@ blockbuster.gui:
         
         gun_transforms: 槍變換
         projectile_transforms: 炮彈變換
+
+        category:
+            motion: 運動
+            hitbox: 碰撞箱
+            timers: 計時器
+            rotation: 旋轉
+            transition: 變換
+
+        keys:
+            cycle: 在面板間循環切換
 
     interpolations:
         linear: 線性
