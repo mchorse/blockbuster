@@ -621,6 +621,16 @@ blockbuster.gui:
         gun_transforms: Gun transformations
         projectile_transforms: Projectile transformations
 
+        category:
+            motion: Motion
+            hitbox: Hitbox
+            timers: Timers
+            rotation: Rotation
+            transition: Transition
+
+        keys:
+            cycle: Cycle between panels
+
     interpolations:
         linear: Linear
         quad_in: Quadratic In
