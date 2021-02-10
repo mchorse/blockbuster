@@ -53,7 +53,7 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 		this.surface.tooltip(IKey.lang("blockbuster.gui.snowstorm.shape.surface_tooltip"));
 
 		this.radiusLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.shape.radius"), 20).anchor(0, 1F);
-		this.radius = new GuiTextElement(mc, (str) ->
+		this.radius = new GuiTextElement(mc, 10000, (str) ->
 		{
 			BedrockComponentShapeSphere sphere = (BedrockComponentShapeSphere) this.component;
 
@@ -61,11 +61,11 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 		});
 
 		this.label = Elements.label(IKey.lang(""), 20).anchor(0, 1F);
-		this.x = new GuiTextElement(mc, (str) -> this.updateNormalDimension(str, this.x, 0));
+		this.x = new GuiTextElement(mc, 10000, (str) -> this.updateNormalDimension(str, this.x, 0));
 		this.x.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
-		this.y = new GuiTextElement(mc, (str) -> this.updateNormalDimension(str, this.y, 1));
+		this.y = new GuiTextElement(mc, 10000, (str) -> this.updateNormalDimension(str, this.y, 1));
 		this.y.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
-		this.z = new GuiTextElement(mc, (str) -> this.updateNormalDimension(str, this.z, 2));
+		this.z = new GuiTextElement(mc, 10000, (str) -> this.updateNormalDimension(str, this.z, 2));
 		this.z.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
 
 		this.modeLabel.label.set("blockbuster.gui.snowstorm.shape.shape");
