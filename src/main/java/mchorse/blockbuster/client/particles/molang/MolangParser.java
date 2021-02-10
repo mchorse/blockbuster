@@ -59,6 +59,19 @@ public class MolangParser extends MathBuilder
 		this.remap("sin", "math.sin");
 		this.remap("sqrt", "math.sqrt");
 		this.remap("trunc", "math.trunc");
+
+		/* New functions in 1.16 */
+		this.remap("acos", "math.acos");
+		this.remap("asin", "math.asin");
+		this.remap("atan", "math.atan");
+		this.remap("atan2", "math.atan2");
+		this.remap("randomi", "math.random_integer");
+		this.remap("roll", "math.die_roll");
+		this.remap("rolli", "math.die_roll_integer");
+		this.remap("hermite", "math.hermite_blend");
+
+		/* Remap variables as well */
+		this.remapVar("PI", "math.pi");
 	}
 
 	/**
@@ -67,6 +80,14 @@ public class MolangParser extends MathBuilder
 	public void remap(String old, String newName)
 	{
 		this.functions.put(newName, this.functions.remove(old));
+	}
+
+	/**
+	 * Remap variable names
+	 */
+	public void remapVar(String old, String newName)
+	{
+		this.variables.put(newName, this.variables.remove(old));
 	}
 
 	public void setValue(String name, double value)
