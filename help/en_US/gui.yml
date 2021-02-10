@@ -534,6 +534,7 @@ blockbuster.gui:
             enabled: Enabled
             realisticCollision: Realistic collision
             preserveEnergy: Preserve energy
+            preserveEnergy_tooltip: Preserve energy option allows to preserve velocity of particles after collision
             entityCollision: Collision with entities
             momentum: Momentum for entity collision
             drag: Collision drag adds a drag (slowdown) after particle's collision with blocks in the world

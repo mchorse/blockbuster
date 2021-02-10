@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.particles.components.motion;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
@@ -28,7 +29,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
     private static final CollisionOffset OFFSET = new CollisionOffset();
     
     public MolangExpression enabled = MolangParser.ONE;
-    public MolangExpression preserveEnergy = MolangParser.ZERO;
+    public boolean preserveEnergy = false;
     public boolean entityCollision;
     public boolean momentum;
     public float collisionDrag = 0;
@@ -131,7 +132,19 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
         if (element.has("collision_drag")) this.collisionDrag = element.get("collision_drag").getAsFloat();
         if (element.has("coefficient_of_restitution")) this.bounciness = element.get("coefficient_of_restitution").getAsFloat();
         if (element.has("bounciness_randomness")) this.randomBounciness = element.get("bounciness_randomness").getAsFloat();
-        if (element.has("preserveEnergy")) this.preserveEnergy = parser.parseJson(element.get("preserveEnergy"));
+        if (element.has("preserveEnergy") && element.get("preserveEnergy").isJsonPrimitive())
+        {
+            JsonPrimitive energy = element.get("preserveEnergy").getAsJsonPrimitive();
+
+            if (energy.isBoolean())
+            {
+                this.preserveEnergy = energy.getAsBoolean();
+            }
+            else
+            {
+                this.preserveEnergy = MolangExpression.isOne(parser.parseJson(energy));
+            }
+        }
         if (element.has("damp")) this.damp = element.get("damp").getAsFloat();
         if (element.has("random_damp")) this.randomDamp = element.get("random_damp").getAsFloat();
         if (element.has("split_particle_count")) this.splitParticleCount = element.get("split_particle_count").getAsInt();
@@ -156,7 +169,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
         if (this.collisionDrag != 0) object.addProperty("collision_drag", this.collisionDrag);
         if (this.bounciness != 1) object.addProperty("coefficient_of_restitution", this.bounciness);
         if (this.randomBounciness != 0) object.addProperty("bounciness_randomness", this.randomBounciness);
-        if (MolangExpression.isOne(this.preserveEnergy)) object.add("preserveEnergy", this.preserveEnergy.toJson());
+        if (this.preserveEnergy) object.addProperty("preserveEnergy", this.preserveEnergy);
         if (this.damp != 0) object.addProperty("damp", this.damp);
         if (this.randomDamp != 0) object.addProperty("random_damp", this.randomDamp);
         if (this.splitParticleCount != 0) object.addProperty("split_particle_count", this.splitParticleCount);
@@ -567,7 +580,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
                  * so the particles speed needs to be scaled back without taking that component into account
                  * when bounciness=0 the energy of that component gets absorbed by the collision block and therefore is lost for the particle
                  */
-                if (MolangExpression.isOne(this.preserveEnergy))
+                if (this.preserveEnergy)
                 {
                     setComponent(vector, component, 0);
                 }

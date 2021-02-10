@@ -91,6 +91,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		this.randomBounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.randomDirection"));
 		
 		this.preserveEnergy = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.preserveEnergy"), (b) -> this.parent.dirty());
+		this.preserveEnergy.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.preserveEnergy_tooltip"));
 		
 		this.damp = new GuiTrackpadElement(mc, (value) ->
 		{
@@ -168,7 +169,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 	public void beforeSave(BedrockScheme scheme)
 	{
 		this.component.enabled = this.enabled.isToggled() ? MolangParser.ONE : MolangParser.ZERO;
-		this.component.preserveEnergy = this.preserveEnergy.isToggled() ? MolangParser.ONE : MolangParser.ZERO;
+		this.component.preserveEnergy = this.preserveEnergy.isToggled();
 	}
 
 	@Override
@@ -189,7 +190,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		this.drag.setValue(this.component.collisionDrag);
 		this.bounciness.setValue(this.component.bounciness);
 		this.randomBounciness.setValue(this.component.randomBounciness);
-		this.preserveEnergy.toggled(MolangExpression.isOne(this.component.preserveEnergy));
+		this.preserveEnergy.toggled(this.component.preserveEnergy);
 		this.damp.setValue(this.component.damp);
 		this.randomDamp.setValue(this.component.randomDamp);
 		this.splitParticle.setValue(this.component.splitParticleCount);
