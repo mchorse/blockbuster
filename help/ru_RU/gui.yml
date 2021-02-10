@@ -620,6 +620,16 @@ blockbuster.gui:
         
         gun_transforms: Трансформация оружия
         projectile_transforms: Трансформация снаряда
+        
+        category:
+            motion: Движение
+            hitbox: Хитбокс
+            timers: Таймеры
+            rotation: Вращение
+            transition: Переход
+
+        keys:
+            cycle: Перемещаться между панелями
     
     interpolations:
         linear: Линейная
