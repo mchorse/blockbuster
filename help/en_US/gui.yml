@@ -401,6 +401,10 @@ blockbuster.gui:
 
             create: Creation expression, it runs when emitter starts
             update: Update expression, it runs every tick
+            
+            create_local: Local creation expression, it runs when emitter starts. Expressions are local to every particle.
+            update_local: Local update expression, it runs every tick
+            
 
         rate:
             title: Spawn rate

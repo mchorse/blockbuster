@@ -5,6 +5,7 @@ import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.*;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceBillboard;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
+import mchorse.blockbuster.client.particles.components.meta.BedrockComponentInitialization;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.mclib.math.IValue;
 import mchorse.mclib.math.Variable;
@@ -184,7 +185,10 @@ public class BedrockEmitter
 		if (this.varSpeedY != null) this.varSpeedY.set(particle.speed.y);
 		if (this.varSpeedZ != null) this.varSpeedZ.set(particle.speed.z);
 		if (this.varBounces != null) this.varBounces.set(particle.bounces);
-
+		
+		this.scheme.getOrCreate(BedrockComponentInitialization.class).localCreation.get();
+		this.scheme.getOrCreate(BedrockComponentInitialization.class).localUpdate.get();
+		
 		this.scheme.updateCurves();
 	}
 
