@@ -6,6 +6,10 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangAssignment;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangMultiStatement;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangValue;
+import mchorse.blockbuster.client.particles.molang.functions.AcosDegrees;
+import mchorse.blockbuster.client.particles.molang.functions.AsinDegrees;
+import mchorse.blockbuster.client.particles.molang.functions.Atan2Degrees;
+import mchorse.blockbuster.client.particles.molang.functions.AtanDegrees;
 import mchorse.blockbuster.client.particles.molang.functions.CosDegrees;
 import mchorse.blockbuster.client.particles.molang.functions.SinDegrees;
 import mchorse.mclib.math.Constant;
@@ -39,6 +43,10 @@ public class MolangParser extends MathBuilder
         /* Replace radian based sin and cos with degreebased */
         this.functions.put("cos", CosDegrees.class);
         this.functions.put("sin", SinDegrees.class);
+        this.functions.put("acos", AcosDegrees.class);
+        this.functions.put("asin", AsinDegrees.class);
+        this.functions.put("atan", AtanDegrees.class);
+        this.functions.put("atan2", Atan2Degrees.class);
 
         /* Remap functions to be in tact with Molang specification */
         this.remap("abs", "math.abs");
