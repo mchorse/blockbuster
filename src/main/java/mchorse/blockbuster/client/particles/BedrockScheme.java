@@ -172,7 +172,7 @@ public class BedrockScheme
 
         try
         {
-            result = (T) clazz.getConstructor().newInstance();
+            result = clazz.getConstructor().newInstance();
 
             this.components.add(result);
             this.setup();
