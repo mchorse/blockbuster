@@ -10,50 +10,44 @@ import net.minecraft.client.Minecraft;
 
 public class GuiSnowstormInitializationSection extends GuiSnowstormComponentSection<BedrockComponentInitialization>
 {
-	public GuiTextElement create;
-	public GuiTextElement update;
-	public GuiTextElement createLocal;
-    public GuiTextElement updateLocal;
+    public GuiTextElement create;
+    public GuiTextElement update;
+    public GuiTextElement updateParticle;
 
-	public GuiSnowstormInitializationSection(Minecraft mc, GuiSnowstorm parent)
-	{
-		super(mc, parent);
+    public GuiSnowstormInitializationSection(Minecraft mc, GuiSnowstorm parent)
+    {
+        super(mc, parent);
 
-		this.create = new GuiTextElement(mc, 10000, (str) -> this.component.creation = this.parse(str, this.create, this.component.creation));
-		this.create.tooltip(IKey.lang("blockbuster.gui.snowstorm.initialization.create"));
-		
-		this.update = new GuiTextElement(mc, 10000, (str) -> this.component.update = this.parse(str, this.update, this.component.update));
-		this.update.tooltip(IKey.lang("blockbuster.gui.snowstorm.initialization.update"));
-        
-		this.createLocal = new GuiTextElement(mc, 10000, (str) -> this.component.localCreation = this.parse(str, this.createLocal, this.component.localCreation));
-        this.createLocal.tooltip(IKey.lang("blockbuster.gui.snowstorm.initialization.create_local"));
-        
-        this.updateLocal = new GuiTextElement(mc, 10000, (str) -> this.component.localUpdate = this.parse(str, this.updateLocal, this.component.localUpdate));
-        this.updateLocal.tooltip(IKey.lang("blockbuster.gui.snowstorm.initialization.update_local"));
-        
-		
-		this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.initialization.emitter_variables"), 20).anchor(0, 1F), this.create, this.update);
-		this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.initialization.particle_variables"), 20).anchor(0, 1F), this.createLocal, this.updateLocal);
-	}
+        this.create = new GuiTextElement(mc, 10000, (str) -> this.component.creation = this.parse(str, this.create, this.component.creation));
+        this.create.tooltip(IKey.lang("blockbuster.gui.snowstorm.initialization.create"));
 
-	@Override
-	public String getTitle()
-	{
-		return "blockbuster.gui.snowstorm.initialization.title";
-	}
+        this.update = new GuiTextElement(mc, 10000, (str) -> this.component.update = this.parse(str, this.update, this.component.update));
+        this.update.tooltip(IKey.lang("blockbuster.gui.snowstorm.initialization.update"));
 
-	@Override
-	protected BedrockComponentInitialization getComponent(BedrockScheme scheme)
-	{
-		return this.scheme.getOrCreate(BedrockComponentInitialization.class);
-	}
+        this.updateParticle = new GuiTextElement(mc, 10000, (str) -> this.component.particleUpdate = this.parse(str, this.updateParticle, this.component.particleUpdate));
+        this.updateParticle.tooltip(IKey.lang("blockbuster.gui.snowstorm.initialization.particle_update_expression"));
 
-	@Override
-	protected void fillData()
-	{
-		this.set(this.create, this.component.creation);
-		this.set(this.update, this.component.update);
-		this.set(this.createLocal, this.component.localCreation);
-        this.set(this.updateLocal, this.component.localUpdate);
-	}
+        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.initialization.emitter_expression_title"), 20).anchor(0, 1F), this.create, this.update);
+        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.initialization.particle_expression_title"), 20).anchor(0, 1F), this.updateParticle);
+    }
+
+    @Override
+    public String getTitle()
+    {
+        return "blockbuster.gui.snowstorm.initialization.title";
+    }
+
+    @Override
+    protected BedrockComponentInitialization getComponent(BedrockScheme scheme)
+    {
+        return this.scheme.getOrCreate(BedrockComponentInitialization.class);
+    }
+
+    @Override
+    protected void fillData()
+    {
+        this.set(this.create, this.component.creation);
+        this.set(this.update, this.component.update);
+        this.set(this.updateParticle, this.component.particleUpdate);
+    }
 }
