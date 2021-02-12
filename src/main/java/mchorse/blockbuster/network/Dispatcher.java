@@ -12,6 +12,7 @@ import mchorse.blockbuster.network.client.ClientHandlerStructureList;
 import mchorse.blockbuster.network.client.audio.ClientHandlerAudio;
 import mchorse.blockbuster.network.client.guns.ClientHandlerGunInfo;
 import mchorse.blockbuster.network.client.guns.ClientHandlerGunProjectile;
+import mchorse.blockbuster.network.client.guns.ClientHandlerGunProjectileVanish;
 import mchorse.blockbuster.network.client.guns.ClientHandlerGunShot;
 import mchorse.blockbuster.network.client.guns.ClientHandlerGunStuck;
 import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
@@ -36,6 +37,7 @@ import mchorse.blockbuster.network.common.PacketReloadModels;
 import mchorse.blockbuster.network.common.audio.PacketAudio;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.blockbuster.network.common.guns.PacketGunProjectile;
+import mchorse.blockbuster.network.common.guns.PacketGunProjectileVanish;
 import mchorse.blockbuster.network.common.guns.PacketGunShot;
 import mchorse.blockbuster.network.common.guns.PacketGunStuck;
 import mchorse.blockbuster.network.common.recording.PacketFramesChunk;
@@ -169,6 +171,7 @@ public class Dispatcher
             register(PacketGunInfo.class, ClientHandlerGunInfo.class, Side.CLIENT);
             register(PacketGunShot.class, ClientHandlerGunShot.class, Side.CLIENT);
             register(PacketGunProjectile.class, ClientHandlerGunProjectile.class, Side.CLIENT);
+            register(PacketGunProjectileVanish.class, ClientHandlerGunProjectileVanish.class, Side.CLIENT);
             register(PacketGunStuck.class, ClientHandlerGunStuck.class, Side.CLIENT);
 
             /* Structure morph */
