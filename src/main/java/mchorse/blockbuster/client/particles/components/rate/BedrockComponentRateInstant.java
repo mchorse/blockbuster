@@ -14,53 +14,53 @@ import mchorse.mclib.math.Operation;
 
 public class BedrockComponentRateInstant extends BedrockComponentRate implements IComponentEmitterUpdate
 {
-	public static final MolangExpression DEFAULT_PARTICLES = new MolangValue(null, new Constant(10));
+    public static final MolangExpression DEFAULT_PARTICLES = new MolangValue(null, new Constant(10));
 
-	public BedrockComponentRateInstant()
-	{
-		this.particles = DEFAULT_PARTICLES;
-	}
+    public BedrockComponentRateInstant()
+    {
+        this.particles = DEFAULT_PARTICLES;
+    }
 
-	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
-	{
-		if (!elem.isJsonObject()) return super.fromJson(elem, parser);
+    public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
+    {
+        if (!elem.isJsonObject()) return super.fromJson(elem, parser);
 
-		JsonObject element = elem.getAsJsonObject();
+        JsonObject element = elem.getAsJsonObject();
 
-		if (element.has("num_particles"))
-		{
-			this.particles = parser.parseJson(element.get("num_particles"));
-		}
+        if (element.has("num_particles"))
+        {
+            this.particles = parser.parseJson(element.get("num_particles"));
+        }
 
-		return super.fromJson(element, parser);
-	}
+        return super.fromJson(element, parser);
+    }
 
-	@Override
-	public JsonElement toJson()
-	{
-		JsonObject object = new JsonObject();
+    @Override
+    public JsonElement toJson()
+    {
+        JsonObject object = new JsonObject();
 
-		if (!MolangExpression.isConstant(this.particles, 10))
-		{
-			object.add("num_particles", this.particles.toJson());
-		}
+        if (!MolangExpression.isConstant(this.particles, 10))
+        {
+            object.add("num_particles", this.particles.toJson());
+        }
 
-		return object;
-	}
+        return object;
+    }
 
-	@Override
-	public void update(BedrockEmitter emitter)
-	{
-		double age = emitter.getAge();
+    @Override
+    public void update(BedrockEmitter emitter)
+    {
+        double age = emitter.getAge();
 
-		if (emitter.playing && Operation.equals(age, 0))
-		{
-			emitter.setEmitterVariables(0);
+        if (emitter.playing && Operation.equals(age, 0))
+        {
+            emitter.setEmitterVariables(0);
 
-			for (int i = 0, c = (int) this.particles.get(); i < c; i ++)
-			{
-				emitter.spawnParticle();
-			}
-		}
-	}
+            for (int i = 0, c = (int) this.particles.get(); i < c; i ++)
+            {
+                emitter.spawnParticle();
+            }
+        }
+    }
 }

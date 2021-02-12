@@ -62,7 +62,7 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
                 this.editor.morphs.nestEdit(record.initial, editing, (morph) ->
                 {
                     record.initial = MorphUtils.copy(morph);
-	                ((GuiMorphRenderer) this.editor.renderer).morph = record.initial;
+                    ((GuiMorphRenderer) this.editor.renderer).morph = record.initial;
                 });
             });
             this.loop = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.loops"), true, (b) ->
@@ -73,9 +73,9 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
             this.randomSkip.tooltip(IKey.lang("blockbuster.gui.record_morph.random_skip"));
             this.randomSkip.limit(0, Integer.MAX_VALUE, true);
 
-	        GuiElement element = new GuiElement(mc);
+            GuiElement element = new GuiElement(mc);
 
-	        element.flex().relative(this).y(1F).w(130).anchorY(1F).column(5).stretch().vertical().height(20).padding(10);
+            element.flex().relative(this).y(1F).w(130).anchorY(1F).column(5).stretch().vertical().height(20).padding(10);
             element.add(this.pick, this.loop, this.randomSkip);
 
             this.records.flex().relative(this).set(10, 25, 110, 20).hTo(element.flex());
@@ -100,7 +100,7 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
             this.loop.toggled(morph.loop);
             this.randomSkip.setValue(morph.randomSkip);
 
-	        ((GuiMorphRenderer) this.editor.renderer).morph = morph.initial;
+            ((GuiMorphRenderer) this.editor.renderer).morph = morph.initial;
 
             this.records.resize();
         }
@@ -108,7 +108,7 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
         @Override
         public void draw(GuiContext context)
         {
-	        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.id"), this.records.area.x, this.records.area.y - 12, 0xcccccc);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.id"), this.records.area.x, this.records.area.y - 12, 0xcccccc);
             super.draw(context);
         }
     }

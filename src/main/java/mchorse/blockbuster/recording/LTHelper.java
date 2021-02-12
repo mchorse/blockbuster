@@ -16,47 +16,47 @@ import java.lang.reflect.Method;
  */
 public class LTHelper
 {
-	private static Method method;
-	private static boolean weTried;
+    private static Method method;
+    private static boolean weTried;
 
-	public static boolean playerRightClickServer(EntityPlayer player, Frame frame)
-	{
-		try
-		{
-			if (method == null && !weTried)
-			{
-				weTried = true;
+    public static boolean playerRightClickServer(EntityPlayer player, Frame frame)
+    {
+        try
+        {
+            if (method == null && !weTried)
+            {
+                weTried = true;
 
-				Class clazz = Class.forName("com.creativemd.littletiles.common.api.LittleTileAPI");
+                Class clazz = Class.forName("com.creativemd.littletiles.common.api.LittleTileAPI");
 
-				method = clazz.getMethod("playerRightClickServer", EntityPlayer.class, Vec3d.class, Vec3d.class);
-			}
-		}
-		catch (Exception e)
-		{}
+                method = clazz.getMethod("playerRightClickServer", EntityPlayer.class, Vec3d.class, Vec3d.class);
+            }
+        }
+        catch (Exception e)
+        {}
 
-		if (method != null)
-		{
-			try
-			{
-				player.rotationPitch = frame.pitch;
-				player.rotationYaw = frame.yaw;
+        if (method != null)
+        {
+            try
+            {
+                player.rotationPitch = frame.pitch;
+                player.rotationYaw = frame.yaw;
 
-				Vec3d pos = new Vec3d(frame.x, frame.y, frame.z);
-				Vec3d look = player.getLookVec().scale(8);
+                Vec3d pos = new Vec3d(frame.x, frame.y, frame.z);
+                Vec3d look = player.getLookVec().scale(8);
 
-				pos = pos.addVector(0, player.getEyeHeight(), 0);
+                pos = pos.addVector(0, player.getEyeHeight(), 0);
 
-				Object object = method.invoke(null, player, pos, pos.add(look));
+                Object object = method.invoke(null, player, pos, pos.add(look));
 
-				return object instanceof Boolean && ((Boolean) object).booleanValue();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
+                return object instanceof Boolean && ((Boolean) object).booleanValue();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

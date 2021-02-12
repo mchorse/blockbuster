@@ -9,46 +9,46 @@ import java.util.List;
 public class Utils
 {
     /**
-	 * Get path to server file in given folder
-	 */
-	public static File serverFile(String folder, String filename)
-	{
-		File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/" + folder);
+     * Get path to server file in given folder
+     */
+    public static File serverFile(String folder, String filename)
+    {
+        File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/" + folder);
 
-		if (!file.exists())
-		{
-			file.mkdirs();
-		}
+        if (!file.exists())
+        {
+            file.mkdirs();
+        }
 
-		return new File(file, filename + ".dat");
-	}
+        return new File(file, filename + ".dat");
+    }
 
-	/**
-	 * Get list of all available replays
-	 */
-	public static List<String> serverFiles(String folder)
-	{
-		List<String> list = new ArrayList<String>();
-		File replays = new File(DimensionManager.getCurrentSaveRootDirectory() + "/" + folder);
-		File[] files = replays.listFiles();
+    /**
+     * Get list of all available replays
+     */
+    public static List<String> serverFiles(String folder)
+    {
+        List<String> list = new ArrayList<String>();
+        File replays = new File(DimensionManager.getCurrentSaveRootDirectory() + "/" + folder);
+        File[] files = replays.listFiles();
 
-		if (files == null)
-		{
-			return list;
-		}
+        if (files == null)
+        {
+            return list;
+        }
 
-		for (File file : files)
-		{
-			String name = file.getName();
+        for (File file : files)
+        {
+            String name = file.getName();
 
-			if (file.isFile() && name.endsWith(".dat"))
-			{
-				int index = name.lastIndexOf(".");
+            if (file.isFile() && name.endsWith(".dat"))
+            {
+                int index = name.lastIndexOf(".");
 
-				list.add(name.substring(0, index));
-			}
-		}
+                list.add(name.substring(0, index));
+            }
+        }
 
-		return list;
-	}
+        return list;
+    }
 }

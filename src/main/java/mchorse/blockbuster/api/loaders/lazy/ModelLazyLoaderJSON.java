@@ -19,116 +19,116 @@ import java.util.Map;
 
 public class ModelLazyLoaderJSON implements IModelLazyLoader
 {
-	public IResourceEntry model;
-	public long lastTime;
-	public int lastCount = -1;
+    public IResourceEntry model;
+    public long lastTime;
+    public int lastCount = -1;
 
-	public ModelLazyLoaderJSON(IResourceEntry model)
-	{
-		this.model = model;
-	}
+    public ModelLazyLoaderJSON(IResourceEntry model)
+    {
+        this.model = model;
+    }
 
-	public int count()
-	{
-		return this.model.exists() ? 1 : 0;
-	}
+    public int count()
+    {
+        return this.model.exists() ? 1 : 0;
+    }
 
-	@Override
-	public long getLastTime()
-	{
-		return this.lastTime;
-	}
+    @Override
+    public long getLastTime()
+    {
+        return this.lastTime;
+    }
 
-	@Override
-	public void setLastTime(long lastTime)
-	{
-		if (this.lastCount == -1)
-		{
-			this.lastCount = this.count();
-		}
+    @Override
+    public void setLastTime(long lastTime)
+    {
+        if (this.lastCount == -1)
+        {
+            this.lastCount = this.count();
+        }
 
-		this.lastTime = lastTime;
-	}
+        this.lastTime = lastTime;
+    }
 
-	@Override
-	public boolean stillExists()
-	{
-		return this.lastCount == this.count();
-	}
+    @Override
+    public boolean stillExists()
+    {
+        return this.lastCount == this.count();
+    }
 
-	@Override
-	public boolean hasChanged()
-	{
-		return this.model.hasChanged();
-	}
+    @Override
+    public boolean hasChanged()
+    {
+        return this.model.hasChanged();
+    }
 
-	@Override
-	public Model loadModel(String key) throws Exception
-	{
-		if (!this.model.exists())
-		{
-			return null;
-		}
+    @Override
+    public Model loadModel(String key) throws Exception
+    {
+        if (!this.model.exists())
+        {
+            return null;
+        }
 
-		return Model.parse(this.model.getStream());
-	}
+        return Model.parse(this.model.getStream());
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public ModelCustom loadClientModel(String key, Model model) throws Exception
-	{
-		/* GC the old model */
-		ModelCustom modelCustom = ModelCustom.MODELS.get(key);
-		Minecraft.getMinecraft().addScheduledTask(() -> ModelExtrudedLayer.clearByModel(modelCustom));
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ModelCustom loadClientModel(String key, Model model) throws Exception
+    {
+        /* GC the old model */
+        ModelCustom modelCustom = ModelCustom.MODELS.get(key);
+        Minecraft.getMinecraft().addScheduledTask(() -> ModelExtrudedLayer.clearByModel(modelCustom));
 
-		Map<String, IMeshes> meshes = this.getMeshes(key, model);
+        Map<String, IMeshes> meshes = this.getMeshes(key, model);
 
-		if (!model.model.isEmpty())
-		{
-			try
-			{
-				Class<? extends ModelCustom> clazz = (Class<? extends ModelCustom>) Class.forName(model.model);
+        if (!model.model.isEmpty())
+        {
+            try
+            {
+                Class<? extends ModelCustom> clazz = (Class<? extends ModelCustom>) Class.forName(model.model);
 
-				/* Parse custom custom model with a custom class */
-				return ModelParser.parse(key, model, clazz, meshes);
-			}
-			catch (ClassNotFoundException e)
-			{
-				e.printStackTrace();
-			}
-		}
+                /* Parse custom custom model with a custom class */
+                return ModelParser.parse(key, model, clazz, meshes);
+            }
+            catch (ClassNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+        }
 
-		return ModelParser.parse(key, model, meshes);
-	}
+        return ModelParser.parse(key, model, meshes);
+    }
 
-	@SideOnly(Side.CLIENT)
-	protected Map<String, IMeshes> getMeshes(String key, Model model) throws Exception
-	{
-		return null;
-	}
+    @SideOnly(Side.CLIENT)
+    protected Map<String, IMeshes> getMeshes(String key, Model model) throws Exception
+    {
+        return null;
+    }
 
-	@Override
-	public boolean copyFiles(File folder)
-	{
-		if (this.model instanceof FileEntry)
-		{
-			FileEntry file = (FileEntry) this.model;
+    @Override
+    public boolean copyFiles(File folder)
+    {
+        if (this.model instanceof FileEntry)
+        {
+            FileEntry file = (FileEntry) this.model;
 
-			if (!file.file.getParentFile().equals(folder))
-			{
-				try
-				{
-					FileUtils.copyDirectory(new File(file.file.getParentFile(), "skins"), new File(folder, "skins"));
+            if (!file.file.getParentFile().equals(folder))
+            {
+                try
+                {
+                    FileUtils.copyDirectory(new File(file.file.getParentFile(), "skins"), new File(folder, "skins"));
 
-					return true;
-				}
-				catch (IOException e)
-				{
-					return false;
-				}
-			}
-		}
+                    return true;
+                }
+                catch (IOException e)
+                {
+                    return false;
+                }
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

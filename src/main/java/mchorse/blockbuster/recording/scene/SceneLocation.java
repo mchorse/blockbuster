@@ -12,108 +12,108 @@ import java.util.Objects;
  */
 public class SceneLocation
 {
-	private Scene scene;
-	private String filename;
+    private Scene scene;
+    private String filename;
 
-	public SceneLocation()
-	{}
+    public SceneLocation()
+    {}
 
-	public SceneLocation(Scene scene)
-	{
-		this.scene = scene;
-		this.filename = scene.getId();
-	}
+    public SceneLocation(Scene scene)
+    {
+        this.scene = scene;
+        this.filename = scene.getId();
+    }
 
-	public SceneLocation(String filename)
-	{
-		this.filename = filename;
-	}
+    public SceneLocation(String filename)
+    {
+        this.filename = filename;
+    }
 
-	public Scene getScene()
-	{
-		return this.scene;
-	}
+    public Scene getScene()
+    {
+        return this.scene;
+    }
 
-	public String getFilename()
-	{
-		return this.filename;
-	}
+    public String getFilename()
+    {
+        return this.filename;
+    }
 
-	public int getType()
-	{
-		return this.isEmpty() ? 0 : 1;
-	}
+    public int getType()
+    {
+        return this.isEmpty() ? 0 : 1;
+    }
 
-	public boolean isEmpty()
-	{
-		return !this.isScene();
-	}
+    public boolean isEmpty()
+    {
+        return !this.isScene();
+    }
 
-	public boolean isScene()
-	{
-		return this.filename != null && !this.filename.isEmpty();
-	}
+    public boolean isScene()
+    {
+        return this.filename != null && !this.filename.isEmpty();
+    }
 
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof SceneLocation)
-		{
-			SceneLocation location = (SceneLocation) obj;
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof SceneLocation)
+        {
+            SceneLocation location = (SceneLocation) obj;
 
-			if (this.getType() == location.getType())
-			{
-				return Objects.equals(this.filename, location.filename);
-			}
-		}
+            if (this.getType() == location.getType())
+            {
+                return Objects.equals(this.filename, location.filename);
+            }
+        }
 
-		return super.equals(obj);
-	}
+        return super.equals(obj);
+    }
 
-	public SceneLocation copyEmpty()
-	{
-		if (this.isScene())
-		{
-			return new SceneLocation(this.getFilename());
-		}
+    public SceneLocation copyEmpty()
+    {
+        if (this.isScene())
+        {
+            return new SceneLocation(this.getFilename());
+        }
 
-		return new SceneLocation();
-	}
+        return new SceneLocation();
+    }
 
-	public void fromByteBuf(ByteBuf buf)
-	{
-		this.filename = null;
+    public void fromByteBuf(ByteBuf buf)
+    {
+        this.filename = null;
 
-		if (buf.readBoolean())
-		{
-			this.filename = ByteBufUtils.readUTF8String(buf);
-		}
+        if (buf.readBoolean())
+        {
+            this.filename = ByteBufUtils.readUTF8String(buf);
+        }
 
-		if (buf.readBoolean())
-		{
-			this.scene = this.isScene() ? new Scene() : null;
+        if (buf.readBoolean())
+        {
+            this.scene = this.isScene() ? new Scene() : null;
 
-			if (this.scene != null)
-			{
-				this.scene.fromBuf(buf);
-			}
-		}
-	}
+            if (this.scene != null)
+            {
+                this.scene.fromBuf(buf);
+            }
+        }
+    }
 
-	public void toByteBuf(ByteBuf buf)
-	{
-		buf.writeBoolean(this.filename != null);
+    public void toByteBuf(ByteBuf buf)
+    {
+        buf.writeBoolean(this.filename != null);
 
-		if (this.filename != null)
-		{
-			ByteBufUtils.writeUTF8String(buf, this.filename);
-		}
+        if (this.filename != null)
+        {
+            ByteBufUtils.writeUTF8String(buf, this.filename);
+        }
 
-		buf.writeBoolean(this.scene != null);
+        buf.writeBoolean(this.scene != null);
 
-		if (this.scene != null)
-		{
-			this.scene.toBuf(buf);
-		}
-	}
+        if (this.scene != null)
+        {
+            this.scene.toBuf(buf);
+        }
+    }
 }

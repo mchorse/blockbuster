@@ -4,15 +4,15 @@ import mchorse.blockbuster.api.formats.Mesh;
 
 public class MeshOBJ extends Mesh
 {
-	public OBJMaterial material;
+    public OBJMaterial material;
 
-	public MeshOBJ(int faces)
-	{
-		super(faces);
-	}
+    public MeshOBJ(int faces)
+    {
+        super(faces);
+    }
 
-	public MeshOBJ(float[] posData, float[] texData, float[] normData)
-	{
-		super(posData, texData, normData);
-	}
+    public MeshOBJ(float[] posData, float[] texData, float[] normData)
+    {
+        super(posData, texData, normData);
+    }
 }

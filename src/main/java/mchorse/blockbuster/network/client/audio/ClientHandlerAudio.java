@@ -9,10 +9,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientHandlerAudio extends ClientMessageHandler<PacketAudio>
 {
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void run(EntityPlayerSP player, PacketAudio message)
-	{
-		ClientProxy.audio.play(message.audio, message.state, message.shift);
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void run(EntityPlayerSP player, PacketAudio message)
+    {
+        ClientProxy.audio.play(message.audio, message.state, message.shift);
+    }
 }

@@ -9,9 +9,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ServerHandlerRequestScenes extends ServerMessageHandler<PacketRequestScenes>
 {
-	@Override
-	public void run(EntityPlayerMP entityPlayerMP, PacketRequestScenes packetRequestScenes)
-	{
-		Dispatcher.sendTo(new PacketScenes(CommonProxy.scenes.sceneFiles()), entityPlayerMP);
-	}
+    @Override
+    public void run(EntityPlayerMP entityPlayerMP, PacketRequestScenes packetRequestScenes)
+    {
+        Dispatcher.sendTo(new PacketScenes(CommonProxy.scenes.sceneFiles()), entityPlayerMP);
+    }
 }

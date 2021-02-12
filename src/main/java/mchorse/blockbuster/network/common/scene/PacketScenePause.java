@@ -4,11 +4,11 @@ import mchorse.blockbuster.recording.scene.SceneLocation;
 
 public class PacketScenePause extends PacketScene
 {
-	public PacketScenePause()
-	{}
+    public PacketScenePause()
+    {}
 
-	public PacketScenePause(SceneLocation location)
-	{
-		super(location);
-	}
+    public PacketScenePause(SceneLocation location)
+    {
+        super(location);
+    }
 }

@@ -7,18 +7,18 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ServerHandlerScenePause extends ServerMessageHandler<PacketScenePause>
 {
-	@Override
-	public void run(EntityPlayerMP player, PacketScenePause packet)
-	{
-		Scene scene = packet.get(player.world);
+    @Override
+    public void run(EntityPlayerMP player, PacketScenePause packet)
+    {
+        Scene scene = packet.get(player.world);
 
-		if (!scene.isPlaying())
-		{
-			scene.resume(-1);
-		}
-		else
-		{
-			scene.pause();
-		}
-	}
+        if (!scene.isPlaying())
+        {
+            scene.resume(-1);
+        }
+        else
+        {
+            scene.pause();
+        }
+    }
 }

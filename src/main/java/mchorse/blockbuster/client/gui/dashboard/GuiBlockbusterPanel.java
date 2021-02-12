@@ -6,14 +6,14 @@ import net.minecraft.client.Minecraft;
 
 public class GuiBlockbusterPanel extends GuiDashboardPanel
 {
-	public GuiBlockbusterPanel(Minecraft mc, GuiDashboard dashboard)
-	{
-		super(mc, dashboard);
-	}
+    public GuiBlockbusterPanel(Minecraft mc, GuiDashboard dashboard)
+    {
+        super(mc, dashboard);
+    }
 
-	@Override
-	public void appear()
-	{
-		GuiFirstTime.addOverlay(this.dashboard);
-	}
+    @Override
+    public void appear()
+    {
+        GuiFirstTime.addOverlay(this.dashboard);
+    }
 }

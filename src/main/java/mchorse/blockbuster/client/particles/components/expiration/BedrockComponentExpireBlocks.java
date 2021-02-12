@@ -19,59 +19,59 @@ import java.util.List;
 
 public abstract class BedrockComponentExpireBlocks extends BedrockComponentBase
 {
-	public List<Block> blocks = new ArrayList<Block>();
+    public List<Block> blocks = new ArrayList<Block>();
 
-	private BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+    private BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
-	@Override
-	public BedrockComponentBase fromJson(JsonElement element, MolangParser parser) throws MolangException
-	{
-		if (element.isJsonArray())
-		{
-			for (JsonElement value : element.getAsJsonArray())
-			{
-				ResourceLocation location = new ResourceLocation(value.getAsString());
-				Block block = ForgeRegistries.BLOCKS.getValue(location);
+    @Override
+    public BedrockComponentBase fromJson(JsonElement element, MolangParser parser) throws MolangException
+    {
+        if (element.isJsonArray())
+        {
+            for (JsonElement value : element.getAsJsonArray())
+            {
+                ResourceLocation location = new ResourceLocation(value.getAsString());
+                Block block = ForgeRegistries.BLOCKS.getValue(location);
 
-				if (block != null)
-				{
-					this.blocks.add(block);
-				}
-			}
-		}
+                if (block != null)
+                {
+                    this.blocks.add(block);
+                }
+            }
+        }
 
-		return super.fromJson(element, parser);
-	}
+        return super.fromJson(element, parser);
+    }
 
-	@Override
-	public JsonElement toJson()
-	{
-		JsonArray array = new JsonArray();
+    @Override
+    public JsonElement toJson()
+    {
+        JsonArray array = new JsonArray();
 
-		for (Block block : this.blocks)
-		{
-			ResourceLocation rl = ForgeRegistries.BLOCKS.getKey(block);
+        for (Block block : this.blocks)
+        {
+            ResourceLocation rl = ForgeRegistries.BLOCKS.getKey(block);
 
-			if (rl != null)
-			{
-				array.add(rl.toString());
-			}
-		}
+            if (rl != null)
+            {
+                array.add(rl.toString());
+            }
+        }
 
-		return array;
-	}
+        return array;
+    }
 
-	public Block getBlock(BedrockEmitter emitter, BedrockParticle particle)
-	{
-		if (emitter.world == null)
-		{
-			return Blocks.AIR;
-		}
+    public Block getBlock(BedrockEmitter emitter, BedrockParticle particle)
+    {
+        if (emitter.world == null)
+        {
+            return Blocks.AIR;
+        }
 
-		Vector3d position = particle.getGlobalPosition(emitter);
+        Vector3d position = particle.getGlobalPosition(emitter);
 
-		this.pos.setPos(position.getX(), position.getY(), position.getZ());
+        this.pos.setPos(position.getX(), position.getY(), position.getZ());
 
-		return emitter.world.getBlockState(this.pos).getBlock();
-	}
+        return emitter.world.getBlockState(this.pos).getBlock();
+    }
 }

@@ -5,8 +5,8 @@ import net.minecraft.client.Minecraft;
 
 public class GuiInteractEntityActionPanel extends GuiItemUseActionPanel
 {
-	public GuiInteractEntityActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
-	{
-		super(mc, panel);
-	}
+    public GuiInteractEntityActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
+    {
+        super(mc, panel);
+    }
 }

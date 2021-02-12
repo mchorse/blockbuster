@@ -11,42 +11,42 @@ import java.util.StringJoiner;
 
 public class MolangMultiStatement extends MolangExpression
 {
-	public List<MolangExpression> expressions = new ArrayList<MolangExpression>();
-	public Map<String, Variable> locals = new HashMap<String, Variable>();
+    public List<MolangExpression> expressions = new ArrayList<MolangExpression>();
+    public Map<String, Variable> locals = new HashMap<String, Variable>();
 
-	public MolangMultiStatement(MolangParser context)
-	{
-		super(context);
-	}
+    public MolangMultiStatement(MolangParser context)
+    {
+        super(context);
+    }
 
-	@Override
-	public double get()
-	{
-		double value = 0;
+    @Override
+    public double get()
+    {
+        double value = 0;
 
-		for (MolangExpression expression : this.expressions)
-		{
-			value = expression.get();
+        for (MolangExpression expression : this.expressions)
+        {
+            value = expression.get();
 
-			if (expression instanceof MolangValue && ((MolangValue) expression).returns)
-			{
-				break;
-			}
-		}
+            if (expression instanceof MolangValue && ((MolangValue) expression).returns)
+            {
+                break;
+            }
+        }
 
-		return value;
-	}
+        return value;
+    }
 
-	@Override
-	public String toString()
-	{
-		StringJoiner builder = new StringJoiner("; ");
+    @Override
+    public String toString()
+    {
+        StringJoiner builder = new StringJoiner("; ");
 
-		for (MolangExpression expression : this.expressions)
-		{
-			builder.add(expression.toString());
-		}
+        for (MolangExpression expression : this.expressions)
+        {
+            builder.add(expression.toString());
+        }
 
-		return builder.toString();
-	}
+        return builder.toString();
+    }
 }

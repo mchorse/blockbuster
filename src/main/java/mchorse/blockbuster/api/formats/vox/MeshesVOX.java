@@ -14,26 +14,26 @@ import javax.vecmath.Matrix3f;
 
 public class MeshesVOX implements IMeshes
 {
-	public Mesh mesh;
-	public VoxDocument document;
-	public Vox vox;
-	public Matrix3f rotation;
+    public Mesh mesh;
+    public VoxDocument document;
+    public Vox vox;
+    public Matrix3f rotation;
 
-	public MeshesVOX(VoxDocument document, VoxDocument.LimbNode node)
-	{
-		this.document = document;
-		this.vox = node.chunk;
-		this.rotation = node.rotation;
-	}
+    public MeshesVOX(VoxDocument document, VoxDocument.LimbNode node)
+    {
+        this.document = document;
+        this.vox = node.chunk;
+        this.rotation = node.rotation;
+    }
 
-	@Override
-	public ModelCustomRenderer createRenderer(Model data, ModelCustom model, ModelLimb limb, ModelTransform transform)
-	{
-		if (this.mesh == null)
-		{
-			this.mesh = new VoxBuilder(this.rotation).build(this.vox);
-		}
+    @Override
+    public ModelCustomRenderer createRenderer(Model data, ModelCustom model, ModelLimb limb, ModelTransform transform)
+    {
+        if (this.mesh == null)
+        {
+            this.mesh = new VoxBuilder(this.rotation).build(this.vox);
+        }
 
-		return new ModelVoxRenderer(model, limb, transform, this);
-	}
+        return new ModelVoxRenderer(model, limb, transform, this);
+    }
 }

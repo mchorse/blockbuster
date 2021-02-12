@@ -9,5 +9,5 @@ import net.minecraft.client.model.ModelBase;
 
 public interface IMeshes
 {
-	public ModelCustomRenderer createRenderer(Model data, ModelCustom model, ModelLimb limb, ModelTransform transform);
+    public ModelCustomRenderer createRenderer(Model data, ModelCustom model, ModelLimb limb, ModelTransform transform);
 }

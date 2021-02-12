@@ -8,16 +8,16 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ServerHandlerSceneManage extends ServerMessageHandler<PacketSceneManage>
 {
-	@Override
-	public void run(EntityPlayerMP entityPlayerMP, PacketSceneManage packetSceneManage)
-	{
-		if (packetSceneManage.action == PacketSceneManage.RENAME && CommonProxy.scenes.rename(packetSceneManage.source, packetSceneManage.destination))
-		{
-			Dispatcher.sendTo(packetSceneManage, entityPlayerMP);
-		}
-		else if (packetSceneManage.action == PacketSceneManage.REMOVE && CommonProxy.scenes.remove(packetSceneManage.source))
-		{
-			Dispatcher.sendTo(packetSceneManage, entityPlayerMP);
-		}
-	}
+    @Override
+    public void run(EntityPlayerMP entityPlayerMP, PacketSceneManage packetSceneManage)
+    {
+        if (packetSceneManage.action == PacketSceneManage.RENAME && CommonProxy.scenes.rename(packetSceneManage.source, packetSceneManage.destination))
+        {
+            Dispatcher.sendTo(packetSceneManage, entityPlayerMP);
+        }
+        else if (packetSceneManage.action == PacketSceneManage.REMOVE && CommonProxy.scenes.remove(packetSceneManage.source))
+        {
+            Dispatcher.sendTo(packetSceneManage, entityPlayerMP);
+        }
+    }
 }

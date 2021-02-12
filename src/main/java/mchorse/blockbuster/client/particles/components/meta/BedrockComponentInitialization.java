@@ -12,11 +12,11 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 public class BedrockComponentInitialization extends BedrockComponentBase implements IComponentEmitterInitialize, IComponentEmitterUpdate
 {
-    /* standard BedrockEdition variables - global inside an emitter */
+    /* Standard BedrockEdition variables - global inside an emitter */
     public MolangExpression creation = MolangParser.ZERO;
     public MolangExpression update = MolangParser.ZERO;
 
-    /* blockbuster specific expression - local inside a particle (added by Chryfi)*/
+    /* Blockbuster specific expression - local inside a particle (added by Chryfi) */
     public MolangExpression particleUpdate = MolangParser.ZERO;
 
     public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException

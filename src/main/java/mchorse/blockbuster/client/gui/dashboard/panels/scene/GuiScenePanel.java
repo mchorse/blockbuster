@@ -666,11 +666,11 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         }
     }
 
-	public void pause()
+    public void pause()
     {
         if (this.location.isScene())
         {
             Dispatcher.sendToServer(new PacketScenePause(this.location));
         }
-	}
+    }
 }

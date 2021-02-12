@@ -9,49 +9,49 @@ import mchorse.mclib.math.Operation;
 
 public abstract class MolangExpression implements IValue
 {
-	public MolangParser context;
+    public MolangParser context;
 
-	public static boolean isZero(MolangExpression expression)
-	{
-		return isConstant(expression, 0);
-	}
+    public static boolean isZero(MolangExpression expression)
+    {
+        return isConstant(expression, 0);
+    }
 
-	public static boolean isOne(MolangExpression expression)
-	{
-		return isConstant(expression, 1);
-	}
+    public static boolean isOne(MolangExpression expression)
+    {
+        return isConstant(expression, 1);
+    }
 
-	public static boolean isConstant(MolangExpression expression, double x)
-	{
-		if (expression instanceof MolangValue)
-		{
-			MolangValue value = (MolangValue) expression;
+    public static boolean isConstant(MolangExpression expression, double x)
+    {
+        if (expression instanceof MolangValue)
+        {
+            MolangValue value = (MolangValue) expression;
 
-			return value.value instanceof Constant && Operation.equals(value.value.get(), x);
-		}
+            return value.value instanceof Constant && Operation.equals(value.value.get(), x);
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public static boolean isExpressionConstant(MolangExpression expression)
-	{
-		if (expression instanceof MolangValue)
-		{
-			MolangValue value = (MolangValue) expression;
+    public static boolean isExpressionConstant(MolangExpression expression)
+    {
+        if (expression instanceof MolangValue)
+        {
+            MolangValue value = (MolangValue) expression;
 
-			return value.value instanceof Constant;
-		}
+            return value.value instanceof Constant;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public MolangExpression(MolangParser context)
-	{
-		this.context = context;
-	}
+    public MolangExpression(MolangParser context)
+    {
+        this.context = context;
+    }
 
-	public JsonElement toJson()
-	{
-		return new JsonPrimitive(this.toString());
-	}
+    public JsonElement toJson()
+    {
+        return new JsonPrimitive(this.toString());
+    }
 }

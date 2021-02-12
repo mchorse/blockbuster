@@ -4,14 +4,14 @@ import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 
 public class BedrockComponentLifetimeOnce extends BedrockComponentLifetime
 {
-	@Override
-	public void update(BedrockEmitter emitter)
-	{
-		emitter.lifetime = (int) (this.activeTime.get() * 20);
+    @Override
+    public void update(BedrockEmitter emitter)
+    {
+        emitter.lifetime = (int) (this.activeTime.get() * 20);
 
-		if (emitter.getAge() >= emitter.lifetime)
-		{
-			emitter.stop();
-		}
-	}
+        if (emitter.getAge() >= emitter.lifetime)
+        {
+            emitter.stop();
+        }
+    }
 }

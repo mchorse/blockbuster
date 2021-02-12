@@ -28,107 +28,107 @@ import java.io.File;
  */
 public class SubCommandModelReport extends CommandBase
 {
-	@Override
-	public String getName()
-	{
-		return "report";
-	}
+    @Override
+    public String getName()
+    {
+        return "report";
+    }
 
-	@Override
-	public String getUsage(ICommandSender sender)
-	{
-		return "blockbuster.commands.model.report";
-	}
+    @Override
+    public String getUsage(ICommandSender sender)
+    {
+        return "blockbuster.commands.model.report";
+    }
 
-	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-	{
-		File models = new File(ClientProxy.configFile, "models");
-		StringBuilder output = new StringBuilder();
+    @Override
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
+        File models = new File(ClientProxy.configFile, "models");
+        StringBuilder output = new StringBuilder();
 
-		output.append("Models folder skins report:\n\n");
+        output.append("Models folder skins report:\n\n");
 
-		this.processRecursively(output, models, models, "", "", false);
+        this.processRecursively(output, models, models, "", "", false);
 
-		GuiScreen.setClipboardString(output.toString().trim());
+        GuiScreen.setClipboardString(output.toString().trim());
 
-		L10n.success(sender, "commands.model_report");
-	}
+        L10n.success(sender, "commands.model_report");
+    }
 
-	private void processRecursively(StringBuilder output, File root, File models, String prefix, String indent, boolean isModel)
-	{
-		if (!models.isDirectory())
-		{
-			return;
-		}
+    private void processRecursively(StringBuilder output, File root, File models, String prefix, String indent, boolean isModel)
+    {
+        if (!models.isDirectory())
+        {
+            return;
+        }
 
-		File[] files = models.listFiles();
+        File[] files = models.listFiles();
 
-		for (File file : files)
-		{
-			if (!file.isFile())
-			{
-				continue;
-			}
+        for (File file : files)
+        {
+            if (!file.isFile())
+            {
+                continue;
+            }
 
-			String name = file.getName();
-			String aux = "";
-			boolean obj = name.endsWith(".obj");
-			boolean vox = name.endsWith(".vox");
+            String name = file.getName();
+            String aux = "";
+            boolean obj = name.endsWith(".obj");
+            boolean vox = name.endsWith(".vox");
 
-			if (!isModel && (obj || name.equals("model.json") || vox))
-			{
-				IModelLazyLoader loader = Blockbuster.proxy.pack.models.get(prefix.substring(1));
+            if (!isModel && (obj || name.equals("model.json") || vox))
+            {
+                IModelLazyLoader loader = Blockbuster.proxy.pack.models.get(prefix.substring(1));
 
-				if (loader instanceof ModelLazyLoaderOBJ && obj)
-				{
-					isModel = true;
-					aux += ", loaded OBJ";
-				}
-				else if (loader instanceof ModelLazyLoaderVOX && vox)
-				{
-					isModel = true;
-					aux += ", loaded VOX";
-				}
-				else if (loader != null && loader.getClass() == ModelLazyLoaderJSON.class)
-				{
-					isModel = true;
-					aux += ", loaded JSON";
-				}
-			}
+                if (loader instanceof ModelLazyLoaderOBJ && obj)
+                {
+                    isModel = true;
+                    aux += ", loaded OBJ";
+                }
+                else if (loader instanceof ModelLazyLoaderVOX && vox)
+                {
+                    isModel = true;
+                    aux += ", loaded VOX";
+                }
+                else if (loader != null && loader.getClass() == ModelLazyLoaderJSON.class)
+                {
+                    isModel = true;
+                    aux += ", loaded JSON";
+                }
+            }
 
-			if (name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".gif"))
-			{
-				ResourceLocation location = RLUtils.create("b.a:" + prefix.substring(1) + "/" + name);
-				ITextureObject texture = Minecraft.getMinecraft().renderEngine.getTexture(location);
+            if (name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".gif"))
+            {
+                ResourceLocation location = RLUtils.create("b.a:" + prefix.substring(1) + "/" + name);
+                ITextureObject texture = Minecraft.getMinecraft().renderEngine.getTexture(location);
 
-				if (texture == TextureUtil.MISSING_TEXTURE)
-				{
-					aux += ", loaded but missing";
-				}
-				else if (texture != null)
-				{
-					aux += ", loaded";
-				}
-			}
+                if (texture == TextureUtil.MISSING_TEXTURE)
+                {
+                    aux += ", loaded but missing";
+                }
+                else if (texture != null)
+                {
+                    aux += ", loaded";
+                }
+            }
 
-			output.append(indent);
-			output.append(name);
-			output.append(aux);
-			output.append("\n");
-		}
+            output.append(indent);
+            output.append(name);
+            output.append(aux);
+            output.append("\n");
+        }
 
-		for (File file : files)
-		{
-			if (!file.isDirectory())
-			{
-				continue;
-			}
+        for (File file : files)
+        {
+            if (!file.isDirectory())
+            {
+                continue;
+            }
 
-			output.append(indent);
-			output.append(file.getName());
-			output.append("/\n");
-			this.processRecursively(output, root, file, prefix + "/" + file.getName(), indent + "    ", isModel);
-		}
-	}
+            output.append(indent);
+            output.append(file.getName());
+            output.append("/\n");
+            this.processRecursively(output, root, file, prefix + "/" + file.getName(), indent + "    ", isModel);
+        }
+    }
 }

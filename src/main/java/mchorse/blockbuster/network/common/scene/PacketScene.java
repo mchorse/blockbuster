@@ -19,15 +19,15 @@ public abstract class PacketScene implements IMessage
         this.location = location;
     }
 
-	public Scene get(World world)
-	{
-		if (this.location.isScene())
-		{
-			return CommonProxy.scenes.get(this.location.getFilename(), world);
-		}
+    public Scene get(World world)
+    {
+        if (this.location.isScene())
+        {
+            return CommonProxy.scenes.get(this.location.getFilename(), world);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
     @Override
     public void fromBytes(ByteBuf buf)

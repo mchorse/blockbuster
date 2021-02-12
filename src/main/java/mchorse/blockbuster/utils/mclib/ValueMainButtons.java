@@ -20,27 +20,27 @@ import java.util.List;
 
 public class ValueMainButtons extends ValueGUI
 {
-	public ValueMainButtons(String id)
-	{
-		super(id);
-	}
+    public ValueMainButtons(String id)
+    {
+        super(id);
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public List<GuiElement> getFields(Minecraft mc, GuiConfig config)
-	{
-		GuiButtonElement wiki = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.wiki"), (button) -> GuiUtils.openWebLink(Blockbuster.WIKI_URL()));
-		GuiButtonElement discord = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.discord"), (button) -> GuiUtils.openWebLink(Blockbuster.DISCORD_URL()));
-		GuiButtonElement tutorial = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.tutorial"), (button) -> GuiUtils.openWebLink(Blockbuster.TUTORIAL_URL()));
-		GuiButtonElement models = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.models"), (button) -> GuiUtils.openWebLink(new File(ClientProxy.configFile, "models").toURI()));
-		GuiButtonElement skins = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.skins"), (button) -> GuiUtils.openWebLink(ClientProxy.skinsFolder.toURI()));
-		GuiIconElement youtube = new GuiIconElement(mc, BBIcons.YOUTUBE, (button) -> GuiUtils.openWebLink(Blockbuster.CHANNEL_URL()));
-		GuiIconElement twitter = new GuiIconElement(mc, BBIcons.TWITTER, (button) -> GuiUtils.openWebLink(Blockbuster.TWITTER_URL()));
+    @Override
+    @SideOnly(Side.CLIENT)
+    public List<GuiElement> getFields(Minecraft mc, GuiConfig config)
+    {
+        GuiButtonElement wiki = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.wiki"), (button) -> GuiUtils.openWebLink(Blockbuster.WIKI_URL()));
+        GuiButtonElement discord = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.discord"), (button) -> GuiUtils.openWebLink(Blockbuster.DISCORD_URL()));
+        GuiButtonElement tutorial = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.tutorial"), (button) -> GuiUtils.openWebLink(Blockbuster.TUTORIAL_URL()));
+        GuiButtonElement models = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.models"), (button) -> GuiUtils.openWebLink(new File(ClientProxy.configFile, "models").toURI()));
+        GuiButtonElement skins = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.skins"), (button) -> GuiUtils.openWebLink(ClientProxy.skinsFolder.toURI()));
+        GuiIconElement youtube = new GuiIconElement(mc, BBIcons.YOUTUBE, (button) -> GuiUtils.openWebLink(Blockbuster.CHANNEL_URL()));
+        GuiIconElement twitter = new GuiIconElement(mc, BBIcons.TWITTER, (button) -> GuiUtils.openWebLink(Blockbuster.TWITTER_URL()));
 
-		GuiElement first = Elements.row(mc, 5, 0, 20, models, skins);
-		GuiElement second = Elements.row(mc, 5, 0, 20, tutorial, wiki);
-		GuiElement third = Elements.row(mc, 5, 0, 20, discord, twitter, youtube);
+        GuiElement first = Elements.row(mc, 5, 0, 20, models, skins);
+        GuiElement second = Elements.row(mc, 5, 0, 20, tutorial, wiki);
+        GuiElement third = Elements.row(mc, 5, 0, 20, discord, twitter, youtube);
 
-		return Arrays.asList(first, second, third);
-	}
+        return Arrays.asList(first, second, third);
+    }
 }
