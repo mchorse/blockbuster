@@ -399,12 +399,12 @@ blockbuster.gui:
         initialization:
             title: Initialization expressions
 
+            emitter_expression_title: Emitter expressions (BedrockEdition)
             create: Creation expression, it runs when emitter starts
             update: Update expression, it runs every tick
             
-            create_local: Local creation expression, it runs when emitter starts. Expressions are local to every particle.
-            update_local: Local update expression, it runs every tick
-            
+            particle_expression_title: Particle expressions (Blockbuster)
+            particle_update_expression: Particle expression, it runs for every particle. They are local to every particle
 
         rate:
             title: Spawn rate

@@ -186,10 +186,14 @@ public class BedrockEmitter
 		if (this.varSpeedZ != null) this.varSpeedZ.set(particle.speed.z);
 		if (this.varBounces != null) this.varBounces.set(particle.bounces);
 		
-		this.scheme.getOrCreate(BedrockComponentInitialization.class).localCreation.get();
-		this.scheme.getOrCreate(BedrockComponentInitialization.class).localUpdate.get();
-		
 		this.scheme.updateCurves();
+		
+		BedrockComponentInitialization component = this.scheme.get(BedrockComponentInitialization.class);
+
+		if (component != null)
+		{
+		    component.particleUpdate.get();
+		}
 	}
 
 	public void setEmitterVariables(float partialTicks)

@@ -13,54 +13,48 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 public class BedrockComponentInitialization extends BedrockComponentBase implements IComponentEmitterInitialize, IComponentEmitterUpdate
 {
     /* standard BedrockEdition variables - global inside an emitter */
-	public MolangExpression creation = MolangParser.ZERO;
-	public MolangExpression update = MolangParser.ZERO;
-	
-	/* blockbuster specific variables - local inside a particle (added by Chryfi)*/
-	public MolangExpression localCreation = MolangParser.ZERO;
-	public MolangExpression localUpdate = MolangParser.ZERO;
+    public MolangExpression creation = MolangParser.ZERO;
+    public MolangExpression update = MolangParser.ZERO;
 
-	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
-	{
-		if (!elem.isJsonObject()) return super.fromJson(elem, parser);
+    /* blockbuster specific expression - local inside a particle (added by Chryfi)*/
+    public MolangExpression particleUpdate = MolangParser.ZERO;
 
-		JsonObject element = elem.getAsJsonObject();
+    public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
+    {
+        if (!elem.isJsonObject()) return super.fromJson(elem, parser);
 
-		if (element.has("creation_expression")) this.creation = parser.parseGlobalJson(element.get("creation_expression"));
-		if (element.has("per_update_expression")) this.update = parser.parseGlobalJson(element.get("per_update_expression"));
+        JsonObject element = elem.getAsJsonObject();
 
-		if (element.has("local_creation_expression")) this.localCreation = parser.parseGlobalJson(element.get("local_creation_expression"));
-        if (element.has("local_per_update_expression")) this.localUpdate = parser.parseGlobalJson(element.get("local_per_update_expression"));
+        if (element.has("creation_expression")) this.creation = parser.parseGlobalJson(element.get("creation_expression"));
+        if (element.has("per_update_expression")) this.update = parser.parseGlobalJson(element.get("per_update_expression"));
+        if (element.has("particle_update_expression")) this.particleUpdate = parser.parseGlobalJson(element.get("particle_update_expression"));
 
-		
-		return super.fromJson(element, parser);
-	}
+        return super.fromJson(element, parser);
+    }
 
-	@Override
-	public JsonElement toJson()
-	{
-		JsonObject object = new JsonObject();
+    @Override
+    public JsonElement toJson()
+    {
+        JsonObject object = new JsonObject();
 
-		if (!MolangExpression.isZero(this.creation)) object.add("creation_expression", this.creation.toJson());
-		if (!MolangExpression.isZero(this.update)) object.add("per_update_expression", this.update.toJson());
+        if (!MolangExpression.isZero(this.creation)) object.add("creation_expression", this.creation.toJson());
+        if (!MolangExpression.isZero(this.update)) object.add("per_update_expression", this.update.toJson());
+        if (!MolangExpression.isZero(this.particleUpdate)) object.add("particle_update_expression", this.particleUpdate.toJson());
 
-		if (!MolangExpression.isZero(this.localCreation)) object.add("local_creation_expression", this.localCreation.toJson());
-        if (!MolangExpression.isZero(this.localUpdate)) object.add("local_per_update_expression", this.localUpdate.toJson());
-		
-		return object;
-	}
+        return object;
+    }
 
-	@Override
-	public void apply(BedrockEmitter emitter)
-	{
-		this.creation.get();
-		emitter.replaceVariables();
-	}
+    @Override
+    public void apply(BedrockEmitter emitter)
+    {
+        this.creation.get();
+        emitter.replaceVariables();
+    }
 
-	@Override
-	public void update(BedrockEmitter emitter)
-	{
-		this.update.get();
-		emitter.replaceVariables();
-	}
+    @Override
+    public void update(BedrockEmitter emitter)
+    {
+        this.update.get();
+        emitter.replaceVariables();
+    }
 }
