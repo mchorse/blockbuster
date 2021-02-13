@@ -23,6 +23,7 @@ import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -159,7 +160,7 @@ public class GuiGun extends GuiBase
 
         int firingOffset = 40;
 
-        this.inventory.flex().relative(this.ammoStack.flex()).x(0.5F).y(-10).anchor(0.5F, 1F);
+        this.inventory.flex().relative(this.ammoStack.flex()).x(0.5F).y(-5).anchor(0.5F, 1F).bounds(this.root, 5);
 
         this.fireCommand.flex().relative(area).set(10, 0, 0, 20).w(1, -20).y(1F, -30);
         this.scatter.flex().relative(area).set(0, 0, 0, 20).x(0.5F).y(1, -75).w(0.5F, -60).anchorX(0.5F);
@@ -167,7 +168,7 @@ public class GuiGun extends GuiBase
         this.projectiles.flex().relative(this.scatter.resizer()).set(0, 0, 100, 20).x(1F, 10);
         this.pickDefault.flex().relative(this.delay.resizer()).w(1F).y(-5 - firingOffset);
         this.pickFiring.flex().relative(this.projectiles.resizer()).w(1F).y(-5 - firingOffset);
-        this.ammoStack.flex().relative(this.scatter.resizer()).x(0.5F).y(-50).anchor(0.5F, 1F);
+        this.ammoStack.flex().relative(this.pickFiring.resizer()).x(1F, 5).y(-2);
 
         GuiElement launchBar = new GuiElement(mc);
 
@@ -483,6 +484,8 @@ public class GuiGun extends GuiBase
             if (this.props.firingMorph != null)
             {
                 this.props.firingMorph.renderOnScreen(player, this.pickFiring.area.mx(), this.pickFiring.area.y - 20, w * 0.5F, 1);
+
+                GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
             }
 
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.default_morph"), this.pickDefault.area.mx(), this.pickFiring.area.y - 12, 0xffffff);
