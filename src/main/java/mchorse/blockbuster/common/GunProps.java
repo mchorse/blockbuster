@@ -9,6 +9,7 @@ import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -36,6 +37,7 @@ public class GunProps
     public float scatter;
     public boolean launch;
     public boolean useTarget;
+    public ItemStack ammoStack = ItemStack.EMPTY;
 
     /* Projectile properties */
     public AbstractMorph projectileMorph;
@@ -240,6 +242,7 @@ public class GunProps
         this.scatter = 0F;
         this.launch = false;
         this.useTarget = false;
+        this.ammoStack = ItemStack.EMPTY;
 
         /* Projectile properties */
         this.projectileMorph = null;
@@ -288,6 +291,7 @@ public class GunProps
         if (tag.hasKey("Scatter")) this.scatter = tag.getFloat("Scatter");
         if (tag.hasKey("Launch")) this.launch = tag.getBoolean("Launch");
         if (tag.hasKey("Target")) this.useTarget = tag.getBoolean("Target");
+        if (tag.hasKey("AmmoStack")) this.ammoStack = new ItemStack(tag.getCompoundTag("AmmoStack"));
 
         /* Projectile properties */
         this.projectileMorph = this.create(tag, "Projectile");
@@ -352,6 +356,7 @@ public class GunProps
         if (this.scatter != 0F) tag.setFloat("Scatter", this.scatter);
         if (this.launch) tag.setBoolean("Launch", this.launch);
         if (this.useTarget) tag.setBoolean("Target", this.useTarget);
+        if (!this.ammoStack.isEmpty()) tag.setTag("AmmoStack", this.ammoStack.writeToNBT(new NBTTagCompound()));
 
         /* Projectile properties */
         if (this.projectileMorph != null) tag.setTag("Projectile", this.to(this.projectileMorph));
