@@ -87,9 +87,10 @@ public class KeyboardHandler
             }
         }
 
-        if (this.openGun.isPressed())
+        Minecraft mc = Minecraft.getMinecraft();
+
+        if (this.openGun.isPressed() && mc.player.capabilities.isCreativeMode)
         {
-            Minecraft mc = Minecraft.getMinecraft();
             ItemStack stack = mc.player.getHeldItemMainhand();
 
             if (stack.getItem() == Blockbuster.gunItem)
