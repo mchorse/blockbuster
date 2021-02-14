@@ -88,6 +88,12 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
         this.add(this.textures, element);
     }
 
+    @Override
+    public boolean isClientSideOnly()
+    {
+        return true;
+    }
+
     private void copy()
     {
         ResourceLocation location = this.textures.getCurrentFirst();
