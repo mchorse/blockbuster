@@ -5,6 +5,7 @@ import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.GuiGun;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
+import mchorse.mclib.utils.OpHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
+import scala.collection.mutable.OpenHashMap;
 
 /**
  * Separate event handler for keyboard events
@@ -89,7 +91,7 @@ public class KeyboardHandler
 
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (this.openGun.isPressed() && mc.player.capabilities.isCreativeMode)
+        if (this.openGun.isPressed() && mc.player.capabilities.isCreativeMode && OpHelper.isPlayerOp())
         {
             ItemStack stack = mc.player.getHeldItemMainhand();
 
