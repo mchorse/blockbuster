@@ -6,6 +6,7 @@ import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.recording.scene.SceneLocation;
+import mchorse.mclib.utils.OpHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -84,7 +85,7 @@ public class ItemPlayback extends Item
         {
             NBTTagCompound tag = stack.getTagCompound();
 
-            if (player.isSneaking())
+            if (player.isSneaking() && OpHelper.isPlayerOp((EntityPlayerMP) player))
             {
                 if (tag == null)
                 {

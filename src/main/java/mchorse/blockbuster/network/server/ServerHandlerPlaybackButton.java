@@ -3,6 +3,7 @@ package mchorse.blockbuster.network.server;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.mclib.network.ServerMessageHandler;
+import mchorse.mclib.utils.OpHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,6 +13,11 @@ public class ServerHandlerPlaybackButton extends ServerMessageHandler<PacketPlay
     @Override
     public void run(EntityPlayerMP player, PacketPlaybackButton message)
     {
+        if (!OpHelper.isPlayerOp(player))
+        {
+            return;
+        }
+
         ItemStack stack = player.getHeldItemMainhand();
 
         if (!(stack.getItem() instanceof ItemPlayback))
