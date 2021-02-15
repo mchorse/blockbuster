@@ -10,6 +10,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.events.MultiskinProcessedEvent;
@@ -67,23 +68,29 @@ public class GuiBlockbusterPanels
     @SubscribeEvent
     public void onRegister(RegisterDashboardPanels event)
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        if (!(event.dashboard instanceof GuiDashboard))
+        {
+            return;
+        }
 
-        this.directorPanel = new GuiScenePanel(mc, event.dashboard);
-        this.modelPanel = new GuiModelBlockPanel(mc, event.dashboard);
-        this.modelEditorPanel = new GuiModelEditorPanel(mc, event.dashboard);
-        this.recordingEditorPanel = new GuiRecordingEditorPanel(mc, event.dashboard);
-        this.texturePanel = new GuiTextureManagerPanel(mc, event.dashboard);
-        this.particleEditor = new GuiSnowstorm(mc, event.dashboard);
+        Minecraft mc = Minecraft.getMinecraft();
+        GuiDashboard dashboard = (GuiDashboard) event.dashboard;
+
+        this.directorPanel = new GuiScenePanel(mc, dashboard);
+        this.modelPanel = new GuiModelBlockPanel(mc, dashboard);
+        this.modelEditorPanel = new GuiModelEditorPanel(mc, dashboard);
+        this.recordingEditorPanel = new GuiRecordingEditorPanel(mc, dashboard);
+        this.texturePanel = new GuiTextureManagerPanel(mc, dashboard);
+        this.particleEditor = new GuiSnowstorm(mc, dashboard);
 
         this.morphs = new GuiCreativeMorphsMenu(mc, null);
 
-        event.dashboard.panels.registerPanel(this.directorPanel, IKey.lang("blockbuster.gui.dashboard.director"), BBIcons.SCENE);
-        event.dashboard.panels.registerPanel(this.modelPanel, IKey.lang("blockbuster.gui.dashboard.model"), Icons.BLOCK);
-        event.dashboard.panels.registerPanel(this.modelEditorPanel, IKey.lang("blockbuster.gui.dashboard.model_editor"), Icons.POSE);
-        event.dashboard.panels.registerPanel(this.recordingEditorPanel, IKey.lang("blockbuster.gui.dashboard.player_recording"), BBIcons.EDITOR);
-        event.dashboard.panels.registerPanel(this.texturePanel, IKey.lang("blockbuster.gui.dashboard.texture"), Icons.MATERIAL);
-        event.dashboard.panels.registerPanel(this.particleEditor, IKey.lang("blockbuster.gui.dashboard.particle"), BBIcons.PARTICLE);
+        dashboard.panels.registerPanel(this.directorPanel, IKey.lang("blockbuster.gui.dashboard.director"), BBIcons.SCENE);
+        dashboard.panels.registerPanel(this.modelPanel, IKey.lang("blockbuster.gui.dashboard.model"), Icons.BLOCK);
+        dashboard.panels.registerPanel(this.modelEditorPanel, IKey.lang("blockbuster.gui.dashboard.model_editor"), Icons.POSE);
+        dashboard.panels.registerPanel(this.recordingEditorPanel, IKey.lang("blockbuster.gui.dashboard.player_recording"), BBIcons.EDITOR);
+        dashboard.panels.registerPanel(this.texturePanel, IKey.lang("blockbuster.gui.dashboard.texture"), Icons.MATERIAL);
+        dashboard.panels.registerPanel(this.particleEditor, IKey.lang("blockbuster.gui.dashboard.particle"), BBIcons.PARTICLE);
     }
 
     @SubscribeEvent

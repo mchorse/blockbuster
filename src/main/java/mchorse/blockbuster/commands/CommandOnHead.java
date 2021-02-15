@@ -34,7 +34,7 @@ public class CommandOnHead extends CommandBase
         EntityPlayer player = getCommandSenderAsPlayer(sender);
         ItemStack stack = player.getHeldItemMainhand();
 
-        if (stack != null)
+        if (!stack.isEmpty())
         {
             player.setItemStackToSlot(EntityEquipmentSlot.HEAD, stack.copy());
         }

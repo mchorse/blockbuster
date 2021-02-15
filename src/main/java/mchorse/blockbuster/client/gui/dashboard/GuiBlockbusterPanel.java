@@ -4,7 +4,7 @@ import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.mclib.GuiDashboardPanel;
 import net.minecraft.client.Minecraft;
 
-public class GuiBlockbusterPanel extends GuiDashboardPanel
+public class GuiBlockbusterPanel extends GuiDashboardPanel<GuiDashboard>
 {
     public GuiBlockbusterPanel(Minecraft mc, GuiDashboard dashboard)
     {
