@@ -7,24 +7,24 @@ import net.minecraft.block.Block;
 
 public class BedrockComponentExpireNotInBlocks extends BedrockComponentExpireBlocks implements IComponentParticleUpdate
 {
-	@Override
-	public void update(BedrockEmitter emitter, BedrockParticle particle)
-	{
-		if (particle.dead || emitter.world == null)
-		{
-			return;
-		}
+    @Override
+    public void update(BedrockEmitter emitter, BedrockParticle particle)
+    {
+        if (particle.dead || emitter.world == null)
+        {
+            return;
+        }
 
-		Block current = this.getBlock(emitter, particle);
+        Block current = this.getBlock(emitter, particle);
 
-		for (Block block : this.blocks)
-		{
-			if (block == current)
-			{
-				return;
-			}
-		}
+        for (Block block : this.blocks)
+        {
+            if (block == current)
+            {
+                return;
+            }
+        }
 
-		particle.dead = true;
-	}
+        particle.dead = true;
+    }
 }

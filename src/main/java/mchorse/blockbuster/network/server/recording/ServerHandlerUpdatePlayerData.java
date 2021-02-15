@@ -6,6 +6,7 @@ import mchorse.blockbuster.recording.MPMHelper;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.mclib.network.ServerMessageHandler;
+import mchorse.mclib.utils.OpHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -14,6 +15,11 @@ public class ServerHandlerUpdatePlayerData extends ServerMessageHandler<PacketUp
     @Override
     public void run(EntityPlayerMP player, PacketUpdatePlayerData message)
     {
+        if (!OpHelper.isPlayerOp(player))
+        {
+            return;
+        }
+
         Record record = null;
 
         try

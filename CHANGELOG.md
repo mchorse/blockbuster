@@ -1,3 +1,19 @@
+## Version 2.2.2
+
+This patch update was made to complement BB guns tutorial video.
+
+**Compatible** with McLib `2.2.2`, Metamorph `1.2.5` and Aperture `1.5.2`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+* Added **Cycle between panels** keybind to configure BB gun GUI
+* Added **Particle expression** in Initialization expression section of particle editor (implemented by Chryfi)
+* Added new functions to MoLang according to 1.16 spec: `math.acos(value)`, `math.asin(value)`, `math.atan(value)`, `math.atan2(y, x)`, `math.random_integer(min, max, seed)`, `math.die_roll(num, low, high)`, `math.die_roll_integer(num, low, high)` and `math.hermite_blend(x)`
+* Changed layout of BB gun panels
+* Fixed entity motion and preserve energy toggles not updating when changing values (reported by Chryfi)
+* Fixed character limit in some fields within particle editor (reported by Chryfi)
+* Fixed sequencer morph editor removing first similar morph instead of currently selected (reported by Chunk7)
+* Fixed BB gun's default morph not updating in hand and gun transformations preview
+* Fixed BB gun's vanish option bugging, not respecting sticks option and prematurely vanishing on the client side
+
 ## Version 2.2.1
 
 This patch update adds a couple of neat features and fixes.

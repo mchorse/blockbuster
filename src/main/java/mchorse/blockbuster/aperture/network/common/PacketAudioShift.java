@@ -6,33 +6,33 @@ import mchorse.blockbuster.recording.scene.SceneLocation;
 
 public class PacketAudioShift extends PacketScene
 {
-	public int shift;
+    public int shift;
 
-	public PacketAudioShift()
-	{
-		super();
-	}
+    public PacketAudioShift()
+    {
+        super();
+    }
 
-	public PacketAudioShift(SceneLocation location, int shift)
-	{
-		super(location);
+    public PacketAudioShift(SceneLocation location, int shift)
+    {
+        super(location);
 
-		this.shift = shift;
-	}
+        this.shift = shift;
+    }
 
-	@Override
-	public void fromBytes(ByteBuf buf)
-	{
-		super.fromBytes(buf);
+    @Override
+    public void fromBytes(ByteBuf buf)
+    {
+        super.fromBytes(buf);
 
-		this.shift = buf.readInt();
-	}
+        this.shift = buf.readInt();
+    }
 
-	@Override
-	public void toBytes(ByteBuf buf)
-	{
-		super.toBytes(buf);
+    @Override
+    public void toBytes(ByteBuf buf)
+    {
+        super.toBytes(buf);
 
-		buf.writeInt(this.shift);
-	}
+        buf.writeInt(this.shift);
+    }
 }

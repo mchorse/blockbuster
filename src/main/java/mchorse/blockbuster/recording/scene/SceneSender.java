@@ -12,70 +12,70 @@ import net.minecraft.world.World;
 
 public class SceneSender implements ICommandSender
 {
-	public Scene scene;
+    public Scene scene;
 
-	public SceneSender(Scene scene)
-	{
-		this.scene = scene;
-	}
+    public SceneSender(Scene scene)
+    {
+        this.scene = scene;
+    }
 
-	@Override
-	public String getName() {
-		return "SceneSender(" + this.scene.getId() + ")";
-	}
+    @Override
+    public String getName() {
+        return "SceneSender(" + this.scene.getId() + ")";
+    }
 
-	@Override
-	public ITextComponent getDisplayName() {
-		return new TextComponentString(this.getName());
-	}
+    @Override
+    public ITextComponent getDisplayName() {
+        return new TextComponentString(this.getName());
+    }
 
-	@Override
-	public void sendMessage(ITextComponent component)
-	{}
+    @Override
+    public void sendMessage(ITextComponent component)
+    {}
 
-	@Override
-	public boolean canUseCommand(int permLevel, String commandName)
-	{
-		return true;
-	}
+    @Override
+    public boolean canUseCommand(int permLevel, String commandName)
+    {
+        return true;
+    }
 
-	@Override
-	public BlockPos getPosition()
-	{
-		return BlockPos.ORIGIN;
-	}
+    @Override
+    public BlockPos getPosition()
+    {
+        return BlockPos.ORIGIN;
+    }
 
-	@Override
-	public Vec3d getPositionVector()
-	{
-		return new Vec3d(this.getPosition());
-	}
+    @Override
+    public Vec3d getPositionVector()
+    {
+        return new Vec3d(this.getPosition());
+    }
 
-	@Override
-	public World getEntityWorld()
-	{
-		return this.scene.getWorld();
-	}
+    @Override
+    public World getEntityWorld()
+    {
+        return this.scene.getWorld();
+    }
 
-	@Override
-	public Entity getCommandSenderEntity()
-	{
-		return null;
-	}
+    @Override
+    public Entity getCommandSenderEntity()
+    {
+        return null;
+    }
 
-	@Override
-	public boolean sendCommandFeedback()
-	{
-		return false;
-	}
+    @Override
+    public boolean sendCommandFeedback()
+    {
+        return false;
+    }
 
-	@Override
-	public void setCommandStat(CommandResultStats.Type type, int amount)
-	{}
+    @Override
+    public void setCommandStat(CommandResultStats.Type type, int amount)
+    {}
 
-	@Override
-	public MinecraftServer getServer()
-	{
-		return this.scene.getWorld().getMinecraftServer();
-	}
+    @Override
+    public MinecraftServer getServer()
+    {
+        return this.scene.getWorld().getMinecraftServer();
+    }
 }

@@ -112,13 +112,13 @@ public class RecordRecorder
         this.tick++;
     }
 
-	public void stop(EntityPlayer player)
+    public void stop(EntityPlayer player)
     {
         if (this.teleportBack && player instanceof EntityPlayerMP)
         {
             ((EntityPlayerMP) player).connection.setPlayerLocation(this.first.x, this.first.y, this.first.z, this.first.yaw, this.first.pitch);
         }
-	}
+    }
 
     public void applyOld(Record oldRecord)
     {

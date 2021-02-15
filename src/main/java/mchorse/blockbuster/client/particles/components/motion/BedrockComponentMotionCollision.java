@@ -81,7 +81,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
     
     public static void negateComponent(Vector3f vector, EnumFacing.Axis component) 
     {
-    	setComponent(vector, component, -getComponent(vector, component));
+        setComponent(vector, component, -getComponent(vector, component));
     }
 
     public static double getComponent(Vector3d vector, EnumFacing.Axis component)
@@ -116,7 +116,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
     
     public static void negateComponent(Vector3d vector, EnumFacing.Axis component) 
     {
-    	setComponent(vector, component, -getComponent(vector, component));
+        setComponent(vector, component, -getComponent(vector, component));
     }
 
     @Override
@@ -295,8 +295,8 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
                 particle.position.set(now);
 
-				/* only apply drag when speed is almost not zero and randombounciness and realisticCollision are off
-				 * prevent particles from accelerating away when randomBounciness is active */
+                /* only apply drag when speed is almost not zero and randombounciness and realisticCollision are off
+                 * prevent particles from accelerating away when randomBounciness is active */
                 if (!((this.randomBounciness != 0 || this.realisticCollision) && Math.round(particle.speed.length()) == 0))
                 {
                     particle.dragFactor += this.collisionDrag;
@@ -318,16 +318,16 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
                 }
                 else
                 {
-                	/* fixes the issue of particles falling through the entity 
-                	 * when they lie on the surface while the hitbox changes 
-                	 * downside: the position is not always accurate depending on the movement*/ 
-                	
-                	/*Vector3f particleMotion = new Vector3f(); 
-                	particleMotion.x = (float) (particle.prevPosition.x - particle.position.x);
-                	particleMotion.y = (float) (particle.prevPosition.y - particle.position.y);
-                	particleMotion.z = (float) (particle.prevPosition.z - particle.position.z);
-                	ray = particleMotion;*/
-                	continue;
+                    /* fixes the issue of particles falling through the entity
+                     * when they lie on the surface while the hitbox changes
+                     * downside: the position is not always accurate depending on the movement*/
+
+                    /*Vector3f particleMotion = new Vector3f();
+                    particleMotion.x = (float) (particle.prevPosition.x - particle.position.x);
+                    particleMotion.y = (float) (particle.prevPosition.y - particle.position.y);
+                    particleMotion.z = (float) (particle.prevPosition.z - particle.position.z);
+                    ray = particleMotion;*/
+                    continue;
                 }
 
                 Vector3d frac = intersect(ray, particle.getGlobalPosition(emitter), entityAABB);
@@ -341,17 +341,17 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
                     if ((aabb2.minX < entityAABB.maxX && aabb2.maxX > entityAABB.maxX) || (aabb2.maxX > entityAABB.minX && aabb2.minX < entityAABB.minX))
                     {
-                    	entityCollision(particle, emitter, entity, EnumFacing.Axis.X, prev);
+                        entityCollision(particle, emitter, entity, EnumFacing.Axis.X, prev);
                     }
 
                     if ((aabb2.minY < entityAABB.maxY && aabb2.maxY > entityAABB.maxY) || (aabb2.maxY > entityAABB.minY && aabb2.minY < entityAABB.minY))
                     {
-                    	entityCollision(particle, emitter, entity, EnumFacing.Axis.Y, prev);
+                        entityCollision(particle, emitter, entity, EnumFacing.Axis.Y, prev);
                     }
 
                     if ((aabb2.minZ < entityAABB.maxZ && aabb2.maxZ > entityAABB.maxZ) || (aabb2.maxZ > entityAABB.minZ && aabb2.minZ < entityAABB.minZ))
                     {
-                    	entityCollision(particle, emitter, entity, EnumFacing.Axis.Z, prev);
+                        entityCollision(particle, emitter, entity, EnumFacing.Axis.Z, prev);
                     }
                 }
             }
@@ -399,7 +399,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
         Vector3f entitySpeed = new Vector3f((float) (entity.posX - entity.prevPosX), (float) (entity.posY - entity.prevPosY), (float) (entity.posZ - entity.prevPosZ));
         Vector3d entityPosition = new Vector3d(entity.posX, entity.posY,entity.posZ);
 
-    	/* collisionTime should be not changed - otherwise the particles will stop when moving against moving entites */
+        /* collisionTime should be not changed - otherwise the particles will stop when moving against moving entites */
         float tmpTime = getComponent(particle.collisionTime, component);
         double delta = getComponent(particle.position, component) - getComponent(entityPosition, component);
         setComponent(particle.position, component, getComponent(particle.position, component) + (delta > 0 ? this.radius : -this.radius));

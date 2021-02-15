@@ -11,61 +11,61 @@ import net.minecraft.client.Minecraft;
 
 public abstract class GuiSnowstormModeSection <T extends BedrockComponentBase> extends GuiSnowstormComponentSection<T>
 {
-	public GuiCirculateElement mode;
-	public GuiLabel modeLabel;
+    public GuiCirculateElement mode;
+    public GuiLabel modeLabel;
 
-	public GuiSnowstormModeSection(Minecraft mc, GuiSnowstorm parent)
-	{
-		super(mc, parent);
+    public GuiSnowstormModeSection(Minecraft mc, GuiSnowstorm parent)
+    {
+        super(mc, parent);
 
-		this.mode = new GuiCirculateElement(mc, (b) -> this.updateMode(this.mode.getValue()));
-		this.fillModes(this.mode);
-		this.modeLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"), 20).anchor(0, 0.5F);
+        this.mode = new GuiCirculateElement(mc, (b) -> this.updateMode(this.mode.getValue()));
+        this.fillModes(this.mode);
+        this.modeLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"), 20).anchor(0, 0.5F);
 
-		this.fields.add(Elements.row(mc, 5, 0, 20, this.modeLabel, this.mode));
-	}
+        this.fields.add(Elements.row(mc, 5, 0, 20, this.modeLabel, this.mode));
+    }
 
-	@Override
-	protected T getComponent(BedrockScheme scheme)
-	{
-		return scheme.getOrCreate(this.getBaseClass(), this.getDefaultClass());
-	}
+    @Override
+    protected T getComponent(BedrockScheme scheme)
+    {
+        return scheme.getOrCreate(this.getBaseClass(), this.getDefaultClass());
+    }
 
-	@Override
-	protected void fillData()
-	{
-		super.fillData();
+    @Override
+    protected void fillData()
+    {
+        super.fillData();
 
-		for (int i = 0, c = this.mode.getLabels().size(); i < c; i ++)
-		{
-			if (this.getModeClass(i) == this.component.getClass())
-			{
-				this.mode.setValue(i);
+        for (int i = 0, c = this.mode.getLabels().size(); i < c; i ++)
+        {
+            if (this.getModeClass(i) == this.component.getClass())
+            {
+                this.mode.setValue(i);
 
-				break;
-			}
-		}
-	}
+                break;
+            }
+        }
+    }
 
-	protected abstract void fillModes(GuiCirculateElement button);
+    protected abstract void fillModes(GuiCirculateElement button);
 
-	protected void updateMode(int value)
-	{
-		T old = this.component;
+    protected void updateMode(int value)
+    {
+        T old = this.component;
 
-		this.component = this.scheme.replace(this.getBaseClass(), this.getModeClass(this.mode.getValue()));
-		this.restoreInfo(this.component, old);
-		this.parent.dirty();
+        this.component = this.scheme.replace(this.getBaseClass(), this.getModeClass(this.mode.getValue()));
+        this.restoreInfo(this.component, old);
+        this.parent.dirty();
 
-		this.fillData();
-	}
+        this.fillData();
+    }
 
-	protected void restoreInfo(T component, T old)
-	{}
+    protected void restoreInfo(T component, T old)
+    {}
 
-	protected abstract Class<T> getBaseClass();
+    protected abstract Class<T> getBaseClass();
 
-	protected abstract Class getDefaultClass();
+    protected abstract Class getDefaultClass();
 
-	protected abstract Class getModeClass(int value);
+    protected abstract Class getModeClass(int value);
 }

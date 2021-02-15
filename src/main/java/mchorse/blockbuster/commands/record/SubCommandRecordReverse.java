@@ -16,42 +16,42 @@ import net.minecraft.server.MinecraftServer;
  */
 public class SubCommandRecordReverse extends SubCommandRecordBase
 {
-	@Override
-	public int getRequiredArgs()
-	{
-		return 1;
-	}
+    @Override
+    public int getRequiredArgs()
+    {
+        return 1;
+    }
 
-	@Override
-	public String getName()
-	{
-		return "reverse";
-	}
+    @Override
+    public String getName()
+    {
+        return "reverse";
+    }
 
-	@Override
-	public String getUsage(ICommandSender sender)
-	{
-		return "blockbuster.commands.record.reverse";
-	}
+    @Override
+    public String getUsage(ICommandSender sender)
+    {
+        return "blockbuster.commands.record.reverse";
+    }
 
-	@Override
-	public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-	{
-		String filename = args[0];
-		Record record = CommandRecord.getRecord(filename);
+    @Override
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
+        String filename = args[0];
+        Record record = CommandRecord.getRecord(filename);
 
-		record.reverse();
+        record.reverse();
 
-		try
-		{
-			RecordUtils.saveRecord(record);
+        try
+        {
+            RecordUtils.saveRecord(record);
 
-			L10n.success(sender, "record.reversed", filename);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			L10n.error(sender, "record.couldnt_save", filename);
-		}
-	}
+            L10n.success(sender, "record.reversed", filename);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            L10n.error(sender, "record.couldnt_save", filename);
+        }
+    }
 }

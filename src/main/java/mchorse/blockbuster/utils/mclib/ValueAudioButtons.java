@@ -17,18 +17,18 @@ import java.util.List;
 
 public class ValueAudioButtons extends ValueGUI
 {
-	public ValueAudioButtons(String id)
-	{
-		super(id);
-	}
+    public ValueAudioButtons(String id)
+    {
+        super(id);
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public List<GuiElement> getFields(Minecraft mc, GuiConfig config)
-	{
-		GuiButtonElement resetAudio = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.reset_audio"), (button) -> ClientProxy.audio.reset());
-		GuiButtonElement openAudio = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.open_audio"), (button) -> GuiUtils.openWebLink(ClientProxy.audio.folder.toURI()));
+    @Override
+    @SideOnly(Side.CLIENT)
+    public List<GuiElement> getFields(Minecraft mc, GuiConfig config)
+    {
+        GuiButtonElement resetAudio = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.reset_audio"), (button) -> ClientProxy.audio.reset());
+        GuiButtonElement openAudio = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.open_audio"), (button) -> GuiUtils.openWebLink(ClientProxy.audio.folder.toURI()));
 
-		return Arrays.asList(Elements.row(mc, 5, 0, 20, resetAudio, openAudio));
-	}
+        return Arrays.asList(Elements.row(mc, 5, 0, 20, resetAudio, openAudio));
+    }
 }

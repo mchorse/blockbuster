@@ -399,7 +399,7 @@ blockbuster.gui:
         initialization:
             title: Initialization expressions
 
-            emitter_expression_title: Emitter expressions (BedrockEdition)
+            emitter_expression_title: Emitter expressions (Bedrock Edition)
             create: Creation expression, it runs when emitter starts
             update: Update expression, it runs every tick
             
@@ -594,6 +594,7 @@ blockbuster.gui:
         projectiles: Projectiles
         scatter: Scatter
         launch: Launch player
+        ammo_stack: This option allows to specify an item, which will be consumed upon shooting. If there are no items of this kind and its count, when shooting in survival mode, then the projectile won't be shot.\n\nThink of it as an ammo option.
         
         projectile_morph: Projectile morph
         tick_command: Command on tick

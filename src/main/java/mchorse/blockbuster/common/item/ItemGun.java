@@ -20,9 +20,13 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class ItemGun extends Item
 {
@@ -87,6 +91,16 @@ public class ItemGun extends Item
         /* Or otherwise launch bullets */
         else
         {
+            if (!player.capabilities.isCreativeMode && !props.ammoStack.isEmpty())
+            {
+                ItemStack ammo = props.ammoStack;
+
+                if (!this.consumeAmmoStack(player, ammo))
+                {
+                    return false;
+                }
+            }
+
             EntityGunProjectile last = null;
 
             for (int i = 0; i < props.projectiles; i++)
@@ -128,6 +142,33 @@ public class ItemGun extends Item
         Dispatcher.sendToTracked(entity, new PacketGunShot(id));
 
         return true;
+    }
+
+    private boolean consumeAmmoStack(EntityPlayer player, ItemStack ammo)
+    {
+        int total = 0;
+
+        for (int i = 0, c = player.inventory.getSizeInventory(); i < c; i++)
+        {
+            ItemStack stack = player.inventory.getStackInSlot(i);
+
+            if (stack.isItemEqual(ammo))
+            {
+                total += stack.getCount();
+
+                if (total >= ammo.getCount())
+                {
+                    break;
+                }
+            }
+        }
+
+        if (total < ammo.getCount())
+        {
+            return false;
+        }
+
+        return player.inventory.clearMatchingItems(ammo.getItem(), -1, ammo.getCount(), null) >= 0;
     }
 
     private void setThrowableHeading(EntityLivingBase entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity, float inaccuracy)

@@ -5,6 +5,7 @@ import mchorse.blockbuster.network.common.recording.actions.PacketAction;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.mclib.network.ServerMessageHandler;
+import mchorse.mclib.utils.OpHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ServerHandlerAction extends ServerMessageHandler<PacketAction>
@@ -12,6 +13,11 @@ public class ServerHandlerAction extends ServerMessageHandler<PacketAction>
     @Override
     public void run(EntityPlayerMP player, PacketAction message)
     {
+        if (!OpHelper.isPlayerOp(player))
+        {
+            return;
+        }
+
         Record record = null;
 
         try

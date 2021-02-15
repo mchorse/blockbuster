@@ -7,6 +7,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.guns.PacketGunProjectile;
+import mchorse.blockbuster.network.common.guns.PacketGunProjectileVanish;
 import mchorse.blockbuster.network.common.guns.PacketGunStuck;
 import mchorse.mclib.utils.NBTUtils;
 import mchorse.metamorph.api.Morph;
@@ -60,7 +61,6 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     public double initMZ;
 
     public boolean setInit;
-    public boolean invisible;
 
     public EntityGunProjectile(World worldIn)
     {
@@ -93,14 +93,17 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     @Override
     public void onUpdate()
     {
-        if (!this.world.isRemote && this.vanish)
+        if (this.vanish)
         {
-            if (this.vanishDelay <= 0)
+            if (!this.world.isRemote && this.vanishDelay <= 0)
             {
                 this.setDead();
             }
 
-            this.vanishDelay--;
+            if (this.vanishDelay > 0)
+            {
+                this.vanishDelay--;
+            }
         }
 
         if (!this.world.isBlockLoaded(this.getPosition(), false))
@@ -244,11 +247,6 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             else
             {
                 this.setPosition(this.posX, this.posY, this.posZ);
-
-                if (this.ticksExisted > 4 && !this.invisible)
-                {
-                    this.invisible = true;
-                }
             }
         }
 
@@ -319,7 +317,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     @Override
     protected void onImpact(RayTraceResult result)
     {
-        if (this.stuck)
+        if (this.stuck || this.vanish)
         {
             return;
         }
@@ -328,7 +326,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         {
             this.hits++;
 
-            boolean shouldDie = this.props.vanish && this.hits >= this.props.hits;
+            boolean shouldDie = this.props.vanish && this.hits >= this.props.hits && !this.props.sticks;
 
             if (result.typeOfHit == Type.BLOCK)
             {
@@ -394,6 +392,12 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 {
                     this.vanish = true;
                     this.vanishDelay = this.props.vanishDelay;
+
+                    if (this.vanishDelay > 0)
+                    {
+                        Dispatcher.sendToTracked(this, new PacketGunProjectileVanish(this.getEntityId(), this.vanishDelay));
+                    }
+
                     return;
                 }
 

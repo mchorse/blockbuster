@@ -4,6 +4,7 @@ import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
 import mchorse.mclib.network.ServerMessageHandler;
+import mchorse.mclib.utils.OpHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ServerHandlerSceneCast extends ServerMessageHandler<PacketSceneCast>
@@ -11,7 +12,7 @@ public class ServerHandlerSceneCast extends ServerMessageHandler<PacketSceneCast
     @Override
     public void run(EntityPlayerMP player, PacketSceneCast message)
     {
-        if (message.location.isEmpty())
+        if (!OpHelper.isPlayerOp(player) || message.location.isEmpty())
         {
             return;
         }

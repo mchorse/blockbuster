@@ -8,17 +8,17 @@ import java.io.File;
 
 public class ModelLoaderJSON implements IModelLoader
 {
-	@Override
-	public IModelLazyLoader load(File folder)
-	{
-		File file = new File(folder, "model.json");
+    @Override
+    public IModelLazyLoader load(File folder)
+    {
+        File file = new File(folder, "model.json");
 
-		if (file.isFile())
-		{
-			return new ModelLazyLoaderJSON(new FileEntry(file));
-		}
+        if (file.isFile())
+        {
+            return new ModelLazyLoaderJSON(new FileEntry(file));
+        }
 
-		return null;
-	}
+        return null;
+    }
 
 }

@@ -10,15 +10,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientHandlerScenes extends ClientMessageHandler<PacketScenes>
 {
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void run(EntityPlayerSP entityPlayerSP, PacketScenes packetScenes)
-	{
-		GuiBlockbusterPanels dashboard = ClientProxy.panels;
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void run(EntityPlayerSP entityPlayerSP, PacketScenes packetScenes)
+    {
+        GuiBlockbusterPanels dashboard = ClientProxy.panels;
 
-		if (dashboard.directorPanel != null)
-		{
-			dashboard.directorPanel.scenes.add(packetScenes.scenes);
-		}
-	}
+        if (dashboard.directorPanel != null)
+        {
+            dashboard.directorPanel.scenes.add(packetScenes.scenes);
+        }
+    }
 }

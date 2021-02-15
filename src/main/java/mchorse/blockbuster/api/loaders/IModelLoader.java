@@ -11,5 +11,5 @@ import java.io.File;
  */
 public interface IModelLoader
 {
-	public IModelLazyLoader load(File folder);
+    public IModelLazyLoader load(File folder);
 }

@@ -12,52 +12,52 @@ import java.util.Map;
 
 public class VoxTransform extends VoxBaseNode
 {
-	public int childId;
-	public int unusedId;
-	public int layerId;
-	public List<Matrix4f> transforms;
+    public int childId;
+    public int unusedId;
+    public int layerId;
+    public List<Matrix4f> transforms;
 
-	public VoxTransform(InputStream stream, VoxReader reader) throws Exception
-	{
-		this.id = reader.readInt(stream);
-		this.attrs = reader.readDictionary(stream);
-		this.childId = reader.readInt(stream);
-		this.unusedId = reader.readInt(stream);
-		this.layerId = reader.readInt(stream);
-		this.num = reader.readInt(stream);
-		this.transforms = new ArrayList<Matrix4f>();
+    public VoxTransform(InputStream stream, VoxReader reader) throws Exception
+    {
+        this.id = reader.readInt(stream);
+        this.attrs = reader.readDictionary(stream);
+        this.childId = reader.readInt(stream);
+        this.unusedId = reader.readInt(stream);
+        this.layerId = reader.readInt(stream);
+        this.num = reader.readInt(stream);
+        this.transforms = new ArrayList<Matrix4f>();
 
-		for (int i = 0; i < this.num; i ++)
-		{
-			Map<String, String> dict = reader.readDictionary(stream);
-			Matrix3f rotation = new Matrix3f();
-			Vector3f translate = new Vector3f(0, 0, 0);
+        for (int i = 0; i < this.num; i ++)
+        {
+            Map<String, String> dict = reader.readDictionary(stream);
+            Matrix3f rotation = new Matrix3f();
+            Vector3f translate = new Vector3f(0, 0, 0);
 
-			rotation.setIdentity();
+            rotation.setIdentity();
 
-			if (dict.containsKey("_r"))
-			{
-				rotation = reader.readRotation(Integer.parseInt(dict.get("_r")));
-			}
+            if (dict.containsKey("_r"))
+            {
+                rotation = reader.readRotation(Integer.parseInt(dict.get("_r")));
+            }
 
-			if (dict.containsKey("_t"))
-			{
-				String[] splits = dict.get("_t").split(" ");
+            if (dict.containsKey("_t"))
+            {
+                String[] splits = dict.get("_t").split(" ");
 
-				if (splits.length == 3)
-				{
-					/* Stupid coordinate systems... */
-					translate.set(-Integer.parseInt(splits[0]), Integer.parseInt(splits[1]), Integer.parseInt(splits[2]));
-				}
-			}
+                if (splits.length == 3)
+                {
+                    /* Stupid coordinate systems... */
+                    translate.set(-Integer.parseInt(splits[0]), Integer.parseInt(splits[1]), Integer.parseInt(splits[2]));
+                }
+            }
 
-			/* Assemble the main result */
-			Matrix4f transform = new Matrix4f();
+            /* Assemble the main result */
+            Matrix4f transform = new Matrix4f();
 
-			transform.set(rotation);
-			transform.setTranslation(translate);
+            transform.set(rotation);
+            transform.setTranslation(translate);
 
-			this.transforms.add(transform);
-		}
-	}
+            this.transforms.add(transform);
+        }
+    }
 }

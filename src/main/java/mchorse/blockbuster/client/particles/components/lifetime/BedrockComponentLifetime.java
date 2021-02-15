@@ -12,48 +12,48 @@ import mchorse.mclib.math.Constant;
 
 public abstract class BedrockComponentLifetime extends BedrockComponentBase implements IComponentEmitterUpdate
 {
-	public static final MolangExpression DEFAULT_ACTIVE = new MolangValue(null, new Constant(10));
+    public static final MolangExpression DEFAULT_ACTIVE = new MolangValue(null, new Constant(10));
 
-	public MolangExpression activeTime = DEFAULT_ACTIVE;
+    public MolangExpression activeTime = DEFAULT_ACTIVE;
 
-	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
-	{
-		if (!elem.isJsonObject())
-		{
-			return super.fromJson(elem, parser);
-		}
+    public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
+    {
+        if (!elem.isJsonObject())
+        {
+            return super.fromJson(elem, parser);
+        }
 
-		JsonObject element = elem.getAsJsonObject();
+        JsonObject element = elem.getAsJsonObject();
 
-		if (element.has(this.getPropertyName()))
-		{
-			this.activeTime = parser.parseJson(element.get(this.getPropertyName()));
-		}
+        if (element.has(this.getPropertyName()))
+        {
+            this.activeTime = parser.parseJson(element.get(this.getPropertyName()));
+        }
 
-		return super.fromJson(element, parser);
-	}
+        return super.fromJson(element, parser);
+    }
 
-	@Override
-	public JsonElement toJson()
-	{
-		JsonObject object = new JsonObject();
+    @Override
+    public JsonElement toJson()
+    {
+        JsonObject object = new JsonObject();
 
-		if (!MolangExpression.isConstant(this.activeTime, 10))
-		{
-			object.add(this.getPropertyName(), this.activeTime.toJson());
-		}
+        if (!MolangExpression.isConstant(this.activeTime, 10))
+        {
+            object.add(this.getPropertyName(), this.activeTime.toJson());
+        }
 
-		return object;
-	}
+        return object;
+    }
 
-	protected String getPropertyName()
-	{
-		return "active_time";
-	}
+    protected String getPropertyName()
+    {
+        return "active_time";
+    }
 
-	@Override
-	public int getSortingIndex()
-	{
-		return -10;
-	}
+    @Override
+    public int getSortingIndex()
+    {
+        return -10;
+    }
 }

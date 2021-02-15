@@ -9,22 +9,22 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ServerHandlerAudioShift extends ServerMessageHandler<PacketAudioShift>
 {
-	@Override
-	public void run(EntityPlayerMP player, PacketAudioShift message)
-	{
-		Scene scene = message.get(player.world);
+    @Override
+    public void run(EntityPlayerMP player, PacketAudioShift message)
+    {
+        Scene scene = message.get(player.world);
 
-		if (scene != null)
-		{
-			scene.audioShift = message.shift;
-			scene.sendAudio(AudioState.SET, scene.getTick());
+        if (scene != null)
+        {
+            scene.audioShift = message.shift;
+            scene.sendAudio(AudioState.SET, scene.getTick());
 
-			try
-			{
-				CommonProxy.scenes.save(scene.getId(), scene, false);
-			}
-			catch (Exception e)
-			{}
-		}
-	}
+            try
+            {
+                CommonProxy.scenes.save(scene.getId(), scene, false);
+            }
+            catch (Exception e)
+            {}
+        }
+    }
 }

@@ -7,18 +7,18 @@ import mchorse.blockbuster.client.particles.molang.MolangParser;
 
 public abstract class BedrockComponentBase
 {
-	public BedrockComponentBase fromJson(JsonElement element, MolangParser parser) throws MolangException
-	{
-		return this;
-	}
+    public BedrockComponentBase fromJson(JsonElement element, MolangParser parser) throws MolangException
+    {
+        return this;
+    }
 
-	public JsonElement toJson()
-	{
-		return new JsonObject();
-	}
+    public JsonElement toJson()
+    {
+        return new JsonObject();
+    }
 
-	public boolean canBeEmpty()
-	{
-		return false;
-	}
+    public boolean canBeEmpty()
+    {
+        return false;
+    }
 }

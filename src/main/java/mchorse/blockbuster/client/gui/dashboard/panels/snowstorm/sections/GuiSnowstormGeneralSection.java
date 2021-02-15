@@ -17,83 +17,83 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiSnowstormGeneralSection extends GuiSnowstormSection
 {
-	public GuiTextElement identifier;
-	public GuiButtonElement pick;
-	public GuiCirculateElement material;
-	public GuiTexturePicker texture;
+    public GuiTextElement identifier;
+    public GuiButtonElement pick;
+    public GuiCirculateElement material;
+    public GuiTexturePicker texture;
 
-	public GuiSnowstormGeneralSection(Minecraft mc, GuiSnowstorm parent)
-	{
-		super(mc, parent);
+    public GuiSnowstormGeneralSection(Minecraft mc, GuiSnowstorm parent)
+    {
+        super(mc, parent);
 
-		this.identifier = new GuiTextElement(mc, 100, (str) ->
-		{
-			this.scheme.identifier = str;
-			this.parent.dirty();
-		});
-		this.identifier.tooltip(IKey.lang("blockbuster.gui.snowstorm.general.identifier"));
+        this.identifier = new GuiTextElement(mc, 100, (str) ->
+        {
+            this.scheme.identifier = str;
+            this.parent.dirty();
+        });
+        this.identifier.tooltip(IKey.lang("blockbuster.gui.snowstorm.general.identifier"));
 
-		this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.snowstorm.general.pick"), (b) ->
-		{
-			GuiElement container = this.getParentContainer();
+        this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.snowstorm.general.pick"), (b) ->
+        {
+            GuiElement container = this.getParentContainer();
 
-			this.texture.fill(this.scheme.texture);
-			this.texture.flex().relative(container).wh(1F, 1F);
-			this.texture.resize();
-			container.add(this.texture);
-		});
+            this.texture.fill(this.scheme.texture);
+            this.texture.flex().relative(container).wh(1F, 1F);
+            this.texture.resize();
+            container.add(this.texture);
+        });
 
-		this.material = new GuiCirculateElement(mc, (b) ->
-		{
-			this.scheme.material = BedrockMaterial.values()[this.material.getValue()];
-			this.parent.dirty();
-		});
-		this.material.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.particles_opaque"));
-		this.material.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.particles_alpha"));
-		this.material.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.particles_blend"));
+        this.material = new GuiCirculateElement(mc, (b) ->
+        {
+            this.scheme.material = BedrockMaterial.values()[this.material.getValue()];
+            this.parent.dirty();
+        });
+        this.material.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.particles_opaque"));
+        this.material.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.particles_alpha"));
+        this.material.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.particles_blend"));
 
-		this.texture = new GuiTexturePicker(mc, (rl) ->
-		{
-			if (rl == null)
-			{
-				rl = BedrockScheme.DEFAULT_TEXTURE;
-			}
+        this.texture = new GuiTexturePicker(mc, (rl) ->
+        {
+            if (rl == null)
+            {
+                rl = BedrockScheme.DEFAULT_TEXTURE;
+            }
 
-			this.setTextureSize(rl);
-			this.scheme.texture = rl;
-			this.parent.dirty();
-		});
+            this.setTextureSize(rl);
+            this.scheme.texture = rl;
+            this.parent.dirty();
+        });
 
-		this.fields.add(this.identifier, Elements.row(mc, 5, 0, 20, this.pick, this.material));
-	}
+        this.fields.add(this.identifier, Elements.row(mc, 5, 0, 20, this.pick, this.material));
+    }
 
-	private void setTextureSize(ResourceLocation rl)
-	{
-		BedrockComponentAppearanceBillboard component = this.scheme.get(BedrockComponentAppearanceBillboard.class);
+    private void setTextureSize(ResourceLocation rl)
+    {
+        BedrockComponentAppearanceBillboard component = this.scheme.get(BedrockComponentAppearanceBillboard.class);
 
-		if (component == null)
-		{
-			return;
-		}
+        if (component == null)
+        {
+            return;
+        }
 
-		this.mc.renderEngine.bindTexture(rl);
+        this.mc.renderEngine.bindTexture(rl);
 
-		component.textureWidth = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
-		component.textureHeight = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
-	}
+        component.textureWidth = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
+        component.textureHeight = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
+    }
 
-	@Override
-	public String getTitle()
-	{
-		return "blockbuster.gui.snowstorm.general.title";
-	}
+    @Override
+    public String getTitle()
+    {
+        return "blockbuster.gui.snowstorm.general.title";
+    }
 
-	@Override
-	public void setScheme(BedrockScheme scheme)
-	{
-		super.setScheme(scheme);
+    @Override
+    public void setScheme(BedrockScheme scheme)
+    {
+        super.setScheme(scheme);
 
-		this.identifier.setText(scheme.identifier);
-		this.material.setValue(scheme.material.ordinal());
-	}
+        this.identifier.setText(scheme.identifier);
+        this.material.setValue(scheme.material.ordinal());
+    }
 }

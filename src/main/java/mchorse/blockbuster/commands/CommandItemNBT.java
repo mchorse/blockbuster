@@ -17,68 +17,74 @@ import java.util.List;
 
 public class CommandItemNBT extends CommandBase
 {
-	@Override
-	public String getName()
-	{
-		return "item_nbt";
-	}
+    @Override
+    public String getName()
+    {
+        return "item_nbt";
+    }
 
-	@Override
-	public String getUsage(ICommandSender sender)
-	{
-		return "blockbuster.commands.item_nbt.help";
-	}
+    @Override
+    public String getUsage(ICommandSender sender)
+    {
+        return "blockbuster.commands.item_nbt.help";
+    }
 
-	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-	{
-		if (args.length < 1)
-		{
-			throw new WrongUsageException(this.getUsage(sender));
-		}
+    @Override
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender)
+    {
+        return true;
+    }
 
-		ItemStack stack = Minecraft.getMinecraft().player.getHeldItemMainhand();
+    @Override
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
+        if (args.length < 1)
+        {
+            throw new WrongUsageException(this.getUsage(sender));
+        }
 
-		if (stack.isEmpty())
-		{
-			L10n.error(sender, "commands.item_nbt_empty");
+        ItemStack stack = Minecraft.getMinecraft().player.getHeldItemMainhand();
 
-			return;
-		}
+        if (stack.isEmpty())
+        {
+            L10n.error(sender, "commands.item_nbt_empty");
 
-		boolean command = CommandBase.parseBoolean(args[0]);
+            return;
+        }
 
-		String output = "{}";
+        boolean command = CommandBase.parseBoolean(args[0]);
 
-		if (command)
-		{
-			NBTTagCompound tag = new NBTTagCompound();
+        String output = "{}";
 
-			stack.writeToNBT(tag);
-			output = "/give @p " + tag.getString("id") + " " + stack.getCount() + " " + stack.getItemDamage();
+        if (command)
+        {
+            NBTTagCompound tag = new NBTTagCompound();
 
-			if (stack.hasTagCompound())
-			{
-				output += " " + stack.getTagCompound().toString();
-			}
-		}
-		else if (stack.hasTagCompound())
-		{
-			output = stack.getTagCompound().toString();
-		}
+            stack.writeToNBT(tag);
+            output = "/give @p " + tag.getString("id") + " " + stack.getCount() + " " + stack.getItemDamage();
 
-		GuiScreen.setClipboardString(output);
-		L10n.success(sender, "commands.item_nbt");
-	}
+            if (stack.hasTagCompound())
+            {
+                output += " " + stack.getTagCompound().toString();
+            }
+        }
+        else if (stack.hasTagCompound())
+        {
+            output = stack.getTagCompound().toString();
+        }
 
-	@Override
-	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
-	{
-		if (args.length == 1)
-		{
-			return getListOfStringsMatchingLastWord(args, "true", "false", "1", "0");
-		}
+        GuiScreen.setClipboardString(output);
+        L10n.success(sender, "commands.item_nbt");
+    }
 
-		return super.getTabCompletions(server, sender, args, targetPos);
-	}
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
+    {
+        if (args.length == 1)
+        {
+            return getListOfStringsMatchingLastWord(args, "true", "false", "1", "0");
+        }
+
+        return super.getTabCompletions(server, sender, args, targetPos);
+    }
 }

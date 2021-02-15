@@ -13,68 +13,68 @@ import java.util.Iterator;
 
 public class EntityRendererTransformer extends ClassMethodTransformer
 {
-	public EntityRendererTransformer()
-	{
-		super();
+    public EntityRendererTransformer()
+    {
+        super();
 
-		this.setMcp("renderWorldPass", "(IFJ)V");
-		this.setNotch("a", "(IFJ)V");
-	}
+        this.setMcp("renderWorldPass", "(IFJ)V");
+        this.setNotch("a", "(IFJ)V");
+    }
 
-	@Override
-	public void processMethod(String s, MethodNode methodNode)
-	{
-		AbstractInsnNode renderLitNode = null;
-		AbstractInsnNode renderNode = null;
+    @Override
+    public void processMethod(String s, MethodNode methodNode)
+    {
+        AbstractInsnNode renderLitNode = null;
+        AbstractInsnNode renderNode = null;
 
-		String owner = CoreClassTransformer.obfuscated ? "btg" : "net/minecraft/client/particle/ParticleManager";
-		String renderLit = CoreClassTransformer.obfuscated ? "b" : "renderLitParticles";
-		String render = CoreClassTransformer.obfuscated ? "a" : "renderParticles";
-		String desc = CoreClassTransformer.obfuscated ? "(Lvg;F)V" : "(Lnet/minecraft/entity/Entity;F)V";
+        String owner = CoreClassTransformer.obfuscated ? "btg" : "net/minecraft/client/particle/ParticleManager";
+        String renderLit = CoreClassTransformer.obfuscated ? "b" : "renderLitParticles";
+        String render = CoreClassTransformer.obfuscated ? "a" : "renderParticles";
+        String desc = CoreClassTransformer.obfuscated ? "(Lvg;F)V" : "(Lnet/minecraft/entity/Entity;F)V";
 
-		/* Find these alive */
-		Iterator<AbstractInsnNode> it = methodNode.instructions.iterator();
+        /* Find these alive */
+        Iterator<AbstractInsnNode> it = methodNode.instructions.iterator();
 
-		while (it.hasNext())
-		{
-			AbstractInsnNode node = it.next();
+        while (it.hasNext())
+        {
+            AbstractInsnNode node = it.next();
 
-			if (node.getOpcode() == Opcodes.INVOKEVIRTUAL)
-			{
-				MethodInsnNode invoke = (MethodInsnNode) node;
+            if (node.getOpcode() == Opcodes.INVOKEVIRTUAL)
+            {
+                MethodInsnNode invoke = (MethodInsnNode) node;
 
-				if (invoke.owner.equals(owner) && invoke.desc.equals(desc))
-				{
-					if (invoke.name.equals(renderLit))
-					{
-						renderLitNode = node;
-					}
-					else if (invoke.name.equals(render))
-					{
-						renderNode = node;
-					}
-				}
-			}
-		}
+                if (invoke.owner.equals(owner) && invoke.desc.equals(desc))
+                {
+                    if (invoke.name.equals(renderLit))
+                    {
+                        renderLitNode = node;
+                    }
+                    else if (invoke.name.equals(render))
+                    {
+                        renderNode = node;
+                    }
+                }
+            }
+        }
 
-		if (renderLitNode != null && renderNode != null)
-		{
-			InsnList renderLitList = new InsnList();
-			InsnList rendeList = new InsnList();
+        if (renderLitNode != null && renderNode != null)
+        {
+            InsnList renderLitList = new InsnList();
+            InsnList rendeList = new InsnList();
 
-			renderLitList.add(new VarInsnNode(Opcodes.FLOAD, 2));
-			renderLitList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/blockbuster/client/RenderingHandler", "renderLitParticles", "(F)V", false));
-			rendeList.add(new VarInsnNode(Opcodes.FLOAD, 2));
-			rendeList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/blockbuster/client/RenderingHandler", "renderParticles", "(F)V", false));
+            renderLitList.add(new VarInsnNode(Opcodes.FLOAD, 2));
+            renderLitList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/blockbuster/client/RenderingHandler", "renderLitParticles", "(F)V", false));
+            rendeList.add(new VarInsnNode(Opcodes.FLOAD, 2));
+            rendeList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/blockbuster/client/RenderingHandler", "renderParticles", "(F)V", false));
 
-			methodNode.instructions.insert(renderLitNode, renderLitList);
-			methodNode.instructions.insert(renderNode, rendeList);
+            methodNode.instructions.insert(renderLitNode, renderLitList);
+            methodNode.instructions.insert(renderNode, rendeList);
 
-			System.out.println("BBCoreMod: successfully patched renderWorldPass!");
-		}
-		else
-		{
-			System.out.println("BBCoreMod: failed to find particle nodes: " + renderLitNode + " and " +renderNode);
-		}
-	}
+            System.out.println("BBCoreMod: successfully patched renderWorldPass!");
+        }
+        else
+        {
+            System.out.println("BBCoreMod: failed to find particle nodes: " + renderLitNode + " and " +renderNode);
+        }
+    }
 }

@@ -7,24 +7,24 @@ import net.minecraft.client.Minecraft;
 
 public abstract class GuiSnowstormComponentSection <T extends BedrockComponentBase> extends GuiSnowstormSection
 {
-	protected T component;
+    protected T component;
 
-	public GuiSnowstormComponentSection(Minecraft mc, GuiSnowstorm parent)
-	{
-		super(mc, parent);
-	}
+    public GuiSnowstormComponentSection(Minecraft mc, GuiSnowstorm parent)
+    {
+        super(mc, parent);
+    }
 
-	@Override
-	public void setScheme(BedrockScheme scheme)
-	{
-		super.setScheme(scheme);
+    @Override
+    public void setScheme(BedrockScheme scheme)
+    {
+        super.setScheme(scheme);
 
-		this.component = this.getComponent(scheme);
-		this.fillData();
-	}
+        this.component = this.getComponent(scheme);
+        this.fillData();
+    }
 
-	protected abstract T getComponent(BedrockScheme scheme);
+    protected abstract T getComponent(BedrockScheme scheme);
 
-	protected void fillData()
-	{}
+    protected void fillData()
+    {}
 }

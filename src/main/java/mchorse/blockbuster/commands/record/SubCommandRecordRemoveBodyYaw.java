@@ -11,40 +11,40 @@ import net.minecraft.server.MinecraftServer;
 
 public class SubCommandRecordRemoveBodyYaw extends SubCommandRecordBase
 {
-	@Override
-	public int getRequiredArgs()
-	{
-		return 1;
-	}
+    @Override
+    public int getRequiredArgs()
+    {
+        return 1;
+    }
 
-	@Override
-	public String getName()
-	{
-		return "remove_body_yaw";
-	}
+    @Override
+    public String getName()
+    {
+        return "remove_body_yaw";
+    }
 
-	@Override
-	public String getUsage(ICommandSender sender)
-	{
-		return "blockbuster.commands.record.remove_body_yaw";
-	}
+    @Override
+    public String getUsage(ICommandSender sender)
+    {
+        return "blockbuster.commands.record.remove_body_yaw";
+    }
 
-	@Override
-	public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-	{
-		String filename = args[0];
-		Record record = CommandRecord.getRecord(filename);
+    @Override
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
+        String filename = args[0];
+        Record record = CommandRecord.getRecord(filename);
 
-		for (int i = 0, c = record.frames.size(); i < c; i++)
-		{
-			Frame frame = record.frames.get(i);
+        for (int i = 0, c = record.frames.size(); i < c; i++)
+        {
+            Frame frame = record.frames.get(i);
 
-			frame.hasBodyYaw = false;
-			frame.bodyYaw = 0F;
-		}
+            frame.hasBodyYaw = false;
+            frame.bodyYaw = 0F;
+        }
 
-		RecordUtils.dirtyRecord(record);
+        RecordUtils.dirtyRecord(record);
 
-		L10n.success(sender, "record.remove_body_yaw", filename);
-	}
+        L10n.success(sender, "record.remove_body_yaw", filename);
+    }
 }

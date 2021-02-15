@@ -8,6 +8,8 @@ import mchorse.blockbuster.commands.model.SubCommandModelExport;
 import mchorse.blockbuster.commands.model.SubCommandModelExportObj;
 import mchorse.blockbuster.commands.model.SubCommandModelReload;
 import mchorse.blockbuster.commands.model.SubCommandModelReport;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
 
 /**
  * Command /model
@@ -43,5 +45,11 @@ public class CommandModel extends SubCommandBase
     protected String getHelp()
     {
         return "blockbuster.commands.model.help";
+    }
+
+    @Override
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender)
+    {
+        return true;
     }
 }

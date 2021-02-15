@@ -21,6 +21,7 @@ import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
+import mchorse.mclib.utils.OpHelper;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import net.minecraft.client.Minecraft;
@@ -202,6 +203,11 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     @Override
     public void open()
     {
+        if (!OpHelper.isPlayerOp())
+        {
+            return;
+        }
+
         this.updateList();
 
         /* Resetting the current model block, if it was removed from the world */
@@ -224,6 +230,11 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
     public void save(TileEntityModel model, boolean force)
     {
+        if (!OpHelper.isPlayerOp())
+        {
+            return;
+        }
+
         if (!force)
         {
             if (this.model == null || this.model == model)

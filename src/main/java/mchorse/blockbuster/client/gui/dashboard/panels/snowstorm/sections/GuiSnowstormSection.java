@@ -15,97 +15,97 @@ import net.minecraft.client.Minecraft;
 
 public abstract class GuiSnowstormSection extends GuiElement
 {
-	public GuiLabel title;
-	public GuiElement fields;
+    public GuiLabel title;
+    public GuiElement fields;
 
-	protected BedrockScheme scheme;
-	protected GuiSnowstorm parent;
+    protected BedrockScheme scheme;
+    protected GuiSnowstorm parent;
 
-	public GuiSnowstormSection(Minecraft mc, GuiSnowstorm parent)
-	{
-		super(mc);
+    public GuiSnowstormSection(Minecraft mc, GuiSnowstorm parent)
+    {
+        super(mc);
 
-		this.parent = parent;
-		this.title = Elements.label(IKey.lang(this.getTitle())).background(() -> 0x88000000 + McLib.primaryColor.get());
-		this.fields = new GuiElement(mc);
-		this.fields.flex().column(5).stretch().vertical().height(20);
+        this.parent = parent;
+        this.title = Elements.label(IKey.lang(this.getTitle())).background(() -> 0x88000000 + McLib.primaryColor.get());
+        this.fields = new GuiElement(mc);
+        this.fields.flex().column(5).stretch().vertical().height(20);
 
-		this.flex().column(5).stretch().vertical();
-		this.add(this.title, this.fields);
-	}
+        this.flex().column(5).stretch().vertical();
+        this.add(this.title, this.fields);
+    }
 
-	public abstract String getTitle();
+    public abstract String getTitle();
 
-	public MolangExpression parse(String string, GuiTextElement element, MolangExpression old)
-	{
-		if (string.isEmpty())
-		{
-			return MolangParser.ZERO;
-		}
+    public MolangExpression parse(String string, GuiTextElement element, MolangExpression old)
+    {
+        if (string.isEmpty())
+        {
+            return MolangParser.ZERO;
+        }
 
-		try
-		{
-			MolangExpression expression = this.scheme.parser.parseExpression(string);
+        try
+        {
+            MolangExpression expression = this.scheme.parser.parseExpression(string);
 
-			element.field.setTextColor(0xffffff);
-			this.parent.dirty();
+            element.field.setTextColor(0xffffff);
+            this.parent.dirty();
 
-			return expression;
-		}
-		catch (Exception e)
-		{}
+            return expression;
+        }
+        catch (Exception e)
+        {}
 
-		element.field.setTextColor(0xff2244);
+        element.field.setTextColor(0xff2244);
 
-		return old;
-	}
+        return old;
+    }
 
-	public void set(GuiTextElement element, MolangExpression expression)
-	{
-		element.field.setTextColor(0xffffff);
-		element.setText(expression.toString());
-	}
+    public void set(GuiTextElement element, MolangExpression expression)
+    {
+        element.field.setTextColor(0xffffff);
+        element.setText(expression.toString());
+    }
 
-	public void setScheme(BedrockScheme scheme)
-	{
-		this.scheme = scheme;
-	}
+    public void setScheme(BedrockScheme scheme)
+    {
+        this.scheme = scheme;
+    }
 
-	public void beforeSave(BedrockScheme scheme)
-	{}
+    public void beforeSave(BedrockScheme scheme)
+    {}
 
-	/**
-	 * Toggle visibility of the field section
-	 */
-	@Override
-	public boolean mouseClicked(GuiContext context)
-	{
-		if (super.mouseClicked(context))
-		{
-			return true;
-		}
+    /**
+     * Toggle visibility of the field section
+     */
+    @Override
+    public boolean mouseClicked(GuiContext context)
+    {
+        if (super.mouseClicked(context))
+        {
+            return true;
+        }
 
-		if (this.title.area.isInside(context))
-		{
-			if (this.fields.hasParent())
-			{
-				this.fields.removeFromParent();
-			}
-			else
-			{
-				this.add(this.fields);
-			}
+        if (this.title.area.isInside(context))
+        {
+            if (this.fields.hasParent())
+            {
+                this.fields.removeFromParent();
+            }
+            else
+            {
+                this.add(this.fields);
+            }
 
-			this.resizeParent();
+            this.resizeParent();
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	protected void resizeParent()
-	{
-		this.getParent().resize();
-	}
+    protected void resizeParent()
+    {
+        this.getParent().resize();
+    }
 }

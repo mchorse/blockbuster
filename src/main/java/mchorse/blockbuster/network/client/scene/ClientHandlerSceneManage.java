@@ -8,10 +8,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientHandlerSceneManage extends ClientMessageHandler<PacketSceneManage>
 {
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void run(EntityPlayerSP entityPlayerSP, PacketSceneManage packetSceneManage)
-	{
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void run(EntityPlayerSP entityPlayerSP, PacketSceneManage packetSceneManage)
+    {
 
-	}
+    }
 }

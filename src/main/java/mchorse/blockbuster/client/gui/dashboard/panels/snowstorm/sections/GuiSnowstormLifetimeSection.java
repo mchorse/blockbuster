@@ -12,120 +12,120 @@ import net.minecraft.client.Minecraft;
 
 public class GuiSnowstormLifetimeSection extends GuiSnowstormModeSection<BedrockComponentLifetime>
 {
-	public GuiTextElement active;
-	public GuiTextElement expiration;
+    public GuiTextElement active;
+    public GuiTextElement expiration;
 
-	public GuiSnowstormLifetimeSection(Minecraft mc, GuiSnowstorm parent)
-	{
-		super(mc, parent);
+    public GuiSnowstormLifetimeSection(Minecraft mc, GuiSnowstorm parent)
+    {
+        super(mc, parent);
 
-		this.active = new GuiTextElement(mc, 10000, (str) -> this.component.activeTime = this.parse(str, this.active, this.component.activeTime));
-		this.active.tooltip(IKey.lang(""));
-		this.expiration = new GuiTextElement(mc, 10000, (str) ->
-		{
-			if (this.component instanceof BedrockComponentLifetimeLooping)
-			{
-				BedrockComponentLifetimeLooping component = (BedrockComponentLifetimeLooping) this.component;
+        this.active = new GuiTextElement(mc, 10000, (str) -> this.component.activeTime = this.parse(str, this.active, this.component.activeTime));
+        this.active.tooltip(IKey.lang(""));
+        this.expiration = new GuiTextElement(mc, 10000, (str) ->
+        {
+            if (this.component instanceof BedrockComponentLifetimeLooping)
+            {
+                BedrockComponentLifetimeLooping component = (BedrockComponentLifetimeLooping) this.component;
 
-				component.sleepTime = this.parse(str, this.expiration, component.sleepTime);
-			}
-			else
-			{
-				BedrockComponentLifetimeExpression component = (BedrockComponentLifetimeExpression) this.component;
+                component.sleepTime = this.parse(str, this.expiration, component.sleepTime);
+            }
+            else
+            {
+                BedrockComponentLifetimeExpression component = (BedrockComponentLifetimeExpression) this.component;
 
-				component.expiration = this.parse(str, this.expiration, component.expiration);
-			}
+                component.expiration = this.parse(str, this.expiration, component.expiration);
+            }
 
-			this.parent.dirty();
-		});
-		this.expiration.tooltip(IKey.lang(""));
+            this.parent.dirty();
+        });
+        this.expiration.tooltip(IKey.lang(""));
 
-		this.fields.add(this.active);
-	}
+        this.fields.add(this.active);
+    }
 
-	@Override
-	public String getTitle()
-	{
-		return "blockbuster.gui.snowstorm.lifetime.title";
-	}
+    @Override
+    public String getTitle()
+    {
+        return "blockbuster.gui.snowstorm.lifetime.title";
+    }
 
-	@Override
-	protected void fillModes(GuiCirculateElement button)
-	{
-		button.addLabel(IKey.lang("blockbuster.gui.snowstorm.lifetime.expression"));
-		button.addLabel(IKey.lang("blockbuster.gui.snowstorm.lifetime.looping"));
-		button.addLabel(IKey.lang("blockbuster.gui.snowstorm.lifetime.once"));
-	}
+    @Override
+    protected void fillModes(GuiCirculateElement button)
+    {
+        button.addLabel(IKey.lang("blockbuster.gui.snowstorm.lifetime.expression"));
+        button.addLabel(IKey.lang("blockbuster.gui.snowstorm.lifetime.looping"));
+        button.addLabel(IKey.lang("blockbuster.gui.snowstorm.lifetime.once"));
+    }
 
-	@Override
-	protected void restoreInfo(BedrockComponentLifetime component, BedrockComponentLifetime old)
-	{
-		component.activeTime = old.activeTime;
-	}
+    @Override
+    protected void restoreInfo(BedrockComponentLifetime component, BedrockComponentLifetime old)
+    {
+        component.activeTime = old.activeTime;
+    }
 
-	@Override
-	protected Class<BedrockComponentLifetime> getBaseClass()
-	{
-		return BedrockComponentLifetime.class;
-	}
+    @Override
+    protected Class<BedrockComponentLifetime> getBaseClass()
+    {
+        return BedrockComponentLifetime.class;
+    }
 
-	@Override
-	protected Class getDefaultClass()
-	{
-		return BedrockComponentLifetimeLooping.class;
-	}
+    @Override
+    protected Class getDefaultClass()
+    {
+        return BedrockComponentLifetimeLooping.class;
+    }
 
-	@Override
-	protected Class getModeClass(int value)
-	{
-		if (value == 0)
-		{
-			return BedrockComponentLifetimeExpression.class;
-		}
-		else if (value == 1)
-		{
-			return BedrockComponentLifetimeLooping.class;
-		}
+    @Override
+    protected Class getModeClass(int value)
+    {
+        if (value == 0)
+        {
+            return BedrockComponentLifetimeExpression.class;
+        }
+        else if (value == 1)
+        {
+            return BedrockComponentLifetimeLooping.class;
+        }
 
-		return BedrockComponentLifetimeOnce.class;
-	}
+        return BedrockComponentLifetimeOnce.class;
+    }
 
-	@Override
-	protected void fillData()
-	{
-		super.fillData();
+    @Override
+    protected void fillData()
+    {
+        super.fillData();
 
-		boolean once = this.component instanceof BedrockComponentLifetimeOnce;
+        boolean once = this.component instanceof BedrockComponentLifetimeOnce;
 
-		this.expiration.setVisible(!once);
+        this.expiration.setVisible(!once);
 
-		if (this.component instanceof BedrockComponentLifetimeExpression)
-		{
-			this.set(this.expiration, ((BedrockComponentLifetimeExpression) this.component).expiration);
-			this.expiration.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.expiration_expression");
+        if (this.component instanceof BedrockComponentLifetimeExpression)
+        {
+            this.set(this.expiration, ((BedrockComponentLifetimeExpression) this.component).expiration);
+            this.expiration.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.expiration_expression");
 
-			this.active.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.active_expression");
-		}
-		else if (this.component instanceof BedrockComponentLifetimeLooping)
-		{
-			this.set(this.expiration, ((BedrockComponentLifetimeLooping) this.component).sleepTime);
-			this.expiration.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.sleep_time");
+            this.active.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.active_expression");
+        }
+        else if (this.component instanceof BedrockComponentLifetimeLooping)
+        {
+            this.set(this.expiration, ((BedrockComponentLifetimeLooping) this.component).sleepTime);
+            this.expiration.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.sleep_time");
 
-			this.active.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.active_looping");
-		}
-		else
-		{
-			this.active.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.active_once");
-		}
+            this.active.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.active_looping");
+        }
+        else
+        {
+            this.active.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.active_once");
+        }
 
-		this.set(this.active, this.component.activeTime);
-		this.expiration.removeFromParent();
+        this.set(this.active, this.component.activeTime);
+        this.expiration.removeFromParent();
 
-		if (!once)
-		{
-			this.fields.add(this.expiration);
-		}
+        if (!once)
+        {
+            this.fields.add(this.expiration);
+        }
 
-		this.resizeParent();
-	}
+        this.resizeParent();
+    }
 }

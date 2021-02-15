@@ -16,164 +16,164 @@ import java.util.Map;
 
 public class AudioLibrary
 {
-	public File folder;
-	public Map<String, AudioFile> files = new HashMap<String, AudioFile>();
+    public File folder;
+    public Map<String, AudioFile> files = new HashMap<String, AudioFile>();
 
-	public AudioLibrary(File folder)
-	{
-		this.folder = folder;
-		this.folder.mkdirs();
-	}
+    public AudioLibrary(File folder)
+    {
+        this.folder = folder;
+        this.folder.mkdirs();
+    }
 
-	public List<File> getFiles()
-	{
-		File[] files = this.folder.listFiles();
+    public List<File> getFiles()
+    {
+        File[] files = this.folder.listFiles();
 
-		if (files == null)
-		{
-			return Collections.emptyList();
-		}
+        if (files == null)
+        {
+            return Collections.emptyList();
+        }
 
-		List<File> list = new ArrayList<File>();
+        List<File> list = new ArrayList<File>();
 
-		for (File file : files)
-		{
-			if (!file.getName().endsWith(".wav"))
-			{
-				continue;
-			}
+        for (File file : files)
+        {
+            if (!file.getName().endsWith(".wav"))
+            {
+                continue;
+            }
 
-			list.add(file);
-		}
+            list.add(file);
+        }
 
-		return list;
-	}
+        return list;
+    }
 
-	public List<String> getFileNames()
-	{
-		List<String> list = new ArrayList<String>();
+    public List<String> getFileNames()
+    {
+        List<String> list = new ArrayList<String>();
 
-		for (File file : this.getFiles())
-		{
-			String name = file.getName();
+        for (File file : this.getFiles())
+        {
+            String name = file.getName();
 
-			list.add(name.substring(0, name.length() - 4));
-		}
+            list.add(name.substring(0, name.length() - 4));
+        }
 
-		return list;
-	}
+        return list;
+    }
 
-	private AudioFile load(String name, File file)
-	{
-		if (!file.isFile())
-		{
-			return null;
-		}
+    private AudioFile load(String name, File file)
+    {
+        if (!file.isFile())
+        {
+            return null;
+        }
 
-		AudioFile audio;
+        AudioFile audio;
 
-		try
-		{
-			Wave wave = new WaveReader().read(new FileInputStream(file));
+        try
+        {
+            Wave wave = new WaveReader().read(new FileInputStream(file));
 
-			if (wave.getBytesPerSample() > 2)
-			{
-				wave = wave.convertTo16();
-			}
+            if (wave.getBytesPerSample() > 2)
+            {
+                wave = wave.convertTo16();
+            }
 
-			WavePlayer player = new WavePlayer().initialize(wave);
-			Waveform waveform = new Waveform();
-			waveform.populate(wave, Blockbuster.audioWaveformDensity.get(), 40);
+            WavePlayer player = new WavePlayer().initialize(wave);
+            Waveform waveform = new Waveform();
+            waveform.populate(wave, Blockbuster.audioWaveformDensity.get(), 40);
 
-			audio = new AudioFile(name + ".wav", file, player, waveform, file.lastModified());
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
+            audio = new AudioFile(name + ".wav", file, player, waveform, file.lastModified());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
 
-			/* Empty */
-			audio = new AudioFile(name + ".wav", file, null, null, file.lastModified());
-		}
+            /* Empty */
+            audio = new AudioFile(name + ".wav", file, null, null, file.lastModified());
+        }
 
-		this.files.put(name, audio);
+        this.files.put(name, audio);
 
-		return audio;
-	}
+        return audio;
+    }
 
-	public boolean play(String audio, AudioState state, int shift)
-	{
-		AudioFile file = this.files.get(audio);
+    public boolean play(String audio, AudioState state, int shift)
+    {
+        AudioFile file = this.files.get(audio);
 
-		if (file == null || file.canBeUpdated())
-		{
-			file = this.load(audio, new File(this.folder, audio + ".wav"));
-		}
+        if (file == null || file.canBeUpdated())
+        {
+            file = this.load(audio, new File(this.folder, audio + ".wav"));
+        }
 
-		if (file == null || file.isEmpty())
-		{
-			return false;
-		}
+        if (file == null || file.isEmpty())
+        {
+            return false;
+        }
 
-		WavePlayer player = file.player;
+        WavePlayer player = file.player;
 
-		float seconds = shift / 20F;
+        float seconds = shift / 20F;
 
-		if (state == AudioState.REWIND)
-		{
-			player.stop();
-			player.play();
-			player.setPlaybackPosition(seconds);
-		}
-		else if (state == AudioState.PAUSE)
-		{
-			player.pause();
-		}
-		else if (state == AudioState.PAUSE_SET)
-		{
-			if (player.isStopped())
-			{
-				player.play();
-			}
+        if (state == AudioState.REWIND)
+        {
+            player.stop();
+            player.play();
+            player.setPlaybackPosition(seconds);
+        }
+        else if (state == AudioState.PAUSE)
+        {
+            player.pause();
+        }
+        else if (state == AudioState.PAUSE_SET)
+        {
+            if (player.isStopped())
+            {
+                player.play();
+            }
 
-			player.pause();
-			player.setPlaybackPosition(seconds);
-		}
-		else if (state == AudioState.RESUME)
-		{
-			player.play();
-		}
-		else if (state == AudioState.RESUME_SET)
-		{
-			player.play();
-			player.setPlaybackPosition(seconds);
-		}
-		else if (state == AudioState.SET)
-		{
-			player.setPlaybackPosition(seconds);
-		}
-		else if (state == AudioState.STOP)
-		{
-			player.stop();
-		}
+            player.pause();
+            player.setPlaybackPosition(seconds);
+        }
+        else if (state == AudioState.RESUME)
+        {
+            player.play();
+        }
+        else if (state == AudioState.RESUME_SET)
+        {
+            player.play();
+            player.setPlaybackPosition(seconds);
+        }
+        else if (state == AudioState.SET)
+        {
+            player.setPlaybackPosition(seconds);
+        }
+        else if (state == AudioState.STOP)
+        {
+            player.stop();
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public void reset()
-	{
-		for (AudioFile file : this.files.values())
-		{
-			file.delete();
-		}
+    public void reset()
+    {
+        for (AudioFile file : this.files.values())
+        {
+            file.delete();
+        }
 
-		this.files.clear();
-	}
+        this.files.clear();
+    }
 
-	public void pause(boolean pause)
-	{
-		for (AudioFile file : this.files.values())
-		{
-			file.pause(pause);
-		}
-	}
+    public void pause(boolean pause)
+    {
+        for (AudioFile file : this.files.values())
+        {
+            file.pause(pause);
+        }
+    }
 }

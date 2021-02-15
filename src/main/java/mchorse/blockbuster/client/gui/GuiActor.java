@@ -13,55 +13,55 @@ import net.minecraft.client.resources.I18n;
 
 public class GuiActor extends GuiBase
 {
-	public GuiMorphRenderer renderer;
-	public GuiButtonElement pick;
-	public GuiCreativeMorphsMenu morphs;
+    public GuiMorphRenderer renderer;
+    public GuiButtonElement pick;
+    public GuiCreativeMorphsMenu morphs;
 
-	private EntityActor actor;
+    private EntityActor actor;
 
-	public GuiActor(Minecraft mc, EntityActor actor)
-	{
-		this.actor = actor;
+    public GuiActor(Minecraft mc, EntityActor actor)
+    {
+        this.actor = actor;
 
-		this.renderer = new GuiMorphRenderer(mc);
-		this.renderer.morph = actor.morph.get();
-		this.renderer.flex().reset().relative(this.viewport).wh(1F, 1F);
+        this.renderer = new GuiMorphRenderer(mc);
+        this.renderer.morph = actor.morph.get();
+        this.renderer.flex().reset().relative(this.viewport).wh(1F, 1F);
 
-		this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (button) ->
-		{
-			this.morphs.resize();
-			this.morphs.setSelected(this.renderer.morph);
-			this.root.add(this.morphs);
-		});
-		this.pick.flex().relative(this.viewport).x(0.5F).y(1F, -10).w(100).anchor(0.5F, 1F);
+        this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (button) ->
+        {
+            this.morphs.resize();
+            this.morphs.setSelected(this.renderer.morph);
+            this.root.add(this.morphs);
+        });
+        this.pick.flex().relative(this.viewport).x(0.5F).y(1F, -10).w(100).anchor(0.5F, 1F);
 
-		this.morphs = new GuiCreativeMorphsMenu(mc, (morph) -> this.renderer.morph = morph);
-		this.morphs.flex().reset().relative(this.viewport).wh(1F, 1F);
+        this.morphs = new GuiCreativeMorphsMenu(mc, (morph) -> this.renderer.morph = morph);
+        this.morphs.flex().reset().relative(this.viewport).wh(1F, 1F);
 
-		this.root.add(this.renderer, this.pick);
-	}
+        this.root.add(this.renderer, this.pick);
+    }
 
-	@Override
-	public boolean doesGuiPauseGame()
-	{
-		return false;
-	}
+    @Override
+    public boolean doesGuiPauseGame()
+    {
+        return false;
+    }
 
-	@Override
-	protected void closeScreen()
-	{
-		this.actor.morph.setDirect(this.renderer.morph);
-		Dispatcher.sendToServer(new PacketModifyActor(this.actor));
+    @Override
+    protected void closeScreen()
+    {
+        this.actor.morph.setDirect(this.renderer.morph);
+        Dispatcher.sendToServer(new PacketModifyActor(this.actor));
 
-		super.closeScreen();
-	}
+        super.closeScreen();
+    }
 
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks)
-	{
-		this.drawDefaultBackground();
-		this.drawCenteredString(this.context.font, I18n.format("blockbuster.gui.actor.title"), this.width / 2, 16, 0xffffff);
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+        this.drawDefaultBackground();
+        this.drawCenteredString(this.context.font, I18n.format("blockbuster.gui.actor.title"), this.width / 2, 16, 0xffffff);
 
-		super.drawScreen(mouseX, mouseY, partialTicks);
-	}
+        super.drawScreen(mouseX, mouseY, partialTicks);
+    }
 }

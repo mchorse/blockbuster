@@ -4,5 +4,5 @@ import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 
 public interface IComponentEmitterInitialize extends IComponentBase
 {
-	public void apply(BedrockEmitter emitter);
+    public void apply(BedrockEmitter emitter);
 }

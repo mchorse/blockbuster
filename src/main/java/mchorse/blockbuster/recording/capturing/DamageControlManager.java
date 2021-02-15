@@ -18,61 +18,61 @@ import java.util.Map;
  */
 public class DamageControlManager
 {
-	/**
-	 * Damage control objects
-	 */
-	public Map<Object, DamageControl> damage = new HashMap<Object, DamageControl>();
+    /**
+     * Damage control objects
+     */
+    public Map<Object, DamageControl> damage = new HashMap<Object, DamageControl>();
 
-	public void reset()
-	{
-		this.damage.clear();
-	}
+    public void reset()
+    {
+        this.damage.clear();
+    }
 
-	/**
-	 * Start observing damage made to terrain
-	 */
-	public void addDamageControl(Object object, EntityLivingBase player)
-	{
-		if (Blockbuster.damageControl.get())
-		{
-			int dist = Blockbuster.damageControlDistance.get();
+    /**
+     * Start observing damage made to terrain
+     */
+    public void addDamageControl(Object object, EntityLivingBase player)
+    {
+        if (Blockbuster.damageControl.get())
+        {
+            int dist = Blockbuster.damageControlDistance.get();
 
-			this.damage.put(object, new DamageControl(player, dist));
-		}
-	}
+            this.damage.put(object, new DamageControl(player, dist));
+        }
+    }
 
-	/**
-	 * Restore made damage
-	 */
-	public void restoreDamageControl(Object object, World world)
-	{
-		DamageControl control = this.damage.remove(object);
+    /**
+     * Restore made damage
+     */
+    public void restoreDamageControl(Object object, World world)
+    {
+        DamageControl control = this.damage.remove(object);
 
-		if (control != null)
-		{
-			control.apply(world);
-		}
-	}
+        if (control != null)
+        {
+            control.apply(world);
+        }
+    }
 
-	/**
-	 * Add an entity to track
-	 */
-	public void addEntity(Entity entity)
-	{
-		for (DamageControl damage : this.damage.values())
-		{
-			damage.entities.add(entity);
-		}
-	}
+    /**
+     * Add an entity to track
+     */
+    public void addEntity(Entity entity)
+    {
+        for (DamageControl damage : this.damage.values())
+        {
+            damage.entities.add(entity);
+        }
+    }
 
-	/**
-	 * Add a block to track
-	 */
-	public void addBlock(BlockPos pos, IBlockState oldState, World worldIn)
-	{
-		for (DamageControl damage : CommonProxy.damage.damage.values())
-		{
-			damage.addBlock(new BlockPos(pos), oldState, worldIn);
-		}
-	}
+    /**
+     * Add a block to track
+     */
+    public void addBlock(BlockPos pos, IBlockState oldState, World worldIn)
+    {
+        for (DamageControl damage : CommonProxy.damage.damage.values())
+        {
+            damage.addBlock(new BlockPos(pos), oldState, worldIn);
+        }
+    }
 }

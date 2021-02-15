@@ -6,15 +6,15 @@ import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 
 public class BedrockComponentAppearanceLighting extends BedrockComponentBase implements IComponentEmitterInitialize
 {
-	@Override
-	public void apply(BedrockEmitter emitter)
-	{
-		emitter.lit = false;
-	}
+    @Override
+    public void apply(BedrockEmitter emitter)
+    {
+        emitter.lit = false;
+    }
 
-	@Override
-	public boolean canBeEmpty()
-	{
-		return true;
-	}
+    @Override
+    public boolean canBeEmpty()
+    {
+        return true;
+    }
 }

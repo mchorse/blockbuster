@@ -182,13 +182,13 @@ public class CameraHandler
 
     @SideOnly(Side.CLIENT)
     @Method(modid = Aperture.MOD_ID)
-	public static void attach(SceneLocation location, List<String> scenes)
+    public static void attach(SceneLocation location, List<String> scenes)
     {
         GuiPlayback playback = new GuiPlayback();
 
         playback.setLocation(location, scenes);
         Minecraft.getMinecraft().displayGuiScreen(playback);
-	}
+    }
 
     public static boolean isCameraEditorOpen()
     {
@@ -208,7 +208,7 @@ public class CameraHandler
     }
 
     @SideOnly(Side.CLIENT)
-	public static float getRoll()
+    public static float getRoll()
     {
         if (isApertureLoaded())
         {
@@ -216,7 +216,7 @@ public class CameraHandler
         }
 
         return 0;
-	}
+    }
 
     @SideOnly(Side.CLIENT)
     public static float getRoll(float partialTicks)
