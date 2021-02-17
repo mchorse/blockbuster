@@ -84,7 +84,7 @@ public class ModelPack
         this.folders.clear();
         this.addFolder(new File(CommonProxy.configFile, "models"));
 
-        if (Blockbuster.modelFolderPath != null && !Blockbuster.modelFolderPath.get().equalsIgnoreCase(""))
+        if (Blockbuster.modelFolderPath != null && !Blockbuster.modelFolderPath.get().isEmpty())
         {
             this.addFolder(new File(Blockbuster.modelFolderPath.get()));
         }
