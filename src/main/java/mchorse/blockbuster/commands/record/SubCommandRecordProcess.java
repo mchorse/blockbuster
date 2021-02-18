@@ -1,11 +1,11 @@
 package mchorse.blockbuster.commands.record;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.commands.SubCommandBase;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.L10n;
+import mchorse.mclib.commands.SubCommandBase;
 import mchorse.mclib.math.IValue;
 import mchorse.mclib.math.MathBuilder;
 import mchorse.mclib.math.Variable;
@@ -113,12 +113,12 @@ public class SubCommandRecordProcess extends SubCommandRecordBase
         {
             RecordUtils.saveRecord(record);
 
-            L10n.success(sender, "record.process", filename, property, start, end);
+            Blockbuster.l10n.success(sender, "record.process", filename, property, start, end);
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            L10n.error(sender, "record.couldnt_save", args[1]);
+            Blockbuster.l10n.error(sender, "record.couldnt_save", args[1]);
         }
     }
 

@@ -1,9 +1,9 @@
 package mchorse.blockbuster.commands.modelblock;
 
-import mchorse.blockbuster.commands.SubCommandBase;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
+import mchorse.mclib.commands.SubCommandBase;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.command.CommandException;

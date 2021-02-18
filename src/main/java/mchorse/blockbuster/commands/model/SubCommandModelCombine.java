@@ -1,7 +1,7 @@
 package mchorse.blockbuster.commands.model;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.TextureUtils;
 import mchorse.mclib.utils.files.GlobalTree;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
@@ -61,7 +61,7 @@ public class SubCommandModelCombine extends CommandBase
 
         if (entries.isEmpty())
         {
-            L10n.error(sender, "commands.combining_empty", toExport.size());
+            Blockbuster.l10n.error(sender, "commands.combining_empty", toExport.size());
             return;
         }
 
@@ -69,11 +69,11 @@ public class SubCommandModelCombine extends CommandBase
 
         if (toExport.isEmpty())
         {
-            L10n.error(sender, "commands.combining_folders_empty", toExport.size());
+            Blockbuster.l10n.error(sender, "commands.combining_folders_empty", toExport.size());
             return;
         }
 
-        L10n.info(sender, "commands.started_combining", toExport.size());
+        Blockbuster.l10n.info(sender, "commands.started_combining", toExport.size());
 
         try
         {
@@ -150,7 +150,7 @@ public class SubCommandModelCombine extends CommandBase
                     folder.mkdirs();
                     ImageIO.write(image, "png", file);
 
-                    L10n.info(this.sender, "commands.combined", i);
+                    Blockbuster.l10n.info(this.sender, "commands.combined", i);
 
                     Thread.sleep(50);
                 }
@@ -160,7 +160,7 @@ public class SubCommandModelCombine extends CommandBase
                 i += 1;
             }
 
-            L10n.info(this.sender, "commands.finished_combining");
+            Blockbuster.l10n.info(this.sender, "commands.finished_combining");
         }
     }
 }

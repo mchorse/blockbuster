@@ -1,11 +1,6 @@
 package mchorse.blockbuster.recording;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
@@ -14,15 +9,19 @@ import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketRequestedFrames;
 import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utilities methods mostly to be used with recording code. Stuff like
@@ -68,7 +67,7 @@ public class RecordUtils
     {
         for (EntityPlayerMP player : getPlayers())
         {
-            L10n.error(player, string, objects);
+            Blockbuster.l10n.error(player, string, objects);
         }
     }
 
@@ -81,7 +80,7 @@ public class RecordUtils
     {
         for (EntityPlayerMP player : getPlayers())
         {
-            L10n.info(player, string, objects);
+            Blockbuster.l10n.info(player, string, objects);
         }
     }
 
@@ -165,12 +164,12 @@ public class RecordUtils
             }
             catch (FileNotFoundException e)
             {
-                L10n.error(player, "recording.not_found", filename);
+                Blockbuster.l10n.error(player, "recording.not_found", filename);
                 record = null;
             }
             catch (Exception e)
             {
-                L10n.error(player, "recording.read", filename);
+                Blockbuster.l10n.error(player, "recording.read", filename);
                 e.printStackTrace();
                 record = null;
             }
@@ -199,7 +198,7 @@ public class RecordUtils
         }
         else if (record == null)
         {
-            L10n.error(player, "recording.not_found", filename);
+            Blockbuster.l10n.error(player, "recording.not_found", filename);
         }
     }
 

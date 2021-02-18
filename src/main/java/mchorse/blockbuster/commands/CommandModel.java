@@ -8,6 +8,7 @@ import mchorse.blockbuster.commands.model.SubCommandModelExport;
 import mchorse.blockbuster.commands.model.SubCommandModelExportObj;
 import mchorse.blockbuster.commands.model.SubCommandModelReload;
 import mchorse.blockbuster.commands.model.SubCommandModelReport;
+import mchorse.mclib.commands.SubCommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 

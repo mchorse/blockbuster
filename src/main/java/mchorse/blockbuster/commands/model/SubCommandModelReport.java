@@ -6,7 +6,6 @@ import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderJSON;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderOBJ;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderVOX;
-import mchorse.blockbuster.utils.L10n;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -52,7 +51,7 @@ public class SubCommandModelReport extends CommandBase
 
         GuiScreen.setClipboardString(output.toString().trim());
 
-        L10n.success(sender, "commands.model_report");
+        Blockbuster.l10n.success(sender, "commands.model_report");
     }
 
     private void processRecursively(StringBuilder output, File root, File models, String prefix, String indent, boolean isModel)

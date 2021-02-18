@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.scene;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
@@ -15,7 +16,6 @@ import mchorse.blockbuster.network.common.scene.PacketSceneTeleport;
 import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.blockbuster.recording.scene.SceneLocation;
-import mchorse.blockbuster.utils.L10n;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -30,7 +30,6 @@ import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
-import mchorse.mclib.client.gui.mclib.GuiAbstractDashboard;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.GuiUtils;
@@ -522,7 +521,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
 
         if (this.replay.id.isEmpty())
         {
-            L10n.error(player, "recording.fill_filename");
+            Blockbuster.l10n.error(player, "recording.fill_filename");
 
             return;
         }
@@ -534,7 +533,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)));
         component.getStyle().setColor(TextFormatting.GRAY).setUnderlined(true);
 
-        L10n.info(player, "recording.message", this.replay.id, component);
+        Blockbuster.l10n.info(player, "recording.message", this.replay.id, component);
 
         /* Add the command to the history */
         List<String> messages = this.mc.ingameGUI.getChatGUI().getSentMessages();

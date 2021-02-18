@@ -1,9 +1,9 @@
 package mchorse.blockbuster.commands;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.recording.scene.Scene;
-import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -53,7 +53,7 @@ public class CommandScene extends CommandBase
 
         if (scene == null)
         {
-            L10n.error(sender, "scene.no_scene", name);
+            Blockbuster.l10n.error(sender, "scene.no_scene", name);
             return;
         }
 
@@ -64,23 +64,23 @@ public class CommandScene extends CommandBase
         {
             if (scene.playing)
             {
-                L10n.error(sender, "scene.playing", name);
+                Blockbuster.l10n.error(sender, "scene.playing", name);
                 return;
             }
 
             scene.startPlayback(0);
-            L10n.success(sender, play, name);
+            Blockbuster.l10n.success(sender, play, name);
         }
         else if (action.equals("stop"))
         {
             if (!scene.playing)
             {
-                L10n.error(sender, "scene.stopped", name);
+                Blockbuster.l10n.error(sender, "scene.stopped", name);
                 return;
             }
 
             scene.stopPlayback(true);
-            L10n.success(sender, stop, name);
+            Blockbuster.l10n.success(sender, stop, name);
         }
         else if (action.equals("loop") && args.length >= 2)
         {
@@ -90,7 +90,7 @@ public class CommandScene extends CommandBase
             {
                 CommonProxy.scenes.save(scene.getId(), scene);
 
-                L10n.info(sender, "scene." + (scene.loops ? "looped" : "unlooped"));
+                Blockbuster.l10n.info(sender, "scene." + (scene.loops ? "looped" : "unlooped"));
             }
             catch (Exception e)
             {}
@@ -98,7 +98,7 @@ public class CommandScene extends CommandBase
         else if (action.equals("toggle"))
         {
             boolean isPlaying = scene.togglePlayback();
-            L10n.success(sender, isPlaying ? play : stop, name);
+            Blockbuster.l10n.success(sender, isPlaying ? play : stop, name);
         }
     }
 

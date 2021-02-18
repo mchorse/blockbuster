@@ -1,10 +1,10 @@
 package mchorse.blockbuster.commands.record;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -46,12 +46,12 @@ public class SubCommandRecordRename extends SubCommandRecordBase
 
             CommonProxy.manager.rename(args[0], record);
 
-            L10n.success(sender, "record.renamed", args[0], args[1]);
+            Blockbuster.l10n.success(sender, "record.renamed", args[0], args[1]);
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            L10n.error(sender, "record.couldnt_save", args[1]);
+            Blockbuster.l10n.error(sender, "record.couldnt_save", args[1]);
         }
     }
 }

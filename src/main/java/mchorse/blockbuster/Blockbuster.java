@@ -11,6 +11,7 @@ import mchorse.blockbuster.utils.mclib.ValueAudioButtons;
 import mchorse.blockbuster.utils.mclib.ValueMainButtons;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.McLib;
+import mchorse.mclib.commands.utils.L10n;
 import mchorse.mclib.config.ConfigBuilder;
 import mchorse.mclib.config.values.ValueBoolean;
 import mchorse.mclib.config.values.ValueFloat;
@@ -141,6 +142,8 @@ public class Blockbuster
     public static CommonProxy proxy;
 
     public static Logger LOGGER;
+
+    public static L10n l10n = new L10n(MOD_ID);
 
     /* Configuration */
     public static ValueBoolean generalFirstTime;

@@ -2,6 +2,7 @@ package mchorse.blockbuster.commands;
 
 import mchorse.blockbuster.commands.modelblock.SubCommandModelBlockMorph;
 import mchorse.blockbuster.commands.modelblock.SubCommandModelBlockProperty;
+import mchorse.mclib.commands.SubCommandBase;
 
 public class CommandModelBlock extends SubCommandBase
 {

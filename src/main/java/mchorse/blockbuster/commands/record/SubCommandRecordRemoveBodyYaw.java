@@ -1,10 +1,10 @@
 package mchorse.blockbuster.commands.record;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -45,6 +45,6 @@ public class SubCommandRecordRemoveBodyYaw extends SubCommandRecordBase
 
         RecordUtils.dirtyRecord(record);
 
-        L10n.success(sender, "record.remove_body_yaw", filename);
+        Blockbuster.l10n.success(sender, "record.remove_body_yaw", filename);
     }
 }

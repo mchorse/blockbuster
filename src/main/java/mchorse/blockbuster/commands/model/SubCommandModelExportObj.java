@@ -6,7 +6,6 @@ import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExporterOBJ;
-import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResource;
@@ -89,12 +88,12 @@ public class SubCommandModelExportObj extends CommandBase
         {
             FileUtils.writeStringToFile(destination, obj, Charset.defaultCharset());
 
-            L10n.success(sender, "model.export.obj", modelName);
+            Blockbuster.l10n.success(sender, "model.export.obj", modelName);
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            L10n.error(sender, "model.export.obj", modelName);
+            Blockbuster.l10n.error(sender, "model.export.obj", modelName);
         }
     }
 

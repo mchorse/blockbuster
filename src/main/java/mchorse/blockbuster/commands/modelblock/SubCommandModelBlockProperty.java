@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
+import mchorse.mclib.commands.McCommandBase;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -75,7 +76,7 @@ public class SubCommandModelBlockProperty extends SubCommandModelBlockBase
 
             if (property.equals("enabled"))
             {
-                return getListOfStringsMatchingLastWord(args, BOOLEANS);
+                return getListOfStringsMatchingLastWord(args, McCommandBase.BOOLEANS);
             }
         }
 

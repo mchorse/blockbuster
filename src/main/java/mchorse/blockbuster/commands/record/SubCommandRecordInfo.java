@@ -1,8 +1,8 @@
 package mchorse.blockbuster.commands.record;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -38,6 +38,6 @@ public class SubCommandRecordInfo extends SubCommandRecordBase
         String filename = args[0];
         Record record = CommandRecord.getRecord(filename);
 
-        L10n.info(sender, "record.info", args[0], record.version, record.frames.size(), record.unload);
+        Blockbuster.l10n.info(sender, "record.info", args[0], record.version, record.frames.size(), record.unload);
     }
 }

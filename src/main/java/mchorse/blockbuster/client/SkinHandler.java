@@ -1,8 +1,8 @@
 package mchorse.blockbuster.client;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.CommonProxy;
-import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.Minecraft;
 import org.apache.commons.io.FilenameUtils;
 
@@ -120,7 +120,7 @@ public class SkinHandler
 
             if (moved)
             {
-                L10n.success(Minecraft.getMinecraft().player, "model.skin_moved", name, "blockbuster." + folder, file.getName());
+                Blockbuster.l10n.success(Minecraft.getMinecraft().player, "model.skin_moved", name, "blockbuster." + folder, file.getName());
             }
         }
     }

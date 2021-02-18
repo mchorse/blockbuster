@@ -1,6 +1,6 @@
 package mchorse.blockbuster.commands;
 
-import mchorse.blockbuster.utils.L10n;
+import mchorse.blockbuster.Blockbuster;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.command.CommandBase;
@@ -47,7 +47,7 @@ public class CommandItemNBT extends CommandBase
 
         if (stack.isEmpty())
         {
-            L10n.error(sender, "commands.item_nbt_empty");
+            Blockbuster.l10n.error(sender, "commands.item_nbt_empty");
 
             return;
         }
@@ -74,7 +74,7 @@ public class CommandItemNBT extends CommandBase
         }
 
         GuiScreen.setClipboardString(output);
-        L10n.success(sender, "commands.item_nbt");
+        Blockbuster.l10n.success(sender, "commands.item_nbt");
     }
 
     @Override

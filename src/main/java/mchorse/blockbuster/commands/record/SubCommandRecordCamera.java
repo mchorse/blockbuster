@@ -5,12 +5,12 @@ import mchorse.aperture.camera.CameraAPI;
 import mchorse.aperture.camera.CameraProfile;
 import mchorse.aperture.camera.CameraUtils;
 import mchorse.aperture.camera.data.Position;
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -62,12 +62,12 @@ public class SubCommandRecordCamera extends SubCommandRecordBase
             CommonProxy.manager.records.put(filename, record);
             RecordUtils.saveRecord(record);
 
-            L10n.success(sender, "record.camera", filename, args[1]);
+            Blockbuster.l10n.success(sender, "record.camera", filename, args[1]);
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            L10n.error(sender, "record.couldnt_save", filename);
+            Blockbuster.l10n.error(sender, "record.couldnt_save", filename);
         }
     }
 

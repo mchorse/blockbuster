@@ -1,8 +1,6 @@
 package mchorse.blockbuster.commands;
 
-import java.util.List;
-
-import mchorse.blockbuster.utils.L10n;
+import mchorse.blockbuster.Blockbuster;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.EntitySelector;
@@ -13,6 +11,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameType;
+
+import java.util.List;
 
 /**
  * Spectate entity command - /spectate &lt;player&gt; &lt;entity&gt;
@@ -46,7 +46,7 @@ public class CommandSpectate extends CommandBase
 
         if (player == null)
         {
-            L10n.error(sender, "commands.no_player", args[0]);
+            Blockbuster.l10n.error(sender, "commands.no_player", args[0]);
 
             return;
         }
@@ -55,7 +55,7 @@ public class CommandSpectate extends CommandBase
 
         if (entities.isEmpty())
         {
-            L10n.error(sender, "commands.no_entity", args[1]);
+            Blockbuster.l10n.error(sender, "commands.no_entity", args[1]);
 
             return;
         }
