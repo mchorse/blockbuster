@@ -32,6 +32,12 @@ public class SubCommandModelBlockProperty extends SubCommandModelBlockBase
     }
 
     @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}modelblock {8}property{r} {7}<x> <y> <z> <property:enabled> <value>{r}";
+    }
+
+    @Override
     public int getRequiredArgs()
     {
         return 5;

@@ -22,12 +22,6 @@ import java.util.List;
 public class SubCommandRecordOrigin extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 1;
-    }
-
-    @Override
     public String getName()
     {
         return "origin";
@@ -37,6 +31,12 @@ public class SubCommandRecordOrigin extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.origin";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}origin{r} {7}<filename> [rotation] [x] [y] [z]{r}";
     }
 
     @Override

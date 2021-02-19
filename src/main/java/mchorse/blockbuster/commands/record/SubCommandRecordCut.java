@@ -17,12 +17,6 @@ import java.util.List;
 public class SubCommandRecordCut extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 3;
-    }
-
-    @Override
     public String getName()
     {
         return "cut";
@@ -32,6 +26,18 @@ public class SubCommandRecordCut extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.cut";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}cut{r} {7}<filename> <before> <after>{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 3;
     }
 
     @Override

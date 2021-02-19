@@ -18,12 +18,6 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandRecordProlong extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 1;
-    }
-
-    @Override
     public String getName()
     {
         return "prolong";
@@ -33,6 +27,12 @@ public class SubCommandRecordProlong extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.prolong";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}prolong{r} {7}<filename> [post_delay] [pre_delay]{r}";
     }
 
     @Override

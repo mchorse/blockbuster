@@ -19,12 +19,6 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandRecordTP extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 1;
-    }
-
-    @Override
     public String getName()
     {
         return "tp";
@@ -34,6 +28,12 @@ public class SubCommandRecordTP extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.tp";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}tp{r} {7}<filename> [tick]{r}";
     }
 
     @Override

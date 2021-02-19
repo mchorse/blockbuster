@@ -17,12 +17,6 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandRecordReverse extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 1;
-    }
-
-    @Override
     public String getName()
     {
         return "reverse";
@@ -32,6 +26,12 @@ public class SubCommandRecordReverse extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.reverse";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}reverse{r} {7}<filename>{r}";
     }
 
     @Override

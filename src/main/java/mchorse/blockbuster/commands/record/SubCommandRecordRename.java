@@ -12,12 +12,6 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandRecordRename extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 2;
-    }
-
-    @Override
     public String getName()
     {
         return "rename";
@@ -27,6 +21,18 @@ public class SubCommandRecordRename extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.rename";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}rename{r} {7}<filename> <new_filename>{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 2;
     }
 
     @Override

@@ -141,12 +141,6 @@ public class SubCommandRecordClean extends SubCommandRecordBase
     }
 
     @Override
-    public int getRequiredArgs()
-    {
-        return 2;
-    }
-
-    @Override
     public String getName()
     {
         return "clean";
@@ -156,6 +150,18 @@ public class SubCommandRecordClean extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.clean";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}clean{r} {7}<filename> <property> [value] [from] [to]{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 2;
     }
 
     @Override

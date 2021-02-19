@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CommandItemNBT extends CommandBase
+public class CommandItemNBT extends BBCommandBase
 {
     @Override
     public String getName()
@@ -30,19 +30,26 @@ public class CommandItemNBT extends CommandBase
     }
 
     @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}item_nbt {7}<give_command>{r}";
+    }
+
+    @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender sender)
     {
         return true;
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public int getRequiredArgs()
     {
-        if (args.length < 1)
-        {
-            throw new WrongUsageException(this.getUsage(sender));
-        }
+        return 1;
+    }
 
+    @Override
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
         ItemStack stack = Minecraft.getMinecraft().player.getHeldItemMainhand();
 
         if (stack.isEmpty())
@@ -82,7 +89,7 @@ public class CommandItemNBT extends CommandBase
     {
         if (args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, "true", "false", "1", "0");
+            return getListOfStringsMatchingLastWord(args, BOOLEANS);
         }
 
         return super.getTabCompletions(server, sender, args, targetPos);

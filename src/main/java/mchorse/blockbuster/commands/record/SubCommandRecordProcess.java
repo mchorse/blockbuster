@@ -46,12 +46,6 @@ public class SubCommandRecordProcess extends SubCommandRecordBase
 }
 
     @Override
-    public int getRequiredArgs()
-    {
-        return 5;
-    }
-
-    @Override
     public String getName()
     {
         return "process";
@@ -61,6 +55,18 @@ public class SubCommandRecordProcess extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.process";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}process{r} {7}<filename> <property> <from> <to> <math>{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 5;
     }
 
     @Override

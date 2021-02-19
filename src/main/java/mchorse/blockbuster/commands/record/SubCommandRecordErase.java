@@ -18,12 +18,6 @@ import java.util.List;
 public class SubCommandRecordErase extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 3;
-    }
-
-    @Override
     public String getName()
     {
         return "erase";
@@ -33,6 +27,18 @@ public class SubCommandRecordErase extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.erase";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}erase{r} {7}<filename> <count> <from>{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 3;
     }
 
     @Override

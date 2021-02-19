@@ -16,11 +16,6 @@ import java.util.List;
 public class SubCommandRecordRestore extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs() {
-        return 2;
-    }
-
-    @Override
     public String getName()
     {
         return "restore";
@@ -30,6 +25,17 @@ public class SubCommandRecordRestore extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.restore";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}restore{r} {7}<filename> <iteration>{r}";
+    }
+
+    @Override
+    public int getRequiredArgs() {
+        return 2;
     }
 
     @Override

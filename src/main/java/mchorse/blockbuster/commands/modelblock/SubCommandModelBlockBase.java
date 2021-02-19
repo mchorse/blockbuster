@@ -1,23 +1,15 @@
 package mchorse.blockbuster.commands.modelblock;
 
-import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.commands.BBCommandBase;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.mclib.commands.McCommandBase;
-import mchorse.mclib.commands.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
-public abstract class SubCommandModelBlockBase extends McCommandBase
+public abstract class SubCommandModelBlockBase extends BBCommandBase
 {
-    @Override
-    public L10n getL10n()
-    {
-        return Blockbuster.l10n;
-    }
-
     @Override
     public int getRequiredArgs()
     {

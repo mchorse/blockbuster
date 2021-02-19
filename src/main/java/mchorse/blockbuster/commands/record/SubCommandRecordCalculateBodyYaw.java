@@ -17,12 +17,6 @@ import java.util.List;
 public class SubCommandRecordCalculateBodyYaw extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 1;
-    }
-
-    @Override
     public String getName()
     {
         return "calculate_body_yaw";
@@ -32,6 +26,12 @@ public class SubCommandRecordCalculateBodyYaw extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.calculate_body_yaw";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}calculate_body_yaw{r} {7}<filename>{r}";
     }
 
     @Override

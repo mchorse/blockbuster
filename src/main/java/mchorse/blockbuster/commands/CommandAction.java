@@ -1,5 +1,6 @@
 package mchorse.blockbuster.commands;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.commands.action.SubCommandActionAppend;
 import mchorse.blockbuster.commands.action.SubCommandActionClear;
 import mchorse.blockbuster.commands.action.SubCommandActionPlay;
@@ -8,10 +9,12 @@ import mchorse.blockbuster.commands.action.SubCommandActionRequest;
 import mchorse.blockbuster.commands.action.SubCommandActionStop;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.mclib.commands.SubCommandBase;
+import mchorse.mclib.commands.utils.L10n;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.world.World;
 
@@ -41,13 +44,19 @@ public class CommandAction extends SubCommandBase
     }
 
     @Override
+    public L10n getL10n()
+    {
+        return Blockbuster.l10n;
+    }
+
+    @Override
     public String getName()
     {
         return "action";
     }
 
     @Override
-    protected String getHelp()
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.action.help";
     }

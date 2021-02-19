@@ -6,13 +6,12 @@ import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExporterOBJ;
+import mchorse.blockbuster.commands.BBCommandBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResource;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import org.apache.commons.io.FileUtils;
@@ -23,7 +22,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.List;
 
-public class SubCommandModelExportObj extends CommandBase
+public class SubCommandModelExportObj extends BBCommandBase
 {
     @Override
     public String getName()
@@ -38,13 +37,20 @@ public class SubCommandModelExportObj extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public String getSyntax()
     {
-        if (args.length < 1)
-        {
-            throw new WrongUsageException(this.getUsage(sender));
-        }
+        return "{l}{6}/{r}model {8}export_obj{r} {7}<model_name> [pose]{r}";
+    }
 
+    @Override
+    public int getRequiredArgs()
+    {
+        return 1;
+    }
+
+    @Override
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
         String modelName = args[0];
         ModelCustom model = ModelCustom.MODELS.get(modelName);
 

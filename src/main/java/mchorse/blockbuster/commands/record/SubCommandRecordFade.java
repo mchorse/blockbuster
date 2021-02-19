@@ -20,12 +20,6 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandRecordFade extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 2;
-    }
-
-    @Override
     public String getName()
     {
         return "fade";
@@ -35,6 +29,18 @@ public class SubCommandRecordFade extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.fade";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}fade{r} {7}<filename> <fade_out>{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 2;
     }
 
     @Override

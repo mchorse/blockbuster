@@ -1,21 +1,19 @@
 package mchorse.blockbuster.commands.record;
 
-import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.commands.BBCommandBase;
 import mchorse.blockbuster.recording.RecordUtils;
-import mchorse.mclib.commands.McCommandBase;
-import mchorse.mclib.commands.utils.L10n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 
-public abstract class SubCommandRecordBase extends McCommandBase
+public abstract class SubCommandRecordBase extends BBCommandBase
 {
     @Override
-    public L10n getL10n()
+    public int getRequiredArgs()
     {
-        return Blockbuster.l10n;
+        return 1;
     }
 
     @Override

@@ -29,12 +29,6 @@ import java.util.List;
 public class SubCommandRecordCamera extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 2;
-    }
-
-    @Override
     public String getName()
     {
         return "camera";
@@ -44,6 +38,18 @@ public class SubCommandRecordCamera extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.camera";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}camera{r} {7}<filename> <camera_profile> [x] [y] [z]{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 2;
     }
 
     @Override

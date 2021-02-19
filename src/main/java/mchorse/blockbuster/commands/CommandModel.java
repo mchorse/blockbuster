@@ -1,5 +1,6 @@
 package mchorse.blockbuster.commands;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.commands.model.SubCommandModelClear;
 import mchorse.blockbuster.commands.model.SubCommandModelClearStructures;
 import mchorse.blockbuster.commands.model.SubCommandModelCombine;
@@ -9,6 +10,7 @@ import mchorse.blockbuster.commands.model.SubCommandModelExportObj;
 import mchorse.blockbuster.commands.model.SubCommandModelReload;
 import mchorse.blockbuster.commands.model.SubCommandModelReport;
 import mchorse.mclib.commands.SubCommandBase;
+import mchorse.mclib.commands.utils.L10n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
@@ -37,15 +39,27 @@ public class CommandModel extends SubCommandBase
     }
 
     @Override
+    public L10n getL10n()
+    {
+        return Blockbuster.l10n;
+    }
+
+    @Override
     public String getName()
     {
         return "model";
     }
 
     @Override
-    protected String getHelp()
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.model.help";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "";
     }
 
     @Override

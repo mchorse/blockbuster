@@ -18,12 +18,6 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandRecordDupe extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 2;
-    }
-
-    @Override
     public String getName()
     {
         return "dupe";
@@ -33,6 +27,18 @@ public class SubCommandRecordDupe extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.dupe";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 2;
     }
 
     @Override

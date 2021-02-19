@@ -15,12 +15,6 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandRecordInfo extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 1;
-    }
-
-    @Override
     public String getName()
     {
         return "info";
@@ -30,6 +24,12 @@ public class SubCommandRecordInfo extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.info";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}info{r} {7}<filename>{r}";
     }
 
     @Override

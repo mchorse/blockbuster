@@ -21,12 +21,6 @@ public class SubCommandRecordFlip extends SubCommandRecordBase
     public static List<String> ALLOWED_AXES = Arrays.asList("x", "z");
 
     @Override
-    public int getRequiredArgs()
-    {
-        return 3;
-    }
-
-    @Override
     public String getName()
     {
         return "flip";
@@ -36,6 +30,18 @@ public class SubCommandRecordFlip extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.flip";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}flip{r} {7}<filename> <axis:X|Z> <coordinate> [center]{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 3;
     }
 
     @Override

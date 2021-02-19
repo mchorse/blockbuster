@@ -1,11 +1,8 @@
 package mchorse.blockbuster.commands.record;
 
-import java.util.List;
-
-import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.metamorph.commands.CommandMorph;
 import net.minecraft.command.CommandBase;
@@ -14,6 +11,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.List;
 
 /**
  * Command /record add
@@ -24,12 +23,6 @@ import net.minecraft.util.math.BlockPos;
 public class SubCommandRecordAdd extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 3;
-    }
-
-    @Override
     public String getName()
     {
         return "add";
@@ -39,6 +32,18 @@ public class SubCommandRecordAdd extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.add";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}add{r} {7}<filename> <tick> <action_type> [data_tag]{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 3;
     }
 
     @Override

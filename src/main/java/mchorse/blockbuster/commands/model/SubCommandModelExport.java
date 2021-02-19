@@ -3,14 +3,13 @@ package mchorse.blockbuster.commands.model;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.client.model.parsing.ModelExporter;
+import mchorse.blockbuster.commands.BBCommandBase;
 import mchorse.metamorph.commands.CommandMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.command.server.CommandSummon;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -40,7 +39,7 @@ import java.util.List;
  *
  * This is attempt number two, and it's a successful attempt!
  */
-public class SubCommandModelExport extends CommandBase
+public class SubCommandModelExport extends BBCommandBase
 {
     @Override
     public String getName()
@@ -55,14 +54,21 @@ public class SubCommandModelExport extends CommandBase
     }
 
     @Override
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public String getSyntax()
     {
-        if (args.length < 1)
-        {
-            throw new WrongUsageException(this.getUsage(sender));
-        }
+        return "{l}{6}/{r}model {8}export{r} {7}<entity_name> [entity_tag]{r}";
+    }
 
+    @Override
+    public int getRequiredArgs()
+    {
+        return 1;
+    }
+
+    @Override
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
         /* Gather needed elements for exporter class */
         String type = args[0];
         Entity entity = EntityList.createEntityByIDFromName(new ResourceLocation(type), sender.getEntityWorld());

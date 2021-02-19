@@ -1,7 +1,5 @@
 package mchorse.blockbuster.commands.record;
 
-import java.util.List;
-
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Record;
@@ -9,6 +7,8 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+
+import java.util.List;
 
 /**
  * Command /record remove
@@ -19,12 +19,6 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandRecordRemove extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 2;
-    }
-
-    @Override
     public String getName()
     {
         return "remove";
@@ -34,6 +28,18 @@ public class SubCommandRecordRemove extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.remove";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}remove{r} {7}<filename> <tick> [index]{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 2;
     }
 
     @Override

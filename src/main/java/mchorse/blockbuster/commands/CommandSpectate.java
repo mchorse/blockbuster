@@ -20,7 +20,7 @@ import java.util.List;
  * This command allows to make given player a spectator of given entity. 
  * I don't know why it's useful, but I think this can be useful.
  */
-public class CommandSpectate extends CommandBase
+public class CommandSpectate extends BBCommandBase
 {
     @Override
     public String getName()
@@ -35,13 +35,20 @@ public class CommandSpectate extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public String getSyntax()
     {
-        if (args.length < 2)
-        {
-            throw new WrongUsageException(this.getUsage(sender));
-        }
+        return "{l}{6}/{r}spectate {8}<player>{r} {7}<entity>{r}";
+    }
 
+    @Override
+    public int getRequiredArgs()
+    {
+        return 2;
+    }
+
+    @Override
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
         EntityPlayerMP player = getPlayer(server, sender, args[0]);
 
         if (player == null)

@@ -27,6 +27,12 @@ public class SubCommandModelBlockMorph extends SubCommandModelBlockBase
     }
 
     @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}modelblock {8}morph{r} {7}<x> <y> <z> [morph_nbt]{r}";
+    }
+
+    @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         TileEntityModel model = this.getModelBlock(sender, args);
