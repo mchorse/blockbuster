@@ -95,11 +95,20 @@ public class SubCommandRecordCamera extends SubCommandRecordBase
         Position prev = new Position();
         Position position = new Position();
 
-        for (int i = 0, c = (int) camera.getDuration(); i <= c; i++)
+        int c = (int) camera.getDuration();
+
+        for (int i = 0; i <= c; i++)
         {
             Frame frame = new Frame();
 
-            camera.applyProfile(i, 0, position);
+            if (i == c)
+            {
+                camera.applyProfile(c - 1, 0.999F, position);
+            }
+            else
+            {
+                camera.applyProfile(i, 0, position);
+            }
 
             if (i == 0)
             {
