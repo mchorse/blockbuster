@@ -81,11 +81,9 @@ public class BlockModel extends Block implements ITileEntityProvider
         if (worldIn.isRemote && this.canOpenMenu(playerIn))
         {
             GuiHandler.open(playerIn, GuiHandler.MODEL_BLOCK, pos.getX(), pos.getY(), pos.getZ());
-
-            return true;
         }
 
-        return !worldIn.isRemote;
+        return true;
     }
 
     @SideOnly(Side.CLIENT)

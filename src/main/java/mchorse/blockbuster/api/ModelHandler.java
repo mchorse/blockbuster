@@ -103,5 +103,6 @@ public class ModelHandler
     public void onClientConnect(ClientConnectedToServerEvent event)
     {
         Blockbuster.proxy.loadModels(false);
+        Blockbuster.proxy.particles.reload();
     }
 }
