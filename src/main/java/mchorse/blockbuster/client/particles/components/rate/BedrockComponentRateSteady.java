@@ -66,11 +66,13 @@ public class BedrockComponentRateSteady extends BedrockComponentRate implements 
         {
             double particles = emitter.getAge(partialTicks) * this.spawnRate.get();
             double diff = particles - emitter.spawnedParticles;
-            double spawn = Math.ceil(diff);
+            double spawn = Math.round(diff);
 
             if (spawn > 0)
             {
                 emitter.setEmitterVariables(partialTicks);
+
+                double track = spawn;
 
                 for (int i = 0; i < spawn; i++)
                 {
@@ -78,9 +80,13 @@ public class BedrockComponentRateSteady extends BedrockComponentRate implements 
                     {
                         emitter.spawnParticle();
                     }
+                    else
+                    {
+                        track -= 1;
+                    }
                 }
 
-                emitter.spawnedParticles += spawn;
+                emitter.spawnedParticles += track;
             }
         }
     }

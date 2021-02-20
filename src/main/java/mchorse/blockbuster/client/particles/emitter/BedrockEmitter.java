@@ -34,6 +34,7 @@ public class BedrockEmitter
     public List<BedrockParticle> collidedParticles = new ArrayList<BedrockParticle>();
     public List<BedrockParticle> splitParticles = new ArrayList<BedrockParticle>();
     public Map<String, IValue> variables;
+    public Map<String, Double> initialValues = new HashMap<String, Double>();
 
     public EntityLivingBase target;
     public World world;
@@ -126,11 +127,21 @@ public class BedrockEmitter
 
     public void setScheme(BedrockScheme scheme)
     {
+        this.setScheme(scheme, null);
+    }
+
+    public void setScheme(BedrockScheme scheme, Map<String, String> variables)
+    {
         this.scheme = scheme;
 
         if (this.scheme == null)
         {
             return;
+        }
+
+        if (variables != null)
+        {
+            this.parseVariables(variables);
         }
 
         this.lit = true;
@@ -139,11 +150,6 @@ public class BedrockEmitter
 
         this.setupVariables();
         this.setEmitterVariables(0);
-
-        for (IComponentEmitterInitialize component : this.scheme.emitterInitializes)
-        {
-            component.apply(this);
-        }
     }
 
     /* Variable related code */
@@ -198,6 +204,16 @@ public class BedrockEmitter
 
     public void setEmitterVariables(float partialTicks)
     {
+        for (Map.Entry<String, Double> entry : this.initialValues.entrySet())
+        {
+            Variable var = this.scheme.parser.variables.get(entry.getKey());
+
+            if (var != null)
+            {
+                var.set(entry.getValue());
+            }
+        }
+
         if (this.varEmitterAge != null) this.varEmitterAge.set(this.getAge(partialTicks));
         if (this.varEmitterLifetime != null) this.varEmitterLifetime.set(this.lifetime / 20.0);
         if (this.varEmitterRandom1 != null) this.varEmitterRandom1.set(this.random1);
@@ -256,6 +272,11 @@ public class BedrockEmitter
         this.age = 0;
         this.spawnedParticles = 0;
         this.playing = true;
+
+        for (IComponentEmitterInitialize component : this.scheme.emitterInitializes)
+        {
+            component.apply(this);
+        }
     }
 
     public void stop()

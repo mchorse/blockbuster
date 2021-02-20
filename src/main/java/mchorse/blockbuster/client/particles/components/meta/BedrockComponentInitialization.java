@@ -8,7 +8,12 @@ import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangAssignment;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangMultiStatement;
+import mchorse.mclib.math.IValue;
+
+import java.util.Map;
 
 public class BedrockComponentInitialization extends BedrockComponentBase implements IComponentEmitterInitialize, IComponentEmitterUpdate
 {
@@ -47,8 +52,34 @@ public class BedrockComponentInitialization extends BedrockComponentBase impleme
     @Override
     public void apply(BedrockEmitter emitter)
     {
+        emitter.initialValues.clear();
+
         this.creation.get();
-        emitter.replaceVariables();
+
+        if (this.creation instanceof MolangMultiStatement)
+        {
+            MolangMultiStatement statement = (MolangMultiStatement) this.creation;
+
+            for (MolangExpression expression : statement.expressions)
+            {
+                if (expression instanceof MolangAssignment)
+                {
+                    MolangAssignment assignment = (MolangAssignment) expression;
+
+                    emitter.initialValues.put(assignment.variable.getName(), assignment.variable.get());
+                }
+            }
+        }
+
+        if (emitter.variables != null)
+        {
+            for (Map.Entry<String, IValue> entry : emitter.variables.entrySet())
+            {
+                emitter.initialValues.put(entry.getKey(), entry.getValue().get());
+            }
+        }
+
+        System.out.println(emitter.initialValues);
     }
 
     @Override
