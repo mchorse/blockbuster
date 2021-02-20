@@ -104,14 +104,14 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
             this.component.facing = GuiSnowstormAppearanceSection.SORTED_FACING_MODES[this.facingMode.getValue()];
             this.parent.dirty();
         });
-        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.direction_x"));
-        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.direction_y"));
-        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.direction_z"));
-        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.lookat_xyz"));
-        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.lookat_y"));
-        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.rotate_xyz"));
-        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.rotate_y"));
-        this.facingModeLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.cameraFacing.label"), 20).anchor(0, 0.5F);
+        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.direction_x"));
+        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.direction_y"));
+        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.direction_z"));
+        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.lookat_xyz"));
+        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.lookat_y"));
+        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.rotate_xyz"));
+        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.rotate_y"));
+        this.facingModeLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.label"), 20).anchor(0, 0.5F);
         
         this.sizeW = new GuiTextElement(mc, 10000, (str) -> this.component.sizeW = this.parse(str, this.sizeW, this.component.sizeW));
         this.sizeW.tooltip(IKey.lang(GUI_PATH +".width"));

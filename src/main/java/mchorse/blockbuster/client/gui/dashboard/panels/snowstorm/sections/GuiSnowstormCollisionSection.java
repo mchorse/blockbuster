@@ -45,13 +45,13 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 
         this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.enabled"), (b) -> this.parent.dirty());
         
-        this.realisticCollision = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.realisticCollision"), (b) ->
+        this.realisticCollision = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.realistic_collision"), (b) ->
         {
             this.component.realisticCollision = b.isToggled();
             this.parent.dirty();
         });
         
-        this.entityCollision = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.entityCollision"), (b) ->
+        this.entityCollision = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.entity_collision"), (b) ->
         {
             this.component.entityCollision = b.isToggled();
             this.parent.dirty();
@@ -88,10 +88,10 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 
             this.updateButtons = true;
         });
-        this.randomBounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.randomDirection"));
+        this.randomBounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.random_direction"));
         
-        this.preserveEnergy = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.preserveEnergy"), (b) -> this.parent.dirty());
-        this.preserveEnergy.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.preserveEnergy_tooltip"));
+        this.preserveEnergy = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.preserve_energy"), (b) -> this.parent.dirty());
+        this.preserveEnergy.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.preserve_energy_tooltip"));
         
         this.damp = new GuiTrackpadElement(mc, (value) ->
         {
@@ -114,14 +114,14 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
             this.component.splitParticleSpeedThreshold = value.floatValue();
             this.parent.dirty();
         });
-        this.splitParticleSpeedThreshold.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.splitParticle.speedThreshold"));
+        this.splitParticleSpeedThreshold.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.split_particle.speed_threshold"));
         
         this.splitParticle = new GuiTrackpadElement(mc, (value) ->
         {
             this.component.splitParticleCount = (int)Math.abs(value);
             this.parent.dirty();
         });
-        this.splitParticle.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.splitParticle.count"));
+        this.splitParticle.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.split_particle.count"));
         this.splitParticle.limit(0, 99);
         
         this.radius = new GuiTrackpadElement(mc, (value) ->
@@ -142,7 +142,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
             this.component.expirationDelay = this.parse(value, this.expirationDelay, this.component.expirationDelay);
             this.parent.dirty();
         });
-        this.expirationDelay.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.expirationDelay"));
+        this.expirationDelay.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.expiration_delay"));
         
         this.controlToggleElements = new GuiElement(mc);
         this.controlToggleElements.flex().column(4).stretch().vertical().height(4);
@@ -156,7 +156,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
         
         this.fields.add(this.controlToggleElements, this.drag, this.bounciness, this.randomBouncinessRow , this.radius, this.expire, this.expirationDelay);
         this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.collision.damping.title"), 20).anchor(0, 1F), this.damp, this.randomDamp);
-        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.collision.splitParticle.title"), 20).anchor(0, 1F), this.splitParticle,  this.splitParticleSpeedThreshold);
+        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.collision.split_particle.title"), 20).anchor(0, 1F), this.splitParticle,  this.splitParticleSpeedThreshold);
     }
 
     @Override
