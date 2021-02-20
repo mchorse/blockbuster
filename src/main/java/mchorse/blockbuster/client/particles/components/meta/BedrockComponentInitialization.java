@@ -78,8 +78,6 @@ public class BedrockComponentInitialization extends BedrockComponentBase impleme
                 emitter.initialValues.put(entry.getKey(), entry.getValue().get());
             }
         }
-
-        System.out.println(emitter.initialValues);
     }
 
     @Override

@@ -593,6 +593,8 @@ blockbuster.gui:
         delay: Delay
         projectiles: Projectiles
         scatter: Scatter
+        scatter_x: Horizontal scatter
+        scatter_y: Vertical scatter
         launch: Launch player
         ammo_stack: This option allows to specify an item, which will be consumed upon shooting. If there are no items of this kind and its count, when shooting in survival mode, then the projectile won't be shot.\n\nThink of it as an ammo option.
         

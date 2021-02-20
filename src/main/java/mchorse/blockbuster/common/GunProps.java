@@ -10,7 +10,10 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -34,7 +37,8 @@ public class GunProps
     public String fireCommand;
     public int delay;
     public int projectiles;
-    public float scatter;
+    public float scatterX;
+    public float scatterY;
     public boolean launch;
     public boolean useTarget;
     public ItemStack ammoStack = ItemStack.EMPTY;
@@ -239,7 +243,7 @@ public class GunProps
         this.fireCommand = "";
         this.delay = 0;
         this.projectiles = 1;
-        this.scatter = 0F;
+        this.scatterX = this.scatterY = 0F;
         this.launch = false;
         this.useTarget = false;
         this.ammoStack = ItemStack.EMPTY;
@@ -288,7 +292,27 @@ public class GunProps
         if (tag.hasKey("FireCommand")) this.fireCommand = tag.getString("FireCommand");
         if (tag.hasKey("Delay")) this.delay = tag.getInteger("Delay");
         if (tag.hasKey("Projectiles")) this.projectiles = tag.getInteger("Projectiles");
-        if (tag.hasKey("Scatter")) this.scatter = tag.getFloat("Scatter");
+        if (tag.hasKey("Scatter"))
+        {
+            NBTBase scatter = tag.getTag("Scatter");
+
+            if (scatter instanceof NBTTagList)
+            {
+                NBTTagList list = (NBTTagList) scatter;
+
+                if (list.tagCount() >= 2)
+                {
+                    this.scatterX = list.getFloatAt(0);
+                    this.scatterY = list.getFloatAt(1);
+                }
+            }
+            else
+            {
+                /* Old compatibility scatter */
+                this.scatterX = this.scatterY = tag.getFloat("Scatter");
+            }
+        }
+        if (tag.hasKey("ScatterY")) this.scatterY = tag.getFloat("ScatterY");
         if (tag.hasKey("Launch")) this.launch = tag.getBoolean("Launch");
         if (tag.hasKey("Target")) this.useTarget = tag.getBoolean("Target");
         if (tag.hasKey("AmmoStack")) this.ammoStack = new ItemStack(tag.getCompoundTag("AmmoStack"));
@@ -353,7 +377,15 @@ public class GunProps
         if (!this.fireCommand.isEmpty()) tag.setString("FireCommand", this.fireCommand);
         if (this.delay != 0) tag.setInteger("Delay", this.delay);
         if (this.projectiles != 1) tag.setInteger("Projectiles", this.projectiles);
-        if (this.scatter != 0F) tag.setFloat("Scatter", this.scatter);
+        if (this.scatterX != 0F || this.scatterY != 0F)
+        {
+            NBTTagList scatter = new NBTTagList();
+
+            scatter.appendTag(new NBTTagFloat(this.scatterX));
+            scatter.appendTag(new NBTTagFloat(this.scatterY));
+
+            tag.setTag("Scatter", scatter);
+        }
         if (this.launch) tag.setBoolean("Launch", this.launch);
         if (this.useTarget) tag.setBoolean("Target", this.useTarget);
         if (!this.ammoStack.isEmpty()) tag.setTag("AmmoStack", this.ammoStack.writeToNBT(new NBTTagCompound()));
