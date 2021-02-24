@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.model;
 
+import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Matrix4f;
@@ -267,6 +268,8 @@ public class ModelCustomRenderer extends ModelRenderer
                         Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
                         Matrix4f matrix4f = new Matrix4f(MatrixUtils.readModelView(obb.modelView));
 
+                        modelViewToTransformations(MatrixUtils.matrix, MatrixUtils.readModelView(obb.modelView));
+                        
                         parent.invert();
                         parent.mul(matrix4f);
                         
@@ -300,6 +303,69 @@ public class ModelCustomRenderer extends ModelRenderer
                     }
                 }
             }
+        }
+    }
+    
+    /**
+     * This method extracts the rotation, translation and scale from the modelview matrix. It needs a correct parent matrix to work
+     * @author Christian F. (known as Chryfi)
+     * @param parent the parent Matrix4f as a reference to extract the correct data from modelview matrix
+     * @param modelview
+     * @return
+     */
+    public ModelView modelViewToTransformations(Matrix4f parent, Matrix4f modelview)
+    {
+        Matrix4f parent0 = new Matrix4f(parent);
+        Matrix4f modelview0 = new Matrix4f(modelview);
+        
+        parent0.invert();
+        parent0.mul(modelview0);
+        
+        Matrix4d translation = new Matrix4d(1, 0, 0, parent.m03, 
+                                            0, 1, 0, parent.m13, 
+                                            0, 0, 1, parent.m23,
+                                            0, 0, 0, 1);
+        
+        Vector4d ax = new Vector4d(parent.m00, parent.m01, parent.m02, 0);
+        Vector4d ay = new Vector4d(parent.m10, parent.m11, parent.m12, 0);
+        Vector4d az = new Vector4d(parent.m20, parent.m21, parent.m22, 0);
+
+        ax.normalize();
+        ay.normalize();
+        az.normalize();
+        Matrix4d rotation = new Matrix4d();
+        
+        rotation.setIdentity();
+        rotation.setRow(0, ax);
+        rotation.setRow(1, ay);
+        rotation.setRow(2, az);
+        
+        Matrix4d rotscale = new Matrix4d(parent.m00, parent.m01, parent.m02, 0,
+                                         parent.m10, parent.m11, parent.m12, 0,
+                                         parent.m20, parent.m21, parent.m22, 0,
+                                         0, 0, 0, 1);
+        
+        rotation.invert();
+        rotscale.mul(rotation);
+        
+        Matrix4d scale = new Matrix4d(rotscale.m00, 0, 0, 0,
+                                      0, rotscale.m11, 0, 0,
+                                      0, 0, rotscale.m22, 0,
+                                      0, 0, 0, 1);
+        return new ModelView(translation, rotation, scale);
+    }
+    
+    private class ModelView 
+    {
+        public Matrix4d translation = new Matrix4d();
+        public Matrix4d rotation = new Matrix4d();
+        public Matrix4d scale = new Matrix4d();
+        
+        public ModelView(Matrix4d translation, Matrix4d rotation, Matrix4d scale)
+        {
+            this.translation.set(translation);
+            this.rotation.set(rotation);
+            this.scale.set(scale);
         }
     }
 
