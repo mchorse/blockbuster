@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSectionManager;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
@@ -24,14 +25,24 @@ public abstract class GuiSnowstormSection extends GuiElement
     public GuiSnowstormSection(Minecraft mc, GuiSnowstorm parent)
     {
         super(mc);
-
+        
         this.parent = parent;
         this.title = Elements.label(IKey.lang(this.getTitle())).background(() -> 0x88000000 + McLib.primaryColor.get());
         this.fields = new GuiElement(mc);
         this.fields.flex().column(5).stretch().vertical().height(20);
 
         this.flex().column(5).stretch().vertical();
-        this.add(this.title, this.fields);
+        this.add(this.title);
+        
+        this.collapseState();
+    }
+    
+    protected void collapseState()
+    {
+        if (!GuiSectionManager.isCollapsed(this.getClass().getSimpleName()))
+        {
+            this.add(this.fields);
+        }
     }
 
     public abstract String getTitle();
@@ -90,10 +101,12 @@ public abstract class GuiSnowstormSection extends GuiElement
             if (this.fields.hasParent())
             {
                 this.fields.removeFromParent();
+                GuiSectionManager.setCollapsed(this.getClass().getSimpleName(), true);
             }
             else
             {
                 this.add(this.fields);
+                GuiSectionManager.setCollapsed(this.getClass().getSimpleName(), false);
             }
 
             this.resizeParent();

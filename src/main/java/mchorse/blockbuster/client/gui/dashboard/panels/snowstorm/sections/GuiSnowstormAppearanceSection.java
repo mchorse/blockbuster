@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSectionManager;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceBillboard;
@@ -128,6 +129,17 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
         this.fields.add(this.sizeW, this.sizeH);
         this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.mapping"), 20).anchor(0, 1F));
         this.fields.add(this.uvX, this.uvY, this.uvW, this.uvH);
+    }
+    
+    @Override
+    protected void collapseState()
+    {
+        GuiSectionManager.setDefaultState(this.getClass().getSimpleName(), false);
+        
+        if (!GuiSectionManager.isCollapsed(this.getClass().getSimpleName()))
+        {
+            this.add(this.fields);
+        }
     }
 
     private void updateElements()

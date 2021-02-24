@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSectionManager;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockMaterial;
 import mchorse.blockbuster.client.particles.BedrockScheme;
@@ -65,6 +66,17 @@ public class GuiSnowstormGeneralSection extends GuiSnowstormSection
         });
 
         this.fields.add(this.identifier, Elements.row(mc, 5, 0, 20, this.pick, this.material));
+    }
+    
+    @Override
+    protected void collapseState()
+    {
+        GuiSectionManager.setDefaultState(this.getClass().getSimpleName(), false);
+        
+        if (!GuiSectionManager.isCollapsed(this.getClass().getSimpleName()))
+        {
+            this.add(this.fields);
+        }
     }
 
     private void setTextureSize(ResourceLocation rl)
