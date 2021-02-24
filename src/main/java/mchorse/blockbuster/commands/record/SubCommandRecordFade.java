@@ -1,10 +1,10 @@
 package mchorse.blockbuster.commands.record;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.L10n;
 import mchorse.mclib.utils.Interpolations;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -20,12 +20,6 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandRecordFade extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 2;
-    }
-
-    @Override
     public String getName()
     {
         return "fade";
@@ -38,6 +32,18 @@ public class SubCommandRecordFade extends SubCommandRecordBase
     }
 
     @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}fade{r} {7}<filename> <fade_out>{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 2;
+    }
+
+    @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         Record record = CommandRecord.getRecord(args[0]);
@@ -46,7 +52,7 @@ public class SubCommandRecordFade extends SubCommandRecordBase
 
         if (length == 0)
         {
-            L10n.error(sender, "record.empty", record.filename);
+            Blockbuster.l10n.error(sender, "record.empty", record.filename);
 
             return;
         }
@@ -79,12 +85,12 @@ public class SubCommandRecordFade extends SubCommandRecordBase
         {
             RecordUtils.saveRecord(record);
 
-            L10n.success(sender, "record.faded", args[0], args[1]);
+            Blockbuster.l10n.success(sender, "record.faded", args[0], args[1]);
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            L10n.error(sender, "record.couldnt_save", args[1]);
+            Blockbuster.l10n.error(sender, "record.couldnt_save", args[1]);
         }
     }
 }

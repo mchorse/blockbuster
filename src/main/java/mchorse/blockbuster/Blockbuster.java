@@ -11,6 +11,7 @@ import mchorse.blockbuster.utils.mclib.ValueAudioButtons;
 import mchorse.blockbuster.utils.mclib.ValueMainButtons;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.McLib;
+import mchorse.mclib.commands.utils.L10n;
 import mchorse.mclib.config.ConfigBuilder;
 import mchorse.mclib.config.values.ValueBoolean;
 import mchorse.mclib.config.values.ValueFloat;
@@ -67,7 +68,7 @@ import org.apache.logging.log4j.Logger;
  * of custom models)</li>
  * </ul>
  */
-@Mod(modid = Blockbuster.MOD_ID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, dependencies = "after:aperture@[%APERTURE,);required-after:metamorph@[%METAMORPH%,);required-after:mclib@[%MCLIB%,);required-after:forge@[14.23.2.2638,)", updateJSON = "https://raw.githubusercontent.com/mchorse/blockbuster/1.12/version.json")
+@Mod(modid = Blockbuster.MOD_ID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, dependencies = "after:aperture@[%APERTURE%,);after:emoticons@[%EMOTICONS%,);required-after:metamorph@[%METAMORPH%,);required-after:mclib@[%MCLIB%,);required-after:forge@[14.23.2.2638,)", updateJSON = "https://raw.githubusercontent.com/mchorse/blockbuster/1.12/version.json")
 public class Blockbuster
 {
     /* Mod info */
@@ -142,6 +143,8 @@ public class Blockbuster
 
     public static Logger LOGGER;
 
+    public static L10n l10n = new L10n(MOD_ID);
+
     /* Configuration */
     public static ValueBoolean generalFirstTime;
     public static ValueBoolean debugPlaybackTicks;
@@ -214,21 +217,31 @@ public class Blockbuster
         ConfigBuilder builder = event.createBuilder(MOD_ID);
 
         /* General */
-        builder.category("general").register(new ValueMainButtons("buttons"));
+        builder.category("general").register(new ValueMainButtons("buttons").clientSide());
 
         generalFirstTime = builder.getBoolean("show_first_time_modal", true);
+        generalFirstTime.clientSide();
         debugPlaybackTicks = builder.getBoolean("debug_playback_ticks", false);
         chromaSky = builder.getBoolean("green_screen_sky", false);
+        chromaSky.clientSide();
         chromaSkyColor = builder.getInt("green_screen_sky_color", 0xff00ff00).colorAlpha();
+        chromaSkyColor.clientSide();
         syncedURLTextureDownload = builder.getBoolean("url_skins_sync_download", true);
+        syncedURLTextureDownload.clientSide();
         addUtilityBlocks = builder.getBoolean("add_utility_blocks", false);
+        addUtilityBlocks.clientSide();
         cachedStructureRendering = builder.getBoolean("cached_structure_rendering", true);
+        cachedStructureRendering.clientSide();
         bbGunSyncDistance = builder.getFloat("bb_gun_sync_distance", 0, 0, 100);
+        bbGunSyncDistance.clientSide();
 
         /* Model block */
         modelBlockDisableRendering = builder.category("model_block").getBoolean("model_block_disable_rendering", false);
         modelBlockDisableItemRendering = builder.getBoolean("model_block_disable_item_rendering", false);
         modelBlockRestore = builder.getBoolean("restore", false);
+
+        builder.getCategory().markClientSide();
+
         modelBlockResetOnPlayback = builder.getBoolean("reset_on_playback", false);
 
         /* Recording */
@@ -248,12 +261,17 @@ public class Blockbuster
         actorFallDamage = builder.category("actor").getBoolean("actor_fall_damage", true);
         actorTrackingRange = builder.getInt("actor_tracking_range", 256, 64, 1024);
         actorRenderingRange = builder.getInt("actor_rendering_range", 256, 64, 1024);
+        actorRenderingRange.clientSide();
         actorAlwaysRender = builder.getBoolean("actor_always_render", false);
+        actorAlwaysRender.clientSide();
         actorAlwaysRenderNames = builder.getBoolean("actor_always_render_names", false);
+        actorAlwaysRenderNames.clientSide();
         actorSwishSwipe = builder.getBoolean("actor_swish_swipe", false);
         actorFixY = builder.getBoolean("actor_y", false);
+        actorFixY.clientSide();
         actorDisableRiding = builder.getBoolean("actor_disable_riding", false);
         actorPlaybackBodyYaw = builder.getBoolean("actor_playback_body_yaw", true);
+        actorPlaybackBodyYaw.clientSide();
 
         /* Damage control */
         damageControl = builder.category("damage_control").getBoolean("damage_control", true);
@@ -265,14 +283,18 @@ public class Blockbuster
         /* Snowstorm */
         snowstormDepthSorting = builder.category("snowstorm").getBoolean("depth_sorting", false);
 
+        builder.getCategory().markClientSide();
+
         /* Audio */
-        builder.category("audio").register(new ValueAudioButtons("buttons"));
+        builder.category("audio").register(new ValueAudioButtons("buttons").clientSide());
 
         audioWaveformVisible = builder.getBoolean("waveform_visible", true);
         audioWaveformDensity = builder.getInt("waveform_density", 20, 10, 100);
         audioWaveformWidth = builder.getFloat("waveform_width", 0.5F, 0F, 1F);
         audioWaveformHeight = builder.getInt("waveform_height", 24, 10, 40);
         audioWaveformFilename = builder.getBoolean("waveform_filename", true);
+
+        builder.getCategory().markClientSide();
 
         event.modules.add(builder.build());
     }

@@ -23,7 +23,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Record manager
@@ -82,7 +85,7 @@ public class RecordManager
     {
         Runnable proxy = () ->
         {
-            if (offset > 0 && this.records.get(filename) != null)
+            if (offset > 0 && this.records.get(filename) != null && notify)
             {
                 RecordPlayer recordPlayer = this.play(filename, player, Mode.ACTIONS, false);
 
@@ -96,9 +99,7 @@ public class RecordManager
             }
         };
 
-        float countdown = Blockbuster.recordingCountdown.get();
-
-        if ((countdown <= 0 || this.recorders.containsKey(player)))
+        if (this.recorders.containsKey(player))
         {
             proxy.run();
         }
@@ -124,9 +125,28 @@ public class RecordManager
         }
 
         RecordRecorder recorder = new RecordRecorder(new Record(filename), mode, player, teleportBack);
-        NBTTagCompound tag = new NBTTagCompound();
 
         recorder.offset = offset;
+
+        if (player.world.isRemote)
+        {
+            this.recorders.put(player, recorder);
+        }
+        else
+        {
+            this.setupPlayerData(recorder, player);
+            CommonProxy.damage.addDamageControl(recorder, player);
+
+            this.scheduled.put(player, new ScheduledRecording(recorder, player, proxy, (int) (Blockbuster.recordingCountdown.get() * 20), offset));
+        }
+
+        return true;
+    }
+
+    private void setupPlayerData(RecordRecorder recorder, EntityPlayer player)
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+
         player.writeEntityToNBT(tag);
         recorder.record.playerData = tag;
 
@@ -139,27 +159,6 @@ public class RecordManager
                 recorder.record.playerData.setTag("MPMData", tag);
             }
         }
-
-        if (!player.world.isRemote)
-        {
-            CommonProxy.damage.addDamageControl(recorder, player);
-        }
-
-        if (countdown <= 0 || player.world.isRemote)
-        {
-            this.recorders.put(player, recorder);
-
-            if (notify)
-            {
-                Dispatcher.sendTo(new PacketPlayerRecording(true, filename, offset), (EntityPlayerMP) player);
-            }
-        }
-        else
-        {
-            this.scheduled.put(player, new ScheduledRecording(recorder, player, proxy, (int) (countdown * 20), offset));
-        }
-
-        return true;
     }
 
     /**
@@ -205,7 +204,7 @@ public class RecordManager
                 EntityUtils.setRecordPlayer(player, null);
             }
 
-            /*  */
+            /* Apply old player recording */
             try
             {
                 Record oldRecord = this.get(filename);
@@ -213,9 +212,7 @@ public class RecordManager
                 recorder.applyOld(oldRecord);
             }
             catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            {}
 
             this.records.put(filename, record);
             this.recorders.remove(player);

@@ -2,7 +2,6 @@ package mchorse.blockbuster.network.server;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.common.PacketReloadModels;
-import mchorse.blockbuster.utils.L10n;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -14,12 +13,11 @@ public class ServerHandlerReloadModels extends ServerMessageHandler<PacketReload
         if (player.canUseCommand(2, ""))
         {
             Blockbuster.reloadServerModels(message.force);
-
-            L10n.success(player, "model.reload");
+            Blockbuster.l10n.success(player, "model.reload");
         }
         else
         {
-            L10n.error(player, "model.reload");
+            Blockbuster.l10n.error(player, "model.reload");
         }
     }
 }

@@ -1,12 +1,12 @@
 package mchorse.blockbuster.commands.record;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.SwipeAction;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -17,12 +17,6 @@ import java.util.List;
 public class SubCommandRecordCalculateBodyYaw extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 1;
-    }
-
-    @Override
     public String getName()
     {
         return "calculate_body_yaw";
@@ -32,6 +26,12 @@ public class SubCommandRecordCalculateBodyYaw extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.calculate_body_yaw";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}calculate_body_yaw{r} {7}<filename>{r}";
     }
 
     @Override
@@ -120,6 +120,6 @@ public class SubCommandRecordCalculateBodyYaw extends SubCommandRecordBase
 
         RecordUtils.dirtyRecord(record);
 
-        L10n.success(sender, "record.calculate_body_yaw", filename);
+        Blockbuster.l10n.success(sender, "record.calculate_body_yaw", filename);
     }
 }

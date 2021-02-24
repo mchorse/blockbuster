@@ -1,7 +1,6 @@
 package mchorse.blockbuster.commands;
 
-import java.io.FileNotFoundException;
-
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.commands.record.SubCommandRecordAdd;
@@ -27,7 +26,12 @@ import mchorse.blockbuster.commands.record.SubCommandRecordReverse;
 import mchorse.blockbuster.commands.record.SubCommandRecordSearch;
 import mchorse.blockbuster.commands.record.SubCommandRecordTP;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.mclib.commands.SubCommandBase;
+import mchorse.mclib.commands.utils.L10n;
 import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+
+import java.io.FileNotFoundException;
 
 /**
  * Command /record
@@ -70,13 +74,19 @@ public class CommandRecord extends SubCommandBase
     }
 
     @Override
+    public L10n getL10n()
+    {
+        return Blockbuster.l10n;
+    }
+
+    @Override
     public String getName()
     {
         return "record";
     }
 
     @Override
-    protected String getHelp()
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.help";
     }

@@ -1,12 +1,10 @@
 package mchorse.blockbuster.commands.record;
 
-import java.util.List;
-
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -14,14 +12,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.List;
+
 public class SubCommandRecordSearch extends SubCommandRecordBase
 {
-    @Override
-    public int getRequiredArgs()
-    {
-        return 2;
-    }
-
     @Override
     public String getName()
     {
@@ -32,6 +26,18 @@ public class SubCommandRecordSearch extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.search";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 2;
     }
 
     @Override
@@ -62,7 +68,7 @@ public class SubCommandRecordSearch extends SubCommandRecordBase
             }
         }
 
-        L10n.info(sender, "record.search_type", args[1]);
+        Blockbuster.l10n.info(sender, "record.search_type", args[1]);
 
         for (List<Action> actions : record.actions)
         {
@@ -94,11 +100,11 @@ public class SubCommandRecordSearch extends SubCommandRecordBase
                     NBTTagCompound tag = new NBTTagCompound();
                     action.toNBT(tag);
 
-                    L10n.info(sender, "record.search_action_data", tick, j, tag.toString());
+                    Blockbuster.l10n.info(sender, "record.search_action_data", tick, j, tag.toString());
                 }
                 else
                 {
-                    L10n.info(sender, "record.search_action", tick, j);
+                    Blockbuster.l10n.info(sender, "record.search_action", tick, j);
                 }
             }
 

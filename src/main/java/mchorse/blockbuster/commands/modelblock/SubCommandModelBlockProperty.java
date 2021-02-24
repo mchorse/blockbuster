@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
+import mchorse.mclib.commands.McCommandBase;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -28,6 +29,12 @@ public class SubCommandModelBlockProperty extends SubCommandModelBlockBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.modelblock.property";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}modelblock {8}property{r} {7}<x> <y> <z> <property:enabled> <value>{r}";
     }
 
     @Override
@@ -75,7 +82,7 @@ public class SubCommandModelBlockProperty extends SubCommandModelBlockBase
 
             if (property.equals("enabled"))
             {
-                return getListOfStringsMatchingLastWord(args, BOOLEANS);
+                return getListOfStringsMatchingLastWord(args, McCommandBase.BOOLEANS);
             }
         }
 

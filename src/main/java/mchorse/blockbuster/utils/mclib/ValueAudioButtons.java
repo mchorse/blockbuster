@@ -6,7 +6,7 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.keys.IKey;
-import mchorse.mclib.config.gui.GuiConfig;
+import mchorse.mclib.config.gui.GuiConfigPanel;
 import mchorse.mclib.config.values.ValueGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
@@ -24,7 +24,7 @@ public class ValueAudioButtons extends ValueGUI
 
     @Override
     @SideOnly(Side.CLIENT)
-    public List<GuiElement> getFields(Minecraft mc, GuiConfig config)
+    public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel config)
     {
         GuiButtonElement resetAudio = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.reset_audio"), (button) -> ClientProxy.audio.reset());
         GuiButtonElement openAudio = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.open_audio"), (button) -> GuiUtils.openWebLink(ClientProxy.audio.folder.toURI()));

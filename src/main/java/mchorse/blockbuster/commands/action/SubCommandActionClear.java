@@ -1,9 +1,9 @@
 package mchorse.blockbuster.commands.action;
 
 import mchorse.blockbuster.capabilities.recording.Recording;
+import mchorse.blockbuster.commands.BBCommandBase;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketUnloadRecordings;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -19,7 +19,7 @@ import net.minecraft.server.MinecraftServer;
  * Used in some buggy situations when server doesn't send unload packet or
  * doesn't want to send clients a new record.
  */
-public class SubCommandActionClear extends CommandBase
+public class SubCommandActionClear extends BBCommandBase
 {
     @Override
     public String getName()
@@ -34,7 +34,13 @@ public class SubCommandActionClear extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}action {8}clear{r}";
+    }
+
+    @Override
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP player = getCommandSenderAsPlayer(sender);
         Recording.get(player).removeRecordings();

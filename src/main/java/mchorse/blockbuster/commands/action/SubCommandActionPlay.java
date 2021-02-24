@@ -1,13 +1,12 @@
 package mchorse.blockbuster.commands.action;
 
 import mchorse.blockbuster.CommonProxy;
+import mchorse.blockbuster.commands.BBCommandBase;
 import mchorse.blockbuster.commands.CommandAction;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Mode;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 
@@ -17,7 +16,7 @@ import net.minecraft.world.World;
  * This sub-command is responsible for starting playback of ghost actor from
  * given attributes.
  */
-public class SubCommandActionPlay extends CommandBase
+public class SubCommandActionPlay extends BBCommandBase
 {
     @Override
     public String getName()
@@ -32,13 +31,20 @@ public class SubCommandActionPlay extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public String getSyntax()
     {
-        if (args.length < 1)
-        {
-            throw new WrongUsageException(this.getUsage(sender));
-        }
+        return "{l}{6}/{r}action {8}play{r} {7}<filename> [invincibility] [morph_nbt]{r}";
+    }
 
+    @Override
+    public int getRequiredArgs()
+    {
+        return 1;
+    }
+
+    @Override
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
         World world = sender.getEntityWorld();
         EntityActor actor = CommandAction.actorFromArgs(args, world);
 

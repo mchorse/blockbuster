@@ -490,7 +490,7 @@ blockbuster.gui:
             regular: Regular
             animated: Animated
             
-            cameraFacing:
+            camera_facing:
                 label: Facing mode
                 
                 direction_x: Direction X
@@ -536,26 +536,28 @@ blockbuster.gui:
             title: Collision
 
             enabled: Enabled
-            realisticCollision: Realistic collision
-            preserveEnergy: Preserve energy
-            preserveEnergy_tooltip: Preserve energy option allows to preserve velocity of particles after collision
-            entityCollision: Collision with entities
+            realistic_collision: Realistic collision
+            preserve_energy: Preserve energy
+            preserve_energy_tooltip: Preserve energy option allows to preserve velocity of particles after collision
+            entity_collision: Collision with entities
             momentum: Momentum for entity collision
             drag: Collision drag adds a drag (slowdown) after particle's collision with blocks in the world
             bounciness: Bounciness multiplies particle's acceleration after collision
-            randomDirection: Random Direction - randomize the direction vector. It doesn't affect the velocity.
+            random_direction: Random Direction - randomize the direction vector. It doesn't affect the velocity.
             damping:
                 title: Damping
                 strength: Damping - reduce the velocity on impact. Valid values are between 0 and 1. 1=highest damping -> reduces velocity completely
                 randomness: Randomize the damping
-            splitParticle:
+
+            split_particle:
                 title: Split particle
                 
                 count: Split the particle on impact into the given count - speed is divided by the count
-                speedThreshold: speed threshold to activate the split process
+                speed_threshold: speed threshold to activate the split process
+
             radius: Radius of particle's hitbox
             expire: Expire on contact
-            expirationDelay: Delay the expiration. Measured in ticks - 20 = 1 second
+            expiration_delay: Delay the expiration. Measured in ticks - 20 = 1 second
             
             appearance:
                 title: Texture on colllision
@@ -593,6 +595,8 @@ blockbuster.gui:
         delay: Delay
         projectiles: Projectiles
         scatter: Scatter
+        scatter_x: Horizontal scatter
+        scatter_y: Vertical scatter
         launch: Launch player
         ammo_stack: This option allows to specify an item, which will be consumed upon shooting. If there are no items of this kind and its count, when shooting in survival mode, then the projectile won't be shot.\n\nThink of it as an ammo option.
         

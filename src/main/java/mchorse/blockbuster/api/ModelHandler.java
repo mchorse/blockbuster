@@ -4,7 +4,6 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -103,5 +102,6 @@ public class ModelHandler
     public void onClientConnect(ClientConnectedToServerEvent event)
     {
         Blockbuster.proxy.loadModels(false);
+        Blockbuster.proxy.particles.reload();
     }
 }

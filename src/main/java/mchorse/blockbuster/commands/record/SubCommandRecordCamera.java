@@ -5,12 +5,12 @@ import mchorse.aperture.camera.CameraAPI;
 import mchorse.aperture.camera.CameraProfile;
 import mchorse.aperture.camera.CameraUtils;
 import mchorse.aperture.camera.data.Position;
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -29,12 +29,6 @@ import java.util.List;
 public class SubCommandRecordCamera extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs()
-    {
-        return 2;
-    }
-
-    @Override
     public String getName()
     {
         return "camera";
@@ -44,6 +38,18 @@ public class SubCommandRecordCamera extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.camera";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}camera{r} {7}<filename> <camera_profile> [x] [y] [z]{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 2;
     }
 
     @Override
@@ -62,12 +68,12 @@ public class SubCommandRecordCamera extends SubCommandRecordBase
             CommonProxy.manager.records.put(filename, record);
             RecordUtils.saveRecord(record);
 
-            L10n.success(sender, "record.camera", filename, args[1]);
+            Blockbuster.l10n.success(sender, "record.camera", filename, args[1]);
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            L10n.error(sender, "record.couldnt_save", filename);
+            Blockbuster.l10n.error(sender, "record.couldnt_save", filename);
         }
     }
 
@@ -89,11 +95,20 @@ public class SubCommandRecordCamera extends SubCommandRecordBase
         Position prev = new Position();
         Position position = new Position();
 
-        for (int i = 0, c = (int) camera.getDuration(); i <= c; i++)
+        int c = (int) camera.getDuration();
+
+        for (int i = 0; i <= c; i++)
         {
             Frame frame = new Frame();
 
-            camera.applyProfile(i, 0, position);
+            if (i == c)
+            {
+                camera.applyProfile(c - 1, 0.999F, position);
+            }
+            else
+            {
+                camera.applyProfile(i, 0, position);
+            }
 
             if (i == 0)
             {

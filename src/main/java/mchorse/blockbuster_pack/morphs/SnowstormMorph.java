@@ -130,8 +130,7 @@ public class SnowstormMorph extends AbstractMorph
         }
 
         this.emitter = new BedrockEmitter();
-        this.emitter.setScheme(this.getScheme(key));
-        this.emitter.parseVariables(this.variables);
+        this.emitter.setScheme(this.getScheme(key), this.variables);
     }
 
     private BedrockScheme getScheme(String key)
@@ -350,11 +349,6 @@ public class SnowstormMorph extends AbstractMorph
     {
         super.fromNBT(tag);
 
-        if (tag.hasKey("Scheme"))
-        {
-            this.setScheme(tag.getString("Scheme"));
-        }
-
         if (tag.hasKey("Vars"))
         {
             NBTTagCompound vars = tag.getCompoundTag("Vars");
@@ -364,14 +358,17 @@ public class SnowstormMorph extends AbstractMorph
                 this.variables.put(key, vars.getString(key));
             }
         }
+
+        if (tag.hasKey("Scheme"))
+        {
+            this.setScheme(tag.getString("Scheme"));
+        }
     }
 
     @Override
     public void toNBT(NBTTagCompound tag)
     {
         super.toNBT(tag);
-
-        tag.setString("Scheme", this.scheme);
 
         if (!this.variables.isEmpty())
         {
@@ -384,5 +381,7 @@ public class SnowstormMorph extends AbstractMorph
 
             tag.setTag("Vars", vars);
         }
+
+        tag.setString("Scheme", this.scheme);
     }
 }

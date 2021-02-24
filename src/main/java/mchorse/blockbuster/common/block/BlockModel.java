@@ -5,12 +5,15 @@ import java.util.List;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
+import mchorse.mclib.utils.EntityUtils;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -25,6 +28,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.GameType;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -74,26 +78,18 @@ public class BlockModel extends Block implements ITileEntityProvider
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-        if (playerIn instanceof EntityPlayerMP && OpHelper.isPlayerOp((EntityPlayerMP) playerIn))
+        if (worldIn.isRemote && this.canOpenMenu(playerIn))
         {
             GuiHandler.open(playerIn, GuiHandler.MODEL_BLOCK, pos.getX(), pos.getY(), pos.getZ());
-
-            return true;
-        }
-        else if (worldIn.isRemote && this.canOpenMenu())
-        {
-            GuiHandler.open(playerIn, GuiHandler.MODEL_BLOCK, pos.getX(), pos.getY(), pos.getZ());
-
-            return true;
         }
 
-        return false;
+        return true;
     }
 
     @SideOnly(Side.CLIENT)
-    private boolean canOpenMenu()
+    private boolean canOpenMenu(EntityPlayer player)
     {
-        return OpHelper.isPlayerOp();
+        return OpHelper.isPlayerOp() && !EntityUtils.isAdventureMode(player);
     }
 
     @Override

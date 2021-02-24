@@ -1,7 +1,8 @@
 package mchorse.blockbuster.commands.model;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.utils.L10n;
+import mchorse.blockbuster.commands.BBCommandBase;
 import mchorse.blockbuster.utils.TextureUtils;
 import mchorse.mclib.utils.files.GlobalTree;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
@@ -11,10 +12,8 @@ import mchorse.mclib.utils.resources.FilteredResourceLocation;
 import mchorse.mclib.utils.resources.MultiResourceLocation;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.mclib.utils.resources.TextureProcessor;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 
 import javax.imageio.ImageIO;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SubCommandModelCombine extends CommandBase
+public class SubCommandModelCombine extends BBCommandBase
 {
     @Override
     public String getName()
@@ -39,13 +38,20 @@ public class SubCommandModelCombine extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public String getSyntax()
     {
-        if (args.length < 1)
-        {
-            throw new WrongUsageException(this.getUsage(sender));
-        }
+        return "{l}{6}/{r}model {8}combine{r} {7}<paths...>{r}";
+    }
 
+    @Override
+    public int getRequiredArgs()
+    {
+        return 1;
+    }
+
+    @Override
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
         List<MultiResourceLocation> toExport = new ArrayList<MultiResourceLocation>();
         List<FolderEntry> entries = new ArrayList<FolderEntry>();
 
@@ -61,7 +67,7 @@ public class SubCommandModelCombine extends CommandBase
 
         if (entries.isEmpty())
         {
-            L10n.error(sender, "commands.combining_empty", toExport.size());
+            Blockbuster.l10n.error(sender, "commands.combining_empty", toExport.size());
             return;
         }
 
@@ -69,11 +75,11 @@ public class SubCommandModelCombine extends CommandBase
 
         if (toExport.isEmpty())
         {
-            L10n.error(sender, "commands.combining_folders_empty", toExport.size());
+            Blockbuster.l10n.error(sender, "commands.combining_folders_empty", toExport.size());
             return;
         }
 
-        L10n.info(sender, "commands.started_combining", toExport.size());
+        Blockbuster.l10n.info(sender, "commands.started_combining", toExport.size());
 
         try
         {
@@ -150,7 +156,7 @@ public class SubCommandModelCombine extends CommandBase
                     folder.mkdirs();
                     ImageIO.write(image, "png", file);
 
-                    L10n.info(this.sender, "commands.combined", i);
+                    Blockbuster.l10n.info(this.sender, "commands.combined", i);
 
                     Thread.sleep(50);
                 }
@@ -160,7 +166,7 @@ public class SubCommandModelCombine extends CommandBase
                 i += 1;
             }
 
-            L10n.info(this.sender, "commands.finished_combining");
+            Blockbuster.l10n.info(this.sender, "commands.finished_combining");
         }
     }
 }

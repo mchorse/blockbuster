@@ -1,20 +1,19 @@
 package mchorse.blockbuster.commands.record;
 
-import java.util.List;
-import java.util.Set;
-
 import com.google.common.collect.ImmutableSet;
-
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Command /record clean
@@ -142,12 +141,6 @@ public class SubCommandRecordClean extends SubCommandRecordBase
     }
 
     @Override
-    public int getRequiredArgs()
-    {
-        return 2;
-    }
-
-    @Override
     public String getName()
     {
         return "clean";
@@ -157,6 +150,18 @@ public class SubCommandRecordClean extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.clean";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}clean{r} {7}<filename> <property> [value] [from] [to]{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 2;
     }
 
     @Override
@@ -200,12 +205,12 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         {
             RecordUtils.saveRecord(record);
 
-            L10n.success(sender, "record.clean", filename, property, start, end);
+            Blockbuster.l10n.success(sender, "record.clean", filename, property, start, end);
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            L10n.error(sender, "record.couldnt_save", args[1]);
+            Blockbuster.l10n.error(sender, "record.couldnt_save", args[1]);
         }
     }
 

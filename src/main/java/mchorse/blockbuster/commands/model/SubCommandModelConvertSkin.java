@@ -1,7 +1,24 @@
 package mchorse.blockbuster.commands.model;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.commands.BBCommandBase;
+import mchorse.mclib.commands.SubCommandBase;
+import mchorse.mclib.utils.files.GlobalTree;
+import mchorse.mclib.utils.files.entries.AbstractEntry;
+import mchorse.mclib.utils.files.entries.FolderEntry;
+import mchorse.mclib.utils.resources.RLUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import org.apache.commons.io.FilenameUtils;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
@@ -9,29 +26,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-
-import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.commands.SubCommandBase;
-import mchorse.mclib.McLib;
-import mchorse.mclib.utils.files.GlobalTree;
-import mchorse.mclib.utils.files.entries.AbstractEntry;
-import mchorse.mclib.utils.files.entries.FolderEntry;
-import mchorse.mclib.utils.resources.RLUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Command /model convert
@@ -39,7 +33,7 @@ import org.apache.commons.lang3.StringUtils;
  * This command is responsible for converting 64x32 skins to 64x64 and 
  * vice versa. 
  */
-public class SubCommandModelConvertSkin extends CommandBase
+public class SubCommandModelConvertSkin extends BBCommandBase
 {
     @Override
     public String getName()
@@ -54,13 +48,20 @@ public class SubCommandModelConvertSkin extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public String getSyntax()
     {
-        if (args.length < 2)
-        {
-            throw new WrongUsageException(this.getUsage(sender));
-        }
+        return "{l}{6}/{r}model {8}convert{r} {7}<steve|fred> <skin>{r}";
+    }
 
+    @Override
+    public int getRequiredArgs()
+    {
+        return 2;
+    }
+
+    @Override
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
         String model = args[0];
         String skin = String.join(" ", SubCommandBase.dropFirstArgument(args));
 
@@ -98,7 +99,7 @@ public class SubCommandModelConvertSkin extends CommandBase
                 Graphics graphics = target.getGraphics();
                 float s = w / 64F;
 
-                /* These coordinates were copied from 
+                /* These coordinates were copied from
                  * ImageBufferDownload class */
                 graphics.drawImage(image, 0, 0, null);
                 graphics.setColor(new Color(0, 0, 0, 0));
@@ -145,7 +146,7 @@ public class SubCommandModelConvertSkin extends CommandBase
             throw new CommandException("blockbuster.error.commands.convert_skin", model, skin, e.getMessage());
         }
 
-        mchorse.blockbuster.utils.L10n.success(sender, "commands.convert_skin", model, skin);
+        Blockbuster.l10n.success(sender, "commands.convert_skin", model, skin);
     }
 
     /**

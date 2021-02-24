@@ -1,11 +1,10 @@
 package mchorse.blockbuster.commands.action;
 
 import mchorse.blockbuster.CommonProxy;
+import mchorse.blockbuster.commands.BBCommandBase;
 import mchorse.blockbuster.recording.RecordUtils;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 
 /**
@@ -13,7 +12,7 @@ import net.minecraft.server.MinecraftServer;
  *
  * This command is responsible for requesting record frames from the server
  */
-public class SubCommandActionRequest extends CommandBase
+public class SubCommandActionRequest extends BBCommandBase
 {
     @Override
     public String getName()
@@ -28,13 +27,20 @@ public class SubCommandActionRequest extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public String getSyntax()
     {
-        if (args.length < 1)
-        {
-            throw new WrongUsageException(this.getUsage(sender));
-        }
+        return "{l}{6}/{r}action {8}request{r} {7}<filename>{r}";
+    }
 
+    @Override
+    public int getRequiredArgs()
+    {
+        return 1;
+    }
+
+    @Override
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
         CommonProxy.scenes.play(args[0], sender.getEntityWorld());
         RecordUtils.sendRecord(args[0], getCommandSenderAsPlayer(sender));
     }

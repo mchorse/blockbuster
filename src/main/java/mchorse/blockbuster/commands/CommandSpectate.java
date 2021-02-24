@@ -1,8 +1,6 @@
 package mchorse.blockbuster.commands;
 
-import java.util.List;
-
-import mchorse.blockbuster.utils.L10n;
+import mchorse.blockbuster.Blockbuster;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.EntitySelector;
@@ -14,13 +12,15 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameType;
 
+import java.util.List;
+
 /**
  * Spectate entity command - /spectate &lt;player&gt; &lt;entity&gt;
  * 
  * This command allows to make given player a spectator of given entity. 
  * I don't know why it's useful, but I think this can be useful.
  */
-public class CommandSpectate extends CommandBase
+public class CommandSpectate extends BBCommandBase
 {
     @Override
     public String getName()
@@ -35,18 +35,25 @@ public class CommandSpectate extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public String getSyntax()
     {
-        if (args.length < 2)
-        {
-            throw new WrongUsageException(this.getUsage(sender));
-        }
+        return "{l}{6}/{r}spectate {8}<player>{r} {7}<entity>{r}";
+    }
 
+    @Override
+    public int getRequiredArgs()
+    {
+        return 2;
+    }
+
+    @Override
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
         EntityPlayerMP player = getPlayer(server, sender, args[0]);
 
         if (player == null)
         {
-            L10n.error(sender, "commands.no_player", args[0]);
+            Blockbuster.l10n.error(sender, "commands.no_player", args[0]);
 
             return;
         }
@@ -55,7 +62,7 @@ public class CommandSpectate extends CommandBase
 
         if (entities.isEmpty())
         {
-            L10n.error(sender, "commands.no_entity", args[1]);
+            Blockbuster.l10n.error(sender, "commands.no_entity", args[1]);
 
             return;
         }

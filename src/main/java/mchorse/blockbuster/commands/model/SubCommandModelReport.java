@@ -6,13 +6,12 @@ import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderJSON;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderOBJ;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderVOX;
-import mchorse.blockbuster.utils.L10n;
+import mchorse.blockbuster.commands.BBCommandBase;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -26,7 +25,7 @@ import java.io.File;
  * This command generates a report of all the files in config/blockbuster/models/
  * and copies it to copy-paste buffer.
  */
-public class SubCommandModelReport extends CommandBase
+public class SubCommandModelReport extends BBCommandBase
 {
     @Override
     public String getName()
@@ -41,7 +40,13 @@ public class SubCommandModelReport extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}model {8}report{r}";
+    }
+
+    @Override
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         File models = new File(ClientProxy.configFile, "models");
         StringBuilder output = new StringBuilder();
@@ -52,7 +57,7 @@ public class SubCommandModelReport extends CommandBase
 
         GuiScreen.setClipboardString(output.toString().trim());
 
-        L10n.success(sender, "commands.model_report");
+        Blockbuster.l10n.success(sender, "commands.model_report");
     }
 
     private void processRecursively(StringBuilder output, File root, File models, String prefix, String indent, boolean isModel)

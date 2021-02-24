@@ -1,10 +1,10 @@
 package mchorse.blockbuster.network.server.recording;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.network.common.recording.PacketUpdatePlayerData;
 import mchorse.blockbuster.recording.MPMHelper;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.L10n;
 import mchorse.mclib.network.ServerMessageHandler;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -31,7 +31,7 @@ public class ServerHandlerUpdatePlayerData extends ServerMessageHandler<PacketUp
 
         if (record == null)
         {
-            L10n.error(player, "record.not_exist", message.record);
+            Blockbuster.l10n.error(player, "record.not_exist", message.record);
 
             return;
         }

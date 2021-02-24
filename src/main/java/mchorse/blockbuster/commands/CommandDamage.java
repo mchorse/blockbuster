@@ -3,13 +3,12 @@ package mchorse.blockbuster.commands;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 
-public class CommandDamage extends CommandBase
+public class CommandDamage extends BBCommandBase
 {
     @Override
     public String getName()
@@ -24,19 +23,32 @@ public class CommandDamage extends CommandBase
     }
 
     @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}damage {7}<entity> <amount>{r}";
+    }
+
+    @Override
+    public boolean isUsernameIndex(String[] args, int index)
+    {
+        return index == 0;
+    }
+
+    @Override
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public int getRequiredArgs()
     {
-        if (args.length < 2)
-        {
-            throw new WrongUsageException(this.getUsage(sender));
-        }
+        return 2;
+    }
 
+    @Override
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
         float damage = (float) CommandBase.parseDouble(args[1]);
         Entity entity = getEntity(server, sender, args[0]);
 
@@ -50,11 +62,5 @@ public class CommandDamage extends CommandBase
         {
             entity.attackEntityFrom(DamageSource.OUT_OF_WORLD, damage);
         }
-    }
-
-    @Override
-    public boolean isUsernameIndex(String[] args, int index)
-    {
-        return index == 0;
     }
 }

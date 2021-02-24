@@ -1,11 +1,11 @@
 package mchorse.blockbuster.commands.record;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.L10n;
 import mchorse.mclib.utils.MathUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -17,12 +17,6 @@ import java.util.List;
 
 public class SubCommandRecordErase extends SubCommandRecordBase
 {
-    @Override
-    public int getRequiredArgs()
-    {
-        return 3;
-    }
-
     @Override
     public String getName()
     {
@@ -36,6 +30,18 @@ public class SubCommandRecordErase extends SubCommandRecordBase
     }
 
     @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}erase{r} {7}<filename> <count> <from>{r}";
+    }
+
+    @Override
+    public int getRequiredArgs()
+    {
+        return 3;
+    }
+
+    @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         Record record = CommandRecord.getRecord(args[0]);
@@ -46,7 +52,7 @@ public class SubCommandRecordErase extends SubCommandRecordBase
 
         if (record.getLength() == 0)
         {
-            L10n.error(sender, "record.empty", record.filename);
+            Blockbuster.l10n.error(sender, "record.empty", record.filename);
 
             return;
         }
@@ -71,12 +77,12 @@ public class SubCommandRecordErase extends SubCommandRecordBase
         {
             RecordUtils.saveRecord(record);
 
-            L10n.success(sender, "record.erase", count, from, args[0], record.getLength());
+            Blockbuster.l10n.success(sender, "record.erase", count, from, args[0], record.getLength());
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            L10n.error(sender, "record.couldnt_save", args[1]);
+            Blockbuster.l10n.error(sender, "record.couldnt_save", args[1]);
         }
     }
 }

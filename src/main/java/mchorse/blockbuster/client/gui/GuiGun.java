@@ -23,7 +23,6 @@ import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
-import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -63,7 +62,8 @@ public class GuiGun extends GuiBase
     public GuiTextElement fireCommand;
     public GuiTrackpadElement delay;
     public GuiTrackpadElement projectiles;
-    public GuiTrackpadElement scatter;
+    public GuiTrackpadElement scatterX;
+    public GuiTrackpadElement scatterY;
     public GuiToggleElement launch;
     public GuiToggleElement useTarget;
     public GuiSlotElement ammoStack;
@@ -152,7 +152,10 @@ public class GuiGun extends GuiBase
         this.delay.limit(0, Integer.MAX_VALUE, true);
         this.projectiles = new GuiTrackpadElement(mc, (value) -> this.props.projectiles = value.intValue());
         this.projectiles.limit(0, Integer.MAX_VALUE, true);
-        this.scatter = new GuiTrackpadElement(mc, (value) -> this.props.scatter = value.floatValue());
+        this.scatterX = new GuiTrackpadElement(mc, (value) -> this.props.scatterX = value.floatValue());
+        this.scatterX.tooltip(IKey.lang("blockbuster.gui.gun.scatter_x"));
+        this.scatterY = new GuiTrackpadElement(mc, (value) -> this.props.scatterY = value.floatValue());
+        this.scatterY.tooltip(IKey.lang("blockbuster.gui.gun.scatter_y"));
         this.launch = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.launch"), false, (b) -> this.props.launch = b.isToggled());
         this.useTarget = new GuiToggleElement(mc, IKey.lang("metamorph.gui.body_parts.use_target"), false, (b) -> this.props.useTarget = b.isToggled());
         this.ammoStack = new GuiSlotElement(mc, 0, this.inventory);
@@ -162,22 +165,26 @@ public class GuiGun extends GuiBase
 
         this.inventory.flex().relative(this.ammoStack.flex()).x(0.5F).y(-5).anchor(0.5F, 1F).bounds(this.root, 5);
 
+        GuiElement scatterBar = new GuiElement(mc);
+
+        scatterBar.flex().relative(area).set(0, 0, 0, 20).x(0.5F).y(1, -75).w(0.5F, -60).anchorX(0.5F).row(5);
+        scatterBar.add(this.scatterX, this.scatterY);
+
         this.fireCommand.flex().relative(area).set(10, 0, 0, 20).w(1, -20).y(1F, -30);
-        this.scatter.flex().relative(area).set(0, 0, 0, 20).x(0.5F).y(1, -75).w(0.5F, -60).anchorX(0.5F);
-        this.delay.flex().relative(this.scatter.resizer()).set(0, 0, 100, 20).x(-10).anchorX(1F);
-        this.projectiles.flex().relative(this.scatter.resizer()).set(0, 0, 100, 20).x(1F, 10);
+        this.delay.flex().relative(scatterBar.resizer()).set(0, 0, 100, 20).x(-10).anchorX(1F);
+        this.projectiles.flex().relative(scatterBar.resizer()).set(0, 0, 100, 20).x(1F, 10);
         this.pickDefault.flex().relative(this.delay.resizer()).w(1F).y(-5 - firingOffset);
         this.pickFiring.flex().relative(this.projectiles.resizer()).w(1F).y(-5 - firingOffset);
         this.ammoStack.flex().relative(this.pickFiring.resizer()).x(1F, 5).y(-2);
 
         GuiElement launchBar = new GuiElement(mc);
 
-        launchBar.flex().relative(this.scatter.resizer()).y(-5 - firingOffset).w(1F).h(11).row(10);
+        launchBar.flex().relative(scatterBar.resizer()).y(-5 - firingOffset).w(1F).h(11).row(10);
         this.launch.flex().h(20);
         this.useTarget.flex().h(20);
         launchBar.add(this.launch, this.useTarget);
 
-        this.gunOptions.add(this.scatter, launchBar, this.delay, this.projectiles, this.pickDefault, this.pickFiring, this.fireCommand, this.ammoStack, this.inventory);
+        this.gunOptions.add(scatterBar, launchBar, this.delay, this.projectiles, this.pickDefault, this.pickFiring, this.fireCommand, this.ammoStack, this.inventory);
 
         /* Projectile options */
         area = this.projectileOptions.area;
@@ -304,7 +311,8 @@ public class GuiGun extends GuiBase
         this.fireCommand.setText(this.props.fireCommand);
         this.delay.setValue(this.props.delay);
         this.projectiles.setValue(this.props.projectiles);
-        this.scatter.setValue(this.props.scatter);
+        this.scatterX.setValue(this.props.scatterX);
+        this.scatterY.setValue(this.props.scatterY);
         this.launch.toggled(this.props.launch);
         this.useTarget.toggled(this.props.useTarget);
         this.ammoStack.stack = this.props.ammoStack;
@@ -492,7 +500,7 @@ public class GuiGun extends GuiBase
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.fire_morph"), this.pickFiring.area.mx(), this.pickFiring.area.y - 12, 0xffffff);
 
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.delay"), this.delay.area.mx(), this.delay.area.y - 12, 0xffffff);
-            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.scatter"), this.scatter.area.mx(), this.scatter.area.y - 12, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.scatter"), this.scatterX.area.ex() + 3, this.scatterX.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.projectiles"), this.projectiles.area.mx(), this.projectiles.area.y - 12, 0xffffff);
 
             this.fontRenderer.drawStringWithShadow(I18n.format("blockbuster.gui.gun.fire_command"), this.fireCommand.area.x, this.fireCommand.area.y - 12, 0xffffff);

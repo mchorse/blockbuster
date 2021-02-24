@@ -1,5 +1,10 @@
 package mchorse.blockbuster.api.formats.obj;
 
+import mchorse.blockbuster.api.formats.IMeshes;
+import mchorse.blockbuster.api.formats.Mesh;
+import mchorse.mclib.commands.SubCommandBase;
+import mchorse.mclib.utils.resources.RLUtils;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
@@ -8,11 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import mchorse.blockbuster.api.formats.IMeshes;
-import mchorse.blockbuster.api.formats.Mesh;
-import mchorse.blockbuster.commands.SubCommandBase;
-import mchorse.mclib.utils.resources.RLUtils;
 
 /**
  * OBJ and MTL parser and loader
@@ -31,7 +31,7 @@ public class OBJParser
     public Map<String, OBJMaterial> materials = new HashMap<String, OBJMaterial>();
 
     /**
-     * Read all lines from a file (needs a text file) 
+     * Read all lines from a file (needs a text file)
      */
     public static List<String> readAllLines(InputStream stream) throws Exception
     {
@@ -94,7 +94,7 @@ public class OBJParser
     }
 
     /**
-     * Read the data first 
+     * Read the data first
      */
     public void read() throws Exception
     {
@@ -127,7 +127,7 @@ public class OBJParser
     }
 
     /**
-     * Read materials from MTL file. This method isn't necessarily will 
+     * Read materials from MTL file. This method isn't necessarily will
      * read any materials because MTL file is optional
      */
     public void readMTL() throws Exception
@@ -182,7 +182,7 @@ public class OBJParser
     }
 
     /**
-     * Read objects from OBJ file 
+     * Read objects from OBJ file
      */
     public void readOBJ() throws Exception
     {
@@ -316,7 +316,7 @@ public class OBJParser
     }
 
     /**
-     * Place all the data to complementary arrays 
+     * Place all the data to complementary arrays
      */
     private void processFaceVertex(int i, OBJIndexGroup indices, Mesh mesh)
     {

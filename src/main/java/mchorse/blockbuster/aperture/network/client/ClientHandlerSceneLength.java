@@ -21,6 +21,7 @@ public class ClientHandlerSceneLength extends ClientMessageHandler<PacketSceneLe
         editor.maxScrub = message.length;
         editor.timeline.value = CameraHandler.tick;
         editor.updateValues();
+        editor.timeline.scale.view(editor.timeline.scale.getMinValue(), Math.max((int) editor.getProfile().getDuration(), message.length));
 
         GuiDirectorConfigOptions.getInstance().audioShift.setValue(message.shift);
     }

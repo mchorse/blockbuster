@@ -1,10 +1,10 @@
 package mchorse.blockbuster.commands.record;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -16,11 +16,6 @@ import java.util.List;
 public class SubCommandRecordRestore extends SubCommandRecordBase
 {
     @Override
-    public int getRequiredArgs() {
-        return 2;
-    }
-
-    @Override
     public String getName()
     {
         return "restore";
@@ -30,6 +25,17 @@ public class SubCommandRecordRestore extends SubCommandRecordBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.restore";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}record {8}restore{r} {7}<filename> <iteration>{r}";
+    }
+
+    @Override
+    public int getRequiredArgs() {
+        return 2;
     }
 
     @Override
@@ -47,7 +53,7 @@ public class SubCommandRecordRestore extends SubCommandRecordBase
 
             if (temporary.exists())
             {
-                L10n.error(sender, "record.cant_restore", name);
+                Blockbuster.l10n.error(sender, "record.cant_restore", name);
             }
             else
             {
@@ -58,12 +64,12 @@ public class SubCommandRecordRestore extends SubCommandRecordBase
                 CommonProxy.manager.records.remove(record.filename);
                 RecordUtils.unloadRecord(record);
 
-                L10n.success(sender, "record.restored", name, iteration);
+                Blockbuster.l10n.success(sender, "record.restored", name, iteration);
             }
         }
         else
         {
-            L10n.error(sender, "record.not_exist_iteration", name, iteration);
+            Blockbuster.l10n.error(sender, "record.not_exist_iteration", name, iteration);
         }
     }
 

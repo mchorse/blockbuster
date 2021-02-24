@@ -493,7 +493,7 @@ blockbuster.gui:
             regular: 普通
             animated: 动画
 
-            cameraFacing:
+            camera_facing:
                 label: 朝向模式
 
                 direction_x: 方向 X
@@ -539,26 +539,28 @@ blockbuster.gui:
             title: 碰撞
 
             enabled: 启用
-            realisticCollision: 真实碰撞
-            preserveEnergy: 保留能量
-            preserveEnergy_tooltip: 保留能量选项可用于保留粒子在碰撞后的速度
-            entityCollision: 与实体碰撞
+            realistic_collision: 真实碰撞
+            preserve_energy: 保留能量
+            preserve_energy_tooltip: 保留能量选项可用于保留粒子在碰撞后的速度
+            entity_collision: 与实体碰撞
             momentum: 实体碰撞动量
             drag: 在粒子与世界中的方块碰撞后，碰撞阻力所增加的阻力（减速）大小
             bounciness: 碰撞后粒子的加速度乘以弹性
-            randomDirection: 随机方向 - 随机化方向矢量。该参数不影响速度。
+            random_direction: 随机方向 - 随机化方向矢量。该参数不影响速度。
             damping:
                 title: 阻尼
                 strength: 阻尼 - 减少撞击时的速度。有效值在 0 和 1 之间。1 = 最大阻尼 -> 完全降低速度。
                 randomness: 随机调整阻尼
-            splitParticle:
+
+            split_particle:
                 title: 分裂粒子
 
                 count: 粒子在撞击时会分裂出的数量 - 分裂后的速度为 分裂前速度/数量
-                speedThreshold: 激活分裂过程中的速度阈值
+                speed_threshold: 激活分裂过程中的速度阈值
+
             radius: 粒子命中箱半径
             expire: 接触时失效
-            expirationDelay: 延迟失效的时间。以 Tick 为单位 - 20 T = 1 秒
+            expiration_delay: 延迟失效的时间。以 Tick 为单位 - 20 T = 1 秒
 
             appearance:
                 title: 碰撞时的材质

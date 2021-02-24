@@ -20,13 +20,9 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class ItemGun extends Item
 {
@@ -62,7 +58,10 @@ public class ItemGun extends Item
         {
             if (props != null && props.launch)
             {
-                this.setThrowableHeading(player, player.rotationPitch, player.rotationYaw, 0, props.speed, props.scatter);
+                float pitch = player.rotationPitch + (float) ((Math.random() - 0.5) * props.scatterY);
+                float yaw = player.rotationYaw + (float) ((Math.random() - 0.5) * props.scatterX);
+
+                this.setThrowableHeading(player, pitch, yaw, 0, props.speed);
             }
 
             return EnumActionResult.PASS;
@@ -81,7 +80,10 @@ public class ItemGun extends Item
         /* Launch the player is enabled */
         if (props.launch)
         {
-            this.setThrowableHeading(player, player.rotationPitch, player.rotationYaw, 0, props.speed, props.scatter);
+            float pitch = player.rotationPitch + (float) ((Math.random() - 0.5) * props.scatterY);
+            float yaw = player.rotationYaw + (float) ((Math.random() - 0.5) * props.scatterX);
+
+            this.setThrowableHeading(player, pitch, yaw, 0, props.speed);
 
             if (!props.fireCommand.isEmpty())
             {
@@ -118,8 +120,11 @@ public class ItemGun extends Item
 
                 EntityGunProjectile projectile = new EntityGunProjectile(world, props, morph);
 
+                float pitch = player.rotationPitch + (float) ((Math.random() - 0.5) * props.scatterY);
+                float yaw = player.rotationYaw + (float) ((Math.random() - 0.5) * props.scatterX);
+
                 projectile.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-                projectile.shoot(player, player.rotationPitch, player.rotationYaw, 0, props.speed, props.scatter);
+                projectile.shoot(player, pitch, yaw, 0, props.speed, 0);
                 projectile.setInitialMotion();
                 world.spawnEntity(projectile);
                 last = projectile;
@@ -171,23 +176,20 @@ public class ItemGun extends Item
         return player.inventory.clearMatchingItems(ammo.getItem(), -1, ammo.getCount(), null) >= 0;
     }
 
-    private void setThrowableHeading(EntityLivingBase entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity, float inaccuracy)
+    private void setThrowableHeading(EntityLivingBase entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity)
     {
         float f = -MathHelper.sin(rotationYawIn * 0.017453292F) * MathHelper.cos(rotationPitchIn * 0.017453292F);
         float f1 = -MathHelper.sin((rotationPitchIn + pitchOffset) * 0.017453292F);
         float f2 = MathHelper.cos(rotationYawIn * 0.017453292F) * MathHelper.cos(rotationPitchIn * 0.017453292F);
-        this.setThrowableHeading(entityThrower, (double) f, (double) f1, (double) f2, velocity, inaccuracy);
+        this.setThrowableHeading(entityThrower, (double) f, (double) f1, (double) f2, velocity);
     }
 
-    public void setThrowableHeading(EntityLivingBase entity, double x, double y, double z, float velocity, float inaccuracy)
+    public void setThrowableHeading(EntityLivingBase entity, double x, double y, double z, float velocity)
     {
         float f = MathHelper.sqrt(x * x + y * y + z * z);
         x = x / (double) f;
         y = y / (double) f;
         z = z / (double) f;
-        x = x + entity.getRNG().nextGaussian() * 0.007499999832361937D * (double) inaccuracy;
-        y = y + entity.getRNG().nextGaussian() * 0.007499999832361937D * (double) inaccuracy;
-        z = z + entity.getRNG().nextGaussian() * 0.007499999832361937D * (double) inaccuracy;
         x = x * (double) velocity;
         y = y * (double) velocity;
         z = z * (double) velocity;

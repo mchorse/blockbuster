@@ -1,9 +1,9 @@
 package mchorse.blockbuster.commands.modelblock;
 
-import mchorse.blockbuster.commands.SubCommandBase;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
+import mchorse.mclib.commands.SubCommandBase;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.command.CommandException;
@@ -24,6 +24,12 @@ public class SubCommandModelBlockMorph extends SubCommandModelBlockBase
     public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.modelblock.morph";
+    }
+
+    @Override
+    public String getSyntax()
+    {
+        return "{l}{6}/{r}modelblock {8}morph{r} {7}<x> <y> <z> [morph_nbt]{r}";
     }
 
     @Override

@@ -1,15 +1,21 @@
 package mchorse.blockbuster.commands.record;
 
-import java.util.List;
-
-import mchorse.blockbuster.commands.McCommandBase;
+import mchorse.blockbuster.commands.BBCommandBase;
 import mchorse.blockbuster.recording.RecordUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-public abstract class SubCommandRecordBase extends McCommandBase
+import java.util.List;
+
+public abstract class SubCommandRecordBase extends BBCommandBase
 {
+    @Override
+    public int getRequiredArgs()
+    {
+        return 1;
+    }
+
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
