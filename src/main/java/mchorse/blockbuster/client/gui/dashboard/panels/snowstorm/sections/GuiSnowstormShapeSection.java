@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSectionManager;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapeBase;
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapeBox;
@@ -71,6 +72,17 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
         this.modeLabel.label.set("blockbuster.gui.snowstorm.shape.shape");
 
         this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.shape.offset"), 20).anchor(0, 1F), this.offsetX, this.offsetY, this.offsetZ, this.direction, this.surface);
+    }
+    
+    @Override
+    protected void collapseState()
+    {
+        GuiSectionManager.setDefaultState(this.getClass().getSimpleName(), false);
+        
+        if (!GuiSectionManager.isCollapsed(this.getClass().getSimpleName()))
+        {
+            this.add(this.fields);
+        }
     }
 
     private void updateNormalDimension(String str, GuiTextElement element, int index)

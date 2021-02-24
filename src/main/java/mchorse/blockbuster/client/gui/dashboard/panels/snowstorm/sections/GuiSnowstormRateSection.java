@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSectionManager;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRate;
 import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRateInstant;
@@ -29,6 +30,17 @@ public class GuiSnowstormRateSection extends GuiSnowstormModeSection<BedrockComp
         this.particles.tooltip(IKey.lang(""));
 
         this.fields.add(this.particles);
+    }
+    
+    @Override
+    protected void collapseState()
+    {
+        GuiSectionManager.setDefaultState(this.getClass().getSimpleName(), false);
+        
+        if (!GuiSectionManager.isCollapsed(this.getClass().getSimpleName()))
+        {
+            this.add(this.fields);
+        }
     }
 
     @Override
