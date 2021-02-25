@@ -136,10 +136,7 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
     {
         GuiSectionManager.setDefaultState(this.getClass().getSimpleName(), false);
         
-        if (!GuiSectionManager.isCollapsed(this.getClass().getSimpleName()))
-        {
-            this.add(this.fields);
-        }
+        super.collapseState();
     }
 
     private void updateElements()
