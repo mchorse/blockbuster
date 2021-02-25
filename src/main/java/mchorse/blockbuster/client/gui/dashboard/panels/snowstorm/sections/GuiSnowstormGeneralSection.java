@@ -73,10 +73,7 @@ public class GuiSnowstormGeneralSection extends GuiSnowstormSection
     {
         GuiSectionManager.setDefaultState(this.getClass().getSimpleName(), false);
         
-        if (!GuiSectionManager.isCollapsed(this.getClass().getSimpleName()))
-        {
-            this.add(this.fields);
-        }
+        super.collapseState();
     }
 
     private void setTextureSize(ResourceLocation rl)
