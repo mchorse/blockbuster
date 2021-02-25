@@ -37,10 +37,7 @@ public class GuiSnowstormRateSection extends GuiSnowstormModeSection<BedrockComp
     {
         GuiSectionManager.setDefaultState(this.getClass().getSimpleName(), false);
         
-        if (!GuiSectionManager.isCollapsed(this.getClass().getSimpleName()))
-        {
-            this.add(this.fields);
-        }
+        super.collapseState();
     }
 
     @Override
