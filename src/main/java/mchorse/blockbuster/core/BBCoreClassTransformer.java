@@ -1,10 +1,8 @@
 package mchorse.blockbuster.core;
 
-import mchorse.blockbuster.core.transformers.EntityRendererTransformer;
-import mchorse.blockbuster.core.transformers.RenderGlobalTransformer;
-import mchorse.blockbuster.core.transformers.RenderItemTransformer;
-import mchorse.blockbuster.core.transformers.WorldTransformer;
+import mchorse.blockbuster.core.transformers.*;
 import mchorse.blockbuster.utils.mclib.coremod.CoreClassTransformer;
+import net.minecraft.entity.Entity;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
@@ -21,6 +19,8 @@ public class BBCoreClassTransformer extends CoreClassTransformer
     private RenderGlobalTransformer render = new RenderGlobalTransformer();
     private EntityRendererTransformer entityRenderer = new EntityRendererTransformer();
     private RenderItemTransformer renderItem = new RenderItemTransformer();
+    private EntityTransformer entity = new EntityTransformer();
+    private EntityTransformationUtilsTransformer entityTransformationUtils = new EntityTransformationUtilsTransformer();
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass)
@@ -36,6 +36,18 @@ public class BBCoreClassTransformer extends CoreClassTransformer
             System.out.println("BBCoreMod: Transforming RenderGlobal class (" + name + ")");
 
             return this.render.transform(name, basicClass);
+        }
+        else if (checkName(name, "vg", "net.minecraft.entity.Entity"))
+        {
+            System.out.println("BBCoreMod: Transforming Entity class (" + name + ")");
+
+            return this.entity.transform(name, basicClass);
+        }
+        else if (name.equals("mchorse.blockbuster.utils.EntityTransformationUtils"))
+        {
+            System.out.println("BBCoreMod: Transforming EntityTransformationUtils class (" + name + ")");
+
+            return this.entityTransformationUtils.transform(name, basicClass);
         }
         else if (checkName(name, "buq", "net.minecraft.client.renderer.EntityRenderer"))
         {
