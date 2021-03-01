@@ -21,6 +21,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
     public GuiToggleElement realisticCollision;
     public GuiToggleElement entityCollision;
     public GuiToggleElement momentum;
+    public GuiToggleElement realisticCollisionDrag;
     public GuiTrackpadElement drag;
     public GuiTrackpadElement bounciness;
     public GuiTrackpadElement randomBounciness; //randomize the direction vector
@@ -64,6 +65,13 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
             this.component.momentum = b.isToggled();
             this.parent.dirty();
         });
+
+        this.realisticCollisionDrag = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.realistic_collision_drag"), (b) ->
+        {
+            this.component.realisticCollisionDrag = b.isToggled();
+            this.parent.dirty();
+        });
+        this.realisticCollisionDrag.tooltip(IKey.lang("blockbuster.gui.snowstorm.realistic_collision_drag_tooltip"));
         
         this.drag = new GuiTrackpadElement(mc, (value) ->
         {
@@ -154,7 +162,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 
         this.randomBouncinessRow.add(this.randomBounciness);
         
-        this.fields.add(this.controlToggleElements, this.drag, this.bounciness, this.randomBouncinessRow , this.radius, this.expire, this.expirationDelay);
+        this.fields.add(this.controlToggleElements, this.realisticCollisionDrag, this.drag, this.bounciness, this.randomBouncinessRow , this.radius, this.expire, this.expirationDelay);
         this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.collision.damping.title"), 20).anchor(0, 1F), this.damp, this.randomDamp);
         this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.collision.split_particle.title"), 20).anchor(0, 1F), this.splitParticle,  this.splitParticleSpeedThreshold);
     }
@@ -187,6 +195,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
         this.realisticCollision.toggled(this.component.realisticCollision);
         this.entityCollision.toggled(this.component.entityCollision);
         this.momentum.toggled(this.component.momentum);
+        this.realisticCollisionDrag.toggled(this.component.realisticCollisionDrag);
         this.drag.setValue(this.component.collisionDrag);
         this.bounciness.setValue(this.component.bounciness);
         this.randomBounciness.setValue(this.component.randomBounciness);
