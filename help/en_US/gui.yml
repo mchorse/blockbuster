@@ -541,6 +541,8 @@ blockbuster.gui:
             preserve_energy_tooltip: Preserve energy option allows to preserve velocity of particles after collision
             entity_collision: Collision with entities
             momentum: Momentum for entity collision
+            realistic_collision_drag: Realistic collision drag
+            realistic_collision_drag_tooltip: Collision drag will be reset when particle stops colliding. Activating this will also fix particles accelerating away with high collision drag values.
             drag: Collision drag adds a drag (slowdown) after particle's collision with blocks in the world
             bounciness: Bounciness multiplies particle's acceleration after collision
             random_direction: Random Direction - randomize the direction vector. It doesn't affect the velocity.

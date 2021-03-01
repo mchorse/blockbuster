@@ -1,8 +1,11 @@
 package mchorse.blockbuster.client.particles.emitter;
 
+import net.minecraft.entity.Entity;
+
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
+import java.util.HashMap;
 
 public class BedrockParticle
 {
@@ -24,6 +27,7 @@ public class BedrockParticle
     public boolean relativeRotation;
     public boolean relativeDirection;
     public boolean relativeAcceleration;
+    public boolean realisticCollisionDrag;
     /* Works best with relativeDirection */
     public boolean gravity;
     public boolean manual;
@@ -36,6 +40,7 @@ public class BedrockParticle
      * I think this probably never happens in practice
      */
     public Vector3f collisionTime = new Vector3f(-2f, -2f,-2f);
+    public HashMap<Entity, Vector3f> entityCollisionTime = new HashMap<>();
     public boolean collisionTexture;
     public boolean collisionTinting;
     public int bounces;
@@ -137,6 +142,12 @@ public class BedrockParticle
 
         if (!this.manual)
         {
+            if(this.realisticCollisionDrag && Math.round(this.speed.x*10000) == 0 && Math.round(this.speed.y*10000) == 0 && Math.round(this.speed.z*10000) == 0)
+            {
+                this.dragFactor = 0;
+                this.speed.scale(0);
+            }
+
             float rotationAcceleration = this.rotationAcceleration / 20F -this.rotationDrag * this.rotationVelocity;
             this.rotationVelocity += rotationAcceleration / 20F;
             this.rotation = this.initialRotation + this.rotationVelocity * this.age;
@@ -152,31 +163,32 @@ public class BedrockParticle
                 emitter.rotation.transform(this.acceleration);
             }
             
-            Vector3f vec = new Vector3f(this.speed);
-            vec.scale(-(this.drag + this.dragFactor));
-            
+            Vector3f drag = new Vector3f(this.speed);
+
+            drag.scale(-(this.drag + this.dragFactor));
+
             if (this.gravity)
             {
                 this.acceleration.y -= 9.81;
             }
-            
-            this.acceleration.add(vec);
+
+            this.acceleration.add(drag);
             this.acceleration.scale(1 / 20F);
             this.speed.add(this.acceleration);
 
-            vec.set(this.speed);
-            vec.x *= this.accelerationFactor.x;
-            vec.y *= this.accelerationFactor.y;
-            vec.z *= this.accelerationFactor.z;
+            Vector3f speed0 = new Vector3f(this.speed);
+            speed0.x *= this.accelerationFactor.x;
+            speed0.y *= this.accelerationFactor.y;
+            speed0.z *= this.accelerationFactor.z;
 
             if (this.relativePosition || this.relativeRotation)
             {
-                this.matrix.transform(vec);
+                this.matrix.transform(speed0);
             }
             
-            this.position.x += vec.x / 20F;
-            this.position.y += vec.y / 20F;
-            this.position.z += vec.z / 20F;
+            this.position.x += speed0.x / 20F;
+            this.position.y += speed0.y / 20F;
+            this.position.z += speed0.z / 20F;
         }
 
         if (this.lifetime >= 0 &&
