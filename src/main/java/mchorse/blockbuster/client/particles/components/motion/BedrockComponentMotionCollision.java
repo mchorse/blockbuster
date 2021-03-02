@@ -284,6 +284,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
                     collisionHandler(particle, emitter, EnumFacing.Axis.Y, now, prev);
 
+                    /* here comes inertia */
                     /* remove unecessary elements from collisionTime*/
                     particle.entityCollisionTime.keySet().retainAll(staticEntityAABBs.keySet());
 
@@ -293,7 +294,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
                         AxisAlignedBB entityAABB = offsetData2.aabb;
                         Entity collidingEntity = entry.getKey();
 
-                        if (d0 != offsetData2.y)
+                        if (d0 != offsetData2.y && origX == offsetData2.x && origZ == offsetData2.z)
                         {
                             inertia(particle, collidingEntity, now);
                         }
@@ -534,18 +535,6 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
     {
         Vector3d entitySpeed = new Vector3d((entity.posX - entity.prevPosX), (entity.posY - entity.prevPosY), (entity.posZ - entity.prevPosZ));
 
-        /* stick the particle on top of the entity */
-        if(now == null)
-        {
-            particle.position.x += (entity.posX - entity.prevPosX);
-            particle.position.z += (entity.posZ - entity.prevPosZ);
-        }
-        else
-        {
-            now.x += (entity.posX - entity.prevPosX);
-            now.z += (entity.posZ - entity.prevPosZ);
-        }
-
         double prevPrevPosX = EntityTransformationUtils.getPrevPrevPosX(entity);
         double prevPrevPosY = EntityTransformationUtils.getPrevPrevPosY(entity);
         double prevPrevPosZ = EntityTransformationUtils.getPrevPrevPosZ(entity);
@@ -561,6 +550,20 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
         if(!particle.entityCollisionTime.containsKey(entity))
         {
             prevEntitySpeed.scale(0);
+        }
+        else
+        {
+            /* stick the particle on top of the entity */
+            if(now == null)
+            {
+                particle.position.x += entitySpeed.x;
+                particle.position.z += entitySpeed.z;
+            }
+            else
+            {
+                now.x += entitySpeed.x;
+                now.z += entitySpeed.z;
+            }
         }
 
         particle.speed.x += Math.round((prevEntitySpeed.x-entitySpeed.x)*1000D)/200D;
