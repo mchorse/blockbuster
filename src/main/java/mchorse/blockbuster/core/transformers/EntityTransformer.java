@@ -54,24 +54,25 @@ public class EntityTransformer extends ClassTransformer
     public void processOnEntityUpdate(MethodNode method)
     {
         InsnList list = new InsnList();
+        String entity = CoreClassTransformer.get("vg", "net/minecraft/entity/Entity");
+        String prevPosX = CoreClassTransformer.get("m", "prevPosX");
+        String prevPosY = CoreClassTransformer.get("n", "prevPosY");
+        String prevPosZ = CoreClassTransformer.get("o", "prevPosZ");
 
-        list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/entity/Entity", "prevPosX", "D"));
-        list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/entity/Entity", "prevPrevPosX", "D"));
-
-        list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/entity/Entity", "prevPosY", "D"));
-        list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/entity/Entity", "prevPrevPosY", "D"));
-
-        list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/entity/Entity", "prevPosZ", "D"));
-        list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/entity/Entity", "prevPrevPosZ", "D"));
+        buildFieldAssignmentInsn(list, entity, prevPosX, "prevPrevPosX");
+        buildFieldAssignmentInsn(list, entity, prevPosY, "prevPrevPosY");
+        buildFieldAssignmentInsn(list, entity, prevPosZ, "prevPrevPosZ");
 
         method.instructions.insert(this.getFirstLabel(method), list);
 
         System.out.println("BBCoreMod: successfully patched onEntityUpdate!");
+    }
+
+    public void buildFieldAssignmentInsn(InsnList list, String owner, String get, String put)
+    {
+        list.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        list.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        list.add(new FieldInsnNode(Opcodes.GETFIELD, owner, get, "D"));
+        list.add(new FieldInsnNode(Opcodes.PUTFIELD, owner, put, "D"));
     }
 }
