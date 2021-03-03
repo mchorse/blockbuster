@@ -61,6 +61,7 @@ blockbuster.error:
         cant_restore: "{f}Can't restore an iteration because temporary file exists while it shouldn't be..."
         wrong_axis: "{f}Given \"%s{f}\" is not a valid axis. It should be either {7}x{r} or {7}z{r}!"
         invalid_math_expression: "Given math expression \"%s{r}\" is not a valid math expression!"
+        wrong_apply_property: "{f}Given wrong apply properties %s{f}!"
 
     # Recording errors
     recording:
