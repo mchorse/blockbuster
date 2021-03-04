@@ -533,6 +533,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
     public void inertia(BedrockParticle particle, Entity entity, @Nullable Vector3d now)
     {
+        if(this.collisionDrag==0)
+        {
+            return;
+        }
+
         Vector3d entitySpeed = new Vector3d((entity.posX - entity.prevPosX), (entity.posY - entity.prevPosY), (entity.posZ - entity.prevPosZ));
 
         double prevPrevPosX = EntityTransformationUtils.getPrevPrevPosX(entity);
@@ -546,7 +551,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
             particle.dragFactor = 0;
         }*/
 
-        /* for first collision the from the inertial system of the particle it is acceleration from zero to current velocity */
+        /* for first collision from the inertial system of the particle it is acceleration from zero to current velocity */
         if(!particle.entityCollisionTime.containsKey(entity))
         {
             prevEntitySpeed.scale(0);
@@ -566,7 +571,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
             }
         }
 
-        particle.speed.x += Math.round((prevEntitySpeed.x-entitySpeed.x)*1000D)/200D;
+        particle.speed.x += Math.round((prevEntitySpeed.x-entitySpeed.x)*1000D)/200D; //scale it up so it gets more noticable
         particle.speed.y += Math.round((prevEntitySpeed.y-entitySpeed.y)*1000D)/200D;
         particle.speed.z += Math.round((prevEntitySpeed.z-entitySpeed.z)*1000D)/200D;
     }
