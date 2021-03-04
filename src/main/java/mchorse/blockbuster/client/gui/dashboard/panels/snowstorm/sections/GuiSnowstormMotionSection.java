@@ -16,16 +16,20 @@ import net.minecraft.client.Minecraft;
 public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockComponentMotion>
 {
     public GuiElement position;
+    public GuiElement positionElements;
     public GuiTextElement positionSpeed;
     public GuiTextElement positionX;
     public GuiTextElement positionY;
     public GuiTextElement positionZ;
     public GuiTextElement positionDrag;
+    public GuiElement positionDragRow;
+    public GuiElement positionTitle = Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_title"), 20).anchor(0, 1F);
 
     public GuiElement rotation;
     public GuiTextElement rotationAngle;
     public GuiTextElement rotationRate;
     public GuiTextElement rotationAcceleration;
+    public GuiElement rotationDragRow;
     public GuiTextElement rotationDrag;
 
     private BedrockComponentInitialSpeed speed;
@@ -38,11 +42,11 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
         this.positionSpeed = new GuiTextElement(mc, 10000, (str) -> this.speed.speed = this.parse(str, this.positionSpeed, this.speed.speed));
         this.positionSpeed.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.position_speed"));
         this.positionX = new GuiTextElement(mc, 10000, (str) -> this.updatePosition(str, this.positionX, 0));
-        this.positionX.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
+        this.positionX.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_x"));
         this.positionY = new GuiTextElement(mc, 10000, (str) -> this.updatePosition(str, this.positionY, 1));
-        this.positionY.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
+        this.positionY.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_y"));
         this.positionZ = new GuiTextElement(mc, 10000, (str) -> this.updatePosition(str, this.positionZ, 2));
-        this.positionZ.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
+        this.positionZ.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_z"));
         this.positionDrag = new GuiTextElement(mc, 10000, (str) ->
         {
             BedrockComponentMotionDynamic component = (BedrockComponentMotionDynamic) this.component;
@@ -80,9 +84,26 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
         this.rotationDrag.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.rotation_drag"));
 
         this.position = new GuiElement(mc);
+
         this.position.flex().column(5).vertical().stretch();
-        this.position.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.position"), 20).anchor(0, 1F), this.positionSpeed);
-        this.position.add(this.positionX, this.positionY, this.positionZ);
+        this.position.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.speed"), 20).anchor(0, 1F), this.positionSpeed);
+
+        this.positionElements = new GuiElement(mc);
+
+        this.positionElements.flex().column(5).vertical().stretch();
+        this.positionElements.add(this.positionX, this.positionY, this.positionZ);
+        this.positionElements.addBefore(this.positionX, this.positionTitle);
+        this.position.add(this.positionElements);
+
+        this.positionDragRow = new GuiElement(mc);
+        this.rotationDragRow = new GuiElement(mc);
+
+        this.rotationDragRow.flex().column(5).vertical().stretch();
+        this.rotationDragRow.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.rotation_drag")), this.rotationDrag);
+
+        this.positionDragRow.flex().column(5).vertical().stretch();
+        this.positionDragRow.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.position_drag_title")), this.positionDrag);
+
 
         this.rotation = new GuiElement(mc);
         this.rotation.flex().column(5).vertical().stretch();
@@ -156,12 +177,22 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
         this.set(this.rotationAngle, this.spin.rotation);
         this.set(this.rotationRate, this.spin.rate);
 
-        this.positionDrag.removeFromParent();
-        this.rotationDrag.removeFromParent();
+        this.positionDragRow.removeFromParent();
+        this.rotationDragRow.removeFromParent();
 
         if (this.component instanceof BedrockComponentMotionDynamic)
         {
             BedrockComponentMotionDynamic component = (BedrockComponentMotionDynamic) this.component;
+
+            this.positionElements.remove(this.positionTitle);
+
+            this.positionTitle = Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_title"), 20).anchor(0, 1F);
+
+            this.positionElements.addBefore(this.positionX, this.positionTitle);
+            
+            this.positionX.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_x"));
+            this.positionY.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_y"));
+            this.positionZ.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_z"));
 
             this.set(this.positionX, component.motionAcceleration[0]);
             this.set(this.positionY, component.motionAcceleration[1]);
@@ -171,12 +202,22 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
             this.set(this.positionDrag, component.motionDrag);
             this.set(this.rotationDrag, component.rotationDrag);
 
-            this.position.add(this.positionDrag);
-            this.rotation.add(this.rotationDrag);
+            this.position.add(this.positionDragRow);
+            this.rotation.add(this.rotationDragRow);
         }
         else
         {
             BedrockComponentMotionParametric component = (BedrockComponentMotionParametric) this.component;
+
+            this.positionElements.remove(this.positionTitle);
+
+            this.positionTitle = Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.position"), 20).anchor(0, 1F);
+
+            this.positionElements.addBefore(this.positionX, this.positionTitle);
+
+            this.positionX.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
+            this.positionY.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
+            this.positionZ.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
 
             this.set(this.positionX, component.position[0]);
             this.set(this.positionY, component.position[1]);
