@@ -1,20 +1,14 @@
 package mchorse.blockbuster.core.transformers;
 
-import mchorse.blockbuster.utils.mclib.coremod.ClassMethodTransformer;
 import mchorse.blockbuster.utils.mclib.coremod.ClassTransformer;
 import mchorse.blockbuster.utils.mclib.coremod.CoreClassTransformer;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
-
-import java.util.Iterator;
 
 /**
  * This patches the entity to save the position before the previous position.
