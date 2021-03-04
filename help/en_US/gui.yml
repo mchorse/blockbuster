@@ -462,6 +462,12 @@ blockbuster.gui:
 
             position: Position
             position_speed: Initial speed
+            speed: Speed
+            acceleration_title: Acceleration
+            acceleration_x: X acceleration
+            acceleration_y: Y acceleration
+            acceleration_z: Z acceleration
+            position_drag_title: Air drag
             position_drag: Motion drag
 
             rotation: Rotation
