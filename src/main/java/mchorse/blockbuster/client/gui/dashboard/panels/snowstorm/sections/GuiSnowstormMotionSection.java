@@ -189,7 +189,7 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
             this.positionTitle = Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_title"), 20).anchor(0, 1F);
 
             this.positionElements.addBefore(this.positionX, this.positionTitle);
-            
+
             this.positionX.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_x"));
             this.positionY.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_y"));
             this.positionZ.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_z"));

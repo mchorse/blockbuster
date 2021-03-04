@@ -2,7 +2,6 @@ package mchorse.blockbuster.core.transformers;
 
 import mchorse.blockbuster.utils.mclib.coremod.ClassTransformer;
 import mchorse.blockbuster.utils.mclib.coremod.CoreClassTransformer;
-import net.minecraft.util.EnumFacing;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
