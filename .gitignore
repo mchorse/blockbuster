@@ -1,0 +1,29 @@
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run
+.DS_Store
+src/main/resources/assets/blockbuster/lang/*.lang
+src/main/resources/*.md
+
+# PHP
+php/vendor
+php/composer.lock
