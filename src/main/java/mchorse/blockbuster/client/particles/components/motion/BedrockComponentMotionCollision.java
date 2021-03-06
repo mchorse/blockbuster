@@ -564,9 +564,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
             particle.offset.z = entitySpeed.z;
         }
 
-        particle.speed.x += Math.round((prevEntitySpeed.x-entitySpeed.x)*1000D)/150D; //scale it up so it gets more noticable
-        particle.speed.y += Math.round((prevEntitySpeed.y-entitySpeed.y)*1000D)/150D;
-        particle.speed.z += Math.round((prevEntitySpeed.z-entitySpeed.z)*1000D)/150D;
+        particle.speed.x += Math.round((prevEntitySpeed.x-entitySpeed.x)*1000D)/250D; //scale it up so it gets more noticable
+        particle.speed.y += Math.round((prevEntitySpeed.y-entitySpeed.y)*1000D)/250D;
+        particle.speed.z += Math.round((prevEntitySpeed.z-entitySpeed.z)*1000D)/250D;
     }
 
     public void momentum(BedrockParticle particle, Entity entity)
