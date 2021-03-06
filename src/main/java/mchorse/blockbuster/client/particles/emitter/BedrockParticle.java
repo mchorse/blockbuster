@@ -248,7 +248,7 @@ public class BedrockParticle
      */
     public void transformOffsetToGlobal()
     {
-        this.offset.scale(2);
+        this.offset.scale(6); //scale it up so it gets more noticeable (artistic choice)
 
         this.speed.x += this.offset.x;
         this.speed.y += this.offset.y;
