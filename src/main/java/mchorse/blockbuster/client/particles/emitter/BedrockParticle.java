@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.particles.emitter;
 
+import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotionCollision;
 import net.minecraft.entity.Entity;
 
 import javax.vecmath.Matrix3f;
@@ -59,6 +60,8 @@ public class BedrockParticle
     public float rotationAcceleration;
     public float rotationDrag;
 
+    /* for transforming into intertial systems (currently just used for inertia)*/
+    public Vector3d offset = new Vector3d();
     /* Position */
     public Vector3d position = new Vector3d();
     public Vector3d initialPosition = new Vector3d();
@@ -148,6 +151,23 @@ public class BedrockParticle
                 this.speed.scale(0);
             }
 
+            /* lazy fix for transforming from moving intertial system back to global space */
+            if(this.entityCollisionTime.isEmpty())
+            {
+                transformOffsetToGlobal();
+            }
+            else
+            {
+                for(HashMap.Entry<Entity, Vector3f> entry : this.entityCollisionTime.entrySet())
+                {
+                    if(entry.getValue().y!=this.age)
+                    {
+                        transformOffsetToGlobal();
+                    }
+                }
+            }
+
+
             float rotationAcceleration = this.rotationAcceleration / 20F -this.rotationDrag * this.rotationVelocity;
             this.rotationVelocity += rotationAcceleration / 20F;
             this.rotation = this.initialRotation + this.rotationVelocity * this.age;
@@ -175,6 +195,8 @@ public class BedrockParticle
             this.acceleration.add(drag);
             this.acceleration.scale(1 / 20F);
             this.speed.add(this.acceleration);
+
+            this.position.add(this.offset);
 
             Vector3f speed0 = new Vector3f(this.speed);
             speed0.x *= this.accelerationFactor.x;
@@ -218,5 +240,20 @@ public class BedrockParticle
         {
             this.matrix.set(emitter.rotation);
         }
+    }
+
+    /**
+     * This method adds the offset to the speed to transform from a moving inertial system to the global space
+     * (especially for inertia)
+     */
+    public void transformOffsetToGlobal()
+    {
+        this.offset.scale(2);
+
+        this.speed.x += this.offset.x;
+        this.speed.y += this.offset.y;
+        this.speed.z += this.offset.z;
+
+        this.offset.scale(0);
     }
 }

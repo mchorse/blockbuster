@@ -296,7 +296,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
                         if (d0 != offsetData2.y && origX == offsetData2.x && origZ == offsetData2.z)
                         {
-                            inertia(particle, collidingEntity, now);
+                            inertia(particle, collidingEntity);
                         }
 
                         if(particle.entityCollisionTime.containsKey(collidingEntity))
@@ -334,10 +334,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
                 drag(particle);
             }
-            else if(this.realisticCollisionDrag && entityAABBs.isEmpty()) //no collision - reset drag stuff
+            else if(entityAABBs.isEmpty() && this.realisticCollisionDrag) //no collision - reset collision drag
             {
                 particle.dragFactor = 0;
             }
+
 
             for (HashMap.Entry<Entity, AxisAlignedBB> entry : entityAABBs.entrySet())
             {
@@ -458,7 +459,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
         if (delta > 0 && component == EnumFacing.Axis.Y) //particle is above
         {
-            inertia(particle, entity, null);
+            inertia(particle, entity);
         }
 
         /* particle speed is always switched (realistcCollision==true), as it always collides with the entity, but it should only have one correct direction */
@@ -531,7 +532,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
         setComponent(particle.collisionTime, component, particle.age);
     }
 
-    public void inertia(BedrockParticle particle, Entity entity, @Nullable Vector3d now)
+    public void inertia(BedrockParticle particle, Entity entity)
     {
         if(this.collisionDrag==0)
         {
@@ -559,21 +560,13 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
         else
         {
             /* stick the particle on top of the entity */
-            if(now == null)
-            {
-                particle.position.x += entitySpeed.x;
-                particle.position.z += entitySpeed.z;
-            }
-            else
-            {
-                now.x += entitySpeed.x;
-                now.z += entitySpeed.z;
-            }
+            particle.offset.x = entitySpeed.x;
+            particle.offset.z = entitySpeed.z;
         }
 
-        particle.speed.x += Math.round((prevEntitySpeed.x-entitySpeed.x)*1000D)/200D; //scale it up so it gets more noticable
-        particle.speed.y += Math.round((prevEntitySpeed.y-entitySpeed.y)*1000D)/200D;
-        particle.speed.z += Math.round((prevEntitySpeed.z-entitySpeed.z)*1000D)/200D;
+        particle.speed.x += Math.round((prevEntitySpeed.x-entitySpeed.x)*1000D)/150D; //scale it up so it gets more noticable
+        particle.speed.y += Math.round((prevEntitySpeed.y-entitySpeed.y)*1000D)/150D;
+        particle.speed.z += Math.round((prevEntitySpeed.z-entitySpeed.z)*1000D)/150D;
     }
 
     public void momentum(BedrockParticle particle, Entity entity)
