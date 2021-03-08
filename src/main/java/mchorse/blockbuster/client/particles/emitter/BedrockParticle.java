@@ -145,6 +145,8 @@ public class BedrockParticle
 
         if (!this.manual)
         {
+            //this.position.add(this.offset);
+
             if(this.realisticCollisionDrag && Math.round(this.speed.x*10000) == 0 && Math.round(this.speed.y*10000) == 0 && Math.round(this.speed.z*10000) == 0)
             {
                 this.dragFactor = 0;
@@ -195,8 +197,6 @@ public class BedrockParticle
             this.acceleration.add(drag);
             this.acceleration.scale(1 / 20F);
             this.speed.add(this.acceleration);
-
-            this.position.add(this.offset);
 
             Vector3f speed0 = new Vector3f(this.speed);
             speed0.x *= this.accelerationFactor.x;
