@@ -9,6 +9,7 @@ import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4d;
 import javax.vecmath.Vector4f;
 
+import mchorse.metamorph.bodypart.BodyPart;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.ModelLimb;
@@ -43,6 +44,9 @@ public class ModelCustomRenderer extends ModelRenderer
     public ModelTransform trasnform;
     public ModelCustomRenderer parent;
     public ModelCustom model;
+
+    /* rotation of this object */
+    public Vector3d instanceRotation = new Vector3d();
 
     public float scaleX = 1;
     public float scaleY = 1;
@@ -179,7 +183,14 @@ public class ModelCustomRenderer extends ModelRenderer
     			
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(this.offsetX, this.offsetY, this.offsetZ);
-                
+
+                this.instanceRotation.set(new Vector3d(this.rotateAngleX, -this.rotateAngleY, -this.rotateAngleZ));
+
+                if(this.parent!=null)
+                {
+                    this.instanceRotation.add(this.parent.instanceRotation);
+                }
+
                 if (this.rotateAngleX == 0.0F && this.rotateAngleY == 0.0F && this.rotateAngleZ == 0.0F)
                 {
                     if (this.rotationPointX == 0.0F && this.rotationPointY == 0.0F && this.rotationPointZ == 0.0F)
@@ -194,7 +205,7 @@ public class ModelCustomRenderer extends ModelRenderer
                                 this.childModels.get(k).render(scale);
                             }
                         }
-                        
+
                         updateObbs();
                     }
                     else
@@ -256,7 +267,7 @@ public class ModelCustomRenderer extends ModelRenderer
     }
     
     public void updateObbs()
-    {  
+    {
         if(this.model != null && this.model.current != null && this.model.current.orientedBBlimbs != null )
         {
             if(this.model.current.orientedBBlimbs.get(this.limb) != null)
@@ -283,12 +294,31 @@ public class ModelCustomRenderer extends ModelRenderer
                         ay.normalize();
                         az.normalize();
                         obb.rotation.setIdentity();
+
+                        //obb.center.set(this.model.current.position);
+
+                        Vector3d rotation0 = new Vector3d(this.model.current.modelBlockRotation);
+                        rotation0.add(this.model.current.instanceRotation);
+                        rotation0.add(this.instanceRotation);
+
+                        Matrix3d rotation = new Matrix3d();
+                        ax.normalize();
+                        ay.normalize();
+                        az.normalize();
+                        obb.rotation.setIdentity();
                         obb.rotation.setRow(0, ax);
                         obb.rotation.setRow(1, ay);
                         obb.rotation.setRow(2, az);
+                        //System.out.println(Math.toDegrees(rotation0.x)+" "+Math.toDegrees(rotation0.y)+" "+Math.toDegrees(rotation0.z));
+                        /*rotation.rotX(rotation0.x);
+                        obb.rotation.mul(rotation);
+                        rotation.rotY(rotation0.y);
+                        obb.rotation.mul(rotation);
+                        rotation.rotZ(rotation0.z);
+                        obb.rotation.mul(rotation);*/
                         
-                        Matrix3f rotation = new Matrix3f(obb.rotation);
-                        Matrix3f rotscale = new Matrix3f(parent.m00, parent.m01, parent.m02,
+                        rotation.set(obb.rotation);
+                        Matrix3d rotscale = new Matrix3d(parent.m00, parent.m01, parent.m02,
                                                          parent.m10, parent.m11, parent.m12,
                                                          parent.m20, parent.m21, parent.m22);
                         
@@ -300,6 +330,8 @@ public class ModelCustomRenderer extends ModelRenderer
                         obb.scale.m22 = rotscale.m22;
                         
                         obb.modelView.setIdentity();
+
+                        obb.buildCorners();
                     }
                 }
             }

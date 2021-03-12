@@ -200,26 +200,6 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     @Override
     protected void applyRotations(EntityLivingBase entity, float pitch, float yaw, float partialTicks)
     {
-        Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
-        Matrix4f matrix4f = MatrixUtils.readModelView(SnowstormMorph.getMatrix());
-
-        parent.invert();
-        parent.mul(matrix4f);
-
-        Vector4f zero = SnowstormMorph.calculateGlobal(parent, entity, 0, 0, 0, partialTicks);
-
-        for (List<OrientedBB> obbs : this.current.orientedBBlimbs.values())
-        {
-            for(OrientedBB obb : obbs)
-            {
-                obb.center.x = zero.x;
-                obb.center.y = zero.y;
-                obb.center.z = zero.z;
-                
-                obb.buildCorners();
-            }
-        }
-
         if (entity.isEntityAlive() && entity.isPlayerSleeping())
         {
             /* Nap time! */
