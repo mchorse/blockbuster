@@ -8,7 +8,9 @@ import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiResourceLocationListElement;
+import mchorse.mclib.client.gui.framework.elements.list.GuiSearchListElement;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiMessageModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
@@ -37,7 +39,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Texture manager panel
@@ -50,7 +54,7 @@ import java.util.Map;
  */
 public class GuiTextureManagerPanel extends GuiBlockbusterPanel
 {
-    public GuiResourceLocationListElement textures;
+    public GuiSearchResourceLocationList textures;
     public GuiToggleElement linear;
     public GuiToggleElement mipmap;
     public GuiButtonElement remove;
@@ -66,8 +70,8 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
     {
         super(mc, dashboard);
 
-        this.textures = new GuiResourceLocationListElement(mc, (rl) -> this.pickRL(rl.get(0)));
-        this.textures.background();
+        this.textures = new GuiSearchResourceLocationList(mc, (rl) -> this.pickRL(rl.get(0)));
+        this.textures.list.background();
         this.linear = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.texture.linear"), false, (b) -> this.setLinear(b.isToggled()));
         this.linear.tooltip(IKey.lang("blockbuster.gui.texture.linear_tooltip"), Direction.LEFT);
         this.mipmap = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.texture.mipmap"), false, (b) -> this.setMipmap(b.isToggled()));
@@ -96,7 +100,7 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
 
     private void copy()
     {
-        ResourceLocation location = this.textures.getCurrentFirst();
+        ResourceLocation location = this.textures.list.getCurrentFirst();
 
         if (location == null)
         {
@@ -108,7 +112,7 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
 
     private void export()
     {
-        ResourceLocation location = this.textures.getCurrentFirst();
+        ResourceLocation location = this.textures.list.getCurrentFirst();
 
         if (location == null)
         {
@@ -253,9 +257,9 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
         Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(this.mc.renderEngine);
         GlStateManager.deleteTexture(map.remove(this.rl).getGlTextureId());
 
-        this.textures.remove(this.rl);
-        this.textures.setIndex(this.textures.getIndex() - 1);
-        this.pickRL(this.textures.getCurrentFirst());
+        this.textures.list.remove(this.rl);
+        this.textures.list.setIndex(this.textures.list.getIndex() - 1);
+        this.pickRL(this.textures.list.getCurrentFirst());
     }
 
     private void replace()
@@ -298,13 +302,13 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
     {
         Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(this.mc.renderEngine);
 
-        this.textures.clear();
-        this.textures.getList().addAll(map.keySet());
-        this.textures.sort();
-        this.textures.update();
+        this.textures.list.clear();
+        this.textures.list.getList().addAll(map.keySet());
+        this.textures.list.sort();
+        this.textures.list.update();
 
         this.pickRL(this.rl);
-        this.textures.setCurrent(this.rl);
+        this.textures.list.setCurrent(this.rl);
     }
 
     @Override
@@ -351,5 +355,19 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
         }
 
         super.draw(context);
+    }
+
+    public static class GuiSearchResourceLocationList extends GuiSearchListElement<ResourceLocation>
+    {
+        public GuiSearchResourceLocationList(Minecraft mc, Consumer<List<ResourceLocation>> callback)
+        {
+            super(mc, callback);
+        }
+
+        @Override
+        protected GuiListElement<ResourceLocation> createList(Minecraft mc, Consumer<List<ResourceLocation>> callback)
+        {
+            return new GuiResourceLocationListElement(mc, callback);
+        }
     }
 }
