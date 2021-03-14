@@ -565,11 +565,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         @Override
         public SequenceEntry clone()
         {
-            SequenceEntry entry = new SequenceEntry(this.morph, this.duration, this.random, this.setDuration);
-
-            entry.setDuration = this.setDuration;
-
-            return entry;
+            return new SequenceEntry(MorphUtils.copy(this.morph), this.duration, this.random, this.setDuration);
         }
 
         @Override
