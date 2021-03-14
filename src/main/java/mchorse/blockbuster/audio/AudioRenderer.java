@@ -5,10 +5,12 @@ import mchorse.blockbuster.ClientProxy;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.utils.wav.Waveform;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.StringUtils;
 
 @SideOnly(Side.CLIENT)
 public class AudioRenderer
@@ -59,7 +61,8 @@ public class AudioRenderer
             wave.render();
         }
 
-        int offset = (int) (file.player.getPlaybackPosition() * wave.getPixelsPerSecond());
+        float playback = file.player.getPlaybackPosition();
+        int offset = (int) (playback * wave.getPixelsPerSecond());
         int waveW = file.waveform.getWidth();
 
         GlStateManager.color(1, 1, 1, 1);
@@ -91,9 +94,22 @@ public class AudioRenderer
 
         Gui.drawRect(x + half, y + 1, x + half + 1, y + h - 1, 0xff57f52a);
 
+        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+
         if (Blockbuster.audioWaveformFilename.get())
         {
-            GuiDraw.drawTextBackground(Minecraft.getMinecraft().fontRenderer, file.name, x + 8, y + h / 2 - 4, 0xffffff, 0x88000000);
+            GuiDraw.drawTextBackground(fontRenderer, file.name, x + 8, y + h / 2 - 4, 0xffffff, 0x99000000);
+        }
+
+        if (Blockbuster.audioWaveformTime.get())
+        {
+            int tick = (int) Math.floor(playback * 20);
+            int seconds = tick / 20;
+            int milliseconds = (int) (tick % 20 == 0 ? 0 : tick % 20 * 5D);
+
+            String tickLabel = tick + "t (" + seconds + "." + StringUtils.leftPad(String.valueOf(milliseconds), 2, "0") + "s)";
+
+            GuiDraw.drawTextBackground(fontRenderer, tickLabel, x + w - 8 - fontRenderer.getStringWidth(tickLabel), y + h / 2 - 4, 0xffffff, 0x99000000);
         }
     }
 }

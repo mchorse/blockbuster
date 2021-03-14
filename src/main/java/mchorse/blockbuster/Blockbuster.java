@@ -193,6 +193,7 @@ public class Blockbuster
     public static ValueFloat audioWaveformWidth;
     public static ValueInt audioWaveformHeight;
     public static ValueBoolean audioWaveformFilename;
+    public static ValueBoolean audioWaveformTime;
 
     /**
      * "Macro" for getting resource location for Blockbuster mod items,
@@ -286,13 +287,14 @@ public class Blockbuster
         builder.getCategory().markClientSide();
 
         /* Audio */
-        builder.category("audio").register(new ValueAudioButtons("buttons").clientSide());
+        builder.category("audio").register(new ValueAudioButtons("buttons"));
 
         audioWaveformVisible = builder.getBoolean("waveform_visible", true);
         audioWaveformDensity = builder.getInt("waveform_density", 20, 10, 100);
         audioWaveformWidth = builder.getFloat("waveform_width", 0.5F, 0F, 1F);
         audioWaveformHeight = builder.getInt("waveform_height", 24, 10, 40);
         audioWaveformFilename = builder.getBoolean("waveform_filename", true);
+        audioWaveformTime = builder.getBoolean("waveform_time", true);
 
         builder.getCategory().markClientSide();
     }
