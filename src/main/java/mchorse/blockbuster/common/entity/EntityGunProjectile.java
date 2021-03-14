@@ -13,6 +13,8 @@ import mchorse.mclib.utils.NBTUtils;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -317,6 +319,16 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     @Override
     protected void onImpact(RayTraceResult result)
     {
+        if (result.typeOfHit == Type.BLOCK)
+        {
+            IBlockState state = this.world.getBlockState(result.getBlockPos());
+
+            if (state.getCollisionBoundingBox(this.world, result.getBlockPos()) == null)
+            {
+                return;
+            }
+        }
+
         if (this.stuck || this.vanish)
         {
             return;
