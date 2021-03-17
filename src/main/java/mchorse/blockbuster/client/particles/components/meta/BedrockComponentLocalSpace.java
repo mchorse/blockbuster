@@ -13,6 +13,7 @@ public class BedrockComponentLocalSpace extends BedrockComponentBase implements 
 {
     public boolean position;
     public boolean rotation;
+    public boolean scale;
     public boolean direction;
     public boolean acceleration;
     public boolean gravity;
@@ -25,6 +26,7 @@ public class BedrockComponentLocalSpace extends BedrockComponentBase implements 
 
         if (element.has("position")) this.position = element.get("position").getAsBoolean();
         if (element.has("rotation")) this.rotation = element.get("rotation").getAsBoolean();
+        if (element.has("scale")) this.scale = element.get("scale").getAsBoolean();
         if (element.has("direction")) this.direction = element.get("direction").getAsBoolean();
         if (element.has("acceleration")) this.acceleration = element.get("acceleration").getAsBoolean();
         if (element.has("gravity")) this.gravity = element.get("gravity").getAsBoolean();
@@ -39,6 +41,7 @@ public class BedrockComponentLocalSpace extends BedrockComponentBase implements 
 
         if (this.position) object.addProperty("position", true);
         if (this.rotation) object.addProperty("rotation", true);
+        if (this.scale) object.addProperty("scale", true);
         if (this.direction) object.addProperty("direction", true);
         if (this.acceleration) object.addProperty("acceleration", true);
         if (this.gravity) object.addProperty("gravity", true);
@@ -51,6 +54,7 @@ public class BedrockComponentLocalSpace extends BedrockComponentBase implements 
     {
         particle.relativePosition = this.position;
         particle.relativeRotation = this.rotation;
+        particle.relativeScale = this.scale;
         particle.relativeDirection = this.direction;
         particle.relativeAcceleration = this.acceleration;
         particle.gravity = this.gravity;

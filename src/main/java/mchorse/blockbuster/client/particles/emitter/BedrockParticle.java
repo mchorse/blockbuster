@@ -27,6 +27,7 @@ public class BedrockParticle
     public boolean relativePosition;
     public boolean relativeRotation;
     public boolean relativeDirection;
+    public boolean relativeScale;
     public boolean relativeAcceleration;
     public boolean realisticCollisionDrag;
     /* Works best with relativeDirection */
