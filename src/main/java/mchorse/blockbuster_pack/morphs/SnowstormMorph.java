@@ -16,9 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
+import javax.vecmath.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -199,6 +197,27 @@ public class SnowstormMorph extends AbstractMorph
             emitter.rotation.setRow(0, ax);
             emitter.rotation.setRow(1, ay);
             emitter.rotation.setRow(2, az);
+
+            Matrix3d rotation = new Matrix3d(emitter.rotation);
+            Matrix3d rotscale = new Matrix3d(parent.m00, parent.m01, parent.m02,
+                                             parent.m10, parent.m11, parent.m12,
+                                             parent.m20, parent.m21, parent.m22);
+
+            try
+            {
+                rotation.invert();
+                rotscale.mul(rotation);
+
+                emitter.scale[0] = rotscale.m00;
+                emitter.scale[1] = rotscale.m11;
+                emitter.scale[2] = rotscale.m22;
+            }
+            catch(SingularMatrixException e)
+            {
+                emitter.scale[0] = 0;
+                emitter.scale[1] = 0;
+                emitter.scale[2] = 0;
+            }
 
             Iterator<BedrockEmitter> it = this.getLastEmitters().iterator();
 

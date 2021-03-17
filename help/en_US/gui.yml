@@ -393,9 +393,15 @@ blockbuster.gui:
             title: Particle space
 
             position: Local position
+            position_tooltip: Particles will simulate in entity space.
             rotation: Local rotation
+            rotation_tooltip: Particle rotation will simulate in entity space. Only works if local position is enabled too.
+            scale: Local scale
+            scale_tooltip: It scales the particles according to the target's scale. It works best with local position and rotation. It doesn't work well with collision!
             direction: Local direction
+            direction_tooltip: It rotates the direction vector according to the target's rotation at spawn time once.
             acceleration: Local acceleration
+            acceleration_tooltip: It rotates the acceleration vector according to the target's rotation throughout the whole lifetime.
             gravity: Gravity
 
         initialization:
