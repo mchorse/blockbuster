@@ -264,6 +264,7 @@ public class RecordPlayer
 
         EntityUtils.setRecordPlayer(this.actor, this);
 
+        /* Checks whether actor isn't already spawned in the world */
         if (this.actor.world.getEntityByID(this.actor.getEntityId()) != this.actor)
         {
             if (this.actor instanceof EntityActor)

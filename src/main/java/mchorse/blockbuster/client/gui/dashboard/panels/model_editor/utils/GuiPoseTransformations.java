@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 public class GuiPoseTransformations extends GuiTransformations
 {
     public ModelTransform trans;
+    public ModelTransform oldTransform;
 
     public GuiPoseTransformations(Minecraft mc)
     {
@@ -15,7 +16,13 @@ public class GuiPoseTransformations extends GuiTransformations
 
     public void set(ModelTransform trans)
     {
+        this.set(trans, null);
+    }
+
+    public void set(ModelTransform trans, ModelTransform oldTransform)
+    {
         this.trans = trans;
+        this.oldTransform = oldTransform;
 
         if (trans != null)
         {
@@ -47,5 +54,20 @@ public class GuiPoseTransformations extends GuiTransformations
         this.trans.rotate[0] = (float) x;
         this.trans.rotate[1] = (float) y;
         this.trans.rotate[2] = (float) z;
+    }
+
+    @Override
+    protected void reset()
+    {
+        if (this.oldTransform == null)
+        {
+            super.reset();
+        }
+        else
+        {
+            this.fillSetT(this.oldTransform.translate[0], this.oldTransform.translate[1], this.oldTransform.translate[2]);
+            this.fillSetS(this.oldTransform.scale[0], this.oldTransform.scale[1], this.oldTransform.scale[2]);
+            this.fillSetR(this.oldTransform.rotate[0], this.oldTransform.rotate[1], this.oldTransform.rotate[2]);
+        }
     }
 }

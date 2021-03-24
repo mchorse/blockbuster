@@ -158,8 +158,10 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
 
     private void pastePose(ModelPose pose)
     {
+        ModelPose currentPose = this.morph.model.getPose(this.morph.currentPose);
+
         this.morph.customPose.copy(pose);
-        this.transforms.set(this.transforms.trans);
+        this.transforms.set(this.transforms.trans, currentPose == null ? null : currentPose.limbs.get(this.list.getCurrentFirst()));
     }
 
     @Override
@@ -171,10 +173,11 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         }
 
         ModelLimb limb = this.morph.model.limbs.get(limbName);
+        ModelPose pose = this.morph.model.getPose(this.morph.currentPose);
 
         this.editor.bbRenderer.limb = limb;
         this.list.setCurrent(limbName);
-        this.transforms.set(this.morph.customPose.limbs.get(limbName));
+        this.transforms.set(this.morph.customPose.limbs.get(limbName), pose == null ? null : pose.limbs.get(limbName));
     }
 
     @Override
