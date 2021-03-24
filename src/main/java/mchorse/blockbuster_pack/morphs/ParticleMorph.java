@@ -90,7 +90,7 @@ public class ParticleMorph extends AbstractMorph
         {
             SequencerMorph seq = ((SequencerMorph) morph);
 
-            morph = this.random ? seq.getRandom() : seq.get(this.morphIndex ++ % seq.morphs.size());
+            morph = this.random ? seq.getRandom(false) : seq.get(this.morphIndex ++ % seq.morphs.size());
         }
 
         return MorphUtils.copy(morph.copy());

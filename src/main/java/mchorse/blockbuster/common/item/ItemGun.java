@@ -113,7 +113,7 @@ public class ItemGun extends Item
                 {
                     SequencerMorph seq = ((SequencerMorph) morph);
 
-                    morph = props.random ? seq.getRandom() : seq.get(i % seq.morphs.size());
+                    morph = props.random ? seq.getRandom(true) : seq.get(i % seq.morphs.size());
                 }
 
                 morph = MorphUtils.copy(morph);

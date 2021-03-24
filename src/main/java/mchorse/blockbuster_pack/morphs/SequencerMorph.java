@@ -189,14 +189,16 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         return this.random;
     }
 
-    public AbstractMorph getRandom()
+    public AbstractMorph getRandom(boolean global)
     {
         if (this.morphs.isEmpty())
         {
             return null;
         }
 
-        return this.get((int) (this.random.nextDouble() * this.morphs.size()));
+        double factor = global ? Math.random() : this.random.nextDouble();
+
+        return this.get((int) (factor * this.morphs.size()));
     }
 
     public int getRandomIndex(float duration)
