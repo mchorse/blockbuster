@@ -16,6 +16,7 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
@@ -83,6 +84,21 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         }
 
         this.impact = -1;
+    }
+
+    @Override
+    public void shoot(Entity entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity, float inaccuracy)
+    {
+        if (entityThrower instanceof EntityActor.EntityFakePlayer)
+        {
+            this.thrower = ((EntityActor.EntityFakePlayer) entityThrower).actor;
+        }
+        else if (entityThrower instanceof EntityLivingBase)
+        {
+            this.thrower = (EntityLivingBase) entityThrower;
+        }
+
+        super.shoot(entityThrower, rotationPitchIn, rotationYawIn, pitchOffset, velocity, inaccuracy);
     }
 
     public void setInitialMotion()
@@ -160,7 +176,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                     {
                         double d1 = position.squareDistanceTo(ray.hitVec);
 
-                        if (d1 < dist || dist == 0.0D)
+                        if (current != this.thrower && (d1 < dist || dist == 0.0D))
                         {
                             entity = current;
                             dist = d1;
@@ -187,7 +203,10 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 }
                 else
                 {
-                    if (!net.minecraftforge.common.ForgeHooks.onThrowableImpact(this, result)) this.onImpact(result);
+                    if (!net.minecraftforge.common.ForgeHooks.onThrowableImpact(this, result))
+                    {
+                        this.onImpact(result);
+                    }
                 }
             }
 
@@ -334,7 +353,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             return;
         }
 
-        if (this.props != null && this.ticksExisted >= 4)
+        if (this.props != null)
         {
             this.hits++;
 
