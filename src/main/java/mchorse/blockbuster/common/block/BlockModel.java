@@ -85,7 +85,11 @@ public class BlockModel extends Block implements ITileEntityProvider
             tag.removeTag("z");
 
             block.setTag("BlockEntityTag", tag);
-            stack.setTagCompound(block);
+
+            if (!(tag.getSize() == 2 && tag.hasKey("id") && tag.hasKey("Morph") && tag.getTag("Morph").equals(TileEntityModel.getDefaultMorph().toNBT())))
+            {
+                stack.setTagCompound(block);
+            }
         }
 
         drops.add(stack);

@@ -35,6 +35,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class TileEntityModel extends TileEntity implements ITickable
 {
+    private static AbstractMorph DEFAULT_MORPH;
+
     public Morph morph = new Morph();
     public EntityLivingBase entity;
     public ItemStack[] slots = new ItemStack[] {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY};
@@ -67,13 +69,23 @@ public class TileEntityModel extends TileEntity implements ITickable
 
     private long lastModelUpdate;
 
+    public static AbstractMorph getDefaultMorph()
+    {
+        if (DEFAULT_MORPH == null)
+        {
+            NBTTagCompound tag = new NBTTagCompound();
+
+            tag.setString("Name", "blockbuster.fred");
+
+            DEFAULT_MORPH = MorphManager.INSTANCE.morphFromNBT(tag);
+        }
+
+        return DEFAULT_MORPH;
+    }
+
     public TileEntityModel()
     {
-        NBTTagCompound tag = new NBTTagCompound();
-
-        tag.setString("Name", "blockbuster.fred");
-
-        this.morph.setDirect(MorphManager.INSTANCE.morphFromNBT(tag));
+        this.morph.setDirect(MorphUtils.copy(getDefaultMorph()));
         this.lastModelUpdate = Scene.lastUpdate;
     }
 
@@ -244,7 +256,7 @@ public class TileEntityModel extends TileEntity implements ITickable
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
-        compound.setByte("Order", (byte) this.order.ordinal());
+        if (this.order != RotationOrder.ZYX) compound.setByte("Order", (byte) this.order.ordinal());
 
         if (this.rotateYawHead != 0) compound.setFloat("Yaw", this.rotateYawHead);
         if (this.rotatePitch != 0) compound.setFloat("Pitch", this.rotatePitch);
@@ -266,6 +278,7 @@ public class TileEntityModel extends TileEntity implements ITickable
         if (!this.enabled) compound.setBoolean("Enabled", this.enabled);
 
         NBTTagList list = new NBTTagList();
+        int empty = 0;
 
         for (int i = 0; i < this.slots.length; i++)
         {
@@ -276,11 +289,18 @@ public class TileEntityModel extends TileEntity implements ITickable
             {
                 stack.writeToNBT(tag);
             }
+            else
+            {
+                empty += 1;
+            }
 
             list.appendTag(tag);
         }
 
-        compound.setTag("Items", list);
+        if (empty != this.slots.length)
+        {
+            compound.setTag("Items", list);
+        }
 
         if (!this.morph.isEmpty())
         {
