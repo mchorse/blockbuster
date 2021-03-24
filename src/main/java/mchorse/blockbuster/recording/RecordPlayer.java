@@ -264,28 +264,31 @@ public class RecordPlayer
 
         EntityUtils.setRecordPlayer(this.actor, this);
 
-        if (this.actor instanceof EntityActor)
+        if (this.actor.world.getEntityByID(this.actor.getEntityId()) != this.actor)
         {
-            this.actor.world.spawnEntity(this.actor);
-        }
-        else if (this.actor instanceof EntityPlayer)
-        {
-            if (this.record.playerData != null)
+            if (this.actor instanceof EntityActor)
             {
+                this.actor.world.spawnEntity(this.actor);
+            }
+            else if (this.actor instanceof EntityPlayer)
+            {
+                if (this.record.playerData != null)
+                {
+                    if (!this.realPlayer)
+                    {
+                        this.actor.readEntityFromNBT(this.record.playerData);
+                    }
+
+                    if (MPMHelper.isLoaded() && this.record.playerData.hasKey("MPMData", NBT.TAG_COMPOUND))
+                    {
+                        MPMHelper.setMPMData((EntityPlayer) this.actor, this.record.playerData.getCompoundTag("MPMData"));
+                    }
+                }
+
                 if (!this.realPlayer)
                 {
-                    this.actor.readEntityFromNBT(this.record.playerData);
+                    this.actor.world.getMinecraftServer().getPlayerList().playerLoggedIn((EntityPlayerMP) this.actor);
                 }
-
-                if (MPMHelper.isLoaded() && this.record.playerData.hasKey("MPMData", NBT.TAG_COMPOUND))
-                {
-                    MPMHelper.setMPMData((EntityPlayer) this.actor, this.record.playerData.getCompoundTag("MPMData"));
-                }
-            }
-
-            if (!this.realPlayer)
-            {
-                this.actor.world.getMinecraftServer().getPlayerList().playerLoggedIn((EntityPlayerMP) this.actor);
             }
         }
 
