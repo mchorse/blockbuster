@@ -70,11 +70,14 @@ public class GunProps
     public boolean sticks;
     public int hits;
     public float damage;
-    public float knockback;
+    public float knockbackHorizontal;
+    public float knockbackVertical;
     public float bounceFactor;
     public String vanishCommand;
     public int vanishDelay;
     public float penetration;
+    public boolean ignoreBlocks;
+    public boolean ignoreEntities;
 
     /* Transforms */
     public ModelTransform gunTransform = new ModelTransform();
@@ -277,11 +280,14 @@ public class GunProps
         this.sticks = false;
         this.hits = 1;
         this.damage = 0F;
-        this.knockback = 0F;
+        this.knockbackHorizontal = 0F;
+        this.knockbackVertical = 0F;
         this.bounceFactor = 1F;
         this.vanishCommand = "";
         this.vanishDelay = 0;
         this.penetration = 0;
+        this.ignoreBlocks = false;
+        this.ignoreEntities = false;
 
         /* Transforms */
         this.gunTransform = new ModelTransform();
@@ -350,11 +356,14 @@ public class GunProps
         if (tag.hasKey("Stick")) this.sticks = tag.getBoolean("Stick");
         if (tag.hasKey("Hits")) this.hits = tag.getInteger("Hits");
         if (tag.hasKey("Damage")) this.damage = tag.getFloat("Damage");
-        if (tag.hasKey("Knockback")) this.knockback = tag.getFloat("Knockback");
+        if (tag.hasKey("KnockbackH")) this.knockbackHorizontal = tag.getFloat("KnockbackH");
+        if (tag.hasKey("KnockbackV")) this.knockbackVertical = tag.getFloat("KnockbackV");
         if (tag.hasKey("BFactor")) this.bounceFactor = tag.getFloat("BFactor");
         if (tag.hasKey("VanishCommand")) this.vanishCommand = tag.getString("VanishCommand");
         if (tag.hasKey("VDelay")) this.vanishDelay = tag.getInteger("VDelay");
         if (tag.hasKey("Penetration")) this.penetration = tag.getFloat("Penetration");
+        if (tag.hasKey("IBlocks")) this.ignoreBlocks = tag.getBoolean("IBlocks");
+        if (tag.hasKey("IEntities")) this.ignoreEntities = tag.getBoolean("IEntities");
 
         /* Transforms */
         if (tag.hasKey("Gun")) this.gunTransform.fromNBT(tag.getCompoundTag("Gun"));
@@ -426,11 +435,14 @@ public class GunProps
         if (this.sticks) tag.setBoolean("Stick", this.sticks);
         if (this.hits != 1) tag.setInteger("Hits", this.hits);
         if (this.damage != 0) tag.setFloat("Damage", this.damage);
-        if (this.knockback != 0) tag.setFloat("Knockback", this.knockback);
+        if (this.knockbackHorizontal != 0F) tag.setFloat("KnockbackH", this.knockbackHorizontal);
+        if (this.knockbackVertical != 0F) tag.setFloat("KnockbackV", this.knockbackVertical);
         if (this.bounceFactor != 1F) tag.setFloat("BFactor", this.bounceFactor);
         if (!this.vanishCommand.isEmpty()) tag.setString("VanishCommand", this.vanishCommand);
         if (this.vanishDelay != 0) tag.setInteger("VDelay", this.vanishDelay);
         if (this.penetration != 0) tag.setFloat("Penetration", this.penetration);
+        if (this.ignoreBlocks) tag.setBoolean("IBlocks", this.ignoreBlocks);
+        if (this.ignoreEntities) tag.setBoolean("IEntities", this.ignoreEntities);
 
         /* Transforms */
         if (!this.gunTransform.isDefault()) tag.setTag("Gun", this.gunTransform.toNBT());
