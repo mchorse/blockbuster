@@ -63,6 +63,7 @@ public class GunProps
     /* Impact properties */
     public AbstractMorph impactMorph;
     public String impactCommand;
+    public String impactEntityCommand;
     public int impactDelay;
     public boolean vanish;
     public boolean bounce;
@@ -71,6 +72,7 @@ public class GunProps
     public float damage;
     public float knockback;
     public float bounceFactor;
+    public String vanishCommand;
     public int vanishDelay;
     public float penetration;
 
@@ -268,6 +270,7 @@ public class GunProps
         /* Impact properties */
         this.impactMorph = null;
         this.impactCommand = "";
+        this.impactEntityCommand = "";
         this.impactDelay = 0;
         this.vanish = true;
         this.bounce = false;
@@ -276,6 +279,7 @@ public class GunProps
         this.damage = 0F;
         this.knockback = 0F;
         this.bounceFactor = 1F;
+        this.vanishCommand = "";
         this.vanishDelay = 0;
         this.penetration = 0;
 
@@ -339,6 +343,7 @@ public class GunProps
         /* Impact properties */
         this.impactMorph = this.create(tag, "Impact");
         if (tag.hasKey("ImpactCommand")) this.impactCommand = tag.getString("ImpactCommand");
+        if (tag.hasKey("ImpactEntityCommand")) this.impactEntityCommand = tag.getString("ImpactEntityCommand");
         if (tag.hasKey("ImpactDelay")) this.impactDelay = tag.getInteger("ImpactDelay");
         if (tag.hasKey("Vanish")) this.vanish = tag.getBoolean("Vanish");
         if (tag.hasKey("Bounce")) this.bounce = tag.getBoolean("Bounce");
@@ -347,6 +352,7 @@ public class GunProps
         if (tag.hasKey("Damage")) this.damage = tag.getFloat("Damage");
         if (tag.hasKey("Knockback")) this.knockback = tag.getFloat("Knockback");
         if (tag.hasKey("BFactor")) this.bounceFactor = tag.getFloat("BFactor");
+        if (tag.hasKey("VanishCommand")) this.vanishCommand = tag.getString("VanishCommand");
         if (tag.hasKey("VDelay")) this.vanishDelay = tag.getInteger("VDelay");
         if (tag.hasKey("Penetration")) this.penetration = tag.getFloat("Penetration");
 
@@ -413,6 +419,7 @@ public class GunProps
         /* Impact properties */
         if (this.impactMorph != null) tag.setTag("Impact", this.to(this.impactMorph));
         if (!this.impactCommand.isEmpty()) tag.setString("ImpactCommand", this.impactCommand);
+        if (!this.impactEntityCommand.isEmpty()) tag.setString("ImpactEntityCommand", this.impactEntityCommand);
         if (this.impactDelay != 0) tag.setInteger("ImpactDelay", this.impactDelay);
         if (!this.vanish) tag.setBoolean("Vanish", this.vanish);
         if (this.bounce) tag.setBoolean("Bounce", this.bounce);
@@ -421,6 +428,7 @@ public class GunProps
         if (this.damage != 0) tag.setFloat("Damage", this.damage);
         if (this.knockback != 0) tag.setFloat("Knockback", this.knockback);
         if (this.bounceFactor != 1F) tag.setFloat("BFactor", this.bounceFactor);
+        if (!this.vanishCommand.isEmpty()) tag.setString("VanishCommand", this.vanishCommand);
         if (this.vanishDelay != 0) tag.setInteger("VDelay", this.vanishDelay);
         if (this.penetration != 0) tag.setFloat("Penetration", this.penetration);
 

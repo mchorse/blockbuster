@@ -619,13 +619,15 @@ blockbuster.gui:
         impact_morph: Impact morph
         impact_delay: Impact delay
         impact_command: Command on impact
+        impact_entity_command: Command on entity impact
         vanish: Vanish # or Spanish
         bounce: Bounce
         sticks: Sticks
         hits: Hits
         damage: Damage
-        knockback: Knockback factor - 0 is no knockback, the higher the value the further is knockback
+        knockback: Knockback factor - 0 is no knockback, the higher the value the further damaged entity will be knockbacked
         bounce_factor: Factor
+        vanish_command: Command on vanish
         vanish_delay: Vanish delay
         penetration: Penetration factor - how much into the block the projectile will penetrate into (this option works only when Sticks enabled)
         

@@ -309,9 +309,9 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         {
             this.setDead();
 
-            if (!this.props.impactCommand.isEmpty())
+            if (!this.props.vanishCommand.isEmpty())
             {
-                this.getServer().commandManager.executeCommand(this, this.props.impactCommand);
+                this.getServer().commandManager.executeCommand(this, this.props.vanishCommand);
             }
         }
 
@@ -393,7 +393,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
             if (!this.world.isRemote)
             {
-                if (!this.props.impactCommand.isEmpty())
+                if (!this.props.impactCommand.isEmpty() && result.typeOfHit == Type.BLOCK)
                 {
                     String command = this.props.impactCommand;
                     int x = Math.round((float) this.posX);
@@ -414,9 +414,17 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                     this.getServer().commandManager.executeCommand(this, command);
                 }
 
-                if (result.typeOfHit == Type.ENTITY && this.props.damage > 0)
+                if (result.typeOfHit == Type.ENTITY)
                 {
-                    result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, null), this.props.damage);
+                    if (!this.props.impactEntityCommand.isEmpty())
+                    {
+                        this.getServer().commandManager.executeCommand(this, this.props.impactEntityCommand);
+                    }
+
+                    if (this.props.damage > 0)
+                    {
+                        result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, null), this.props.damage);
+                    }
 
                     if (this.props.knockback > 0 && result.entityHit instanceof EntityLivingBase)
                     {

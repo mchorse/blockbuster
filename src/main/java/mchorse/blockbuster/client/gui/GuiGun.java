@@ -92,6 +92,7 @@ public class GuiGun extends GuiBase
     public GuiElement impactOptions;
     public GuiNestedEdit pickImpact;
     public GuiTextElement impactCommand;
+    public GuiTextElement impactEntityCommand;
     public GuiTrackpadElement impactDelay;
     public GuiToggleElement vanish;
     public GuiToggleElement bounce;
@@ -100,6 +101,7 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement damage;
     public GuiTrackpadElement knockback;
     public GuiTrackpadElement bounceFactor;
+    public GuiTextElement vanishCommand;
     public GuiTrackpadElement vanishDelay;
     public GuiTrackpadElement penetration;
 
@@ -240,6 +242,7 @@ public class GuiGun extends GuiBase
         this.impactDelay = new GuiTrackpadElement(mc, (value) -> this.props.impactDelay = value.intValue());
         this.impactDelay.limit(0, Integer.MAX_VALUE, true);
         this.impactCommand = new GuiTextElement(mc, 10000, (value) -> this.props.impactCommand = value);
+        this.impactEntityCommand = new GuiTextElement(mc, 10000, (value) -> this.props.impactEntityCommand = value);
         this.vanish = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.enabled"), false, (b) -> this.props.vanish = b.isToggled());
         this.bounce = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.enabled"), false, (b) -> this.props.bounce = b.isToggled());
         this.sticks = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.enabled"), false, (b) -> this.props.sticks = b.isToggled());
@@ -251,24 +254,27 @@ public class GuiGun extends GuiBase
         this.knockback.tooltip(IKey.lang("blockbuster.gui.gun.knockback"));
         this.bounceFactor = new GuiTrackpadElement(mc, (value) -> this.props.bounceFactor = value.floatValue());
         this.bounceFactor.tooltip(IKey.lang("blockbuster.gui.gun.bounce_factor"));
+        this.vanishCommand = new GuiTextElement(mc, 10000, (value) -> this.props.vanishCommand = value);
         this.vanishDelay = new GuiTrackpadElement(mc, (value) -> this.props.vanishDelay = value.intValue());
         this.vanishDelay.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.gun.vanish_delay"));
         this.penetration = new GuiTrackpadElement(mc, (value) -> this.props.penetration = value.floatValue());
         this.penetration.block().tooltip(IKey.lang("blockbuster.gui.gun.penetration"));
 
-        this.pickImpact.flex().relative(area).w(100).x(0.75F, -50).y(1, -60);
-        this.impactCommand.flex().relative(area).set(10, 0, 0, 20).w(1, -20).y(1, -30);
+        this.pickImpact.flex().relative(area).w(100).x(0.75F, -40).y(1, -140);
+        this.vanishCommand.flex().relative(area).set(10, 0, 0, 20).w(1, -20).y(1, -110);
+        this.impactEntityCommand.flex().relative(this.vanishCommand).y(40).w(1F).h(20);
+        this.impactCommand.flex().relative(this.impactEntityCommand).y(40).w(1F).h(20);
 
         GuiElement impactFields = new GuiElement(mc);
 
-        impactFields.flex().relative(area).w(1F).h(1F, -40).column(5).width(100).height(20).padding(10);
+        impactFields.flex().relative(area).w(1F).h(1F, -120).column(5).width(100).height(20).padding(10);
         impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.impact_delay")).background(0x88000000), this.impactDelay);
         impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.damage"), 20).background(0x88000000).anchor(0, 1), this.damage, this.knockback);
         impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.bounce"), 20).background(0x88000000).anchor(0, 1), this.bounce, this.hits, this.bounceFactor);
         impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.vanish"), 20).background(0x88000000).anchor(0, 1), this.vanish, this.vanishDelay);
         impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.sticks"), 20).background(0x88000000).anchor(0, 1), this.sticks, this.penetration);
 
-        this.impactOptions.add(this.pickImpact, this.impactCommand, impactFields);
+        this.impactOptions.add(this.pickImpact, this.vanishCommand, this.impactEntityCommand, this.impactCommand, impactFields);
 
         /* Gun transforms */
         area = this.transformOptions.area;
@@ -340,6 +346,7 @@ public class GuiGun extends GuiBase
         /* Impact properties */
         this.pickImpact.setMorph(this.props.impactMorph);
         this.impactCommand.setText(this.props.impactCommand);
+        this.impactEntityCommand.setText(this.props.impactEntityCommand);
         this.impactDelay.setValue(this.props.impactDelay);
         this.vanish.toggled(this.props.vanish);
         this.bounce.toggled(this.props.bounce);
@@ -348,6 +355,7 @@ public class GuiGun extends GuiBase
         this.damage.setValue(this.props.damage);
         this.knockback.setValue(this.props.knockback);
         this.bounceFactor.setValue(this.props.bounceFactor);
+        this.vanishCommand.setText(this.props.vanishCommand);
         this.vanishDelay.setValue(this.props.vanishDelay);
         this.penetration.setValue(this.props.penetration);
 
@@ -530,6 +538,8 @@ public class GuiGun extends GuiBase
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.impact_morph"), this.pickImpact.area.mx(), this.pickImpact.area.y - 12, 0xffffff);
 
             this.fontRenderer.drawStringWithShadow(I18n.format("blockbuster.gui.gun.impact_command"), this.impactCommand.area.x, this.impactCommand.area.y - 12, 0xffffff);
+            this.fontRenderer.drawStringWithShadow(I18n.format("blockbuster.gui.gun.impact_entity_command"), this.impactEntityCommand.area.x, this.impactEntityCommand.area.y - 12, 0xffffff);
+            this.fontRenderer.drawStringWithShadow(I18n.format("blockbuster.gui.gun.vanish_command"), this.vanishCommand.area.x, this.vanishCommand.area.y - 12, 0xffffff);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
