@@ -159,13 +159,25 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             CustomMorph custom = (CustomMorph) previous;
             ModelPose pose = custom.getCurrentPose();
 
-            if (custom.animation.isInProgress() && pose != null)
+            if (!this.animation.ignored)
             {
-                this.animation.last = custom.animation.calculatePose(pose, 1).clone();
+                if (custom.animation.isInProgress() && pose != null)
+                {
+                    this.animation.last = custom.animation.calculatePose(pose, 1).clone();
+                }
+                else
+                {
+                    this.animation.last = pose;
+                }
             }
-            else
+            else if (custom.customPose != null)
             {
-                this.animation.last = pose;
+                this.customPose = custom.customPose;
+            }
+            else if (!custom.currentPose.isEmpty())
+            {
+                this.customPose = null;
+                this.currentPose = custom.currentPose;
             }
 
             this.animation.mergeShape(custom.shapes);
