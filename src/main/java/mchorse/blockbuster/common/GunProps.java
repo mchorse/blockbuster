@@ -69,6 +69,7 @@ public class GunProps
     public boolean sticks;
     public int hits;
     public float damage;
+    public float knockback;
     public float bounceFactor;
     public int vanishDelay;
     public float penetration;
@@ -273,6 +274,7 @@ public class GunProps
         this.sticks = false;
         this.hits = 1;
         this.damage = 0F;
+        this.knockback = 0F;
         this.bounceFactor = 1F;
         this.vanishDelay = 0;
         this.penetration = 0;
@@ -343,6 +345,7 @@ public class GunProps
         if (tag.hasKey("Stick")) this.sticks = tag.getBoolean("Stick");
         if (tag.hasKey("Hits")) this.hits = tag.getInteger("Hits");
         if (tag.hasKey("Damage")) this.damage = tag.getFloat("Damage");
+        if (tag.hasKey("Knockback")) this.knockback = tag.getFloat("Knockback");
         if (tag.hasKey("BFactor")) this.bounceFactor = tag.getFloat("BFactor");
         if (tag.hasKey("VDelay")) this.vanishDelay = tag.getInteger("VDelay");
         if (tag.hasKey("Penetration")) this.penetration = tag.getFloat("Penetration");
@@ -416,6 +419,7 @@ public class GunProps
         if (this.sticks) tag.setBoolean("Stick", this.sticks);
         if (this.hits != 1) tag.setInteger("Hits", this.hits);
         if (this.damage != 0) tag.setFloat("Damage", this.damage);
+        if (this.knockback != 0) tag.setFloat("Knockback", this.knockback);
         if (this.bounceFactor != 1F) tag.setFloat("BFactor", this.bounceFactor);
         if (this.vanishDelay != 0) tag.setInteger("VDelay", this.vanishDelay);
         if (this.penetration != 0) tag.setFloat("Penetration", this.penetration);

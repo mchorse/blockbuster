@@ -624,6 +624,7 @@ blockbuster.gui:
         sticks: Sticks
         hits: Hits
         damage: Damage
+        knockback: Knockback factor - 0 is no knockback, the higher the value the further is knockback
         bounce_factor: Factor
         vanish_delay: Vanish delay
         penetration: Penetration factor - how much into the block the projectile will penetrate into (this option works only when Sticks enabled)
