@@ -11,6 +11,7 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
+import mchorse.mclib.client.gui.framework.tooltips.LabelTooltip;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
@@ -201,10 +202,10 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.elements.add(this.pick, this.duration, this.random, this.setDuration);
             this.add(this.addPart, this.removePart, this.randomOrder, this.reverse, this.list, this.elements, previewBar);
 
-            this.keys().register(this.plause.tooltip.label, Keyboard.KEY_SPACE, () -> this.plause.clickItself(GuiBase.getCurrent()))
+            this.keys().register(((LabelTooltip) this.plause.tooltip).label, Keyboard.KEY_SPACE, () -> this.plause.clickItself(GuiBase.getCurrent()))
                 .held(Keyboard.KEY_LSHIFT)
                 .category(GuiAbstractMorph.KEY_CATEGORY);
-            this.keys().register(this.stop.tooltip.label, Keyboard.KEY_SPACE, () -> this.stop.clickItself(GuiBase.getCurrent()))
+            this.keys().register(((LabelTooltip) this.stop.tooltip).label, Keyboard.KEY_SPACE, () -> this.stop.clickItself(GuiBase.getCurrent()))
                 .held(Keyboard.KEY_LMENU)
                 .category(GuiAbstractMorph.KEY_CATEGORY);
         }

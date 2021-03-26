@@ -7,6 +7,7 @@ import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRate
 import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRateSteady;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
+import mchorse.mclib.client.gui.framework.tooltips.LabelTooltip;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 
@@ -84,7 +85,7 @@ public class GuiSnowstormRateSection extends GuiSnowstormModeSection<BedrockComp
 
         this.updateVisibility();
         this.set(this.particles, this.component.particles);
-        this.particles.tooltip.label.set(this.isInstant() ? "blockbuster.gui.snowstorm.rate.particles" : "blockbuster.gui.snowstorm.rate.max_particles");
+        ((LabelTooltip) this.particles.tooltip).label.set(this.isInstant() ? "blockbuster.gui.snowstorm.rate.particles" : "blockbuster.gui.snowstorm.rate.max_particles");
 
         if (this.component instanceof BedrockComponentRateSteady)
         {
