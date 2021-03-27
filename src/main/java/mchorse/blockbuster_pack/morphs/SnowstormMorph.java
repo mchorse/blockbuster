@@ -16,9 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
+import javax.vecmath.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,6 +39,7 @@ public class SnowstormMorph extends AbstractMorph
     public List<BedrockEmitter> lastEmitters;
 
     private long lastUpdate;
+    private int lastAge = 0; //to determine which tick it is
 
     public static Matrix4f getMatrix()
     {
@@ -183,10 +182,22 @@ public class SnowstormMorph extends AbstractMorph
 
             Vector4f zero = calculateGlobal(parent, target, 0, 0, 0, partialTicks);
 
+            if (this.lastAge != this.age)
+            {
+                emitter.prevRotation.set(emitter.rotation);
+                emitter.prevGlobal.set(emitter.lastGlobal);
+            }
+
+            this.lastAge = this.age;
+
             emitter.lastGlobal.x = zero.x;
             emitter.lastGlobal.y = zero.y;
             emitter.lastGlobal.z = zero.z;
+
+            //emitter.angularVelocity.set(this.angularVelocity);
             emitter.rotation.setIdentity();
+
+            emitter.translation.set(this.cachedTranslation);
 
             Vector3f ax = new Vector3f(parent.m00, parent.m01, parent.m02);
             Vector3f ay = new Vector3f(parent.m10, parent.m11, parent.m12);
@@ -199,6 +210,27 @@ public class SnowstormMorph extends AbstractMorph
             emitter.rotation.setRow(0, ax);
             emitter.rotation.setRow(1, ay);
             emitter.rotation.setRow(2, az);
+
+            Matrix3d rotation = new Matrix3d(emitter.rotation);
+            Matrix3d rotscale = new Matrix3d(parent.m00, parent.m01, parent.m02,
+                                             parent.m10, parent.m11, parent.m12,
+                                             parent.m20, parent.m21, parent.m22);
+
+            try
+            {
+                rotation.invert();
+                rotscale.mul(rotation);
+
+                emitter.scale[0] = rotscale.m00;
+                emitter.scale[1] = rotscale.m11;
+                emitter.scale[2] = rotscale.m22;
+            }
+            catch(SingularMatrixException e)
+            {
+                emitter.scale[0] = 0;
+                emitter.scale[1] = 0;
+                emitter.scale[2] = 0;
+            }
 
             Iterator<BedrockEmitter> it = this.getLastEmitters().iterator();
 

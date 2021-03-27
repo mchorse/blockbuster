@@ -17,9 +17,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
+import javax.vecmath.*;
 
 public class BedrockComponentAppearanceBillboard extends BedrockComponentBase implements IComponentParticleRender
 {
@@ -274,9 +272,40 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             py = this.vector.y;
             pz = this.vector.z;
 
+            if(particle.relativeScale)
+            {
+                Vector3d pos = new Vector3d(px, py, pz);
+
+                Matrix3d scale = new Matrix3d(emitter.scale[0], 0, 0,
+                                              0, emitter.scale[1], 0,
+                                              0, 0, emitter.scale[2]);
+
+                scale.transform(pos);
+
+                px = pos.x;
+                py = pos.y;
+                pz = pos.z;
+            }
+
             px += emitter.lastGlobal.x;
             py += emitter.lastGlobal.y;
             pz += emitter.lastGlobal.z;
+        }
+        else if(particle.relativeScale)
+        {
+            Vector3d pos = new Vector3d(px, py, pz);
+
+            Matrix3d scale = new Matrix3d(emitter.scale[0], 0, 0,
+                                     0, emitter.scale[1], 0,
+                                     0, 0, emitter.scale[2]);
+
+            pos.sub(emitter.lastGlobal); //transform back to local
+            scale.transform(pos);
+            pos.add(emitter.lastGlobal); //transform back to global
+
+            px = pos.x;
+            py = pos.y;
+            pz = pos.z;
         }
 
         /* Calculate yaw and pitch based on the facing mode */
@@ -322,6 +351,19 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
         this.vertices[2].set(this.w / 2, this.h / 2, 0, 1);
         this.vertices[3].set(-this.w / 2, this.h / 2, 0, 1);
         this.transform.setIdentity();
+
+        if(particle.relativeScaleBillboard)
+        {
+            Matrix4d scale = new Matrix4d(emitter.scale[0], 0, 0, 0,
+                                     0, emitter.scale[1], 0, 0,
+                                     0, 0, emitter.scale[2], 0,
+                                     0, 0, 0, 1);
+
+            for (Vector4f vertex : this.vertices)
+            {
+                scale.transform(vertex);
+            }
+        }
 
         if (this.facing == CameraFacing.ROTATE_XYZ || this.facing == CameraFacing.LOOKAT_XYZ)
         {

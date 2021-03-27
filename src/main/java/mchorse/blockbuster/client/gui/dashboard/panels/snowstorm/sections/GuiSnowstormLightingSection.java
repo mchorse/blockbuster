@@ -93,6 +93,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
         this.a.tooltip(IKey.lang("blockbuster.gui.snowstorm.lighting.alpha"));
 
         this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.lighting.lighting"), (b) -> this.parent.dirty());
+        this.lighting.tooltip(IKey.lang("blockbuster.gui.snowstorm.lighting.lighting_tooltip"));
 
         GuiLabel label = Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"), 20).anchor(0, 0.5F);
 

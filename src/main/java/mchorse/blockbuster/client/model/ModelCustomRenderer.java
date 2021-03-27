@@ -9,7 +9,12 @@ import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4d;
 import javax.vecmath.Vector4f;
 
+import mchorse.mclib.utils.Color;
+import mchorse.mclib.utils.ColorUtils;
 import mchorse.metamorph.bodypart.BodyPart;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.ModelLimb;
@@ -45,8 +50,13 @@ public class ModelCustomRenderer extends ModelRenderer
     public ModelCustomRenderer parent;
     public ModelCustom model;
 
-    /* rotation of this object */
-    public Vector3d instanceRotation = new Vector3d();
+    public Vector3f cachedTranslation = new Vector3f();
+
+    /**
+     * At the moment no use -> would be useful to have realistic physics
+     * for every limb, see robotics https://www.tu-chemnitz.de/informatik/KI/edu/robotik/ws2017/vel.kin.pdf
+     */
+    public Vector3f angularVelocity = new Vector3f();
 
     public float scaleX = 1;
     public float scaleY = 1;
@@ -180,16 +190,37 @@ public class ModelCustomRenderer extends ModelRenderer
                 {
                     this.compileDisplayList(scale);
                 }
-    			
+
+                MatrixUtils.Transformation modelView = new MatrixUtils.Transformation();
+
+                if (MatrixUtils.matrix != null)
+                {
+                    modelView = MatrixUtils.extractTransformations(MatrixUtils.matrix, MatrixUtils.readModelView(BodyPart.modelViewMatrix));
+                }
+
+                this.cachedTranslation.set(this.rotationPointX/16,(this.limb.parent.isEmpty() ? this.rotationPointY -24 : this.rotationPointY)/16,this.rotationPointZ/16);
+
+                Matrix3f transformation = new Matrix3f(modelView.getRotation3f());
+
+                transformation.mul(modelView.getScale3f());
+                transformation.transform(this.cachedTranslation);
+
+                if (this.parent!=null)
+                {
+                    this.cachedTranslation.add(this.parent.cachedTranslation);
+                }
+
+                if (this.model.current != null)
+                {
+                    this.cachedTranslation.add(this.model.current.cachedTranslation);
+                    this.model.current.cachedTranslation.scale(0);
+                }
+
+                //currently deactivated, only use bodypart's translation as radius for angular stuff
+                //BodyPart.cachedTranslation.set(this.cachedTranslation);
+
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(this.offsetX, this.offsetY, this.offsetZ);
-
-                this.instanceRotation.set(new Vector3d(this.rotateAngleX, -this.rotateAngleY, -this.rotateAngleZ));
-
-                if(this.parent!=null)
-                {
-                    this.instanceRotation.add(this.parent.instanceRotation);
-                }
 
                 if (this.rotateAngleX == 0.0F && this.rotateAngleY == 0.0F && this.rotateAngleZ == 0.0F)
                 {
@@ -276,128 +307,16 @@ public class ModelCustomRenderer extends ModelRenderer
                 {
                     if (MatrixUtils.matrix != null)
                     {
-                        Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
-                        Matrix4f matrix4f = new Matrix4f(MatrixUtils.readModelView(obb.modelView));
+                        MatrixUtils.Transformation modelView = MatrixUtils.extractTransformations(MatrixUtils.matrix, MatrixUtils.readModelView(OrientedBB.modelView));
 
-                        modelViewToTransformations(MatrixUtils.matrix, MatrixUtils.readModelView(obb.modelView));
-                        
-                        parent.invert();
-                        parent.mul(matrix4f);
-                        
-                        obb.offset.set(parent.m03, parent.m13, parent.m23);
-                        
-                        Vector3d ax = new Vector3d(parent.m00, parent.m01, parent.m02);
-                        Vector3d ay = new Vector3d(parent.m10, parent.m11, parent.m12);
-                        Vector3d az = new Vector3d(parent.m20, parent.m21, parent.m22);
-
-                        ax.normalize();
-                        ay.normalize();
-                        az.normalize();
-                        obb.rotation.setIdentity();
-
-                        //obb.center.set(this.model.current.position);
-
-                        Vector3d rotation0 = new Vector3d(this.model.current.modelBlockRotation);
-                        rotation0.add(this.model.current.instanceRotation);
-                        rotation0.add(this.instanceRotation);
-
-                        Matrix3d rotation = new Matrix3d();
-                        ax.normalize();
-                        ay.normalize();
-                        az.normalize();
-                        obb.rotation.setIdentity();
-                        obb.rotation.setRow(0, ax);
-                        obb.rotation.setRow(1, ay);
-                        obb.rotation.setRow(2, az);
-                        //System.out.println(Math.toDegrees(rotation0.x)+" "+Math.toDegrees(rotation0.y)+" "+Math.toDegrees(rotation0.z));
-                        /*rotation.rotX(rotation0.x);
-                        obb.rotation.mul(rotation);
-                        rotation.rotY(rotation0.y);
-                        obb.rotation.mul(rotation);
-                        rotation.rotZ(rotation0.z);
-                        obb.rotation.mul(rotation);*/
-                        
-                        rotation.set(obb.rotation);
-                        Matrix3d rotscale = new Matrix3d(parent.m00, parent.m01, parent.m02,
-                                                         parent.m10, parent.m11, parent.m12,
-                                                         parent.m20, parent.m21, parent.m22);
-                        
-                        rotation.invert();
-                        rotscale.mul(rotation);
-                        
-                        obb.scale.m00 = rotscale.m00;
-                        obb.scale.m11 = rotscale.m11;
-                        obb.scale.m22 = rotscale.m22;
-                        
-                        obb.modelView.setIdentity();
-
-                        obb.buildCorners();
+                        obb.rotation.set(modelView.getRotation3f());
+                        obb.offset.set(modelView.getTranslation3f());
+                        obb.scale.set(modelView.getScale3f());
                     }
+
+                    obb.buildCorners();
                 }
             }
-        }
-    }
-    
-    /**
-     * This method extracts the rotation, translation and scale from the modelview matrix. It needs a correct parent matrix to work
-     * @author Christian F. (known as Chryfi)
-     * @param parent the parent Matrix4f as a reference to extract the correct data from modelview matrix
-     * @param modelview
-     * @return
-     */
-    public ModelView modelViewToTransformations(Matrix4f parent, Matrix4f modelview)
-    {
-        Matrix4f parent0 = new Matrix4f(parent);
-        Matrix4f modelview0 = new Matrix4f(modelview);
-        
-        parent0.invert();
-        parent0.mul(modelview0);
-        
-        Matrix4d translation = new Matrix4d(1, 0, 0, parent.m03, 
-                                            0, 1, 0, parent.m13, 
-                                            0, 0, 1, parent.m23,
-                                            0, 0, 0, 1);
-        
-        Vector4d ax = new Vector4d(parent.m00, parent.m01, parent.m02, 0);
-        Vector4d ay = new Vector4d(parent.m10, parent.m11, parent.m12, 0);
-        Vector4d az = new Vector4d(parent.m20, parent.m21, parent.m22, 0);
-
-        ax.normalize();
-        ay.normalize();
-        az.normalize();
-        Matrix4d rotation = new Matrix4d();
-        
-        rotation.setIdentity();
-        rotation.setRow(0, ax);
-        rotation.setRow(1, ay);
-        rotation.setRow(2, az);
-        
-        Matrix4d rotscale = new Matrix4d(parent.m00, parent.m01, parent.m02, 0,
-                                         parent.m10, parent.m11, parent.m12, 0,
-                                         parent.m20, parent.m21, parent.m22, 0,
-                                         0, 0, 0, 1);
-        
-        rotation.invert();
-        rotscale.mul(rotation);
-        
-        Matrix4d scale = new Matrix4d(rotscale.m00, 0, 0, 0,
-                                      0, rotscale.m11, 0, 0,
-                                      0, 0, rotscale.m22, 0,
-                                      0, 0, 0, 1);
-        return new ModelView(translation, rotation, scale);
-    }
-    
-    private class ModelView 
-    {
-        public Matrix4d translation = new Matrix4d();
-        public Matrix4d rotation = new Matrix4d();
-        public Matrix4d scale = new Matrix4d();
-        
-        public ModelView(Matrix4d translation, Matrix4d rotation, Matrix4d scale)
-        {
-            this.translation.set(translation);
-            this.rotation.set(rotation);
-            this.scale.set(scale);
         }
     }
 
