@@ -352,7 +352,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
         this.vertices[3].set(-this.w / 2, this.h / 2, 0, 1);
         this.transform.setIdentity();
 
-        if(particle.relativeScale)
+        if (particle.relativeScaleBillboard)
         {
             Matrix4d scale = new Matrix4d(emitter.scale[0], 0, 0, 0,
                                      0, emitter.scale[1], 0, 0,

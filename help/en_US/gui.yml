@@ -401,6 +401,15 @@ blockbuster.gui:
             acceleration: Local acceleration
             acceleration_tooltip: It rotates the acceleration vector according to the target's rotation throughout the whole lifetime.
             gravity: Gravity
+            scale: Local scale
+            scale_tooltip: It scales the particles according to the target's scale. It works best with local position and rotation. It doesn't work well with collision!
+            scale_billboard: Scale texture
+            scale_billboard_tooltip: It scales the particle's texture size according to the target's scale.
+            object_velocity_title: Object
+            linear_velocity: Velocity
+            linear_velocity_tooltip: Let the object give the particle a starting velocity. The velocity gets calculated by the position change of the snowstorm morph, multiplied by the given factor. It gets added to the particle's velocity at spawntime.
+            angular_velocity: Angular velocity
+            angular_velocity_tooltip: The angular velocity gets calculated by the rotation change of the snowstorm morph, multiplied by the given factor. It gets added to the particle's velocity at spawntime. The radius is the translation of the snowstorm morph bodypart.
 
         initialization:
             title: Initialization expressions
@@ -535,6 +544,7 @@ blockbuster.gui:
             title: Color and lighting
 
             lighting: Lighting
+            lighting_tooltip: Use the Minecraft shadow for rendering. If it is deactivated the particles will glow.
 
             solid: Solid
             expression: Expression

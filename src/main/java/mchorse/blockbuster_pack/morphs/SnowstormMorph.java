@@ -39,6 +39,7 @@ public class SnowstormMorph extends AbstractMorph
     public List<BedrockEmitter> lastEmitters;
 
     private long lastUpdate;
+    private int lastAge = 0; //to determine which tick it is
 
     public static Matrix4f getMatrix()
     {
@@ -181,10 +182,22 @@ public class SnowstormMorph extends AbstractMorph
 
             Vector4f zero = calculateGlobal(parent, target, 0, 0, 0, partialTicks);
 
+            if (this.lastAge != this.age)
+            {
+                emitter.prevRotation.set(emitter.rotation);
+                emitter.prevGlobal.set(emitter.lastGlobal);
+            }
+
+            this.lastAge = this.age;
+
             emitter.lastGlobal.x = zero.x;
             emitter.lastGlobal.y = zero.y;
             emitter.lastGlobal.z = zero.z;
+
+            //emitter.angularVelocity.set(this.angularVelocity);
             emitter.rotation.setIdentity();
+
+            emitter.translation.set(this.cachedTranslation);
 
             Vector3f ax = new Vector3f(parent.m00, parent.m01, parent.m02);
             Vector3f ay = new Vector3f(parent.m10, parent.m11, parent.m12);
