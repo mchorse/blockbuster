@@ -11,6 +11,7 @@ import javax.vecmath.Vector4f;
 
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.ColorUtils;
+import mchorse.mclib.utils.MatrixUtils;
 import mchorse.metamorph.bodypart.BodyPart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
