@@ -1,11 +1,11 @@
 package mchorse.blockbuster.client.particles.emitter;
 
 import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotionCollision;
+import mchorse.mclib.utils.MathUtils;
+import mchorse.mclib.utils.MatrixUtils;
 import net.minecraft.entity.Entity;
 
-import javax.vecmath.Matrix3f;
-import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
+import javax.vecmath.*;
 import java.util.HashMap;
 
 public class BedrockParticle
@@ -28,9 +28,11 @@ public class BedrockParticle
     public boolean relativeRotation;
     public boolean relativeDirection;
     public boolean relativeScale;
+    public boolean relativeScaleBillboard;
     public boolean relativeAcceleration;
     public boolean realisticCollisionDrag;
-    /* Works best with relativeDirection */
+    public float linearVelocity;
+    public float angularVelocity;
     public boolean gravity;
     public boolean manual;
     
@@ -148,37 +150,83 @@ public class BedrockParticle
         {
             //this.position.add(this.offset);
 
-            if(this.realisticCollisionDrag && Math.round(this.speed.x*10000) == 0 && Math.round(this.speed.y*10000) == 0 && Math.round(this.speed.z*10000) == 0)
+            if (this.realisticCollisionDrag && Math.round(this.speed.x*10000) == 0 && Math.round(this.speed.y*10000) == 0 && Math.round(this.speed.z*10000) == 0)
             {
                 this.dragFactor = 0;
                 this.speed.scale(0);
             }
 
             /* lazy fix for transforming from moving intertial system back to global space */
-            if(this.entityCollisionTime.isEmpty())
+            if (this.entityCollisionTime.isEmpty())
             {
                 transformOffsetToGlobal();
             }
             else
             {
-                for(HashMap.Entry<Entity, Vector3f> entry : this.entityCollisionTime.entrySet())
+                for (HashMap.Entry<Entity, Vector3f> entry : this.entityCollisionTime.entrySet())
                 {
-                    if(entry.getValue().y!=this.age)
+                    if (entry.getValue().y != this.age)
                     {
                         transformOffsetToGlobal();
                     }
                 }
             }
 
-
             float rotationAcceleration = this.rotationAcceleration / 20F -this.rotationDrag * this.rotationVelocity;
             this.rotationVelocity += rotationAcceleration / 20F;
             this.rotation = this.initialRotation + this.rotationVelocity * this.age;
 
             /* Position */
-            if (this.relativeDirection && this.age == 0)
+            if (this.age == 0)
             {
-                emitter.rotation.transform(this.speed);
+                if (this.relativeDirection)
+                {
+                    emitter.rotation.transform(this.speed);
+                }
+
+                if (this.linearVelocity != 0)
+                {
+                    Vector3f v = new Vector3f(emitter.lastGlobal);
+                    v.x -= emitter.prevGlobal.x;
+                    v.y -= emitter.prevGlobal.y;
+                    v.z -= emitter.prevGlobal.z;
+
+                    this.speed.x += v.x * this.linearVelocity;
+                    this.speed.y += v.y * this.linearVelocity;
+                    this.speed.z += v.z * this.linearVelocity;
+                }
+
+                if (this.angularVelocity != 0)
+                {
+                    Matrix3f rotation1 = new Matrix3f(emitter.rotation);
+                    Matrix3f identity = new Matrix3f();
+
+                    identity.setIdentity();
+
+                    try
+                    {
+                        Matrix3f rotation0 = new Matrix3f(emitter.prevRotation);
+
+                        rotation0.invert();
+                        rotation1.mul(rotation0);
+
+                        Vector3f angularV = MatrixUtils.getAngularVelocity(rotation1);
+
+                        Vector3f radius = new Vector3f(emitter.translation);
+                        radius.x += this.position.x - emitter.lastGlobal.x;
+                        radius.y += this.position.y - emitter.lastGlobal.y;
+                        radius.z += this.position.z - emitter.lastGlobal.z;
+
+                        Vector3f v = new Vector3f();
+
+                        v.cross(angularV, radius);
+
+                        this.speed.x += v.x * this.angularVelocity;
+                        this.speed.y += v.y * this.angularVelocity;
+                        this.speed.z += v.z * this.angularVelocity;
+                    }
+                    catch (SingularMatrixException e) {} //maybe check if determinant is zero
+                }
             }
 
             if (this.relativeAcceleration)
@@ -257,4 +305,6 @@ public class BedrockParticle
 
         this.offset.scale(0);
     }
+
+
 }

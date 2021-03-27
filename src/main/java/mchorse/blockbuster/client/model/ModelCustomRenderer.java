@@ -1,5 +1,20 @@
 package mchorse.blockbuster.client.model;
 
+import javax.vecmath.Matrix3d;
+import javax.vecmath.Matrix3f;
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4d;
+import javax.vecmath.Vector4f;
+
+import mchorse.mclib.utils.Color;
+import mchorse.mclib.utils.ColorUtils;
+import mchorse.metamorph.bodypart.BodyPart;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.ModelLimb;
@@ -32,6 +47,14 @@ public class ModelCustomRenderer extends ModelRenderer
     public ModelTransform trasnform;
     public ModelCustomRenderer parent;
     public ModelCustom model;
+
+    public Vector3f cachedTranslation = new Vector3f();
+
+    /**
+     * At the moment no use -> would be useful to have realistic physics
+     * for every limb, see robotics https://www.tu-chemnitz.de/informatik/KI/edu/robotik/ws2017/vel.kin.pdf
+     */
+    public Vector3f angularVelocity = new Vector3f();
 
     public float scaleX = 1;
     public float scaleY = 1;
@@ -165,6 +188,34 @@ public class ModelCustomRenderer extends ModelRenderer
                 {
                     this.compileDisplayList(scale);
                 }
+
+                MatrixUtils.Transformation modelView = new MatrixUtils.Transformation();
+
+                if (MatrixUtils.matrix != null)
+                {
+                    modelView = MatrixUtils.extractTransformations(MatrixUtils.matrix, MatrixUtils.readModelView(BodyPart.modelViewMatrix));
+                }
+
+                this.cachedTranslation.set(this.rotationPointX/16,(this.limb.parent.isEmpty() ? this.rotationPointY -24 : this.rotationPointY)/16,this.rotationPointZ/16);
+
+                Matrix3f transformation = new Matrix3f(modelView.getRotation3f());
+
+                transformation.mul(modelView.getScale3f());
+                transformation.transform(this.cachedTranslation);
+
+                if (this.parent!=null)
+                {
+                    this.cachedTranslation.add(this.parent.cachedTranslation);
+                }
+
+                if (this.model.current != null)
+                {
+                    this.cachedTranslation.add(this.model.current.cachedTranslation);
+                    this.model.current.cachedTranslation.scale(0);
+                }
+
+                //currently deactivated, only use bodypart's translation as radius for angular stuff
+                //BodyPart.cachedTranslation.set(this.cachedTranslation);
 
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(this.offsetX, this.offsetY, this.offsetZ);

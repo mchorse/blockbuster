@@ -31,7 +31,6 @@ public class BedrockEmitter
 {
     public BedrockScheme scheme;
     public List<BedrockParticle> particles = new ArrayList<BedrockParticle>();
-    public List<BedrockParticle> collidedParticles = new ArrayList<BedrockParticle>();
     public List<BedrockParticle> splitParticles = new ArrayList<BedrockParticle>();
     public Map<String, IValue> variables;
     public Map<String, Double> initialValues = new HashMap<String, Double>();
@@ -47,7 +46,11 @@ public class BedrockEmitter
 
     /* Intermediate values */
     public Vector3d lastGlobal = new Vector3d();
-    public Matrix3f rotation = new Matrix3f();
+    public Vector3d prevGlobal = new Vector3d();
+    public Matrix3f rotation = new Matrix3f(1,0,0,0,1,0,0,0,1);
+    public Matrix3f prevRotation = new Matrix3f(1,0,0,0,1,0,0,0,1);
+    public Vector3f angularVelocity = new Vector3f();
+    public Vector3d translation = new Vector3d();
 
     /* Runtime properties */
     public int age;
@@ -61,6 +64,8 @@ public class BedrockEmitter
     public float random4 = (float) Math.random();
 
     private BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
+
+    public double[] scale = {1,1,1};
 
     /* Camera properties */
     public int perspective;
