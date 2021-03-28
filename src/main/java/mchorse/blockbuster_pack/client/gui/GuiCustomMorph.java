@@ -34,6 +34,8 @@ import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -59,6 +61,35 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         if (entry == null)
         {
             return;
+        }
+
+        /* Add presets that are part of JSON file */
+        if (morph instanceof CustomMorph)
+        {
+            CustomMorph custom = (CustomMorph) morph;
+
+            if (custom.model != null && !custom.model.presets.isEmpty())
+            {
+                for (Map.Entry<String, String> preset : custom.model.presets.entrySet())
+                {
+                    NBTTagCompound tag = null;
+
+                    try
+                    {
+                        tag = JsonToNBT.getTagFromJson(preset.getValue());
+                    }
+                    catch (Exception e)
+                    {}
+
+                    if (tag != null)
+                    {
+                        NBTTagCompound morphTag = custom.toNBT();
+
+                        morphTag.merge(tag);
+                        list.add(new Label<NBTTagCompound>(IKey.str(preset.getKey()), morphTag));
+                    }
+                }
+            }
         }
 
         for (AbstractEntry childEntry : entry.getEntries())

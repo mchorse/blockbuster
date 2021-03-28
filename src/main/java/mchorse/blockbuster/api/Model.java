@@ -111,6 +111,9 @@ public class Model
     @Expose
     public Map<String, ModelPose> poses = new HashMap<String, ModelPose>();
 
+    @Expose
+    public Map<String, String> presets = new HashMap<String, String>();
+
     public Map<String, OBJMaterial> materials = new HashMap<String, OBJMaterial>();
 
     public List<String> shapes = new ArrayList<String>();
@@ -342,6 +345,8 @@ public class Model
         {
             b.poses.put(entry.getKey(), entry.getValue().clone());
         }
+
+        b.presets.putAll(this.presets);
 
         return b;
     }
