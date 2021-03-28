@@ -200,6 +200,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
     public List<ShapeKey> getShapesForRendering(float partialTick)
     {
+        if (this.model.shapes.isEmpty())
+        {
+            return this.shapes;
+        }
+
         if (this.animation.isInProgress())
         {
             return this.animation.calculateShapes(this, partialTick);
@@ -949,11 +954,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
             this.temporaryShapes.clear();
 
-            for (ShapeKey key : this.lastShapes)
-            {
-                this.temporaryShapes.add(new ShapeKey(key.name, this.interp.interpolate(key.value, 0, factor), key.relative));
-            }
-
             for (ShapeKey key : morph.shapes)
             {
                 ShapeKey last = null;
@@ -969,6 +969,26 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                 }
 
                 this.temporaryShapes.add(new ShapeKey(key.name, this.interp.interpolate(last == null ? 0 : last.value, key.value, factor), key.relative));
+            }
+
+            for (ShapeKey key : this.lastShapes)
+            {
+                ShapeKey last = null;
+
+                for (ShapeKey previous : this.temporaryShapes)
+                {
+                    if (previous.name.equals(key.name))
+                    {
+                        last = previous;
+
+                        break;
+                    }
+                }
+
+                if (last == null)
+                {
+                    this.temporaryShapes.add(new ShapeKey(key.name, this.interp.interpolate(key.value, 0, factor), key.relative));
+                }
             }
 
             return this.temporaryShapes;
