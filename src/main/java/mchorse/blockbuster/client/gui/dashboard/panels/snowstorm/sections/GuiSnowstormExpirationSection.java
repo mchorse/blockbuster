@@ -17,6 +17,7 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
+import mchorse.mclib.client.gui.framework.tooltips.LabelTooltip;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -113,7 +114,7 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 
     private void updateTooltip()
     {
-        this.expression.tooltip.label.set(this.lifetime.max ? "blockbuster.gui.snowstorm.expiration.max_tooltip" : "blockbuster.gui.snowstorm.expiration.expression_tooltip");
+        ((LabelTooltip) this.expression.tooltip).label.set(this.lifetime.max ? "blockbuster.gui.snowstorm.expiration.max_tooltip" : "blockbuster.gui.snowstorm.expiration.expression_tooltip");
     }
 
     @Override

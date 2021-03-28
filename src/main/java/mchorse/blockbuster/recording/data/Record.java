@@ -201,6 +201,11 @@ public class Record
 
             actor.onGround = frame.onGround;
 
+            if (frame.hasBodyYaw)
+            {
+                actor.renderYawOffset = frame.bodyYaw;
+            }
+
             if (actor instanceof EntityPlayerSP)
             {
                 MovementInput input = ((EntityPlayerSP) actor).movementInput;

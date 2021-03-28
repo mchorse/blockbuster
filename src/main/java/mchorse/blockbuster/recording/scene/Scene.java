@@ -15,6 +15,7 @@ import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.recording.scene.fake.FakeContext;
+import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.vanilla_pack.morphs.PlayerMorph;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
@@ -280,15 +281,9 @@ public class Scene
             if (this.loops && actor.isFinished())
             {
                 actor.record.reset(actor.actor);
-                actor.tick = 0;
-                actor.record.applyFrame(0, actor.actor, true, actor.realPlayer);
-                actor.record.applyAction(0, actor.actor);
-                Dispatcher.sendToTracked(actor.actor, new PacketPlayback(actor.actor.getEntityId(), true, actor.realPlayer, replay.id));
 
-                if (actor.realPlayer)
-                {
-                    Dispatcher.sendTo(new PacketPlayback(actor.actor.getEntityId(), true, actor.realPlayer, replay.id), (EntityPlayerMP) actor.actor);
-                }
+                actor.startPlaying(replay.id, actor.kill);
+                actor.record.applyAction(0, actor.actor);
 
                 CommonProxy.manager.players.put(actor.actor, actor);
             }

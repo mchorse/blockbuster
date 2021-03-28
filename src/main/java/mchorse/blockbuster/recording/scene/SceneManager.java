@@ -31,9 +31,11 @@ public class SceneManager
     /**
      * Currently loaded scenes
      */
-    public Map<String, Scene> scenes = new HashMap<String, Scene>();
+    private Map<String, Scene> scenes = new HashMap<String, Scene>();
 
     private List<String> toRemove = new ArrayList<String>();
+    private Map<String, Scene> toPut = new HashMap<String, Scene>();
+    private boolean ticking;
 
     public static boolean isValidFilename(String filename)
     {
@@ -45,6 +47,10 @@ public class SceneManager
      */
     public void reset()
     {
+        this.ticking = false;
+        this.toRemove.clear();
+        this.toPut.clear();
+
         this.scenes.clear();
     }
 
@@ -53,24 +59,38 @@ public class SceneManager
      */
     public void tick()
     {
-        for (Map.Entry<String, Scene> entry : this.scenes.entrySet())
+        this.ticking = true;
+
+        try
         {
-            Scene scene = entry.getValue();
-
-            scene.tick();
-
-            if (!scene.playing)
+            for (Map.Entry<String, Scene> entry : this.scenes.entrySet())
             {
-                this.toRemove.add(entry.getKey());
+                Scene scene = entry.getValue();
+
+                scene.tick();
+
+                if (!scene.playing)
+                {
+                    this.toRemove.add(entry.getKey());
+                }
             }
         }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        this.ticking = false;
 
         for (String scene : this.toRemove)
         {
             this.scenes.remove(scene);
         }
 
+        this.scenes.putAll(this.toPut);
+
         this.toRemove.clear();
+        this.toPut.clear();
     }
 
     /**
@@ -114,7 +134,7 @@ public class SceneManager
                 {
                     if (!CommonProxy.manager.recorders.containsKey(player))
                     {
-                        this.scenes.put(filename, scene);
+                        this.put(filename, scene);
                         scene.startPlayback(record, offset);
                     }
                     else
@@ -165,7 +185,7 @@ public class SceneManager
             {
                 scene.setWorld(world);
                 scene.setSender(new SceneSender(scene));
-                this.scenes.put(filename, scene);
+                this.put(filename, scene);
             }
         }
         catch (Exception e)
@@ -260,6 +280,11 @@ public class SceneManager
     private File sceneFile(String filename)
     {
         return Utils.serverFile("blockbuster/scenes", filename);
+    }
+
+    private void put(String filename, Scene scene)
+    {
+        (this.ticking ? this.toPut : this.scenes).put(filename, scene);
     }
 
     /**

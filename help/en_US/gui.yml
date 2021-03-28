@@ -47,12 +47,12 @@ blockbuster.gui:
         resources: Resources
         wiki: Wiki
         discord: Discord
-        tutorial: Video Tutorial
-        models: Open Models...
-        skins: Open Skins...
+        tutorial: Video tutorial
+        models: Open models...
+        skins: Open skins...
 
-        reset_audio: Reset Audio Tracks
-        open_audio: Open Audio Tracks...
+        reset_audio: Reset audio tracks
+        open_audio: Open audio tracks...
         
         options: Options
     
@@ -637,15 +637,24 @@ blockbuster.gui:
         impact_morph: Impact morph
         impact_delay: Impact delay
         impact_command: Command on impact
+        impact_entity_command: Command on entity impact
         vanish: Vanish # or Spanish
         bounce: Bounce
         sticks: Sticks
         hits: Hits
         damage: Damage
+        knockback_horizontal: Horizontal knockback factor, 0 is no knockback, the higher the value the further entity will be knocked
+        knockback_vertical: Vertical knockback factor, 0 is no vertical knockback, the higher the value the higher entity will be knocked. This option doesn't work if horizontal knockback is 0
         bounce_factor: Factor
+        vanish_command: Command on vanish
         vanish_delay: Vanish delay
         penetration: Penetration factor - how much into the block the projectile will penetrate into (this option works only when Sticks enabled)
-        
+        collision: Collision
+        ignore_blocks: Ignore blocks
+        ignore_blocks_tooltip: This option makes projectiles go through blocks instead of bouncing, sliding or sticking
+        ignore_entities: Ignore entities
+        ignore_entities_tooltip: This option makes projectiles go through entities instead of causing damage, knockback or executing on entity impact command
+
         gun_transforms: Gun transformations
         projectile_transforms: Projectile transformations
 

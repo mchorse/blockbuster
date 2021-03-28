@@ -28,7 +28,7 @@ public class BreakBlockAnimation extends InteractBlockAction
     @Override
     public void apply(EntityLivingBase actor)
     {
-        actor.world.sendBlockBreakProgress(actor.getEntityId(), this.pos, this.progress);
+        actor.world.sendBlockBreakProgress(-1, this.pos, this.progress);
     }
 
     @Override

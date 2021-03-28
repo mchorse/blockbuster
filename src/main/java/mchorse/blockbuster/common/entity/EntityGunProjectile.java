@@ -14,6 +14,7 @@ import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
@@ -83,6 +84,21 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         this.impact = -1;
     }
 
+    @Override
+    public void shoot(Entity entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity, float inaccuracy)
+    {
+        if (entityThrower instanceof EntityActor.EntityFakePlayer)
+        {
+            this.thrower = ((EntityActor.EntityFakePlayer) entityThrower).actor;
+        }
+        else if (entityThrower instanceof EntityLivingBase)
+        {
+            this.thrower = (EntityLivingBase) entityThrower;
+        }
+
+        super.shoot(entityThrower, rotationPitchIn, rotationYawIn, pitchOffset, velocity, inaccuracy);
+    }
+
     public void setInitialMotion()
     {
         this.initMX = this.motionX;
@@ -134,34 +150,37 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             /* Ray trace for impact */
             Vec3d position = new Vec3d(this.posX, this.posY, this.posZ);
             Vec3d next = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-            RayTraceResult result = this.world.rayTraceBlocks(position, next);
+            Entity entity = null;
+            RayTraceResult result = this.world.rayTraceBlocks(position, next, false, true, false);
 
             if (result != null)
             {
                 next = new Vec3d(result.hitVec.x, result.hitVec.y, result.hitVec.z);
             }
 
-            Entity entity = null;
-            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1.0D));
-            double dist = 0.0D;
-
-            for (int i = 0; i < list.size(); ++i)
+            if (!this.props.ignoreEntities)
             {
-                Entity current = list.get(i);
+                List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1.0D));
+                double dist = 0.0D;
 
-                if (current.canBeCollidedWith())
+                for (int i = 0; i < list.size(); ++i)
                 {
-                    AxisAlignedBB box = current.getEntityBoundingBox().grow(0.30000001192092896D);
-                    RayTraceResult ray = box.calculateIntercept(position, next);
+                    Entity current = list.get(i);
 
-                    if (ray != null)
+                    if (current.canBeCollidedWith())
                     {
-                        double d1 = position.squareDistanceTo(ray.hitVec);
+                        AxisAlignedBB box = current.getEntityBoundingBox().grow(0.30000001192092896D);
+                        RayTraceResult ray = box.calculateIntercept(position, next);
 
-                        if (d1 < dist || dist == 0.0D)
+                        if (ray != null)
                         {
-                            entity = current;
-                            dist = d1;
+                            double d1 = position.squareDistanceTo(ray.hitVec);
+
+                            if (!(current instanceof EntityGunProjectile) && current != this.thrower && (d1 < dist || dist == 0.0D))
+                            {
+                                entity = current;
+                                dist = d1;
+                            }
                         }
                     }
                 }
@@ -185,7 +204,10 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 }
                 else
                 {
-                    if (!net.minecraftforge.common.ForgeHooks.onThrowableImpact(this, result)) this.onImpact(result);
+                    if (!net.minecraftforge.common.ForgeHooks.onThrowableImpact(this, result))
+                    {
+                        this.onImpact(result);
+                    }
                 }
             }
 
@@ -237,6 +259,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
                 if (diff < 100 * 100)
                 {
+                    this.noClip = this.props.ignoreBlocks;
                     this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
                 }
                 else
@@ -288,9 +311,9 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         {
             this.setDead();
 
-            if (!this.props.impactCommand.isEmpty())
+            if (!this.props.vanishCommand.isEmpty())
             {
-                this.getServer().commandManager.executeCommand(this, this.props.impactCommand);
+                this.getServer().commandManager.executeCommand(this, this.props.vanishCommand);
             }
         }
 
@@ -317,100 +340,123 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     @Override
     protected void onImpact(RayTraceResult result)
     {
-        if (this.stuck || this.vanish)
+        if (this.stuck || this.vanish || this.props == null)
         {
             return;
         }
 
-        if (this.props != null && this.ticksExisted >= 4)
+        this.hits++;
+
+        boolean shouldDie = this.props.vanish && this.hits >= this.props.hits && !this.props.sticks;
+        boolean impactMorph = false;
+
+        if (result.typeOfHit == Type.BLOCK && !this.props.ignoreBlocks)
         {
-            this.hits++;
+            Axis axis = result.sideHit.getAxis();
+            float factor = (this.props.bounce && this.hits <= this.props.hits ? -1 : 0);
 
-            boolean shouldDie = this.props.vanish && this.hits >= this.props.hits && !this.props.sticks;
+            if (axis == Axis.X) this.motionX *= factor;
+            if (axis == Axis.Y) this.motionY *= factor;
+            if (axis == Axis.Z) this.motionZ *= factor;
 
-            if (result.typeOfHit == Type.BLOCK)
+            this.motionX *= this.props.bounceFactor;
+            this.motionY *= this.props.bounceFactor;
+            this.motionZ *= this.props.bounceFactor;
+
+            this.posX = result.hitVec.x + this.width / 2 * result.sideHit.getFrontOffsetX();
+            this.posY = result.hitVec.y - this.height * (result.sideHit == EnumFacing.DOWN ? 1 : 0);
+            this.posZ = result.hitVec.z + this.width / 2 * result.sideHit.getFrontOffsetZ();
+
+            if (this.props.sticks)
             {
-                Axis axis = result.sideHit.getAxis();
-                float factor = (this.props.bounce && this.hits <= this.props.hits ? -1 : 0);
+                this.stuck = true;
 
-                if (axis == Axis.X) this.motionX *= factor;
-                if (axis == Axis.Y) this.motionY *= factor;
-                if (axis == Axis.Z) this.motionZ *= factor;
-
-                this.motionX *= this.props.bounceFactor;
-                this.motionY *= this.props.bounceFactor;
-                this.motionZ *= this.props.bounceFactor;
-
-                this.posX = result.hitVec.x + this.width / 2 * result.sideHit.getFrontOffsetX();
-                this.posY = result.hitVec.y - this.height * (result.sideHit == EnumFacing.DOWN ? 1 : 0);
-                this.posZ = result.hitVec.z + this.width / 2 * result.sideHit.getFrontOffsetZ();
-
-                if (this.props.sticks)
+                if (!this.world.isRemote)
                 {
-                    this.stuck = true;
+                    if (result.sideHit == EnumFacing.WEST || result.sideHit == EnumFacing.EAST) this.posX += this.props.penetration * result.sideHit.getFrontOffsetX();
+                    else if (result.sideHit == EnumFacing.UP || result.sideHit == EnumFacing.DOWN) this.posY += this.props.penetration * result.sideHit.getFrontOffsetY();
+                    else if (result.sideHit == EnumFacing.NORTH || result.sideHit == EnumFacing.SOUTH) this.posZ += this.props.penetration * result.sideHit.getFrontOffsetZ();
 
-                    if (!this.world.isRemote)
-                    {
-                        if (result.sideHit == EnumFacing.WEST || result.sideHit == EnumFacing.EAST) this.posX += this.props.penetration * result.sideHit.getFrontOffsetX();
-                        else if (result.sideHit == EnumFacing.UP || result.sideHit == EnumFacing.DOWN) this.posY += this.props.penetration * result.sideHit.getFrontOffsetY();
-                        else if (result.sideHit == EnumFacing.NORTH || result.sideHit == EnumFacing.SOUTH) this.posZ += this.props.penetration * result.sideHit.getFrontOffsetZ();
-
-                        Dispatcher.sendToTracked(this, new PacketGunStuck(this.getEntityId(), (float) this.posX, (float) this.posY, (float) this.posZ));
-                    }
+                    Dispatcher.sendToTracked(this, new PacketGunStuck(this.getEntityId(), (float) this.posX, (float) this.posY, (float) this.posZ));
                 }
             }
+        }
 
-            if (!this.world.isRemote)
+        if (!this.world.isRemote)
+        {
+            if (!this.props.impactCommand.isEmpty() && result.typeOfHit == Type.BLOCK && !this.props.ignoreBlocks)
             {
-                if (!this.props.impactCommand.isEmpty())
+                String command = this.props.impactCommand;
+                int x = Math.round((float) this.posX);
+                int y = Math.round((float) this.posY);
+                int z = Math.round((float) this.posZ);
+
+                if (result.typeOfHit == Type.BLOCK)
                 {
-                    String command = this.props.impactCommand;
-                    int x = Math.round((float) this.posX);
-                    int y = Math.round((float) this.posY);
-                    int z = Math.round((float) this.posZ);
-
-                    if (result.typeOfHit == Type.BLOCK)
-                    {
-                        x = result.getBlockPos().getX();
-                        y = result.getBlockPos().getY();
-                        z = result.getBlockPos().getZ();
-                    }
-
-                    command = command.replaceAll("\\$\\{x\\}", String.valueOf(x));
-                    command = command.replaceAll("\\$\\{y\\}", String.valueOf(y));
-                    command = command.replaceAll("\\$\\{z\\}", String.valueOf(z));
-
-                    this.getServer().commandManager.executeCommand(this, command);
+                    x = result.getBlockPos().getX();
+                    y = result.getBlockPos().getY();
+                    z = result.getBlockPos().getZ();
                 }
 
-                if (result.typeOfHit == Type.ENTITY && this.props.damage > 0)
+                command = command.replaceAll("\\$\\{x\\}", String.valueOf(x));
+                command = command.replaceAll("\\$\\{y\\}", String.valueOf(y));
+                command = command.replaceAll("\\$\\{z\\}", String.valueOf(z));
+
+                this.getServer().commandManager.executeCommand(this, command);
+
+                impactMorph = true;
+            }
+
+            if (result.typeOfHit == Type.ENTITY && !this.props.ignoreEntities)
+            {
+                if (!this.props.impactEntityCommand.isEmpty())
+                {
+                    this.getServer().commandManager.executeCommand(this, this.props.impactEntityCommand);
+                }
+
+                if (this.props.damage > 0)
                 {
                     result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, null), this.props.damage);
                 }
 
-                if (shouldDie)
+                if (this.props.knockbackHorizontal != 0 && result.entityHit instanceof EntityLivingBase)
                 {
-                    this.vanish = true;
-                    this.vanishDelay = this.props.vanishDelay;
+                    ((EntityLivingBase) result.entityHit).knockBack(this, Math.abs(this.props.knockbackHorizontal), -this.motionX, -this.motionZ);
 
-                    if (this.vanishDelay > 0)
+                    if (this.props.knockbackHorizontal < 0)
                     {
-                        Dispatcher.sendToTracked(this, new PacketGunProjectileVanish(this.getEntityId(), this.vanishDelay));
+                        result.entityHit.motionX *= -1;
+                        result.entityHit.motionZ *= -1;
                     }
-
-                    return;
                 }
 
-                /* Change to impact morph */
-                if (this.props.impactDelay > 0)
+                result.entityHit.motionY += this.props.knockbackVertical;
+
+                impactMorph = true;
+            }
+
+            if (shouldDie)
+            {
+                this.vanish = true;
+                this.vanishDelay = this.props.vanishDelay;
+
+                if (this.vanishDelay > 0)
                 {
-                    AbstractMorph morph = MorphUtils.copy(this.props.impactMorph);
-
-                    this.morph.set(morph);
-                    this.impact = this.props.impactDelay;
-
-                    Dispatcher.sendToTracked(this, new PacketGunProjectile(this.getEntityId(), morph));
+                    Dispatcher.sendToTracked(this, new PacketGunProjectileVanish(this.getEntityId(), this.vanishDelay));
                 }
+
+                return;
+            }
+
+            /* Change to impact morph */
+            if (impactMorph && this.props.impactDelay > 0)
+            {
+                AbstractMorph morph = MorphUtils.copy(this.props.impactMorph);
+
+                this.morph.set(morph);
+                this.impact = this.props.impactDelay;
+
+                Dispatcher.sendToTracked(this, new PacketGunProjectile(this.getEntityId(), morph));
             }
         }
     }

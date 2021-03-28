@@ -7,6 +7,7 @@ import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponent
 import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponentLifetimeOnce;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
+import mchorse.mclib.client.gui.framework.tooltips.LabelTooltip;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 
@@ -102,20 +103,20 @@ public class GuiSnowstormLifetimeSection extends GuiSnowstormModeSection<Bedrock
         if (this.component instanceof BedrockComponentLifetimeExpression)
         {
             this.set(this.expiration, ((BedrockComponentLifetimeExpression) this.component).expiration);
-            this.expiration.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.expiration_expression");
+            ((LabelTooltip) this.expiration.tooltip).label.set("blockbuster.gui.snowstorm.lifetime.expiration_expression");
 
-            this.active.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.active_expression");
+            ((LabelTooltip) this.active.tooltip).label.set("blockbuster.gui.snowstorm.lifetime.active_expression");
         }
         else if (this.component instanceof BedrockComponentLifetimeLooping)
         {
             this.set(this.expiration, ((BedrockComponentLifetimeLooping) this.component).sleepTime);
-            this.expiration.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.sleep_time");
+            ((LabelTooltip) this.expiration.tooltip).label.set("blockbuster.gui.snowstorm.lifetime.sleep_time");
 
-            this.active.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.active_looping");
+            ((LabelTooltip) this.active.tooltip).label.set("blockbuster.gui.snowstorm.lifetime.active_looping");
         }
         else
         {
-            this.active.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.active_once");
+            ((LabelTooltip) this.active.tooltip).label.set("blockbuster.gui.snowstorm.lifetime.active_once");
         }
 
         this.set(this.active, this.component.activeTime);

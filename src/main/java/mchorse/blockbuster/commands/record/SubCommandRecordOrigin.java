@@ -91,6 +91,11 @@ public class SubCommandRecordOrigin extends SubCommandRecordBase
 
                 frame.yaw += rotation;
                 frame.yawHead += rotation;
+
+                if (frame.hasBodyYaw)
+                {
+                    frame.bodyYaw += rotation;
+                }
             }
 
             frame.x = x + frameX;

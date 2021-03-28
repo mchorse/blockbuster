@@ -68,7 +68,7 @@ import org.apache.logging.log4j.Logger;
  * of custom models)</li>
  * </ul>
  */
-@Mod(modid = Blockbuster.MOD_ID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, dependencies = "after:aperture@[%APERTURE%,);after:emoticons@[%EMOTICONS%,);required-after:metamorph@[%METAMORPH%,);required-after:mclib@[%MCLIB%,);required-after:forge@[14.23.2.2638,)", updateJSON = "https://raw.githubusercontent.com/mchorse/blockbuster/1.12/version.json")
+@Mod(modid = Blockbuster.MOD_ID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, dependencies = "after:aperture@[%APERTURE%,);before:emoticons@[%EMOTICONS%,);required-after:metamorph@[%METAMORPH%,);required-after:mclib@[%MCLIB%,);required-after:forge@[14.23.2.2638,)", updateJSON = "https://raw.githubusercontent.com/mchorse/blockbuster/1.12/version.json")
 public class Blockbuster
 {
     /* Mod info */
@@ -193,6 +193,7 @@ public class Blockbuster
     public static ValueFloat audioWaveformWidth;
     public static ValueInt audioWaveformHeight;
     public static ValueBoolean audioWaveformFilename;
+    public static ValueBoolean audioWaveformTime;
 
     /**
      * "Macro" for getting resource location for Blockbuster mod items,
@@ -286,17 +287,16 @@ public class Blockbuster
         builder.getCategory().markClientSide();
 
         /* Audio */
-        builder.category("audio").register(new ValueAudioButtons("buttons").clientSide());
+        builder.category("audio").register(new ValueAudioButtons("buttons"));
 
         audioWaveformVisible = builder.getBoolean("waveform_visible", true);
         audioWaveformDensity = builder.getInt("waveform_density", 20, 10, 100);
         audioWaveformWidth = builder.getFloat("waveform_width", 0.5F, 0F, 1F);
         audioWaveformHeight = builder.getInt("waveform_height", 24, 10, 40);
         audioWaveformFilename = builder.getBoolean("waveform_filename", true);
+        audioWaveformTime = builder.getBoolean("waveform_time", true);
 
         builder.getCategory().markClientSide();
-
-        event.modules.add(builder.build());
     }
 
     @EventHandler

@@ -57,3 +57,4 @@ blockbuster.config.comments:
         waveform_width: Width of an audio bar in floating point percentage (between 0 and 1)
         waveform_height: Height of an audio bar in pixels
         waveform_filename: Whether filename of the played audio in the audio should be shown
+        waveform_time: Whether audio track's playback time should be displayed. Keep in mind that audio track's playback time doesn't necessarily represent scene's current playback time!

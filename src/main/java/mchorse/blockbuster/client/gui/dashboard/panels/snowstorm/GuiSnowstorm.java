@@ -171,7 +171,7 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
             scheme.factory(this.library.factory.containsKey(name));
             scheme.identifier = name;
             this.setScheme(name, scheme);
-            this.dirty();
+            this.save();
         }).setValue(this.filename));
     }
 

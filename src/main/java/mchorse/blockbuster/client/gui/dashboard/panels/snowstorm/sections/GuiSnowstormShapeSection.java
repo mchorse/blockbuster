@@ -79,10 +79,7 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
     {
         GuiSectionManager.setDefaultState(this.getClass().getSimpleName(), false);
         
-        if (!GuiSectionManager.isCollapsed(this.getClass().getSimpleName()))
-        {
-            this.add(this.fields);
-        }
+        super.collapseState();
     }
 
     private void updateNormalDimension(String str, GuiTextElement element, int index)

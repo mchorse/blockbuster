@@ -4,6 +4,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.commands.record.SubCommandRecordAdd;
+import mchorse.blockbuster.commands.record.SubCommandRecordApply;
 import mchorse.blockbuster.commands.record.SubCommandRecordCalculateBodyYaw;
 import mchorse.blockbuster.commands.record.SubCommandRecordCamera;
 import mchorse.blockbuster.commands.record.SubCommandRecordClean;
@@ -45,6 +46,7 @@ public class CommandRecord extends SubCommandBase
     {
         /* Register sub-commands */
         this.add(new SubCommandRecordAdd());
+        this.add(new SubCommandRecordApply());
         this.add(new SubCommandRecordCalculateBodyYaw());
 
         if (CameraHandler.isApertureLoaded())

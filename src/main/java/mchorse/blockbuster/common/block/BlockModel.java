@@ -1,10 +1,12 @@
 package mchorse.blockbuster.common.block;
 
 import java.util.List;
+import java.util.Random;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
+import mchorse.blockbuster.recording.capturing.ActionHandler;
 import mchorse.mclib.utils.EntityUtils;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.block.Block;
@@ -20,11 +22,14 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -61,6 +66,33 @@ public class BlockModel extends Block implements ITileEntityProvider
     public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced)
     {
         tooltip.add(I18n.format("blockbuster.info.model_block"));
+    }
+
+    @Override
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
+    {
+        ItemStack stack = new ItemStack(Item.getItemFromBlock(this));
+        TileEntity te = ActionHandler.lastTE;
+
+        if (te instanceof TileEntityModel)
+        {
+            TileEntityModel model = (TileEntityModel) te;
+            NBTTagCompound tag = model.writeToNBT(new NBTTagCompound());
+            NBTTagCompound block = new NBTTagCompound();
+
+            tag.removeTag("x");
+            tag.removeTag("y");
+            tag.removeTag("z");
+
+            block.setTag("BlockEntityTag", tag);
+
+            if (!(tag.getSize() == 2 && tag.hasKey("id") && tag.hasKey("Morph") && tag.getTag("Morph").equals(TileEntityModel.getDefaultMorph().toNBT())))
+            {
+                stack.setTagCompound(block);
+            }
+        }
+
+        drops.add(stack);
     }
 
     @Override
