@@ -268,6 +268,14 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 
     private void setScheme(String name, BedrockScheme scheme)
     {
+        if (scheme == null)
+        {
+            this.particles.list.remove(name);
+            this.particles.list.setIndex(-1);
+
+            return;
+        }
+
         this.filename = name;
         this.scheme = scheme;
         this.renderer.setScheme(this.scheme);
