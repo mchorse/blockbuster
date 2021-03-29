@@ -236,6 +236,15 @@ public class RenderingHandler
 
         Minecraft mc = Minecraft.getMinecraft();
         List<EntityActor> actors = mc.world.getEntities(EntityActor.class, EntitySelectors.IS_ALIVE);
+        Entity camera = mc.getRenderViewEntity();
+
+        actors.sort((a, b) ->
+        {
+            double dist1 = camera.getDistanceSq(a);
+            double dist2 = camera.getDistanceSq(b);
+
+            return dist1 == dist2 ? 0 : (dist2 - dist1 > 0 ? 1 : -1);
+        });
 
         for (EntityActor actor : actors)
         {

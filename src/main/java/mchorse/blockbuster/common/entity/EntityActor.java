@@ -108,6 +108,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     public float prevRoll;
     public float roll;
 
+    public boolean renderLast;
+
     public EntityActor(World worldIn)
     {
         super(worldIn);
@@ -315,7 +317,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      *
      * This override is responsible for applying fall damage on the actor.
      * {@link #move(MoverType, double, double, double)} seem to override onGround
-     * property wrongly on the server, so we have deal with this bullshit.
+     * property wrongly on the server.
      */
     @Override
     protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)
@@ -604,8 +606,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             ByteBufUtils.writeUTF8String(buffer, this.playback.record.filename);
         }
 
-        /* What a shame, Mojang, why do I need to synchronize your shit?! */
         buffer.writeBoolean(this.isEntityInvulnerable(DamageSource.ANVIL));
+        buffer.writeBoolean(this.renderLast);
     }
 
     @Override
@@ -643,6 +645,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         }
 
         this.setEntityInvulnerable(buffer.readBoolean());
+        this.renderLast = buffer.readBoolean();
     }
 
     @Override

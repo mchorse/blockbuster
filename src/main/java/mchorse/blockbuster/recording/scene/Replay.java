@@ -36,6 +36,7 @@ public class Replay
     public boolean enabled = true;
     public boolean fake = false;
     public float health = 20F;
+    public boolean renderLast = false;
 
     public Replay()
     {}
@@ -81,6 +82,7 @@ public class Replay
         }
 
         actor.setHealth(this.health);
+        actor.renderLast = this.renderLast;
         actor.notifyPlayers();
     }
 
@@ -112,6 +114,7 @@ public class Replay
         tag.setBoolean("Fake", this.fake);
         if (!this.teleportBack) tag.setBoolean("TP", this.teleportBack);
         if (this.health != 20) tag.setFloat("Health", this.health);
+        if (this.renderLast) tag.setBoolean("RenderLast", this.renderLast);
     }
 
     public void fromNBT(NBTTagCompound tag)
@@ -127,6 +130,7 @@ public class Replay
         if (tag.hasKey("Enabled")) this.enabled = tag.getBoolean("Enabled");
         if (tag.hasKey("TP")) this.teleportBack = tag.getBoolean("TP");
         if (tag.hasKey("Health")) this.health = tag.getFloat("Health");
+        if (tag.hasKey("RenderLast")) this.renderLast = tag.getBoolean("RenderLast");
     }
 
     /* to / from ByteBuf */
@@ -143,6 +147,7 @@ public class Replay
         buf.writeBoolean(this.enabled);
         buf.writeBoolean(this.fake);
         buf.writeBoolean(this.teleportBack);
+        buf.writeBoolean(this.renderLast);
         buf.writeFloat(this.health);
     }
 
@@ -158,6 +163,7 @@ public class Replay
         this.enabled = buf.readBoolean();
         this.fake = buf.readBoolean();
         this.teleportBack = buf.readBoolean();
+        this.renderLast = buf.readBoolean();
         this.health = buf.readFloat();
     }
 
@@ -173,6 +179,7 @@ public class Replay
                 && Objects.equal(replay.target, this.target)
                 && replay.invincible == this.invincible
                 && replay.invisible == this.invisible
+                && replay.renderLast == this.renderLast
                 && Objects.equal(replay.morph, this.morph);
         }
 
@@ -193,6 +200,7 @@ public class Replay
         replay.enabled = this.enabled;
         replay.fake = this.fake;
         replay.teleportBack = this.teleportBack;
+        replay.renderLast = this.renderLast;
         replay.health = this.health;
 
         return replay;

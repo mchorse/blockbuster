@@ -88,6 +88,8 @@ blockbuster.gui:
         fake_player: Fake player
         tp_back: Teleport back
         tp_back_tooltip: Teleport yourself back to starting position
+        render_last: Render last
+        render_last_tooltip: Makes an actor to be rendered last, which should fix in most of cases opaque actors appear behind actors with semi-transparent morphs.\n\nThis option requires Always render actors mod options to be enabled, and fake player option for this actor to be disabled.
         health: Health
         edit_record: Edit record
         update_data: Update data
