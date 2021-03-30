@@ -74,7 +74,8 @@ blockbuster:
         on_head.help: "{r}{o}On head command{r}. This command allows putting currently held item in the main slot directly in the head slot, without any hassle of coming up with NBT data tag."
         item_nbt.help: "{r}Item NBT command allows to copy current held item's NBT tag to the clipboard. If you provide {7}<give_command>{r} as {7}true{r} or {7}1{r} it will copy to clipboard a proper {7}/give{r} command to give that item. You'll most likely need a command block for that..."
         damage.help: "{r}Inflicts {7}<amount>{r} damage to {7}<entity>{r}. If {7}<amount>{r} is negative then all {7}<entity>{r} matched by target selector will be healed."
-        spectate.help: "{r}{o}Spectate command{r}. This command allows making given player to spectate given entity."
+        spectate.help: "{r}{o}Spectate command{r}. This command allows making given {7}<player>{r} to spectate given {7}<entity>{r}."
+        mount.help: "{r}{o}Mount command{r}. This command allows making given {7}<target>{r} entity to mount a given {7}[destination]{r} entity. If {7}[destination]{r} is omitted, then the {7}<target>{r} will be dismounted.\n\nMake sure there are only one entity that is qualifies for {7}<target>{r} and {7}[destination]{r} target selectors!"
 
         modelblock:
             help: "{r}{o}Model block command{r}. This command allows editing model blocks through commands."
