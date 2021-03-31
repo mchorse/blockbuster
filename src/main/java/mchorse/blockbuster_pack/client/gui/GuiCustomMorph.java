@@ -5,6 +5,7 @@ import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.formats.obj.OBJMaterial;
 import mchorse.blockbuster.api.formats.obj.ShapeKey;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiBBModelRenderer;
+import mchorse.blockbuster.client.gui.utils.GuiShapeKeysEditor;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
@@ -243,10 +244,10 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         CustomMorph custom = this.morph;
 
         this.bbRenderer.materials = custom.materials;
-        this.bbRenderer.shapes = custom.getShapes();
         this.bbRenderer.model = ModelCustom.MODELS.get(custom.getKey());
         this.bbRenderer.texture = custom.skin == null ? custom.model.defaultTexture : custom.skin;
-        this.bbRenderer.pose = custom.customPose == null ? custom.model.getPose(custom.currentPose) : custom.customPose;
+        this.bbRenderer.pose = custom.getCurrentPose();
+        this.bbRenderer.shapes = this.bbRenderer.pose.shapes;
     }
 
     /**
@@ -261,10 +262,6 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         public GuiStringListElement materials;
         public GuiTexturePicker picker;
         public GuiToggleElement keying;
-
-        public GuiListElement<ShapeKey> shapes;
-        public GuiTrackpadElement factor;
-        public GuiToggleElement relative;
 
         public GuiMaterialsPanel(Minecraft mc, GuiCustomMorph editor)
         {
@@ -303,82 +300,13 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.keying.tooltip(IKey.lang("blockbuster.gui.image.keying_tooltip"), Direction.TOP);
             this.picker = new GuiTexturePicker(mc, skin);
 
-            this.shapes = new GuiShapeKeyListElement(mc, (str) -> this.setFactor(str.get(0)));
-            this.shapes.sorting().background();
-            this.shapes.context(() ->
-            {
-                GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc);
-
-                menu.action(Icons.ADD, IKey.lang("blockbuster.gui.builder.context.add"), () ->
-                {
-                    GuiSimpleContextMenu nested = new GuiSimpleContextMenu(mc);
-
-                    for (String key : this.morph.model.shapes)
-                    {
-                        nested.action(Icons.ADD, IKey.format("blockbuster.gui.builder.context.add_to", key), () ->
-                        {
-                            ShapeKey shapeKey = new ShapeKey(key, 0);
-
-                            this.morph.getShapes().add(shapeKey);
-                            this.shapes.update();
-                            this.shapes.setCurrent(shapeKey);
-                            this.setFactor(shapeKey);
-                        });
-                    }
-
-                    GuiBase.getCurrent().replaceContextMenu(nested);
-                });
-
-                if (this.shapes.getIndex() != -1)
-                {
-                    menu.action(Icons.REMOVE, IKey.lang("blockbuster.gui.builder.context.remove"), () ->
-                    {
-                        int index = this.shapes.getIndex();
-
-                        this.morph.getShapes().remove(index);
-                        index = MathUtils.clamp(index, 0, this.shapes.getList().size() - 1);
-
-                        this.shapes.setIndex(index);
-                        this.setFactor(this.shapes.getCurrentFirst());
-                    });
-                }
-
-                return menu;
-            });
-            this.factor = new GuiTrackpadElement(mc, (value) -> this.setFactor(value.floatValue()));
-            this.factor.tooltip(IKey.lang("blockbuster.gui.builder.shape_keys_factor_tooltip"), Direction.TOP);
-
-            this.relative = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.builder.relative"), (b) -> this.shapes.getCurrentFirst().relative = b.isToggled());
-            this.relative.tooltip(IKey.lang("blockbuster.gui.builder.relative_tooltip"), Direction.TOP);
-
             this.skin.flex().relative(this).set(10, 10, 110, 20);
             this.texture.flex().relative(this.skin).set(0, 25, 110, 20);
             this.materials.flex().relative(this.texture).set(0, 25, 110, 0).hTo(this.keying.flex(), -5);
             this.keying.flex().relative(this).x(10).w(110).y(1F, -24);
             this.picker.flex().relative(this).wh(1F, 1F);
 
-            this.shapes.flex().relative(this).x(1F, -120).y(22).w(110).hTo(this.factor.flex(), -17);
-            this.factor.flex().relative(this.relative.flex()).y(-25).wh(110, 20);
-            this.relative.flex().relative(this).x(1F, -120).y(1F, -10).w(110).anchorY(1F);
-
-            this.add(this.skin, this.texture, this.keying, this.materials, this.relative, this.factor, this.shapes);
-        }
-
-        private void setFactor(ShapeKey key)
-        {
-            this.factor.setVisible(key != null);
-            this.relative.setVisible(key != null);
-
-            if (key != null)
-            {
-                this.factor.setValue(key.value);
-                this.relative.toggled(key.relative);
-            }
-        }
-
-        private void setFactor(float value)
-        {
-            this.shapes.getCurrentFirst().value = value;
+            this.add(this.skin, this.texture, this.keying, this.materials);
         }
 
         private void setCurrentMaterialRL(ResourceLocation rl)
@@ -425,20 +353,6 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.materials.setVisible(!noMaterials);
             this.texture.setVisible(!noMaterials);
             this.keying.toggled(morph.keying);
-
-            this.shapes.setList(morph.getShapes());
-
-            boolean hidden = morph.model.shapes.isEmpty();
-
-            this.shapes.setVisible(!hidden);
-            this.factor.setVisible(!hidden);
-            this.relative.setVisible(!hidden);
-
-            if (!hidden)
-            {
-                this.shapes.setIndex(0);
-                this.setFactor(this.shapes.getCurrentFirst());
-            }
         }
 
         @Override
@@ -455,16 +369,6 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             if (this.materials.isVisible())
             {
                 this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.obj_materials"), this.materials.area.x, this.materials.area.y - 12, 0xffffff);
-            }
-
-            if (this.shapes.isVisible())
-            {
-                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.shape_keys"), this.shapes.area.x, this.shapes.area.y - 12, 0xffffff);
-            }
-
-            if (this.factor.isVisible())
-            {
-                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.shape_keys_factor"), this.factor.area.x, this.factor.area.y - 12, 0xffffff);
             }
 
             super.draw(context);

@@ -346,7 +346,7 @@ public class Model
 
         for (Map.Entry<String, ModelPose> entry : this.poses.entrySet())
         {
-            b.poses.put(entry.getKey(), entry.getValue().clone());
+            b.poses.put(entry.getKey(), entry.getValue().copy());
         }
 
         b.presets.putAll(this.presets);

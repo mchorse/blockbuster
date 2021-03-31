@@ -114,11 +114,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     public BodyPartManager parts = new BodyPartManager();
 
     /**
-     * Shapes configurations
-     */
-    private List<ShapeKey> shapes = new ArrayList<ShapeKey>();
-
-    /**
      * Cached key value 
      */
     private String key;
@@ -163,7 +158,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             {
                 if (custom.animation.isInProgress() && pose != null)
                 {
-                    this.animation.last = custom.animation.calculatePose(pose, 1).clone();
+                    this.animation.last = custom.animation.calculatePose(pose, 1).copy();
                 }
                 else
                 {
@@ -180,7 +175,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                 this.currentPose = custom.currentPose;
             }
 
-            this.animation.mergeShape(custom.shapes);
+            this.animation.mergeShape(pose.shapes);
         }
 
         this.parts.pause(previous, offset);
@@ -202,7 +197,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     {
         if (this.model.shapes.isEmpty())
         {
-            return this.shapes;
+            return this.getCurrentPose().shapes;
         }
 
         if (this.animation.isInProgress())
@@ -210,12 +205,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             return this.animation.calculateShapes(this, partialTick);
         }
 
-        return this.shapes;
-    }
-
-    public List<ShapeKey> getShapes()
-    {
-        return this.shapes;
+        return this.getCurrentPose().shapes;
     }
 
     @Override
@@ -588,7 +578,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             result = result && this.parts.equals(morph.parts);
             result = result && this.keying == morph.keying;
             result = result && this.animation.equals(morph.animation);
-            result = result && this.shapes.equals(morph.shapes);
 
             return result;
         }
@@ -614,7 +603,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
                 if (this.animation.isInProgress() && pose != null)
                 {
-                    this.animation.last = this.animation.calculatePose(pose, 1).clone();
+                    this.animation.last = this.animation.calculatePose(pose, 1).copy();
                 }
                 else
                 {
@@ -622,9 +611,9 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                 }
 
                 this.currentPose = custom.currentPose;
-                this.customPose = custom.customPose == null ? null : custom.customPose.clone();
+                this.customPose = custom.customPose == null ? null : custom.customPose.copy();
                 this.animation.merge(custom.animation);
-                this.animation.mergeShape(this.shapes);
+                this.animation.mergeShape(pose.shapes);
             }
             else
             {
@@ -646,13 +635,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
             this.parts.merge(custom.parts);
             this.model = custom.model;
-
-            this.shapes.clear();
-
-            for (ShapeKey key : custom.shapes)
-            {
-                this.shapes.add(key.copy());
-            }
 
             return true;
         }
@@ -717,7 +699,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
         if (destination.animation.isInProgress() && pose != null)
         {
-            target.animation.last = destination.animation.calculatePose(pose, 1).clone();
+            target.animation.last = destination.animation.calculatePose(pose, 1).copy();
         }
         else
         {
@@ -761,7 +743,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
             if (morph.customPose != null)
             {
-                this.customPose = morph.customPose.clone();
+                this.customPose = morph.customPose.copy();
             }
 
             if (!morph.materials.isEmpty())
@@ -777,12 +759,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             this.model = morph.model;
             this.parts.copy(morph.parts);
             this.animation.copy(morph.animation);
-            this.shapes.clear();
-
-            for (ShapeKey key : morph.shapes)
-            {
-                this.shapes.add(key.copy());
-            }
         }
     }
 
@@ -831,21 +807,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         if (!animation.hasNoTags())
         {
             tag.setTag("Animation", animation);
-        }
-
-        if (!this.shapes.isEmpty())
-        {
-            NBTTagList shapes = new NBTTagList();
-
-            for (ShapeKey shape : this.shapes)
-            {
-                if (shape.value != 0)
-                {
-                    shapes.appendTag(shape.toNBT());
-                }
-            }
-
-            tag.setTag("Shapes", shapes);
         }
     }
 
@@ -902,26 +863,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         {
             this.animation.fromNBT(tag.getCompoundTag("Animation"));
         }
-
-        if (tag.hasKey("Shapes"))
-        {
-            NBTTagList shapes = tag.getTagList("Shapes", NBT.TAG_COMPOUND);
-
-            this.shapes.clear();
-
-            for (int i = 0; i < shapes.tagCount(); i++)
-            {
-                NBTTagCompound key = shapes.getCompoundTagAt(i);
-
-                if (key.hasKey("Name") && key.hasKey("Value"))
-                {
-                    ShapeKey shapeKey = new ShapeKey();
-
-                    shapeKey.fromNBT(key);
-                    this.shapes.add(shapeKey);
-                }
-            }
-        }
     }
 
     /**
@@ -954,7 +895,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
             this.temporaryShapes.clear();
 
-            for (ShapeKey key : morph.shapes)
+            for (ShapeKey key : morph.getCurrentPose().shapes)
             {
                 ShapeKey last = null;
 

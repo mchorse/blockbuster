@@ -2,7 +2,6 @@ package mchorse.blockbuster.api.loaders.lazy;
 
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelPose;
-import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.api.formats.IMeshes;
 import mchorse.blockbuster.api.formats.obj.MeshesOBJ;
 import mchorse.blockbuster.api.formats.obj.OBJDataMesh;
@@ -231,11 +230,11 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
         ModelPose blocky = new ModelPose();
 
         blocky.setSize(1, 1, 1);
-        data.poses.put("flying", blocky.clone());
-        data.poses.put("standing", blocky.clone());
-        data.poses.put("sneaking", blocky.clone());
-        data.poses.put("sleeping", blocky.clone());
-        data.poses.put("riding", blocky.clone());
+        data.poses.put("flying", blocky.copy());
+        data.poses.put("standing", blocky.copy());
+        data.poses.put("sneaking", blocky.copy());
+        data.poses.put("sleeping", blocky.copy());
+        data.poses.put("riding", blocky.copy());
         data.name = model;
 
         data.providesObj = true;

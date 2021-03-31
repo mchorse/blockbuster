@@ -8,7 +8,6 @@ import mchorse.blockbuster.api.formats.IMeshes;
 import mchorse.blockbuster.api.formats.vox.MeshesVOX;
 import mchorse.blockbuster.api.formats.vox.VoxDocument;
 import mchorse.blockbuster.api.formats.vox.VoxReader;
-import mchorse.blockbuster.api.formats.vox.data.Vox;
 import mchorse.blockbuster.api.resource.IResourceEntry;
 import mchorse.blockbuster.client.model.ModelCustom;
 import net.minecraftforge.fml.relauncher.Side;
@@ -121,11 +120,11 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
         data.providesMtl = true;
 
         blocky.setSize(1, 1, 1);
-        data.poses.put("flying", blocky.clone());
-        data.poses.put("standing", blocky.clone());
-        data.poses.put("sneaking", blocky.clone());
-        data.poses.put("sleeping", blocky.clone());
-        data.poses.put("riding", blocky.clone());
+        data.poses.put("flying", blocky.copy());
+        data.poses.put("standing", blocky.copy());
+        data.poses.put("sneaking", blocky.copy());
+        data.poses.put("sleeping", blocky.copy());
+        data.poses.put("riding", blocky.copy());
         data.name = model;
 
         return data;

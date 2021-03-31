@@ -141,7 +141,7 @@ public class GuiModelPoses extends GuiModelEditorTab
 
     private void addPose(String text)
     {
-        this.addPose(text, this.panel.pose == null ? new ModelPose() : this.panel.pose.clone());
+        this.addPose(text, this.panel.pose == null ? new ModelPose() : this.panel.pose.copy());
     }
 
     private void addPose(String text, ModelPose pose)
