@@ -274,12 +274,12 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
     {
         boolean result = super.copyFiles(folder);
 
-        result = result || this.obj.copyTo(new File(folder, this.obj.getName()));
-        result = result || this.mtl.copyTo(new File(folder, this.mtl.getName()));
+        result = this.obj.copyTo(new File(folder, this.obj.getName())) || result;
+        result = this.mtl.copyTo(new File(folder, this.mtl.getName())) || result;
 
         for (IResourceEntry shape : this.shapes)
         {
-            result = result || shape.copyTo(new File(folder, "shapes/" + shape.getName()));
+            result = shape.copyTo(new File(folder, "shapes/" + shape.getName())) || result;
         }
 
         return result;

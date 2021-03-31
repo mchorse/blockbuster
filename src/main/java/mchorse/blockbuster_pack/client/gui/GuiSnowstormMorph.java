@@ -1,6 +1,7 @@
 package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.blockbuster_pack.morphs.SnowstormMorph;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
@@ -81,10 +82,11 @@ public class GuiSnowstormMorph extends GuiAbstractMorph<SnowstormMorph>
             super.fillData(morph);
 
             Set<String> keys = new HashSet<String>();
+            BedrockScheme scheme = this.morph.getEmitter().scheme;
 
             for (String key : this.morph.variables.keySet())
             {
-                if (!this.morph.getEmitter().scheme.parser.variables.containsKey(key))
+                if (scheme != null && !scheme.parser.variables.containsKey(key))
                 {
                     keys.add(key);
                 }
@@ -96,8 +98,12 @@ public class GuiSnowstormMorph extends GuiAbstractMorph<SnowstormMorph>
             }
 
             this.variables.clear();
-            this.variables.add(this.morph.getEmitter().scheme.parser.variables.keySet());
-            this.variables.sort();
+
+            if (scheme != null)
+            {
+                this.variables.add(scheme.parser.variables.keySet());
+                this.variables.sort();
+            }
 
             String first = this.variables.getList().isEmpty() ? "" : this.variables.getList().get(0);
 

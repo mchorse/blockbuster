@@ -84,6 +84,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
     public GuiToggleElement enabled;
     public GuiToggleElement fake;
     public GuiToggleElement teleportBack;
+    public GuiToggleElement renderLast;
     public GuiTrackpadElement health;
 
     public GuiButtonElement record;
@@ -165,21 +166,22 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.name = new GuiTextElement(mc, 80, (str) -> this.replay.name = str);
         this.name.tooltip(IKey.lang("blockbuster.gui.director.name_tooltip"), Direction.RIGHT);
         this.target = new GuiTextElement(mc, 80, (str) -> this.replay.target = str);
-        this.target.tooltip(IKey.lang("blockbuster.gui.director.target_tooltip"), Direction.RIGHT);
+        this.target.tooltip(IKey.lang("blockbuster.gui.director.target_tooltip"), Direction.LEFT);
         this.invincible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invincible"), false, (b) -> this.replay.invincible = b.isToggled());
         this.invisible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invisible"), false, (b) -> this.replay.invisible = b.isToggled());
         this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.enabled"), false, (b) -> this.replay.enabled = b.isToggled());
         this.fake = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.fake_player"), false, (b) -> this.replay.fake = b.isToggled());
         this.teleportBack = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.tp_back"), false, (b) -> this.replay.teleportBack = b.isToggled());
         this.teleportBack.tooltip(IKey.lang("blockbuster.gui.director.tp_back_tooltip"), Direction.RIGHT);
+        this.renderLast = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.render_last"), false, (b) -> this.replay.renderLast = b.isToggled());
+        this.renderLast.tooltip(IKey.lang("blockbuster.gui.director.render_last_tooltip"), Direction.RIGHT);
         this.health = new GuiTrackpadElement(mc, (value) -> this.replay.health = value.floatValue());
         this.health.limit(0);
         this.recordingId = Elements.label(IKey.lang("blockbuster.gui.director.id")).color(0xcccccc);
 
         left.add(this.recordingId, this.id);
         left.add(Elements.label(IKey.lang("blockbuster.gui.director.name")).color(0xcccccc), this.name);
-        left.add(Elements.label(IKey.lang("blockbuster.gui.director.health")).color(0xcccccc), this.health, this.invincible, this.invisible, this.enabled, this.fake, this.teleportBack);
-        left.add(Elements.label(IKey.lang("blockbuster.gui.director.target"), 16).color(0xcccccc).anchor(0, 1), this.target);
+        left.add(Elements.label(IKey.lang("blockbuster.gui.director.health")).color(0xcccccc), this.health, this.invincible, this.invisible, this.enabled, this.fake, this.teleportBack, this.renderLast);
         this.replays.add(this.selector, this.replayEditor);
 
         /* Toggle view button */
@@ -247,6 +249,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         }
 
         right.add(this.teleport);
+        right.add(Elements.label(IKey.lang("blockbuster.gui.director.target"), 16).color(0xcccccc).anchor(0, 1), this.target);
         this.replayEditor.add(this.pickMorph);
 
         /* Scene manager */
@@ -429,6 +432,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.enabled.toggled(this.replay.enabled);
         this.fake.toggled(this.replay.fake);
         this.teleportBack.toggled(this.replay.teleportBack);
+        this.renderLast.toggled(this.replay.renderLast);
         this.health.setValue(this.replay.health);
         this.pickMorph.setMorph(this.replay.morph);
 

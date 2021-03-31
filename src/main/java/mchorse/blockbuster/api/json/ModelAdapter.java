@@ -91,6 +91,11 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
         map.remove("extrudeMaxFactor");
         map.remove("extrudeInwards");
 
+        if (src.presets.isEmpty())
+        {
+            map.remove("presets");
+        }
+
         if (!src.model.isEmpty())
         {
             map.addProperty("model", src.model);
