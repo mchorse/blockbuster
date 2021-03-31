@@ -2,6 +2,7 @@ package mchorse.blockbuster.commands;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.commands.action.SubCommandActionAppend;
+import mchorse.blockbuster.commands.action.SubCommandActionCancel;
 import mchorse.blockbuster.commands.action.SubCommandActionClear;
 import mchorse.blockbuster.commands.action.SubCommandActionPlay;
 import mchorse.blockbuster.commands.action.SubCommandActionRecord;
@@ -36,6 +37,7 @@ public class CommandAction extends SubCommandBase
     {
         /* Register sub-commands in alphabetical order */
         this.add(new SubCommandActionAppend());
+        this.add(new SubCommandActionCancel());
         this.add(new SubCommandActionClear());
         this.add(new SubCommandActionPlay());
         this.add(new SubCommandActionRecord());

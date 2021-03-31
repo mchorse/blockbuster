@@ -3,7 +3,6 @@ package mchorse.blockbuster.client;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.GuiGun;
-import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.client.Minecraft;
@@ -16,7 +15,6 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
-import scala.collection.mutable.OpenHashMap;
 
 /**
  * Separate event handler for keyboard events
@@ -25,9 +23,9 @@ import scala.collection.mutable.OpenHashMap;
 public class KeyboardHandler
 {
     /* Misc. */
-    private KeyBinding plauseDirector;
-    private KeyBinding recordDirector;
-    private KeyBinding pauseDirector;
+    private KeyBinding plause;
+    private KeyBinding record;
+    private KeyBinding pause;
     private KeyBinding openGun;
 
     /**
@@ -39,14 +37,14 @@ public class KeyboardHandler
         String category = "key.blockbuster.category";
 
         /* Misc */
-        this.plauseDirector = new KeyBinding("key.blockbuster.plause_director", Keyboard.KEY_RCONTROL, category);
-        this.recordDirector = new KeyBinding("key.blockbuster.record_director", Keyboard.KEY_RMENU, category);
-        this.pauseDirector = new KeyBinding("key.blockbuster.pause_director", Keyboard.KEY_RSHIFT, category);
+        this.plause = new KeyBinding("key.blockbuster.plause_director", Keyboard.KEY_RCONTROL, category);
+        this.record = new KeyBinding("key.blockbuster.record_director", Keyboard.KEY_RMENU, category);
+        this.pause = new KeyBinding("key.blockbuster.pause_director", Keyboard.KEY_RSHIFT, category);
         this.openGun = new KeyBinding("key.blockbuster.open_gun", Keyboard.KEY_END  , category);
 
-        ClientRegistry.registerKeyBinding(this.plauseDirector);
-        ClientRegistry.registerKeyBinding(this.recordDirector);
-        ClientRegistry.registerKeyBinding(this.pauseDirector);
+        ClientRegistry.registerKeyBinding(this.plause);
+        ClientRegistry.registerKeyBinding(this.record);
+        ClientRegistry.registerKeyBinding(this.pause);
         ClientRegistry.registerKeyBinding(this.openGun);
     }
 
@@ -65,27 +63,27 @@ public class KeyboardHandler
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent event)
     {
-        if (this.plauseDirector.isPressed())
+        if (this.plause.isPressed())
         {
-            if (ClientProxy.panels.directorPanel != null)
+            if (ClientProxy.panels.scenePanel != null)
             {
-                ClientProxy.panels.directorPanel.plause();
+                ClientProxy.panels.scenePanel.plause();
             }
         }
 
-        if (this.recordDirector.isPressed())
+        if (this.record.isPressed())
         {
-            if (ClientProxy.panels.directorPanel != null)
+            if (ClientProxy.panels.scenePanel != null)
             {
-                ClientProxy.panels.directorPanel.record();
+                ClientProxy.panels.scenePanel.record();
             }
         }
 
-        if (this.pauseDirector.isPressed())
+        if (this.pause.isPressed())
         {
-            if (ClientProxy.panels.directorPanel != null)
+            if (ClientProxy.panels.scenePanel != null)
             {
-                ClientProxy.panels.directorPanel.pause();
+                ClientProxy.panels.scenePanel.pause();
             }
         }
 

@@ -1,5 +1,7 @@
 package mchorse.blockbuster.network.server.scene;
 
+import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.network.common.scene.PacketScenePause;
 import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.mclib.network.ServerMessageHandler;
@@ -16,15 +18,25 @@ public class ServerHandlerScenePause extends ServerMessageHandler<PacketScenePau
             return;
         }
 
-        Scene scene = message.get(player.world);
-
-        if (!scene.isPlaying())
+        if (CommonProxy.manager.recorders.containsKey(player))
         {
-            scene.resume(-1);
+            if (CommonProxy.manager.cancel(player))
+            {
+                Blockbuster.l10n.info(player, "action.cancel");
+            }
         }
         else
         {
-            scene.pause();
+            Scene scene = message.get(player.world);
+
+            if (!scene.isPlaying())
+            {
+                scene.resume(-1);
+            }
+            else
+            {
+                scene.pause();
+            }
         }
     }
 }

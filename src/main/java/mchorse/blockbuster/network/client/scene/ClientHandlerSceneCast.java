@@ -31,20 +31,20 @@ public class ClientHandlerSceneCast extends ClientMessageHandler<PacketSceneCast
 
         if (opened)
         {
-            panels.directorPanel.openScene(message.location);
+            panels.scenePanel.openScene(message.location);
         }
         else if (screen == dashboard)
         {
-            panels.directorPanel.setScene(message.location);
+            panels.scenePanel.setScene(message.location);
         }
         else
         {
-            panels.directorPanel.set(message.location);
+            panels.scenePanel.set(message.location);
         }
 
         if (opened)
         {
-            dashboard.panels.setPanel(panels.directorPanel);
+            dashboard.panels.setPanel(panels.scenePanel);
             Minecraft.getMinecraft().displayGuiScreen(GuiDashboard.get());
         }
     }

@@ -6,5 +6,5 @@ key:
         
         plause_director: Play/stop scene
         record_director: Record scene replay
-        pause_director: Pause scene replay
+        pause_director: Pause scene / Cancel recording
         open_gun: Configure gun
