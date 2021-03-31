@@ -350,6 +350,7 @@ public class Model
         }
 
         b.presets.putAll(this.presets);
+        b.shapes.addAll(this.shapes);
 
         return b;
     }

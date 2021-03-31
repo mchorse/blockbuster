@@ -246,8 +246,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         this.bbRenderer.materials = custom.materials;
         this.bbRenderer.model = ModelCustom.MODELS.get(custom.getKey());
         this.bbRenderer.texture = custom.skin == null ? custom.model.defaultTexture : custom.skin;
-        this.bbRenderer.pose = custom.getCurrentPose();
-        this.bbRenderer.shapes = this.bbRenderer.pose.shapes;
+        this.bbRenderer.setPose(custom.getCurrentPose());
     }
 
     /**

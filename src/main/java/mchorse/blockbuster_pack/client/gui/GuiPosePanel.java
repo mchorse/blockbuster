@@ -137,7 +137,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         options.flex().relative(this).x(1F, -130).y(1F).w(130).anchorY(1F).column(5).vertical().stretch().height(20).padding(10);
         options.add(this.model, this.scale, this.scaleGui);
 
-        this.shapeKeys = new GuiShapeKeysEditor(mc, () -> this.morph);
+        this.shapeKeys = new GuiShapeKeysEditor(mc, () -> this.morph.model);
         this.shapeKeys.flex().relative(this.animation).x(10).y(1F, 10).w(1F, -20).hTo(options.area, -10);
 
         this.add(this.reset, this.create, this.poseOnSneak, this.list, this.animation, options, this.shapeKeys, this.transforms, this.models);

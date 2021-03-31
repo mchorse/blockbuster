@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.utils;
 
+import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.formats.obj.ShapeKey;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
@@ -27,9 +28,9 @@ public class GuiShapeKeysEditor extends GuiElement
     public GuiTrackpadElement factor;
     public GuiToggleElement relative;
 
-    private Supplier<CustomMorph> supplier;
+    private Supplier<Model> supplier;
 
-    public GuiShapeKeysEditor(Minecraft mc, Supplier<CustomMorph> supplier)
+    public GuiShapeKeysEditor(Minecraft mc, Supplier<Model> supplier)
     {
         super(mc);
 
@@ -43,16 +44,16 @@ public class GuiShapeKeysEditor extends GuiElement
 
             menu.action(Icons.ADD, IKey.lang("blockbuster.gui.builder.context.add"), () ->
             {
-                CustomMorph morph = this.supplier == null ? null : this.supplier.get();
+                Model model = this.supplier == null ? null : this.supplier.get();
 
-                if (morph == null)
+                if (model == null)
                 {
                     return;
                 }
 
                 GuiSimpleContextMenu nested = new GuiSimpleContextMenu(mc);
 
-                for (String key : morph.model.shapes)
+                for (String key : model.shapes)
                 {
                     nested.action(Icons.ADD, IKey.format("blockbuster.gui.builder.context.add_to", key), () ->
                     {
@@ -99,8 +100,8 @@ public class GuiShapeKeysEditor extends GuiElement
 
     private void setFactor(ShapeKey key)
     {
-        this.factor.setVisible(key != null);
-        this.relative.setVisible(key != null);
+        this.factor.setEnabled(key != null);
+        this.relative.setEnabled(key != null);
 
         if (key != null)
         {

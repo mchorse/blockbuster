@@ -225,7 +225,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         if (pose != null)
         {
             this.pose = pose;
-            this.modelRenderer.pose = pose;
+            this.modelRenderer.setPose(pose);
             this.renderModel.pose = pose;
 
             if (this.limb != null)
@@ -303,7 +303,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         if (this.model != null)
         {
             this.renderModel.pose = oldPose;
-            this.modelRenderer.pose = oldPose;
+            this.modelRenderer.setPose(oldPose);
         }
 
         this.dirty();
@@ -355,7 +355,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.modelRenderer.model = this.renderModel;
         this.modelRenderer.texture = this.getFirstResourceLocation();
         this.modelRenderer.limb = this.limb;
-        this.modelRenderer.pose = this.pose;
+        this.modelRenderer.setPose(this.pose);
 
         this.limbs.fillData(model);
         this.poses.fillData(model);

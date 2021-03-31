@@ -5,6 +5,7 @@ import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
+import mchorse.blockbuster.client.gui.utils.GuiShapeKeysEditor;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiContextMenu;
@@ -34,7 +35,9 @@ public class GuiModelPoses extends GuiModelEditorTab
     private GuiIconElement applyPose;
 
     private GuiStringListElement posesList;
+    private GuiShapeKeysEditor shapeKeys;
     private GuiTwoElement hitbox;
+    private GuiElement bottom;
 
     private String pose;
 
@@ -89,17 +92,20 @@ public class GuiModelPoses extends GuiModelEditorTab
         this.applyPose.tooltip(IKey.lang("blockbuster.gui.me.poses.apply_pose_tooltip"));
 
         GuiElement sidebar = Elements.row(mc, 0, 0, 20, this.addPose, this.removePose, this.copyPose, this.applyPose);
-        GuiElement bottom = new GuiElement(mc);
+        this.bottom = new GuiElement(mc);
 
         sidebar.flex().relative(this).x(1F).h(20).anchorX(1F).row(0).resize();
-        bottom.flex().relative(this).y(1F).w(1F).anchorY(1F).column(5).vertical().stretch().height(20).padding(10);
+        this.bottom.flex().relative(this).y(1F).w(1F).anchorY(1F).column(5).vertical().stretch().height(20).padding(10);
 
         this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str.get(0)));
         this.posesList.flex().relative(this).y(20).w(1F).hTo(bottom.area);
         this.posesList.context(() -> createCopyPasteMenu(this::copyCurrentPose, this::pastePose));
 
-        bottom.add(Elements.label(IKey.lang("blockbuster.gui.me.poses.hitbox")), this.hitbox);
-        this.add(sidebar, bottom, this.posesList);
+        this.shapeKeys = new GuiShapeKeysEditor(mc, () -> this.panel.model);
+        this.shapeKeys.flex().relative(this.posesList).y(1F, 10).x(10).w(1F, -20).hTo(this.hitbox.area, -27);
+
+        this.bottom.add(Elements.label(IKey.lang("blockbuster.gui.me.poses.hitbox")), this.hitbox);
+        this.add(sidebar, this.bottom, this.posesList);
     }
 
     private void copyCurrentPose()
@@ -273,6 +279,26 @@ public class GuiModelPoses extends GuiModelEditorTab
     public void fillPoseData()
     {
         this.hitbox.setValues(this.panel.pose.size[0], this.panel.pose.size[1]);
+
+        boolean isVisible = !this.panel.model.shapes.isEmpty();
+
+        if (isVisible)
+        {
+            this.shapeKeys.fillData(this.panel.pose.shapes);
+
+            if (!this.shapeKeys.hasParent())
+            {
+                this.add(this.shapeKeys);
+                this.posesList.flex().h(0.4F);
+            }
+        }
+        else
+        {
+            this.shapeKeys.removeFromParent();
+            this.posesList.flex().hTo(this.bottom.area);
+        }
+
+        this.resize();
     }
 
     @Override

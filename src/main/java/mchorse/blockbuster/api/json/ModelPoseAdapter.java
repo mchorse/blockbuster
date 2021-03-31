@@ -27,6 +27,11 @@ public class ModelPoseAdapter implements JsonSerializer<ModelPose>
 
         map.remove("limbs");
 
+        if (src.shapes.isEmpty())
+        {
+            map.remove("shapes");
+        }
+
         for (Map.Entry<String, ModelTransform> limb : src.limbs.entrySet())
         {
             ModelTransform trans = limb.getValue();
