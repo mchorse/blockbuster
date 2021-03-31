@@ -348,7 +348,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.dirty(false);
 
         this.modelName = name;
-        this.model = model.clone();
+        this.model = model.copy();
         this.modelEntry = loader;
 
         this.renderModel = this.buildModel();

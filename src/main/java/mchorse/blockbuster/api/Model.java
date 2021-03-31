@@ -99,6 +99,9 @@ public class Model
     @Expose
     public boolean providesMtl = false;
 
+    @Expose
+    public boolean legacyObj = true;
+
     /**
      * Skins folder 
      */
@@ -318,8 +321,7 @@ public class Model
     /**
      * Clone a model
      */
-    @Override
-    public Model clone()
+    public Model copy()
     {
         Model b = new Model();
 
@@ -334,6 +336,7 @@ public class Model
         b.defaultTexture = this.defaultTexture == null ? null : RLUtils.clone(this.defaultTexture);
         b.providesObj = this.providesObj;
         b.providesMtl = this.providesMtl;
+        b.legacyObj = this.legacyObj;
         b.skins = this.skins;
 
         for (Map.Entry<String, ModelLimb> entry : this.limbs.entrySet())
@@ -349,28 +352,6 @@ public class Model
         b.presets.putAll(this.presets);
 
         return b;
-    }
-
-    /**
-     * Copy model from model
-     */
-    public void copy(Model from)
-    {
-        this.texture = from.texture;
-        this.scale = from.scale;
-        this.scaleGui = from.scaleGui;
-
-        this.name = from.name;
-        this.scheme = from.scheme;
-        this.model = from.model;
-
-        this.defaultTexture = from.defaultTexture;
-        this.providesObj = from.providesObj;
-        this.providesMtl = from.providesMtl;
-        this.skins = from.skins;
-
-        this.poses = from.poses;
-        this.limbs = from.limbs;
     }
 
     @Override

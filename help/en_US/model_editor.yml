@@ -80,6 +80,8 @@ blockbuster.gui.me:
         extrude_inwards: Extrude inwards factor. This option allows to control whether HD skin bits are being extruded inwards more, as the higher max factor, the thinner are bits.
         provides_obj: Provides OBJ
         provides_mtl: Provides MTL
+        legacy_obj: Legacy OBJ loading
+        legacy_obj_tooltip: When enabled, OBJ models will be loaded using the old method, which contains inconsistencies such as being flipped on X axis.\n\nWhen disabled, OBJ models will be loaded using new method which should be more consistent with the way OBJ model supposed to look.
         default_texture: Pick default texture
     
     poses:

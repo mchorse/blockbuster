@@ -257,14 +257,7 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
             data.addLimb("body");
         }
 
-        /* Flip around the X axis */
-        for (ModelPose pose : data.poses.values())
-        {
-            for (ModelTransform transform : pose.limbs.values())
-            {
-                transform.scale[0] *= -1;
-            }
-        }
+        data.legacyObj = false;
 
         return data;
     }
