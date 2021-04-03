@@ -272,7 +272,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             py = this.vector.y;
             pz = this.vector.z;
 
-            if(particle.relativeScale)
+            if (particle.relativeScale)
             {
                 Vector3d pos = new Vector3d(px, py, pz);
 
@@ -291,7 +291,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             py += emitter.lastGlobal.y;
             pz += emitter.lastGlobal.z;
         }
-        else if(particle.relativeScale)
+        else if (particle.relativeScale)
         {
             Vector3d pos = new Vector3d(px, py, pz);
 

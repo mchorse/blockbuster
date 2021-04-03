@@ -225,7 +225,7 @@ public class SnowstormMorph extends AbstractMorph
                 emitter.scale[1] = rotscale.m11;
                 emitter.scale[2] = rotscale.m22;
             }
-            catch(SingularMatrixException e)
+            catch (SingularMatrixException e)
             {
                 emitter.scale[0] = 0;
                 emitter.scale[1] = 0;
