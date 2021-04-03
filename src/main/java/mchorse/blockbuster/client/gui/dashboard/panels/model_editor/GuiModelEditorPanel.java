@@ -220,6 +220,11 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
     public void setPose(String str)
     {
+        this.setPose(str, false);
+    }
+
+    public void setPose(String str, boolean scroll)
+    {
         ModelPose pose = this.model.poses.get(str);
 
         if (pose != null)
@@ -233,7 +238,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
                 this.transform = pose.limbs.get(this.limb.name);
             }
 
-            this.poses.setCurrent(str);
+            this.poses.setCurrent(str, scroll);
             this.poses.fillPoseData();
             this.poseEditor.set(this.transform);
         }
@@ -361,7 +366,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.poses.fillData(model);
         this.options.fillData(model);
 
-        this.setPose("standing");
+        this.setPose("standing", true);
         this.setLimb(this.model.limbs.keySet().iterator().next());
     }
 
