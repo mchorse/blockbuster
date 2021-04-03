@@ -3,7 +3,6 @@ package mchorse.blockbuster.client.gui.utils;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.formats.obj.ShapeKey;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
-import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -15,7 +14,6 @@ import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.MathUtils;
-import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
@@ -123,6 +121,10 @@ public class GuiShapeKeysEditor extends GuiElement
         {
             this.shapes.setIndex(0);
             this.setFactor(this.shapes.getCurrentFirst());
+        }
+        else
+        {
+            this.setFactor(null);
         }
     }
 
