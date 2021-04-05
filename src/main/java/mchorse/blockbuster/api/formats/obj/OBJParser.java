@@ -30,6 +30,14 @@ public class OBJParser
     public List<OBJDataMesh> objects = new ArrayList<OBJDataMesh>();
     public Map<String, OBJMaterial> materials = new HashMap<String, OBJMaterial>();
 
+    public static String processMaterialName(String name)
+    {
+        /* Apparently material name can have slashes and backslashes, so
+         * they must be replaced to avoid messing up texture paths...
+         */
+        return name.replaceAll("[/|\\\\]+", "-");
+    }
+
     /**
      * Read all lines from a file (needs a text file)
      */
@@ -152,7 +160,7 @@ public class OBJParser
 
             if (first.equals("newmtl"))
             {
-                material = new OBJMaterial(tokens[1]);
+                material = new OBJMaterial(processMaterialName(tokens[1]));
 
                 this.materials.put(material.name, material);
             }
@@ -246,7 +254,7 @@ public class OBJParser
             /* Material group */
             else if (first.equals("usemtl"))
             {
-                OBJMaterial material = this.materials.get(tokens[1]);
+                OBJMaterial material = this.materials.get(processMaterialName(tokens[1]));
 
                 group = firstUse ? group : new OBJDataGroup();
                 group.material = material;
