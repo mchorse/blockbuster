@@ -24,11 +24,13 @@ import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.recording.capturing.FrameHandler;
+import mchorse.blockbuster.utils.mclib.BlockbusterJarTree;
 import mchorse.blockbuster.utils.mclib.BlockbusterTree;
 import mchorse.blockbuster_pack.client.render.RenderCustomActor;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.blockbuster_pack.morphs.StructureMorph.StructureRenderer;
 import mchorse.mclib.McLib;
+import mchorse.mclib.utils.files.FileTree;
 import mchorse.mclib.utils.files.GlobalTree;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -155,7 +157,12 @@ public class ClientProxy extends CommonProxy
             }
 
             /* File tree */
+            BlockbusterJarTree jarTree = new BlockbusterJarTree();
+
             GlobalTree.TREE.register(tree = new BlockbusterTree(this.pack.folders.get(0)));
+            GlobalTree.TREE.register(jarTree);
+
+            FileTree.addBackEntry(jarTree.root);
 
             /* Create steve, alex and fred skins folders */
             new File(path + "/models/steve/skins").mkdirs();
@@ -163,6 +170,7 @@ public class ClientProxy extends CommonProxy
             new File(path + "/models/fred/skins").mkdirs();
             new File(path + "/models/image/skins").mkdirs();
             new File(path + "/models/cape/skins").mkdirs();
+            new File(path + "/models/eyes/3.0/skins").mkdirs();
         }
         catch (Exception e)
         {

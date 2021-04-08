@@ -139,6 +139,13 @@ public class ModelPack
             this.addDefaultModel("fred_3d");
             this.addDefaultModel("empty");
             this.addDefaultModel("cape");
+
+            /* Eyes related models */
+            this.addDefaultModel("eyes/3.0");
+            this.addDefaultModel("eyes/3.0_1px");
+            this.addDefaultModel("eyes/alex_eyes");
+            this.addDefaultModel("eyes/fred_eyes");
+            this.addDefaultModel("eyes/steve_eyes");
         }
         catch (Exception e)
         {

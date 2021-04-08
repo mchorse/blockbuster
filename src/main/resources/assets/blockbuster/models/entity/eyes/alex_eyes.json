@@ -1,0 +1,561 @@
+{
+    "scheme": "1.3",
+    "name": "Alex (eyes)",
+    "texture": [ 64, 64 ],
+    "default": "minecraft:textures/entity/alex.png",
+    "scale": [ 0.9375, 0.9375, 0.9375 ],
+    "skins": "alex",
+    "presets": {
+        "Alex (2px eyes)": "{Skin:[{Path:\"minecraft:textures/entity/alex.png\"},{Path:\"blockbuster:textures/entity/eye_masks/2px.png\",Erase:1b}]}",
+        "Alex (1px eyes)": "{Skin:[{Path:\"minecraft:textures/entity/alex.png\"},{Path:\"blockbuster:textures/entity/eye_masks/1px.png\",Erase:1b}]}"
+    },
+    "limbs": {
+        "right_arm": {
+            "size": [ 3, 12, 4 ],
+            "texture": [ 40, 16 ],
+            "anchor": [ 0.5, 0.1666, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "holding": "right",
+            "slot": "right_shoulder",
+            "parent": "body",
+            "idle": true,
+            "swinging": true,
+            "swiping": true
+        },
+        "left_leg": {
+            "size": [ 4, 12, 4 ],
+            "texture": [ 16, 48 ],
+            "anchor": [ 0.5, 0.0, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "slot": "left_leg",
+            "parent": "body",
+            "swinging": true
+        },
+        "right_armwear": {
+            "size": [ 3, 12, 4 ],
+            "texture": [ 40, 32 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "sizeOffset": 0.25,
+            "parent": "right_arm"
+        },
+        "outer": {
+            "size": [ 8, 8, 8 ],
+            "texture": [ 32, 0 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "sizeOffset": 0.25,
+            "parent": "head"
+        },
+        "left_legwear": {
+            "size": [ 4, 12, 4 ],
+            "texture": [ 0, 48 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "sizeOffset": 0.25,
+            "slot": "left_foot",
+            "parent": "left_leg"
+        },
+        "body": {
+            "size": [ 8, 12, 4 ],
+            "texture": [ 16, 16 ],
+            "anchor": [ 0.5, 0.0, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "slot": "leggings",
+            "parent": "anchor"
+        },
+        "bodywear": {
+            "size": [ 8, 12, 4 ],
+            "texture": [ 16, 32 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "sizeOffset": 0.25,
+            "slot": "chest",
+            "parent": "body"
+        },
+        "head": {
+            "size": [ 8, 8, 8 ],
+            "texture": [ 0, 0 ],
+            "anchor": [ 0.5, 1.0, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "slot": "head",
+            "parent": "anchor",
+            "looking": true,
+            "is3D": true
+        },
+        "left_arm": {
+            "size": [ 3, 12, 4 ],
+            "texture": [ 32, 48 ],
+            "anchor": [ 0.5, 0.1666, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "holding": "left",
+            "slot": "left_shoulder",
+            "parent": "body",
+            "idle": true,
+            "swinging": true,
+            "invert": true
+        },
+        "right_leg": {
+            "size": [ 4, 12, 4 ],
+            "texture": [ 0, 16 ],
+            "anchor": [ 0.5, 0.0, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "slot": "right_leg",
+            "parent": "body",
+            "swinging": true,
+            "invert": true
+        },
+        "right_legwear": {
+            "size": [ 4, 12, 4 ],
+            "texture": [ 0, 32 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "sizeOffset": 0.25,
+            "slot": "right_foot",
+            "parent": "right_leg"
+        },
+        "anchor": {
+            "size": [ 2, 2, 2 ],
+            "texture": [ 0, 0 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "opacity": 0.0
+        },
+        "left_armwear": {
+            "size": [ 3, 12, 4 ],
+            "texture": [ 48, 48 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "sizeOffset": 0.25,
+            "parent": "left_arm"
+        }
+    },
+    "poses": {
+        "standing": {
+            "size": [ 0.6, 1.8, 0.6 ],
+            "limbs": {
+                "right_arm": {
+                    "translate": [ -5.5, -2.0, 0.0 ]
+                },
+                "left_leg": {
+                    "translate": [ 2.0, -12.0, 0.0 ]
+                },
+                "right_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                },
+                "outer": {
+                    "translate": [ 0.0, 4.0, 0.0 ]
+                },
+                "left_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "body": {
+                    "translate": [ 0.0, 8.0, 0.0 ]
+                },
+                "bodywear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "head": {
+                    "translate": [ 0.0, 8.0, 0.0 ]
+                },
+                "left_arm": {
+                    "translate": [ 5.5, -2.0, 0.0 ]
+                },
+                "right_leg": {
+                    "translate": [ -2.0, -12.0, 0.0 ]
+                },
+                "right_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "anchor": {
+                    "translate": [ 0.0, 16.0, 0.0 ]
+                },
+                "left_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                }
+            }
+        },
+        "flying": {
+            "size": [ 0.6, 0.6, 0.6 ],
+            "limbs": {
+                "right_arm": {
+                    "translate": [ -5.5, -2.0, 0.0 ]
+                },
+                "left_leg": {
+                    "translate": [ 2.0, -12.0, 0.0 ]
+                },
+                "right_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                },
+                "outer": {
+                    "translate": [ 0.0, 4.0, 0.0 ]
+                },
+                "left_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "body": {
+                    "translate": [ 0.0, 8.0, 0.0 ]
+                },
+                "bodywear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "head": {
+                    "translate": [ 0.0, 8.0, 0.0 ],
+                    "rotate": [ -45, 0.0, 0.0 ]
+                },
+                "left_arm": {
+                    "translate": [ 5.5, -2.0, 0.0 ]
+                },
+                "right_leg": {
+                    "translate": [ -2.0, -12.0, 0.0 ]
+                },
+                "right_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "anchor": {
+                    "translate": [ 0.0, 16.0, 0.0 ]
+                },
+                "left_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                }
+            }
+        },
+        "sneaking": {
+            "size": [ 0.6, 1.65, 0.6 ],
+            "limbs": {
+                "right_arm": {
+                    "translate": [ -5.5, -2.0, 1.0 ],
+                    "rotate": [ -5.74, 0.0, 0.0 ]
+                },
+                "left_leg": {
+                    "translate": [ 1.98, -9.6, 0.8 ],
+                    "rotate": [ -28.64, 0.0, 0.0 ],
+                    "scale": [ 0.990999, 1.0, 1.0 ]
+                },
+                "right_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                },
+                "outer": {
+                    "translate": [ 0.0, 4.0, 0.0 ]
+                },
+                "left_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "body": {
+                    "translate": [ 0.0, 4.8, 0.0 ],
+                    "rotate": [ 28.64, 0.0, 0.0 ]
+                },
+                "bodywear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "head": {
+                    "translate": [ 0.0, 3.8, 0.0 ],
+                    "scale": [ 1.005, 1.0, 1.0 ]
+                },
+                "left_arm": {
+                    "translate": [ 5.5, -2.0, 1.0 ],
+                    "rotate": [ -5.74, 0.0, 0.0 ]
+                },
+                "right_leg": {
+                    "translate": [ -1.98, -9.6, 0.8 ],
+                    "rotate": [ -28.64, 0.0, 0.0 ],
+                    "scale": [ 0.99, 1.0, 1.0 ]
+                },
+                "right_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "anchor": {
+                    "translate": [ 0.0, 16.0, 0.0 ]
+                },
+                "left_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                }
+            }
+        },
+        "riding": {
+            "size": [ 0.6, 1.8, 0.6 ],
+            "limbs": {
+                "right_arm": {
+                    "translate": [ -5.5, -2.0, 0.0 ],
+                    "rotate": [ -36.0, 0.0, 0.0 ]
+                },
+                "left_leg": {
+                    "translate": [ 2.0, -12.0, 0.0 ],
+                    "rotate": [ -81.0, 18.0, -4.5 ]
+                },
+                "right_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                },
+                "outer": {
+                    "translate": [ 0.0, 4.0, 0.0 ]
+                },
+                "left_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "body": {
+                    "translate": [ 0.0, 8.0, 0.0 ]
+                },
+                "bodywear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "head": {
+                    "translate": [ 0.0, 8.0, 0.0 ]
+                },
+                "left_arm": {
+                    "translate": [ 5.5, -2.0, 0.0 ],
+                    "rotate": [ -36.0, 0.0, 0.0 ]
+                },
+                "right_leg": {
+                    "translate": [ -2.0, -12.0, 0.0 ],
+                    "rotate": [ -81.0, -18.0, 4.5 ]
+                },
+                "right_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "anchor": {
+                    "translate": [ 0.0, 16.0, 0.0 ]
+                },
+                "left_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                }
+            }
+        },
+        "dabbing": {
+            "size": [ 0.6, 1.8, 0.6 ],
+            "limbs": {
+                "right_arm": {
+                    "translate": [ -5.5, -2.0, 0.0 ],
+                    "rotate": [ 0.0, 0.0, -110.0 ]
+                },
+                "left_leg": {
+                    "translate": [ 2.0, -12.0, 0.0 ]
+                },
+                "right_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                },
+                "outer": {
+                    "translate": [ 0.0, 4.0, 0.0 ]
+                },
+                "left_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "body": {
+                    "translate": [ 0.0, 8.0, 0.0 ]
+                },
+                "bodywear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "head": {
+                    "translate": [ 0.0, 8.0, 0.0 ],
+                    "rotate": [ 50.0, 45.0, 0.0 ]
+                },
+                "left_arm": {
+                    "translate": [ 5.5, -2.0, 0.0 ],
+                    "rotate": [ -90.0, -30.0, 0.0 ]
+                },
+                "right_leg": {
+                    "translate": [ -2.0, -12.0, 0.0 ]
+                },
+                "right_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "anchor": {
+                    "translate": [ 0.0, 16.0, 0.0 ]
+                },
+                "left_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                }
+            }
+        },
+        "t_pose": {
+            "size": [ 0.6, 1.8, 0.6 ],
+            "limbs": {
+                "right_arm": {
+                    "translate": [ -5.5, -2.0, 0.0 ],
+                    "rotate": [ 0.0, 0.0, -90.0 ],
+                    "scale": [ 1.0, 1.0, 1.01 ]
+                },
+                "left_leg": {
+                    "translate": [ 2.0, -12.0, 0.0 ]
+                },
+                "right_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                },
+                "outer": {
+                    "translate": [ 0.0, 4.0, 0.0 ]
+                },
+                "left_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "body": {
+                    "translate": [ 0.0, 8.0, 0.0 ]
+                },
+                "bodywear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "head": {
+                    "translate": [ 0.0, 8.0, 0.0 ]
+                },
+                "left_arm": {
+                    "translate": [ 5.5, -2.0, 0.0 ],
+                    "rotate": [ 0.0, 0.0, 90.0 ],
+                    "scale": [ 1.0, 1.0, 1.01 ]
+                },
+                "right_leg": {
+                    "translate": [ -2.0, -12.0, 0.0 ]
+                },
+                "right_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "anchor": {
+                    "translate": [ 0.0, 16.0, 0.0 ]
+                },
+                "left_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                }
+            }
+        },
+        "sleeping": {
+            "size": [ 0.6, 0.4, 0.2 ],
+            "limbs": {
+                "right_arm": {
+                    "translate": [ -5.5, -2.0, 0.0 ]
+                },
+                "left_leg": {
+                    "translate": [ 2.0, -12.0, 0.0 ]
+                },
+                "right_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                },
+                "outer": {
+                    "translate": [ 0.0, 4.0, 0.0 ]
+                },
+                "left_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "body": {
+                    "translate": [ 0.0, 8.0, 0.0 ]
+                },
+                "bodywear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "head": {
+                    "translate": [ 0.0, 8.0, 0.0 ],
+                    "rotate": [ 30.0, 0.0, 0.0 ]
+                },
+                "left_arm": {
+                    "translate": [ 5.5, -2.0, 0.0 ]
+                },
+                "right_leg": {
+                    "translate": [ -2.0, -12.0, 0.0 ]
+                },
+                "right_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "anchor": {
+                    "translate": [ 0.0, 2.0, 0.0 ],
+                    "rotate": [ -90.0, 0.0, 0.0 ]
+                },
+                "left_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                }
+            }
+        },
+        "sitting": {
+            "size": [ 0.6, 1.3, 0.6 ],
+            "limbs": {
+                "right_arm": {
+                    "translate": [ -5.5, -2.0, 0.0 ],
+                    "rotate": [ -36.0, 0.0, 0.0 ]
+                },
+                "left_leg": {
+                    "translate": [ 2.0, -12.0, 0.0 ],
+                    "rotate": [ -90.0, 18.0, -4.5 ]
+                },
+                "right_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                },
+                "outer": {
+                    "translate": [ 0.0, 4.0, 0.0 ]
+                },
+                "left_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "body": {
+                    "translate": [ 0.0, 8.0, 0.0 ]
+                },
+                "bodywear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "head": {
+                    "translate": [ 0.0, 8.0, 0.0 ]
+                },
+                "left_arm": {
+                    "translate": [ 5.5, -2.0, 0.0 ],
+                    "rotate": [ -36.0, 0.0, 0.0 ]
+                },
+                "right_leg": {
+                    "translate": [ -2.0, -12.0, 0.0 ],
+                    "rotate": [ -90.0, -18.0, 4.5 ]
+                },
+                "right_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "anchor": {
+                    "translate": [ 0.0, 5.75, 0.0 ]
+                },
+                "left_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                }
+            }
+        },
+        "lying": {
+            "size": [ 0.6, 0.4, 0.2 ],
+            "limbs": {
+                "right_arm": {
+                    "translate": [ -5.5, -2.0, 0.0 ],
+                    "rotate": [ -180.0, 0.0, 0.0 ]
+                },
+                "left_leg": {
+                    "translate": [ 2.0, -12.0, 0.0 ]
+                },
+                "right_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                },
+                "outer": {
+                    "translate": [ 0.0, 4.0, 0.0 ]
+                },
+                "left_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "body": {
+                    "translate": [ 0.0, 8.0, 0.0 ]
+                },
+                "bodywear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "head": {
+                    "translate": [ 0.0, 8.0, 0.0 ],
+                    "rotate": [ -40.0, 0.0, 0.0 ]
+                },
+                "left_arm": {
+                    "translate": [ 5.5, -2.0, 0.0 ],
+                    "rotate": [ -180.0, 0.0, 0.0 ]
+                },
+                "right_leg": {
+                    "translate": [ -2.0, -12.0, 0.0 ]
+                },
+                "right_legwear": {
+                    "translate": [ 0.0, -6.0, 0.0 ]
+                },
+                "anchor": {
+                    "translate": [ 0.0, 2.0, 0.0 ],
+                    "rotate": [ 90.0, 0.0, 0.0 ]
+                },
+                "left_armwear": {
+                    "translate": [ 0.0, -4.0, 0.0 ]
+                }
+            }
+        }
+    }
+}
