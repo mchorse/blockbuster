@@ -168,7 +168,9 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
     @SideOnly(Side.CLIENT)
     protected String getSubclassDisplayName()
     {
-        return I18n.format("blockbuster.morph.structure");
+        String suffix = this.structure != null && !this.structure.isEmpty() ? " (" + this.structure + ")" : "";
+
+        return I18n.format("blockbuster.morph.structure") + suffix;
     }
 
     @Override
