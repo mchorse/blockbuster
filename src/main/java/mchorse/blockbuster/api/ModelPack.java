@@ -143,9 +143,9 @@ public class ModelPack
             /* Eyes related models */
             this.addDefaultModel("eyes/3.0");
             this.addDefaultModel("eyes/3.0_1px");
-            this.addDefaultModel("eyes/alex_eyes");
-            this.addDefaultModel("eyes/fred_eyes");
-            this.addDefaultModel("eyes/steve_eyes");
+            this.addDefaultModel("eyes/alex");
+            this.addDefaultModel("eyes/fred");
+            this.addDefaultModel("eyes/steve");
         }
         catch (Exception e)
         {
