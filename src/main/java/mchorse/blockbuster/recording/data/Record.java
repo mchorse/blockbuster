@@ -206,11 +206,9 @@ public class Record
                 actor.renderYawOffset = frame.bodyYaw;
             }
 
-            if (actor instanceof EntityPlayerSP)
+            if (actor.world.isRemote)
             {
-                MovementInput input = ((EntityPlayerSP) actor).movementInput;
-
-                input.sneak = frame.isSneaking;
+                this.applyClientMovement(actor, frame);
             }
 
             actor.setSneaking(frame.isSneaking);
@@ -279,6 +277,17 @@ public class Record
                 actor.distanceWalkedModified = actor.distanceWalkedModified + MathHelper.sqrt(dx * dx + dz * dz) * 0.32F;
                 actor.distanceWalkedOnStepModified = actor.distanceWalkedOnStepModified + MathHelper.sqrt(dx * dx + dy * dy + dz * dz) * 0.32F;
             }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void applyClientMovement(EntityLivingBase actor, Frame frame)
+    {
+        if (actor instanceof EntityPlayerSP)
+        {
+            MovementInput input = ((EntityPlayerSP) actor).movementInput;
+
+            input.sneak = frame.isSneaking;
         }
     }
 
