@@ -71,6 +71,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         private GuiToggleElement setDuration;
         private GuiToggleElement reverse;
         private GuiToggleElement randomOrder;
+        private GuiToggleElement trulyRandomOrder;
 
         public SequenceEntry entry;
 
@@ -180,11 +181,18 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                 this.stopPlayback();
             });
 
+            this.trulyRandomOrder = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.sequencer.truly_random_order"), false, (b) ->
+            {
+                this.morph.isTrulyRandom = b.isToggled();
+                this.stopPlayback();
+            });
+
             this.addPart.flex().relative(this.area).set(10, 10, 50, 20);
             this.removePart.flex().relative(this.addPart.resizer()).set(55, 0, 50, 20);
             this.list.flex().relative(this.area).set(10, 50, 105, 0).hTo(this.reverse.area, -5);
             this.randomOrder.flex().relative(this).x(10).y(1F, -24).w(105);
-            this.reverse.flex().relative(this.randomOrder).y(-1F, -5).w(1F);
+            this.trulyRandomOrder.flex().relative(this.randomOrder).y(-1F, -5).w(1F);
+            this.reverse.flex().relative(this.trulyRandomOrder).y(-1F, -5).w(1F);
 
             /* Playback preview code */
             this.preview = new GuiTrackpadElement(mc, (value) -> this.previewTick(value.intValue()));
@@ -200,7 +208,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             previewBar.add(this.plause, this.preview, this.stop);
 
             this.elements.add(this.pick, this.duration, this.random, this.setDuration);
-            this.add(this.addPart, this.removePart, this.randomOrder, this.reverse, this.list, this.elements, previewBar);
+            this.add(this.addPart, this.removePart, this.randomOrder, this.trulyRandomOrder, this.reverse, this.list, this.elements, previewBar);
 
             this.keys().register(((LabelTooltip) this.plause.tooltip).label, Keyboard.KEY_SPACE, () -> this.plause.clickItself(GuiBase.getCurrent()))
                 .held(Keyboard.KEY_LSHIFT)
@@ -320,6 +328,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
             this.reverse.toggled(morph.reverse);
             this.randomOrder.toggled(morph.isRandom);
+            this.trulyRandomOrder.toggled(morph.isTrulyRandom);
         }
 
         @Override

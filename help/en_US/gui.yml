@@ -319,6 +319,7 @@ blockbuster.gui:
         no_morph: (no morph)
         morphs: Morphs
         random_order: Random order
+        truly_random_order: Truly random
         ticks: ticks
 
         preview_tick: Preview tick of this sequencer morph
@@ -403,8 +404,6 @@ blockbuster.gui:
             acceleration: Local acceleration
             acceleration_tooltip: It rotates the acceleration vector according to the target's rotation throughout the whole lifetime.
             gravity: Gravity
-            scale: Local scale
-            scale_tooltip: It scales the particles according to the target's scale. It works best with local position and rotation. It doesn't work well with collision!
             scale_billboard: Scale texture
             scale_billboard_tooltip: It scales the particle's texture size according to the target's scale.
             object_velocity_title: Object
