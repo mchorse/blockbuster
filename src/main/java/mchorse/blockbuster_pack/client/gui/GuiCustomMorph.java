@@ -64,35 +64,6 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             return;
         }
 
-        /* Add presets that are part of JSON file */
-        if (morph instanceof CustomMorph)
-        {
-            CustomMorph custom = (CustomMorph) morph;
-
-            if (custom.model != null && !custom.model.presets.isEmpty())
-            {
-                for (Map.Entry<String, String> preset : custom.model.presets.entrySet())
-                {
-                    NBTTagCompound tag = null;
-
-                    try
-                    {
-                        tag = JsonToNBT.getTagFromJson(preset.getValue());
-                    }
-                    catch (Exception e)
-                    {}
-
-                    if (tag != null)
-                    {
-                        NBTTagCompound morphTag = custom.toNBT();
-
-                        morphTag.merge(tag);
-                        list.add(new Label<NBTTagCompound>(IKey.str(preset.getKey()), morphTag));
-                    }
-                }
-            }
-        }
-
         for (AbstractEntry childEntry : entry.getEntries())
         {
             if (childEntry instanceof FileEntry)
@@ -232,6 +203,33 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
     {
         List<Label<NBTTagCompound>> list = new ArrayList<Label<NBTTagCompound>>();
         String key = morph.getKey();
+
+        /* Add presets that are part of JSON file */
+        if (morph instanceof CustomMorph)
+        {
+            if (morph.model != null && !morph.model.presets.isEmpty())
+            {
+                for (Map.Entry<String, String> preset : morph.model.presets.entrySet())
+                {
+                    NBTTagCompound tag = null;
+
+                    try
+                    {
+                        tag = JsonToNBT.getTagFromJson(preset.getValue());
+                    }
+                    catch (Exception e)
+                    {}
+
+                    if (tag != null)
+                    {
+                        NBTTagCompound morphTag = morph.toNBT();
+
+                        morphTag.merge(tag);
+                        list.add(new Label<NBTTagCompound>(IKey.str(preset.getKey()), morphTag));
+                    }
+                }
+            }
+        }
 
         addSkins(morph, list, "Skin", ClientProxy.tree.getByPath(key + "/skins", null));
         addSkins(morph, list, "Skin", ClientProxy.tree.getByPath(morph.model.skins + "/skins", null));
