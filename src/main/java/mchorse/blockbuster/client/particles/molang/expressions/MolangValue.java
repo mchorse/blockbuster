@@ -28,7 +28,7 @@ public class MolangValue extends MolangExpression
     @Override
     public double get()
     {
-        return this.value.get();
+        return this.value.get().doubleValue();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class MolangValue extends MolangExpression
     {
         if (this.value instanceof Constant)
         {
-            return new JsonPrimitive(this.value.get());
+            return new JsonPrimitive(this.value.get().doubleValue());
         }
 
         return super.toJson();

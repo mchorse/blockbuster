@@ -262,7 +262,7 @@ public class BedrockEmitter
 
             if (var != null)
             {
-                var.set(entry.getValue().get());
+                var.set(entry.getValue().get().doubleValue());
             }
         }
     }

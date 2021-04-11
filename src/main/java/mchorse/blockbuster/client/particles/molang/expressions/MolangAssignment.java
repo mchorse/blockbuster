@@ -20,7 +20,7 @@ public class MolangAssignment extends MolangExpression
     @Override
     public double get()
     {
-        double value = this.expression.get();
+        double value = this.expression.get().doubleValue();
 
         this.variable.set(value);
 

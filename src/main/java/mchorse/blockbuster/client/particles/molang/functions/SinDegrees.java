@@ -1,9 +1,9 @@
 package mchorse.blockbuster.client.particles.molang.functions;
 
 import mchorse.mclib.math.IValue;
-import mchorse.mclib.math.functions.Function;
+import mchorse.mclib.math.functions.NNFunction;
 
-public class SinDegrees extends Function
+public class SinDegrees extends NNFunction
 {
     public SinDegrees(IValue[] values, String name) throws Exception
     {
@@ -17,8 +17,8 @@ public class SinDegrees extends Function
     }
 
     @Override
-    public double get()
+    public double doubleValue()
     {
-        return Math.sin(this.getArg(0) / 180 * Math.PI);
+        return Math.sin(this.getArg(0).doubleValue() / 180 * Math.PI);
     }
 }

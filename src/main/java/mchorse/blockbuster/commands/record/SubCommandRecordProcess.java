@@ -112,7 +112,7 @@ public class SubCommandRecordProcess extends SubCommandRecordBase
             this.tick.set(i);
             this.factor.set((i - start) / (double) (end - start));
 
-            SubCommandRecordClean.set(property, frame, math.get());
+            SubCommandRecordClean.set(property, frame, math.get().doubleValue());
         }
 
         try

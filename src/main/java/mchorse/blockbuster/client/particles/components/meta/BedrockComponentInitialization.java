@@ -66,7 +66,7 @@ public class BedrockComponentInitialization extends BedrockComponentBase impleme
                 {
                     MolangAssignment assignment = (MolangAssignment) expression;
 
-                    emitter.initialValues.put(assignment.variable.getName(), assignment.variable.get());
+                    emitter.initialValues.put(assignment.variable.getName(), assignment.variable.get().doubleValue());
                 }
             }
         }
@@ -75,7 +75,7 @@ public class BedrockComponentInitialization extends BedrockComponentBase impleme
         {
             for (Map.Entry<String, IValue> entry : emitter.variables.entrySet())
             {
-                emitter.initialValues.put(entry.getKey(), entry.getValue().get());
+                emitter.initialValues.put(entry.getKey(), entry.getValue().get().doubleValue());
             }
         }
     }

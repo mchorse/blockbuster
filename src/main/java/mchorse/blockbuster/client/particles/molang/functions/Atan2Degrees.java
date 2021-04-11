@@ -11,8 +11,8 @@ public class Atan2Degrees extends Atan2
     }
 
     @Override
-    public double get()
+    public double doubleValue()
     {
-        return super.get() / Math.PI * 180;
+        return super.doubleValue() / Math.PI * 180;
     }
 }
