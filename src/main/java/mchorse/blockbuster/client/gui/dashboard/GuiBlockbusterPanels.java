@@ -31,7 +31,7 @@ import java.util.function.Consumer;
 @SideOnly(Side.CLIENT)
 public class GuiBlockbusterPanels
 {
-    public GuiScenePanel directorPanel;
+    public GuiScenePanel scenePanel;
     public GuiModelBlockPanel modelPanel;
     public GuiModelEditorPanel modelEditorPanel;
     public GuiRecordingEditorPanel recordingEditorPanel;
@@ -76,7 +76,7 @@ public class GuiBlockbusterPanels
         Minecraft mc = Minecraft.getMinecraft();
         GuiDashboard dashboard = (GuiDashboard) event.dashboard;
 
-        this.directorPanel = new GuiScenePanel(mc, dashboard);
+        this.scenePanel = new GuiScenePanel(mc, dashboard);
         this.modelPanel = new GuiModelBlockPanel(mc, dashboard);
         this.modelEditorPanel = new GuiModelEditorPanel(mc, dashboard);
         this.recordingEditorPanel = new GuiRecordingEditorPanel(mc, dashboard);
@@ -85,7 +85,7 @@ public class GuiBlockbusterPanels
 
         this.morphs = new GuiCreativeMorphsMenu(mc, null);
 
-        dashboard.panels.registerPanel(this.directorPanel, IKey.lang("blockbuster.gui.dashboard.director"), BBIcons.SCENE);
+        dashboard.panels.registerPanel(this.scenePanel, IKey.lang("blockbuster.gui.dashboard.director"), BBIcons.SCENE);
         dashboard.panels.registerPanel(this.modelPanel, IKey.lang("blockbuster.gui.dashboard.model"), Icons.BLOCK);
         dashboard.panels.registerPanel(this.modelEditorPanel, IKey.lang("blockbuster.gui.dashboard.model_editor"), Icons.POSE);
         dashboard.panels.registerPanel(this.recordingEditorPanel, IKey.lang("blockbuster.gui.dashboard.player_recording"), BBIcons.EDITOR);
@@ -99,7 +99,7 @@ public class GuiBlockbusterPanels
         GuiModelBlockPanel.lastBlocks.clear();
         ClientProxy.audio.reset();
 
-        this.directorPanel = null;
+        this.scenePanel = null;
         this.modelPanel = null;
         this.recordingEditorPanel = null;
 

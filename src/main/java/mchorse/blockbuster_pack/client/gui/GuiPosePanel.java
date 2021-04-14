@@ -5,23 +5,21 @@ import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelPoses;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
+import mchorse.blockbuster.client.gui.utils.GuiShapeKeysEditor;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiContextMenu;
-import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
-import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.client.gui.editor.GuiAnimation;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -37,6 +35,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
     public GuiPoseTransformations transforms;
 
     public GuiAnimation animation;
+    public GuiShapeKeysEditor shapeKeys;
 
     /* General options */
     public GuiStringListElement models;
@@ -72,7 +71,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         {
             if (this.morph.customPose == null)
             {
-                this.morph.customPose = this.morph.getPose(this.mc.player, 0).clone();
+                this.morph.customPose = this.morph.getPose(this.mc.player, 0).copy();
             }
 
             this.updateList();
@@ -138,7 +137,10 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         options.flex().relative(this).x(1F, -130).y(1F).w(130).anchorY(1F).column(5).vertical().stretch().height(20).padding(10);
         options.add(this.model, this.scale, this.scaleGui);
 
-        this.add(this.reset, this.create, this.poseOnSneak, this.list, options, this.transforms, this.models, this.animation);
+        this.shapeKeys = new GuiShapeKeysEditor(mc, () -> this.morph.model);
+        this.shapeKeys.flex().relative(this.animation).x(10).y(1F, 10).w(1F, -20).hTo(options.area, -10);
+
+        this.add(this.reset, this.create, this.poseOnSneak, this.list, this.animation, options, this.shapeKeys, this.transforms, this.models);
     }
 
     private GuiContextMenu limbContextMenu()
@@ -162,6 +164,17 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
 
         this.morph.customPose.copy(pose);
         this.transforms.set(this.transforms.trans, currentPose == null ? null : currentPose.limbs.get(this.list.getCurrentFirst()));
+        this.updateShapeKeys();
+    }
+
+    private void updateShapeKeys()
+    {
+        this.shapeKeys.setVisible(!morph.model.shapes.isEmpty() && this.morph.customPose != null);
+
+        if (this.shapeKeys.isVisible())
+        {
+            this.shapeKeys.fillData(this.morph.getCurrentPose().shapes);
+        }
     }
 
     @Override
@@ -216,6 +229,8 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.transforms.setVisible(this.morph.customPose != null);
         this.list.flex().relative(this.morph.customPose == null ? this.create : this.reset);
         this.list.resize();
+
+        this.updateShapeKeys();
     }
 
     private void updateList()

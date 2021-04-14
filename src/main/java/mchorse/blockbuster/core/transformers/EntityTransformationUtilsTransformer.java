@@ -44,9 +44,9 @@ public class EntityTransformationUtilsTransformer extends ClassTransformer
             index++;
             AbstractInsnNode node = it.next();
 
-            if(node instanceof InsnNode)
+            if (node instanceof InsnNode)
             {
-                if(node.getOpcode() == Opcodes.DCONST_0)
+                if (node.getOpcode() == Opcodes.DCONST_0)
                 {
                     target = node;
 

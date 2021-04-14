@@ -9,7 +9,7 @@ public class ShapeKey
 {
     public String name;
     public float value;
-    public boolean relative;
+    public boolean relative = true;
 
     public ShapeKey()
     {}
@@ -48,11 +48,7 @@ public class ShapeKey
 
     public ShapeKey copy()
     {
-        ShapeKey shapeKey = new ShapeKey(this.name, this.value);
-
-        shapeKey.relative = this.relative;
-
-        return shapeKey;
+        return new ShapeKey(this.name, this.value, this.relative);
     }
 
     public NBTBase toNBT()

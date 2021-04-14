@@ -77,7 +77,7 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
             {
                 Dispatcher.sendToServer(new PacketAudioShift(location, value.intValue()));
 
-                GuiScenePanel panel = mchorse.blockbuster.ClientProxy.panels.directorPanel;
+                GuiScenePanel panel = mchorse.blockbuster.ClientProxy.panels.scenePanel;
 
                 if (panel.getLocation().equals(location))
                 {

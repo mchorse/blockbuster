@@ -1,12 +1,16 @@
 package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.client.ClientHandlerStructure;
 import mchorse.blockbuster.network.common.structure.PacketStructure;
 import mchorse.blockbuster.network.common.structure.PacketStructureRequest;
 import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.api.morphs.utils.Animation;
+import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
+import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -39,7 +43,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class StructureMorph extends AbstractMorph
+public class StructureMorph extends AbstractMorph implements IAnimationProvider, ISyncableMorph
 {
     /**
      * Map of baked structures 
@@ -56,6 +60,13 @@ public class StructureMorph extends AbstractMorph
      * The name of the structure which should be rendered 
      */
     public String structure = "";
+
+    /**
+     * TSR for structure morph
+     */
+    public ModelTransform pose = new ModelTransform();
+
+    public StructureAnimation animation = new StructureAnimation();
 
     @SideOnly(Side.CLIENT)
     public static void request()
@@ -128,10 +139,38 @@ public class StructureMorph extends AbstractMorph
     }
 
     @Override
+    public Animation getAnimation()
+    {
+        return this.animation;
+    }
+
+    @Override
+    public void pause(AbstractMorph previous, int offset)
+    {
+        this.animation.pause(offset);
+
+        if (previous instanceof StructureMorph)
+        {
+            StructureMorph structure = (StructureMorph) previous;
+
+            this.animation.last = new ModelTransform();
+            this.animation.last.copy(structure.pose);
+        }
+    }
+
+    @Override
+    public boolean isPaused()
+    {
+        return this.animation.paused;
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     protected String getSubclassDisplayName()
     {
-        return I18n.format("blockbuster.morph.structure");
+        String suffix = this.structure != null && !this.structure.isEmpty() ? " (" + this.structure + ")" : "";
+
+        return I18n.format("blockbuster.morph.structure") + suffix;
     }
 
     @Override
@@ -169,6 +208,7 @@ public class StructureMorph extends AbstractMorph
             GlStateManager.rotate(45.0F, 0.0F, -1.0F, 0.0F);
             GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+
             renderer.render();
             renderer.renderTEs();
             GlStateManager.disableLighting();
@@ -210,6 +250,18 @@ public class StructureMorph extends AbstractMorph
             GlStateManager.enableRescaleNormal();
             GlStateManager.translate(x, y, z);
 
+            ModelTransform transform = this.pose;
+
+            if (this.animation.isInProgress())
+            {
+                transform = new ModelTransform();
+                transform.copy(this.pose);
+
+                this.animation.apply(transform, partialTicks);
+            }
+
+            transform.transform();
+
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
@@ -229,6 +281,14 @@ public class StructureMorph extends AbstractMorph
     }
 
     @Override
+    public void update(EntityLivingBase target)
+    {
+        super.update(target);
+
+        this.animation.update();
+    }
+
+    @Override
     public AbstractMorph create()
     {
         return new StructureMorph();
@@ -244,6 +304,8 @@ public class StructureMorph extends AbstractMorph
             StructureMorph morph = (StructureMorph) from;
 
             this.structure = morph.structure;
+            this.pose.copy(morph.pose);
+            this.animation.copy(morph.animation);
         }
     }
 
@@ -269,9 +331,32 @@ public class StructureMorph extends AbstractMorph
             StructureMorph morph = (StructureMorph) obj;
 
             result = result && Objects.equals(this.structure, morph.structure);
+            result = result && Objects.equals(this.pose, morph.pose);
         }
 
         return result;
+    }
+
+    @Override
+    public boolean canMerge(AbstractMorph morph)
+    {
+        if (morph instanceof StructureMorph)
+        {
+            StructureMorph structure = (StructureMorph) morph;
+
+            this.mergeBasic(morph);
+
+            if (!structure.animation.ignored)
+            {
+                this.animation.merge(this, structure);
+                this.copy(structure);
+                this.animation.progress = 0;
+            }
+
+            return true;
+        }
+
+        return super.canMerge(morph);
     }
 
     @Override
@@ -279,7 +364,9 @@ public class StructureMorph extends AbstractMorph
     {
         super.fromNBT(tag);
 
-        this.structure = tag.getString("Structure");
+        if (tag.hasKey("Structure")) this.structure = tag.getString("Structure");
+        if (tag.hasKey("Pose")) this.pose.fromNBT(tag.getCompoundTag("Pose"));
+        if (tag.hasKey("Animation")) this.animation.fromNBT(tag.getCompoundTag("Animation"));
     }
 
     @Override
@@ -290,6 +377,18 @@ public class StructureMorph extends AbstractMorph
         if (!this.structure.isEmpty())
         {
             tag.setString("Structure", this.structure);
+        }
+
+        if (!this.pose.isDefault())
+        {
+            tag.setTag("Pose", this.pose.toNBT());
+        }
+
+        NBTTagCompound animation = this.animation.toNBT();
+
+        if (!animation.hasNoTags())
+        {
+            tag.setTag("Animation", animation);
         }
     }
 
@@ -427,6 +526,24 @@ public class StructureMorph extends AbstractMorph
                 this.vbo = -1;
                 this.count = 0;
             }
+        }
+    }
+
+    public static class StructureAnimation extends Animation
+    {
+        public ModelTransform last = new ModelTransform();
+
+        public void merge(StructureMorph last, StructureMorph next)
+        {
+            this.merge(next.animation);
+            this.last.copy(last.pose);
+        }
+
+        public void apply(ModelTransform transform, float partialTicks)
+        {
+            float factor = this.getFactor(partialTicks);
+
+            transform.interpolate(this.last, transform, factor, this.interp);
         }
     }
 }

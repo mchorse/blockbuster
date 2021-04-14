@@ -272,7 +272,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             py = this.vector.y;
             pz = this.vector.z;
 
-            if(particle.relativeScale)
+            if (particle.relativeScale)
             {
                 Vector3d pos = new Vector3d(px, py, pz);
 
@@ -291,7 +291,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             py += emitter.lastGlobal.y;
             pz += emitter.lastGlobal.z;
         }
-        else if(particle.relativeScale)
+        else if (particle.relativeScale)
         {
             Vector3d pos = new Vector3d(px, py, pz);
 
@@ -352,7 +352,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
         this.vertices[3].set(-this.w / 2, this.h / 2, 0, 1);
         this.transform.setIdentity();
 
-        if(particle.relativeScaleBillboard)
+        if (particle.relativeScaleBillboard)
         {
             Matrix4d scale = new Matrix4d(emitter.scale[0], 0, 0, 0,
                                      0, emitter.scale[1], 0, 0,

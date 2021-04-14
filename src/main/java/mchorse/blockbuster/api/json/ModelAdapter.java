@@ -42,6 +42,8 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
         Model model = plainGSON.fromJson(json, Model.class);
         JsonObject object = json.getAsJsonObject();
 
+        model.shapes.clear();
+
         if (object.has("limbs"))
         {
             model.limbs = context.deserialize(object.get("limbs"), new TypeToken<Map<String, ModelLimb>>()
@@ -87,7 +89,9 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
         map.remove("poses");
         map.remove("providesObj");
         map.remove("providesMtl");
+        map.remove("legacyObj");
         map.remove("materials");
+        map.remove("shapes");
         map.remove("extrudeMaxFactor");
         map.remove("extrudeInwards");
 
@@ -150,6 +154,11 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
         if (src.extrudeInwards > 1)
         {
             map.addProperty("extrudeInwards", src.extrudeInwards);
+        }
+
+        if (!src.legacyObj)
+        {
+            map.addProperty("legacyObj", src.legacyObj);
         }
 
         map.add("limbs", context.serialize(src.limbs));

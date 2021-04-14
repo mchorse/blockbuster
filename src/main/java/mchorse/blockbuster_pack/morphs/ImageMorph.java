@@ -545,8 +545,6 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
             this.pose.scale[1] = scale;
             this.pose.scale[2] = scale;
         }
-
-        this.animation.reset();
     }
 
     public static class ImageAnimation extends Animation

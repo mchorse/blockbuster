@@ -37,7 +37,7 @@ public class ClientHandlerRequestedFrames extends ClientMessageHandler<PacketReq
             playback.record = record;
         }
 
-        if (ClientProxy.panels != null)
+        if (ClientProxy.panels != null && ClientProxy.panels.recordingEditorPanel != null)
         {
             ClientProxy.panels.recordingEditorPanel.reselectRecord(record);
         }

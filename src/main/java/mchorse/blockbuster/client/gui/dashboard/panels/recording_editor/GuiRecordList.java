@@ -39,7 +39,7 @@ public class GuiRecordList extends GuiElement
 
     public void add(List<String> records)
     {
-        List<Replay> replays = ClientProxy.panels.directorPanel.getReplays();
+        List<Replay> replays = ClientProxy.panels.scenePanel.getReplays();
         boolean loadAll = replays == null || !CameraHandler.canSync() || !CameraHandler.isCameraEditorOpen();
 
         if (loadAll)

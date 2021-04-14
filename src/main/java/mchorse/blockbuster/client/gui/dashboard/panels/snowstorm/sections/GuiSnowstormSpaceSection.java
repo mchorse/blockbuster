@@ -79,6 +79,30 @@ public class GuiSnowstormSpaceSection extends GuiSnowstormComponentSection<Bedro
             this.component.gravity = b.isToggled();
             this.parent.dirty();
         });
+        
+        this.objectVelocity = new GuiElement(mc);
+        this.scaleColumns = new GuiElement(mc);
+
+        this.scaleColumns.flex().column(4).stretch().vertical().height(2);
+        this.objectVelocity.flex().column(4).stretch().vertical().height(4);
+
+        this.linearVelocity = new GuiTrackpadElement(mc, (value) ->
+        {
+            this.component.linearVelocity = value.floatValue();
+            this.parent.dirty();
+        });
+        this.linearVelocity.tooltip(IKey.lang("blockbuster.gui.snowstorm.space.linear_velocity_tooltip"));
+        this.objectVelocity.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.space.object_velocity_title"), 30).anchor(0, 1F), Elements.label(IKey.lang("blockbuster.gui.snowstorm.space.linear_velocity"), 20).anchor(0, 1F), this.linearVelocity);
+
+        this.angularVelocity = new GuiTrackpadElement(mc, (value) ->
+        {
+            this.component.angularVelocity = value.floatValue();
+            this.parent.dirty();
+        });
+        this.angularVelocity.tooltip(IKey.lang("blockbuster.gui.snowstorm.space.angular_velocity_tooltip"));
+        this.objectVelocity.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.space.angular_velocity"), 20).anchor(0, 1F), this.angularVelocity);
+
+        this.scaleColumns.add(this.scale);
 
         this.objectVelocity = new GuiElement(mc);
         this.scaleColumns = new GuiElement(mc);
@@ -104,7 +128,7 @@ public class GuiSnowstormSpaceSection extends GuiSnowstormComponentSection<Bedro
 
         this.scaleColumns.add(this.scale);
 
-
+        
         this.fields.add(this.position, this.rotation, this.scaleColumns, this.direction, this.acceleration, this.gravity, this.objectVelocity);
     }
 

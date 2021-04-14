@@ -65,6 +65,7 @@ blockbuster:
             help: "{r}{o}Action command{r}. This command provides few sub-commands for managing player recording actions."
 
             append: "{r}Records an action from current player into given {7}<filename>{r} with {7}<offset>{r} tick which will overwrite given frames after given offset tick. You can also optionally specify {7}[scene]{r} name. Supplying scene name, helps out with synchronizing the actors."
+            cancel: "{r}Cancels currently recording action."
             clear: "{r}Removes all records on the client (used to force unload client-side records)."
             play: "{r}Playbacks an action from given {7}<filename>{r}. This sub-command also can receive optional arguments {7}[invincibility]{r} flag ({7}1{r}, {7}0{r}, {7}true{r} or {7}false{r} values) and {7}[morph_nbt]{r} (which allows to specify a morph)."
             record: "{r}Records an action from current player into given {7}<filename>{r}. You can also optionally specify {7}[scene]{r} name. Supplying scene name, helps out with synchronizing the actors."

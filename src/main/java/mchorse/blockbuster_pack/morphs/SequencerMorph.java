@@ -70,6 +70,11 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
      */
     public boolean isRandom;
 
+    /**
+     * Whether it's random, and truly random
+     */
+    public boolean isTrulyRandom;
+
     private Animation animation = new Animation();
     private Random random = new Random();
 
@@ -184,19 +189,26 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
     private Random getRandomSeed(float duration)
     {
-        this.random.setSeed((long) (duration * 100000L));
+        if (this.isTrulyRandom)
+        {
+            this.random.setSeed(System.nanoTime());
+        }
+        else
+        {
+            this.random.setSeed((long) (duration * 100000L));
+        }
 
         return this.random;
     }
 
-    public AbstractMorph getRandom(boolean global)
+    public AbstractMorph getRandom()
     {
         if (this.morphs.isEmpty())
         {
             return null;
         }
 
-        double factor = global ? Math.random() : this.random.nextDouble();
+        double factor = this.isTrulyRandom ? Math.random() : this.random.nextDouble();
 
         return this.get((int) (factor * this.morphs.size()));
     }
@@ -376,6 +388,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
             this.reverse = morph.reverse;
             this.isRandom = morph.isRandom;
+            this.isTrulyRandom = morph.isTrulyRandom;
 
             /* Runtime properties */
             this.currentMorph.copy(morph.currentMorph);
@@ -413,6 +426,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             result = result && Objects.equals(this.morphs, seq.morphs);
             result = result && this.reverse == seq.reverse;
             result = result && this.isRandom == seq.isRandom;
+            result = result && this.isTrulyRandom == seq.isTrulyRandom;
         }
 
         return result;
@@ -491,6 +505,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
         if (this.reverse) tag.setBoolean("Reverse", this.reverse);
         if (this.isRandom) tag.setBoolean("Random", this.isRandom);
+        if (this.isTrulyRandom) tag.setBoolean("TrulyRandom", this.isTrulyRandom);
     }
 
     @Override
@@ -518,6 +533,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
         if (tag.hasKey("Reverse")) this.reverse = tag.getBoolean("Reverse");
         if (tag.hasKey("Random")) this.isRandom = tag.getBoolean("Random");
+        if (tag.hasKey("TrulyRandom")) this.isTrulyRandom = tag.getBoolean("TrulyRandom");
     }
 
     /**

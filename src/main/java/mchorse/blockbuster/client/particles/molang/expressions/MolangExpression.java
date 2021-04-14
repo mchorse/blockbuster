@@ -7,7 +7,7 @@ import mchorse.mclib.math.Constant;
 import mchorse.mclib.math.IValue;
 import mchorse.mclib.math.Operation;
 
-public abstract class MolangExpression implements IValue
+public abstract class MolangExpression
 {
     public MolangParser context;
 
@@ -27,7 +27,7 @@ public abstract class MolangExpression implements IValue
         {
             MolangValue value = (MolangValue) expression;
 
-            return value.value instanceof Constant && Operation.equals(value.value.get(), x);
+            return value.value instanceof Constant && Operation.equals(value.value.get().doubleValue(), x);
         }
 
         return false;
@@ -49,6 +49,8 @@ public abstract class MolangExpression implements IValue
     {
         this.context = context;
     }
+
+    public abstract double get();
 
     public JsonElement toJson()
     {

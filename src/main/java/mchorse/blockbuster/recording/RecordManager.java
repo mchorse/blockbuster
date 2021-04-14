@@ -166,6 +166,14 @@ public class RecordManager
      */
     public boolean halt(EntityPlayer player, boolean hasDied, boolean notify)
     {
+        return this.halt(player, hasDied, notify, false);
+    }
+
+    /**
+     * Stop recording given player
+     */
+    public boolean halt(EntityPlayer player, boolean hasDied, boolean notify, boolean canceled)
+    {
         /* Stop countdown */
         ScheduledRecording scheduled = this.scheduled.get(player);
 
@@ -185,7 +193,7 @@ public class RecordManager
             Record record = recorder.record;
             String filename = record.filename;
 
-            if (hasDied && !record.actions.isEmpty())
+            if (!canceled && hasDied && !record.actions.isEmpty())
             {
                 record.addAction(record.actions.size() - 1, new DamageAction(200.0F));
             }
@@ -204,17 +212,21 @@ public class RecordManager
                 EntityUtils.setRecordPlayer(player, null);
             }
 
-            /* Apply old player recording */
-            try
+            if (!canceled)
             {
-                Record oldRecord = this.get(filename);
+                /* Apply old player recording */
+                try
+                {
+                    Record oldRecord = this.get(filename);
 
-                recorder.applyOld(oldRecord);
+                    recorder.applyOld(oldRecord);
+                }
+                catch (Exception e)
+                {}
+
+                this.records.put(filename, record);
             }
-            catch (Exception e)
-            {}
 
-            this.records.put(filename, record);
             this.recorders.remove(player);
             MorphAPI.demorph(player);
 
@@ -222,7 +234,7 @@ public class RecordManager
             {
                 CommonProxy.damage.restoreDamageControl(recorder, player.world);
 
-                Dispatcher.sendTo(new PacketPlayerRecording(false, "", 0), (EntityPlayerMP) player);
+                Dispatcher.sendTo(new PacketPlayerRecording(false, "", 0, canceled), (EntityPlayerMP) player);
             }
 
             return true;
@@ -327,6 +339,11 @@ public class RecordManager
 
         this.players.remove(actor.actor);
         EntityUtils.setRecordPlayer(actor.actor, null);
+    }
+
+    public boolean cancel(EntityPlayer player)
+    {
+        return this.halt(player, false, true, true);
     }
 
     /**
@@ -463,7 +480,7 @@ public class RecordManager
             {
                 record.run();
                 this.recorders.put(record.player, record.recorder);
-                Dispatcher.sendTo(new PacketPlayerRecording(true, record.recorder.record.filename, record.offset), (EntityPlayerMP) record.player);
+                Dispatcher.sendTo(new PacketPlayerRecording(true, record.recorder.record.filename, record.offset, false), (EntityPlayerMP) record.player);
 
                 it.remove();
 

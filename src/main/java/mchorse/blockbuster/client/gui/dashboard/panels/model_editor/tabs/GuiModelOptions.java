@@ -12,6 +12,7 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.Direction;
 import net.minecraft.client.Minecraft;
 
 public class GuiModelOptions extends GuiModelEditorTab
@@ -27,12 +28,15 @@ public class GuiModelOptions extends GuiModelEditorTab
     private GuiTextElement skins;
     private GuiToggleElement providesObj;
     private GuiToggleElement providesMtl;
+    private GuiToggleElement legacyObj;
 
     public GuiModelOptions(Minecraft mc, GuiModelEditorPanel panel)
     {
         super(mc, panel);
 
         /* Main properties */
+        GuiScrollElement element = new GuiScrollElement(mc);
+
         this.name = new GuiTextElement(mc, 120, (str) -> this.panel.model.name = str);
         this.texture = new GuiTwoElement(mc, (value) ->
         {
@@ -90,13 +94,21 @@ public class GuiModelOptions extends GuiModelEditorTab
             this.panel.model.providesMtl = b.isToggled();
             this.panel.rebuildModel();
         });
+        this.legacyObj = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.options.legacy_obj"), false, (b) ->
+        {
+            this.panel.model.legacyObj = b.isToggled();
+            this.panel.rebuildModel();
+        });
+        this.legacyObj.tooltip(IKey.lang("blockbuster.gui.me.options.legacy_obj_tooltip"), Direction.TOP);
 
-        this.flex().column(5).vertical().stretch().scroll().padding(10).height(20);
-        this.add(Elements.label(IKey.lang("blockbuster.gui.me.options.name")), this.name);
-        this.add(Elements.label(IKey.lang("blockbuster.gui.me.options.texture")), this.texture);
-        this.add(Elements.label(IKey.lang("blockbuster.gui.me.options.extrusion")), this.extrudeMaxFactor, this.extrudeInwards);
-        this.add(Elements.label(IKey.lang("blockbuster.gui.me.options.scale")), this.scale, this.scaleGui, this.defaultTexture);
-        this.add(Elements.label(IKey.lang("blockbuster.gui.me.options.skins")), this.skins, this.providesObj, this.providesMtl);
+        element.flex().relative(this).wh(1F, 1F).column(5).vertical().stretch().scroll().padding(10).height(20);
+        element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.name")), this.name);
+        element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.texture")), this.texture);
+        element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.extrusion")), this.extrudeMaxFactor, this.extrudeInwards);
+        element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.scale")), this.scale, this.scaleGui, this.defaultTexture);
+        element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.skins")), this.skins, this.providesObj, this.providesMtl, this.legacyObj);
+
+        this.add(element);
     }
 
     public void fillData(Model model)
@@ -110,6 +122,7 @@ public class GuiModelOptions extends GuiModelEditorTab
         this.skins.setText(model.skins);
         this.providesObj.toggled(model.providesObj);
         this.providesMtl.toggled(model.providesMtl);
+        this.legacyObj.toggled(model.legacyObj);
     }
 
     @Override

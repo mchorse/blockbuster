@@ -1,0 +1,980 @@
+{
+    "scheme": "1.3",
+    "name": "Eyes 3.0 (1px)",
+    "texture": [ 16, 16 ],
+    "default": "blockbuster:textures/entity/eyes/steve.png",
+    "skins": "eyes3.0",
+    "limbs": {
+        "eyebrow_r_2": {
+            "size": [ 1, 1, 1 ],
+            "texture": [ 0, 8 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "parent": "eyebrow_r"
+        },
+        "eye_r": {
+            "size": [ 2, 1, 1 ],
+            "texture": [ 0, 3 ],
+            "anchor": [ 0.0, 1.0, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ]
+        },
+        "eye_l_pupil": {
+            "size": [ 1, 1, 1 ],
+            "texture": [ 6, 1 ],
+            "anchor": [ 1.0, 1.0, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ]
+        },
+        "eyelid_lt": {
+            "size": [ 2, 1, 1 ],
+            "texture": [ 6, 10 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ]
+        },
+        "eyebrow_r": {
+            "size": [ 2, 1, 1 ],
+            "texture": [ 0, 6 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ]
+        },
+        "eye_r_pupil": {
+            "size": [ 1, 1, 1 ],
+            "texture": [ 0, 1 ],
+            "anchor": [ 0.0, 1.0, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ]
+        },
+        "eyebrow_l_2": {
+            "size": [ 1, 1, 1 ],
+            "texture": [ 6, 8 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ],
+            "parent": "eyebrow_l"
+        },
+        "eye_l": {
+            "size": [ 2, 1, 1 ],
+            "texture": [ 6, 3 ],
+            "anchor": [ 1.0, 1.0, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ]
+        },
+        "eyelid_lb": {
+            "size": [ 2, 1, 1 ],
+            "texture": [ 6, 12 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ]
+        },
+        "eyelid_rb": {
+            "size": [ 2, 1, 1 ],
+            "texture": [ 0, 12 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ]
+        },
+        "eyelid_rt": {
+            "size": [ 2, 1, 1 ],
+            "texture": [ 0, 10 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ]
+        },
+        "eyebrow_l": {
+            "size": [ 2, 1, 1 ],
+            "texture": [ 6, 6 ],
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "origin": [ 0.0, 0.0, 0.0 ]
+        }
+    },
+    "poses": {
+        "look_downleft": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 1.99, 2.5, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.5, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 2.5, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.5, 3.6 ]
+                }
+            }
+        },
+        "look_up": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 3.35, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.5, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 3.35, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.5, 3.6 ]
+                }
+            }
+        },
+        "thinking_flipped": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 3.0, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.2, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 3.0, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 5.0, 3.6 ],
+                    "scale": [ 1.1, 1.0, 1.0 ]
+                }
+            }
+        },
+        "look_right": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 3.0, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.5, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -1.99, 3.0, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.5, 3.6 ]
+                }
+            }
+        },
+        "angry": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.099, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 3.0, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.2, 3.6 ],
+                    "rotate": [ 0.0, 0.0, -7.0 ],
+                    "scale": [ 1.2, 1.0, 1.0 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 3.0, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.0, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.2, 3.6 ],
+                    "rotate": [ 0.0, 0.0, 7.0 ],
+                    "scale": [ 1.2, 1.0, 1.0 ]
+                }
+            }
+        },
+        "suspicious": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 3.0, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.2, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 3.0, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.9, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.9, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.2, 3.6 ]
+                }
+            }
+        },
+        "thinking": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 3.0, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 5.0, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 3.0, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.2, 3.6 ],
+                    "scale": [ 1.1, 1.0, 1.0 ]
+                }
+            }
+        },
+        "look_upright": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 3.35, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.5, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -1.99, 3.35, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.5, 3.6 ]
+                }
+            }
+        },
+        "standing": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 3.0, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.5, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 3.0, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.5, 3.6 ]
+                }
+            }
+        },
+        "derp": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 1.991, 3.0, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.5, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -1.99, 3.0, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.5, 3.6 ]
+                }
+            }
+        },
+        "look_upleft": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 1.99, 3.35, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.5, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 3.35, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.5, 3.6 ]
+                }
+            }
+        },
+        "look_downright": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 2.5, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.5, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -1.99, 2.5, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.5, 3.6 ]
+                }
+            }
+        },
+        "no_eyebrows": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.4, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 3.0, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.5, 3.401 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 3.0, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.4, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.5, 3.4 ]
+                }
+            }
+        },
+        "sad": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 3.0, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.3, 3.6 ],
+                    "rotate": [ 0.0, 0.0, 10.0 ],
+                    "scale": [ 1.2, 1.0, 1.0 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 3.0, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.3, 3.6 ],
+                    "rotate": [ 0.0, 0.0, -10.0 ],
+                    "scale": [ 1.2, 1.0, 1.0 ]
+                }
+            }
+        },
+        "look_down": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 2.5, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.5, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 2.5, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.5, 3.6 ]
+                }
+            }
+        },
+        "closed": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, 1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 3.0, 3.45 ],
+                    "scale": [ 1.0, 0.0, 1.0 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.0, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 3.5, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 3.0, 3.45 ],
+                    "scale": [ 1.0, 0.0, 1.0 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, 1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 3.0, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 3.0, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.0, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 3.5, 3.6 ]
+                }
+            }
+        },
+        "eyeless": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 4.0, 3.8 ],
+                    "scale": [ 0.0, 0.0, 0.0 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.5, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 4.0, 3.8 ],
+                    "scale": [ 0.0, 0.0, 0.0 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.5, 3.6 ]
+                }
+            }
+        },
+        "sleepy": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 3.0, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.63, 3.475 ],
+                    "rotate": [ 0.0, 0.0, -3.0 ],
+                    "scale": [ 1.05, 2.0, 1.0 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.7, 3.6 ],
+                    "rotate": [ 0.0, 0.0, 5.0 ],
+                    "scale": [ 1.1, 1.0, 1.0 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 3.0, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.625, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.625, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.63, 3.475 ],
+                    "rotate": [ 0.0, 0.0, 3.0 ],
+                    "scale": [ 1.05, 2.0, 1.0 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.7, 3.6 ],
+                    "rotate": [ 0.0, 0.0, -5.0 ],
+                    "scale": [ 1.1, 1.0, 1.0 ]
+                }
+            }
+        },
+        "scared": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.999, 3.4, 3.45 ],
+                    "scale": [ 0.35, 0.35, 1.0 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.7, 3.6 ],
+                    "rotate": [ 0.0, 0.0, 7.0 ],
+                    "scale": [ 1.2, 1.0, 1.0 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.999, 3.4, 3.45 ],
+                    "scale": [ 0.35, 0.35, 1.0 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.79, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.789, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.7, 3.6 ],
+                    "rotate": [ 0.0, 0.0, -7.0 ],
+                    "scale": [ 1.2, 1.0, 1.0 ]
+                }
+            }
+        },
+        "sad_kawaii": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 0.99, 3.0, 3.45 ],
+                    "scale": [ 1.75, 1.0, 1.0 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.3, 3.6 ],
+                    "rotate": [ 0.0, 0.0, 10.0 ],
+                    "scale": [ 1.2, 1.0, 1.0 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 3.0, 3.45 ],
+                    "scale": [ 1.75, 1.0, 1.0 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.3, 3.6 ],
+                    "rotate": [ 0.0, 0.0, -10.0 ],
+                    "scale": [ 1.2, 1.0, 1.0 ]
+                }
+            }
+        },
+        "look_left": {
+            "size": [ 0.5, 0.5, 0.6 ],
+            "limbs": {
+                "eyebrow_r_2": {
+                    "translate": [ -1.499, -1.0, 0.0 ]
+                },
+                "eye_r": {
+                    "translate": [ -1.0, 3.0, 3.301 ]
+                },
+                "eye_l_pupil": {
+                    "translate": [ 1.99, 3.0, 3.45 ]
+                },
+                "eyelid_lt": {
+                    "translate": [ 2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_r": {
+                    "translate": [ -2.0, 4.5, 3.6 ]
+                },
+                "eye_r_pupil": {
+                    "translate": [ -0.99, 3.0, 3.45 ]
+                },
+                "eyebrow_l_2": {
+                    "translate": [ 1.499, -1.0, 0.0 ]
+                },
+                "eye_l": {
+                    "translate": [ 1.0, 3.0, 3.301 ]
+                },
+                "eyelid_lb": {
+                    "translate": [ 2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rb": {
+                    "translate": [ -2.0, 2.5, 3.475 ]
+                },
+                "eyelid_rt": {
+                    "translate": [ -2.0, 4.5, 3.475 ]
+                },
+                "eyebrow_l": {
+                    "translate": [ 2.0, 4.5, 3.6 ]
+                }
+            }
+        }
+    }
+}

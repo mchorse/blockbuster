@@ -7,6 +7,7 @@ import mchorse.blockbuster_pack.client.gui.GuiParticleMorph;
 import mchorse.blockbuster_pack.client.gui.GuiRecordMorph;
 import mchorse.blockbuster_pack.client.gui.GuiSequencerMorph;
 import mchorse.blockbuster_pack.client.gui.GuiSnowstormMorph;
+import mchorse.blockbuster_pack.client.gui.GuiStructureMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.blockbuster_pack.morphs.ParticleMorph;
@@ -48,6 +49,7 @@ public class BlockbusterFactory implements IMorphFactory
         editors.add(new GuiImageMorph(mc));
         editors.add(new GuiSequencerMorph(mc));
         editors.add(new GuiRecordMorph(mc));
+        editors.add(new GuiStructureMorph(mc));
         editors.add(new GuiParticleMorph(mc));
         editors.add(new GuiSnowstormMorph(mc));
     }
@@ -101,6 +103,6 @@ public class BlockbusterFactory implements IMorphFactory
     @Override
     public boolean hasMorph(String morph)
     {
-        return morph.startsWith("blockbuster.") || morph.equals("sequencer") || morph.equals("structure") || morph.equals("particle")  || morph.equals("snowstorm");
+        return morph.startsWith("blockbuster.") || morph.equals("sequencer") || morph.equals("structure") || morph.equals("particle") || morph.equals("snowstorm");
     }
 }

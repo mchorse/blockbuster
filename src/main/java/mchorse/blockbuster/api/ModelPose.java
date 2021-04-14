@@ -1,13 +1,17 @@
 package mchorse.blockbuster.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.MoreObjects;
 
+import mchorse.blockbuster.api.formats.obj.ShapeKey;
 import mchorse.mclib.utils.NBTUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
 
 /**
  * Pose class
@@ -20,6 +24,11 @@ public class ModelPose
 {
     public float[] size = new float[] {1, 1, 1};
     public Map<String, ModelTransform> limbs = new HashMap<String, ModelTransform>();
+
+    /**
+     * Shapes configurations
+     */
+    public final List<ShapeKey> shapes = new ArrayList<ShapeKey>();
 
     public void copy(ModelPose pose)
     {
@@ -62,7 +71,7 @@ public class ModelPose
         {
             ModelPose pose = (ModelPose) obj;
 
-            return ModelTransform.equalFloatArray(this.size, pose.size) && this.limbs.equals(pose.limbs);
+            return ModelTransform.equalFloatArray(this.size, pose.size) && this.limbs.equals(pose.limbs) && this.shapes.equals(pose.shapes);
         }
 
         return super.equals(obj);
@@ -71,8 +80,7 @@ public class ModelPose
     /**
      * Clone a model pose
      */
-    @Override
-    public ModelPose clone()
+    public ModelPose copy()
     {
         ModelPose b = new ModelPose();
 
@@ -83,12 +91,17 @@ public class ModelPose
             b.limbs.put(entry.getKey(), entry.getValue().clone());
         }
 
+        for (ShapeKey key : this.shapes)
+        {
+            b.shapes.add(key.copy());
+        }
+
         return b;
     }
 
     public void fromNBT(NBTTagCompound tag)
     {
-        if (tag.hasKey("Size", 9))
+        if (tag.hasKey("Size", Constants.NBT.TAG_LIST))
         {
             NBTTagList list = tag.getTagList("Size", 5);
 
@@ -98,7 +111,7 @@ public class ModelPose
             }
         }
 
-        if (tag.hasKey("Poses", 10))
+        if (tag.hasKey("Poses", Constants.NBT.TAG_COMPOUND))
         {
             this.limbs.clear();
 
@@ -110,6 +123,26 @@ public class ModelPose
 
                 trans.fromNBT(poses.getCompoundTag(key));
                 this.limbs.put(key, trans);
+            }
+        }
+
+        if (tag.hasKey("Shapes"))
+        {
+            NBTTagList shapes = tag.getTagList("Shapes", Constants.NBT.TAG_COMPOUND);
+
+            this.shapes.clear();
+
+            for (int i = 0; i < shapes.tagCount(); i++)
+            {
+                NBTTagCompound key = shapes.getCompoundTagAt(i);
+
+                if (key.hasKey("Name") && key.hasKey("Value"))
+                {
+                    ShapeKey shapeKey = new ShapeKey();
+
+                    shapeKey.fromNBT(key);
+                    this.shapes.add(shapeKey);
+                }
             }
         }
     }
@@ -124,6 +157,21 @@ public class ModelPose
         for (Map.Entry<String, ModelTransform> entry : this.limbs.entrySet())
         {
             poses.setTag(entry.getKey(), entry.getValue().toNBT());
+        }
+
+        if (!this.shapes.isEmpty())
+        {
+            NBTTagList shapes = new NBTTagList();
+
+            for (ShapeKey shape : this.shapes)
+            {
+                if (shape.value != 0)
+                {
+                    shapes.appendTag(shape.toNBT());
+                }
+            }
+
+            tag.setTag("Shapes", shapes);
         }
 
         return tag;

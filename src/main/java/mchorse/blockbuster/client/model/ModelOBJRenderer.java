@@ -145,6 +145,12 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                     float ny = -mesh.normData[i * 3 + 1];
                     float nz = mesh.normData[i * 3 + 2];
 
+                    if (!this.model.model.legacyObj)
+                    {
+                        x = -mesh.posData[i * 3] + this.limb.origin[0];
+                        nx *= -1;
+                    }
+
                     if (hasColor)
                     {
                         renderer.pos(x, y, z).tex(texF, 0.5F).normal(nx, ny, nz).endVertex();
@@ -306,7 +312,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
         public void render(ModelOBJRenderer renderer)
         {
-            if (renderer.shapes != null && this.mesh != null)
+            if (renderer.shapes != null && !renderer.shapes.isEmpty() && this.mesh != null)
             {
                 BufferBuilder builder = Tessellator.getInstance().getBuffer();
 
@@ -349,9 +355,9 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                         float z;
                         float u;
                         float v;
-                        float nx;
-                        float ny;
-                        float nz;
+                        float nx = this.temporary.normData[i * 3];
+                        float ny = this.temporary.normData[i * 3 + 1];
+                        float nz = this.temporary.normData[i * 3 + 2];
 
                         if (key.relative)
                         {
@@ -361,9 +367,6 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                             z = this.temporary.posData[i * 3 + 2] + Interpolations.lerp(this.mesh.posData[i * 3 + 2], mesh.posData[i * 3 + 2], factor) - this.mesh.posData[i * 3 + 2];
                             u = this.temporary.texData[i * 2] + Interpolations.lerp(this.mesh.texData[i * 2], mesh.texData[i * 2], factor) - this.mesh.texData[i * 2];
                             v = this.temporary.texData[i * 2 + 1] + Interpolations.lerp(this.mesh.texData[i * 2 + 1], mesh.texData[i * 2 + 1], factor) - this.mesh.texData[i * 2 + 1];
-                            nx = this.temporary.normData[i * 3] + Interpolations.lerp(this.mesh.normData[i * 3], mesh.normData[i * 3], factor) - this.mesh.normData[i * 3];
-                            ny = this.temporary.normData[i * 3 + 1] + Interpolations.lerp(this.mesh.normData[i * 3 + 1], mesh.normData[i * 3 + 1], factor) - this.mesh.normData[i * 3 + 1];
-                            nz = this.temporary.normData[i * 3 + 2] + Interpolations.lerp(this.mesh.normData[i * 3 + 2], mesh.normData[i * 3 + 2], factor) - this.mesh.normData[i * 3 + 2];
                         }
                         else
                         {
@@ -372,9 +375,16 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                             z = Interpolations.lerp(this.temporary.posData[i * 3 + 2], mesh.posData[i * 3 + 2], factor);
                             u = Interpolations.lerp(this.temporary.texData[i * 2], mesh.texData[i * 2], factor);
                             v = Interpolations.lerp(this.temporary.texData[i * 2 + 1], mesh.texData[i * 2 + 1], factor);
-                            nx = Interpolations.lerp(this.temporary.normData[i * 3], mesh.normData[i * 3], factor);
-                            ny = Interpolations.lerp(this.temporary.normData[i * 3 + 1], mesh.normData[i * 3 + 1], factor);
-                            nz = Interpolations.lerp(this.temporary.normData[i * 3 + 2], mesh.normData[i * 3 + 2], factor);
+                        }
+
+                        if (
+                            nx == mesh.normData[i * 3] &&
+                            ny == mesh.normData[i * 3 + 1] &&
+                            nz == mesh.normData[i * 3 + 2]
+                        ) {
+                            nx = Interpolations.lerp(nx, mesh.normData[i * 3], factor);
+                            ny = Interpolations.lerp(ny, mesh.normData[i * 3 + 1], factor);
+                            nz = Interpolations.lerp(nz, mesh.normData[i * 3 + 2], factor);
                         }
 
                         this.temporary.posData[i * 3] = x;
@@ -400,6 +410,12 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                     float nx = this.temporary.normData[i * 3];
                     float ny = -this.temporary.normData[i * 3 + 1];
                     float nz = this.temporary.normData[i * 3 + 2];
+
+                    if (!renderer.model.model.legacyObj)
+                    {
+                        x = -this.temporary.posData[i * 3] + renderer.limb.origin[0];
+                        nx *= -1;
+                    }
 
                     if (false)
                     {

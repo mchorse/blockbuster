@@ -16,9 +16,9 @@ public class ClientHandlerScenes extends ClientMessageHandler<PacketScenes>
     {
         GuiBlockbusterPanels dashboard = ClientProxy.panels;
 
-        if (dashboard.directorPanel != null)
+        if (dashboard.scenePanel != null)
         {
-            dashboard.directorPanel.scenes.add(packetScenes.scenes);
+            dashboard.scenePanel.scenes.add(packetScenes.scenes);
         }
     }
 }

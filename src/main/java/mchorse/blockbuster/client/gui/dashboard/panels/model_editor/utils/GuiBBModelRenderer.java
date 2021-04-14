@@ -41,11 +41,12 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     public boolean looking = true;
 
     public Map<String, ResourceLocation> materials;
-    public List<ShapeKey> shapes;
     public ResourceLocation texture;
     public ModelCustom model;
-    public ModelPose pose;
     public ModelLimb limb;
+
+    private ModelPose pose;
+    private List<ShapeKey> shapes;
 
     public static void renderItems(EntityLivingBase entity, ModelCustom model)
     {
@@ -310,5 +311,16 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         GlStateManager.enableCull();
         GlStateManager.disableBlend();
         GlStateManager.depthMask(true);
+    }
+
+    public void setPose(ModelPose pose)
+    {
+        this.setPose(pose, pose == null ? null : pose.shapes);
+    }
+
+    public void setPose(ModelPose pose, List<ShapeKey> shapes)
+    {
+        this.pose = pose;
+        this.shapes = shapes;
     }
 }

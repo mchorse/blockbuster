@@ -1,7 +1,6 @@
 package mchorse.blockbuster.client.particles.molang.functions;
 
 import mchorse.mclib.math.IValue;
-import mchorse.mclib.math.functions.Function;
 import mchorse.mclib.math.functions.trig.Asin;
 
 public class AsinDegrees extends Asin
@@ -12,8 +11,8 @@ public class AsinDegrees extends Asin
     }
 
     @Override
-    public double get()
+    public double doubleValue()
     {
-        return super.get() / Math.PI * 180;
+        return super.doubleValue() / Math.PI * 180;
     }
 }
