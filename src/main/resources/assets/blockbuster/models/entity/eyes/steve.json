@@ -53,7 +53,6 @@
             "parent": "left_leg",
             "opacity": 0.0,
             "mirror": true,
-            "swinging": true,
             "invert": true
         },
         "left_arm": {
@@ -94,7 +93,6 @@
             "slot": "right_foot",
             "parent": "right_leg",
             "opacity": 0.0,
-            "swinging": true,
             "invert": true
         },
         "outer": {
