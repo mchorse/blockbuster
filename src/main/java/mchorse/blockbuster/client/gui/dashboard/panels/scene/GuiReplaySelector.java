@@ -4,6 +4,7 @@ import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -42,7 +43,7 @@ public class GuiReplaySelector extends GuiListElement<Replay>
             int w = this.font.getStringWidth(hovered);
             int x = this.hoverX - w / 2;
 
-            Gui.drawRect(x - 2, this.hoverY - 1, x + w + 2, this.hoverY + 9, 0x88000000);
+            Gui.drawRect(x - 2, this.hoverY - 1, x + w + 2, this.hoverY + 9, ColorUtils.HALF_BLACK);
             this.font.drawStringWithShadow(this.hovered, x, this.hoverY, 0xffffff);
         }
         else if (this.getList().isEmpty())

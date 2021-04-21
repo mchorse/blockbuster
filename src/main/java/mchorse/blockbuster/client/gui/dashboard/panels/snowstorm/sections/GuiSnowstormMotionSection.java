@@ -23,7 +23,7 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
     public GuiTextElement positionZ;
     public GuiTextElement positionDrag;
     public GuiElement positionDragRow;
-    public GuiElement positionTitle = Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_title"), 20).anchor(0, 1F);
+    public GuiElement positionTitle = Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_title")).marginTop(12);
 
     public GuiElement rotation;
     public GuiTextElement rotationAngle;
@@ -86,7 +86,7 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
         this.position = new GuiElement(mc);
 
         this.position.flex().column(5).vertical().stretch();
-        this.position.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.speed"), 20).anchor(0, 1F), this.positionSpeed);
+        this.position.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.speed")).marginTop(12), this.positionSpeed);
 
         this.positionElements = new GuiElement(mc);
 
@@ -107,7 +107,7 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
 
         this.rotation = new GuiElement(mc);
         this.rotation.flex().column(5).vertical().stretch();
-        this.rotation.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.rotation"), 20).anchor(0, 1F), this.rotationAngle, this.rotationRate);
+        this.rotation.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.rotation")).marginTop(12), this.rotationAngle, this.rotationRate);
         this.rotation.add(this.rotationAcceleration);
 
         this.fields.add(this.position, this.rotation);
@@ -186,7 +186,7 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
 
             this.positionElements.remove(this.positionTitle);
 
-            this.positionTitle = Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_title"), 20).anchor(0, 1F);
+            this.positionTitle = Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.acceleration_title")).marginTop(12);
 
             this.positionElements.addBefore(this.positionX, this.positionTitle);
 
@@ -211,7 +211,8 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
 
             this.positionElements.remove(this.positionTitle);
 
-            this.positionTitle = Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.position"), 20).anchor(0, 1F);
+            this.positionTitle = Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.position"));
+            this.positionTitle.marginTop(12);
 
             this.positionElements.addBefore(this.positionX, this.positionTitle);
 

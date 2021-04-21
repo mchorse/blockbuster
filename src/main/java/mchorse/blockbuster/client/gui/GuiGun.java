@@ -23,6 +23,7 @@ import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -230,12 +231,12 @@ public class GuiGun extends GuiBase
         GuiElement projectileFields = new GuiElement(mc);
 
         projectileFields.flex().relative(area).w(1F).h(1F, -40).column(5).width(100).height(20).padding(10);
-        projectileFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.category.motion")).background(0x88000000), this.speed, this.friction, this.gravity);
-        projectileFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.category.hitbox"), 20).background(0x88000000).anchor(0, 1), this.hitboxX, this.hitboxY);
-        projectileFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.category.timers"), 20).background(0x88000000).anchor(0, 1), this.ticking, this.lifeSpan);
-        projectileFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.category.rotation"), 20).background(0x88000000).anchor(0, 1), this.yaw, this.pitch);
-        projectileFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.category.transition"), 20).background(0x88000000).anchor(0, 1), this.fadeIn, this.fadeOut);
-        projectileFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.sequencer"), 20).background(0x88000000).anchor(0, 1), this.sequencer, this.random);
+        projectileFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.category.motion")).background(), this.speed, this.friction, this.gravity);
+        projectileFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.category.hitbox")).background().marginTop(12), this.hitboxX, this.hitboxY);
+        projectileFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.category.timers")).background().marginTop(12), this.ticking, this.lifeSpan);
+        projectileFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.category.rotation")).background().marginTop(12), this.yaw, this.pitch);
+        projectileFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.category.transition")).background().marginTop(12), this.fadeIn, this.fadeOut);
+        projectileFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.sequencer")).background().marginTop(12), this.sequencer, this.random);
         this.projectileOptions.add(this.pickProjectile, this.tickCommand, projectileFields);
 
         /* Impact options */
@@ -277,12 +278,12 @@ public class GuiGun extends GuiBase
         GuiElement impactFields = new GuiElement(mc);
 
         impactFields.flex().relative(area).w(1F).h(1F, -120).column(5).width(100).height(20).padding(10);
-        impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.impact_delay")).background(0x88000000), this.impactDelay);
-        impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.damage"), 20).background(0x88000000).anchor(0, 1), this.damage, this.knockbackHorizontal, this.knockbackVertical);
-        impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.bounce"), 20).background(0x88000000).anchor(0, 1), this.bounce, this.hits, this.bounceFactor);
-        impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.vanish"), 20).background(0x88000000).anchor(0, 1), this.vanish, this.vanishDelay);
-        impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.sticks"), 20).background(0x88000000).anchor(0, 1), this.sticks, this.penetration);
-        impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.collision"), 20).background(0x88000000).anchor(0, 1), this.ignoreBlocks, this.ignoreEntities);
+        impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.impact_delay")).background(), this.impactDelay);
+        impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.damage")).background().marginTop(12), this.damage, this.knockbackHorizontal, this.knockbackVertical);
+        impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.bounce")).background().marginTop(12), this.bounce, this.hits, this.bounceFactor);
+        impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.vanish")).background().marginTop(12), this.vanish, this.vanishDelay);
+        impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.sticks")).background().marginTop(12), this.sticks, this.penetration);
+        impactFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.collision")).background().marginTop(12), this.ignoreBlocks, this.ignoreEntities);
 
         this.impactOptions.add(this.pickImpact, this.vanishCommand, this.impactEntityCommand, this.impactCommand, impactFields);
 
@@ -500,8 +501,8 @@ public class GuiGun extends GuiBase
     {
         GuiDraw.drawCustomBackground(0, 0, this.width, this.height);
 
-        Gui.drawRect(0, 0, this.width, 35, 0x88000000);
-        this.drawGradientRect(0, 35, this.width, 45, 0x88000000, 0x00000000);
+        Gui.drawRect(0, 0, this.width, 35, ColorUtils.HALF_BLACK);
+        this.drawGradientRect(0, 35, this.width, 45, ColorUtils.HALF_BLACK, 0);
         this.fontRenderer.drawStringWithShadow(I18n.format("blockbuster.gui.gun.title"), 10, 15, 0xffffffff);
 
         EntityPlayer player = this.mc.player;
@@ -562,8 +563,8 @@ public class GuiGun extends GuiBase
             String gun = I18n.format("blockbuster.gui.gun.gun_transforms");
             String trans = I18n.format("blockbuster.gui.gun.projectile_transforms");
 
-            GuiDraw.drawTextBackground(this.context.font, gun, this.gun.area.mx(this.context.font.getStringWidth(gun)), this.arms.area.y + 15, 0xffffff, 0x88000000);
-            GuiDraw.drawTextBackground(this.context.font, trans, this.projectile.area.mx(this.context.font.getStringWidth(trans)), this.arms.area.y + 15, 0xffffff, 0x88000000);
+            GuiDraw.drawTextBackground(this.context.font, gun, this.gun.area.mx(this.context.font.getStringWidth(gun)), this.arms.area.y + 15, 0xffffff, ColorUtils.HALF_BLACK);
+            GuiDraw.drawTextBackground(this.context.font, trans, this.projectile.area.mx(this.context.font.getStringWidth(trans)), this.arms.area.y + 15, 0xffffff, ColorUtils.HALF_BLACK);
         }
     }
 

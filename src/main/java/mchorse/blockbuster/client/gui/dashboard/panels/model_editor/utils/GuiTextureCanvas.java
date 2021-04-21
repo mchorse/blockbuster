@@ -46,7 +46,7 @@ public class GuiTextureCanvas extends GuiCanvasEditor
         });
         this.y.limit(0, 8192, true);
 
-        this.editor.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.texture")).background(0x88000000), this.x, this.y);
+        this.editor.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.texture")).background(), this.x, this.y);
         this.add(this.editor, this.close);
 
         this.markContainer();

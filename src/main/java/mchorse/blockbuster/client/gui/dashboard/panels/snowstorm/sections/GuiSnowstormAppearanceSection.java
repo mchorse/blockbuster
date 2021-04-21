@@ -118,16 +118,16 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
 
         this.flipbook = new GuiElement(mc);
         this.flipbook.flex().column(5).vertical().stretch();
-        this.flipbook.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.animated"), 20).anchor(0, 1F));
+        this.flipbook.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.animated")).marginTop(12));
         this.flipbook.add(Elements.row(mc, 5, 0, 20, this.stepX, this.stepY));
         this.flipbook.add(Elements.row(mc, 5, 0, 20, this.fps, this.max));
         this.flipbook.add(Elements.row(mc, 5, 0, 20, this.stretch, this.loop));
 
         this.fields.add(Elements.row(mc, 5, 0, 20, this.modeLabel, this.mode));
         this.fields.add(Elements.row(mc, 5, 0, 20, this.facingModeLabel, this.facingMode));
-        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.size"), 20).anchor(0, 1F));
+        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.size")).marginTop(12));
         this.fields.add(this.sizeW, this.sizeH);
-        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.mapping"), 20).anchor(0, 1F));
+        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.mapping")).marginTop(12));
         this.fields.add(this.uvX, this.uvY, this.uvW, this.uvH);
     }
     

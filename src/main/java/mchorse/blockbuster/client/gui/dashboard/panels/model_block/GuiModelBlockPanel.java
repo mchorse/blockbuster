@@ -20,6 +20,7 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.OpHelper;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -339,7 +340,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
                 int w = Math.max(this.font.getStringWidth(morph.name), this.font.getStringWidth(morph.getDisplayName()));
 
-                Gui.drawRect(x - w / 2 - 3, y - 20, x + w / 2 + 3, y, 0x88000000);
+                Gui.drawRect(x - w / 2 - 3, y - 20, x + w / 2 + 3, y, ColorUtils.HALF_BLACK);
 
                 this.drawCenteredString(this.font, morph.getDisplayName(), x, y - this.font.FONT_HEIGHT * 2, 0xffffff);
                 this.drawCenteredString(this.font, morph.name, x, y - this.font.FONT_HEIGHT, 0xcccccc);

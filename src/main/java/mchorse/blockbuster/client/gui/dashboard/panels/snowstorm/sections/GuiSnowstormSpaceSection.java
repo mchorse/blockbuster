@@ -92,7 +92,7 @@ public class GuiSnowstormSpaceSection extends GuiSnowstormComponentSection<Bedro
             this.parent.dirty();
         });
         this.linearVelocity.tooltip(IKey.lang("blockbuster.gui.snowstorm.space.linear_velocity_tooltip"));
-        this.objectVelocity.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.space.object_velocity_title"), 30).anchor(0, 1F), Elements.label(IKey.lang("blockbuster.gui.snowstorm.space.linear_velocity"), 20).anchor(0, 1F), this.linearVelocity);
+        this.objectVelocity.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.space.object_velocity_title")).marginTop(12), Elements.label(IKey.lang("blockbuster.gui.snowstorm.space.linear_velocity")).marginTop(12), this.linearVelocity);
 
         this.angularVelocity = new GuiTrackpadElement(mc, (value) ->
         {
@@ -100,7 +100,7 @@ public class GuiSnowstormSpaceSection extends GuiSnowstormComponentSection<Bedro
             this.parent.dirty();
         });
         this.angularVelocity.tooltip(IKey.lang("blockbuster.gui.snowstorm.space.angular_velocity_tooltip"));
-        this.objectVelocity.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.space.angular_velocity"), 20).anchor(0, 1F), this.angularVelocity);
+        this.objectVelocity.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.space.angular_velocity")).marginTop(12), this.angularVelocity);
 
         this.scaleColumns.add(this.scale);
 

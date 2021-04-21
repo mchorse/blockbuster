@@ -165,10 +165,10 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
 
             element.flex().relative(this).wh(1F, 1F).column(5).width(110).padding(10).height(20);
             element.add(this.mode, this.pickParticle);
-            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.emission"), 16).anchor(0, 1F), this.frequency, this.duration, this.delay, this.cap, this.speed, this.count);
-            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.vanilla"), 16).anchor(0, 1F), this.x, this.y, this.z);
-            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.common"), 16).anchor(0, 1F), this.dx, this.dy, this.dz);
-            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.args"), 16).anchor(0, 1F), this.args, this.localRotation);
+            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.emission")).marginTop(12), this.frequency, this.duration, this.delay, this.cap, this.speed, this.count);
+            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.vanilla")).marginTop(12), this.x, this.y, this.z);
+            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.common")).marginTop(12), this.dx, this.dy, this.dz);
+            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.args")).marginTop(12), this.args, this.localRotation);
 
             this.add(element, this.type);
         }

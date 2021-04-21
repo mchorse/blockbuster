@@ -5,6 +5,7 @@ import mchorse.blockbuster.recording.actions.ChatAction;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
+import mchorse.mclib.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
 
 public class GuiChatActionPanel extends GuiActionPanel<ChatAction>
@@ -36,7 +37,7 @@ public class GuiChatActionPanel extends GuiActionPanel<ChatAction>
 
         if (!message.isEmpty())
         {
-            GuiDraw.drawTextBackground(this.font, message, this.command.area.x + 3, this.command.area.y - this.font.FONT_HEIGHT - 3, 0xffffff, 0x88000000);
+            GuiDraw.drawTextBackground(this.font, message, this.command.area.x + 3, this.command.area.y - this.font.FONT_HEIGHT - 3, 0xffffff, ColorUtils.HALF_BLACK);
         }
 
         super.draw(context);

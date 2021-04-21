@@ -240,12 +240,12 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.dirty();
         });
 
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size")).background(0x88000000), this.size);
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size_offset")).background(0x88000000), this.sizeOffset);
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.item_scale")).background(0x88000000), this.itemScale);
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.texture"), 24).anchor(0, 1).background(0x88000000), Elements.row(mc, 5, 0, 20, this.texture, this.mirror));
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.anchor"), 24).anchor(0, 1).background(0x88000000), this.anchor);
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.origin")).background(0x88000000), this.origin);
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size")).background(), this.size);
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size_offset")).background(), this.sizeOffset);
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.item_scale")).background(), this.itemScale);
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.texture")).background().marginTop(12), Elements.row(mc, 5, 0, 20, this.texture, this.mirror));
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.anchor")).background().marginTop(12), this.anchor);
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.origin")).background(), this.origin);
 
         GuiElement appearance = new GuiElement(mc);
 
@@ -264,8 +264,8 @@ public class GuiModelLimbs extends GuiModelEditorTab
         animation.add(this.cape);
 
         this.scroll.add(Elements.row(mc, 5, this.slot, this.holding));
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.appearance"), 24).anchor(0, 1).background(0x88000000), appearance, this.color);
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.animation"), 24).anchor(0, 1).background(0x88000000), animation);
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.appearance")).background().marginTop(12), appearance, this.color);
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.animation")).background().marginTop(12), animation);
 
         /* Buttons */
         this.addLimb = new GuiIconElement(mc, Icons.ADD, (b) -> this.addLimb());

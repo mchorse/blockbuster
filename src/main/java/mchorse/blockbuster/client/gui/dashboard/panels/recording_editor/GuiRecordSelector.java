@@ -10,6 +10,7 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.ScrollArea;
 import mchorse.mclib.client.gui.utils.ScrollDirection;
+import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
@@ -241,12 +242,12 @@ public class GuiRecordSelector extends GuiElement
 
         this.scroll.drag(mouseX, mouseY);
         this.vertical.drag(mouseX, mouseY);
-        this.scroll.draw(0x88000000);
+        this.scroll.draw(ColorUtils.HALF_BLACK);
 
         Gui.drawRect(this.area.ex(), this.area.y, this.area.ex() + 20, this.area.ey(), 0xff222222);
         Gui.drawRect(this.area.x - 20, this.area.y, this.area.x, this.area.ey(), 0xff222222);
-        GuiDraw.drawHorizontalGradientRect(this.area.ex() - 8, this.area.y, this.area.ex(), this.area.ey(), 0x00000000, 0x88000000, 0);
-        GuiDraw.drawHorizontalGradientRect(this.area.x, this.area.y, this.area.x + 8, this.area.ey(), 0x88000000, 0x00000000, 0);
+        GuiDraw.drawHorizontalGradientRect(this.area.ex() - 8, this.area.y, this.area.ex(), this.area.ey(), 0, ColorUtils.HALF_BLACK, 0);
+        GuiDraw.drawHorizontalGradientRect(this.area.x, this.area.y, this.area.x + 8, this.area.ey(), ColorUtils.HALF_BLACK, 0, 0);
 
         int max = this.area.x + this.scroll.scrollItemSize * count;
 
@@ -303,7 +304,7 @@ public class GuiRecordSelector extends GuiElement
                             this.drawAnimationLength(action, x, y, color, selected);
                         }
 
-                        Gui.drawRect(x, y, x + w, y + 20, color + 0x88000000);
+                        Gui.drawRect(x, y, x + w, y + 20, color + ColorUtils.HALF_BLACK);
                         this.font.drawStringWithShadow(label, x + offset, y + 6, 0xffffff);
 
                         if (selected)
@@ -326,7 +327,7 @@ public class GuiRecordSelector extends GuiElement
 
                 String str = String.valueOf(i);
 
-                this.drawGradientRect(x + 1, y - 6, x + w, y + 12, 0x00000000, 0x88000000);
+                this.drawGradientRect(x + 1, y - 6, x + w, y + 12, 0, ColorUtils.HALF_BLACK);
                 this.font.drawStringWithShadow(str, x + (this.scroll.scrollItemSize - this.font.getStringWidth(str) + 2) / 2, y, 0xffffff);
             }
         }
@@ -372,7 +373,7 @@ public class GuiRecordSelector extends GuiElement
 
             this.drawAnimationLength(action, x, y, color, true);
 
-            Gui.drawRect(x, y, x + w, y + 20, color + 0x88000000);
+            Gui.drawRect(x, y, x + w, y + 20, color + ColorUtils.HALF_BLACK);
             this.font.drawStringWithShadow(String.valueOf(this.index), x + 6, y + 6, 0xffffff);
             GuiDraw.drawOutline(x, y, x + w, y + 20, 0xffffffff);
         }

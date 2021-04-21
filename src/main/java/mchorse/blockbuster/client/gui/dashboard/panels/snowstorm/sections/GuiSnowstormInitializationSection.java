@@ -27,8 +27,8 @@ public class GuiSnowstormInitializationSection extends GuiSnowstormComponentSect
         this.updateParticle = new GuiTextElement(mc, 10000, (str) -> this.component.particleUpdate = this.parse(str, this.updateParticle, this.component.particleUpdate));
         this.updateParticle.tooltip(IKey.lang("blockbuster.gui.snowstorm.initialization.particle_update_expression"));
 
-        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.initialization.emitter_expression_title"), 20).anchor(0, 1F), this.create, this.update);
-        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.initialization.particle_expression_title"), 20).anchor(0, 1F), this.updateParticle);
+        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.initialization.emitter_expression_title")).marginTop(12), this.create, this.update);
+        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.initialization.particle_expression_title")).marginTop(12), this.updateParticle);
     }
 
     @Override

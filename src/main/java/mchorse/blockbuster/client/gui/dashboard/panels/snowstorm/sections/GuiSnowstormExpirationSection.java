@@ -105,7 +105,7 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 
         this.fields.add(Elements.row(mc, 5, 0, 20, Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"), 20).anchor(0, 0.5F), this.mode));
         this.fields.add(this.expression);
-        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.expiration.kill_plane"), 20).anchor(0, 1F)
+        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.expiration.kill_plane")).marginTop(12)
             .tooltip(IKey.lang("blockbuster.gui.snowstorm.expiration.kill_plane_tooltip")));
         this.fields.add(Elements.row(mc, 5, 0, 20, this.a, this.b));
         this.fields.add(Elements.row(mc, 5, 0, 20, this.c, this.d));

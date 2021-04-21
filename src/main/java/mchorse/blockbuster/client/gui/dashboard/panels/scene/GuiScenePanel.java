@@ -35,6 +35,7 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.OpHelper;
 import mchorse.metamorph.api.MorphUtils;
@@ -136,7 +137,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.loops = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.loops"), false, (b) -> this.location.getScene().loops = b.isToggled());
 
         this.audio = new GuiStringListElement(mc, (value) -> this.location.getScene().audio = value.get(0).equals(this.noneAudioTrack.get()) ? "" : value.get(0));
-        this.audio.background(0x88000000).tooltip(IKey.lang("blockbuster.gui.director.audio_tooltip"), Direction.RIGHT);
+        this.audio.background().tooltip(IKey.lang("blockbuster.gui.director.audio_tooltip"), Direction.RIGHT);
         this.audioShift = new GuiTrackpadElement(mc, (value) -> this.location.getScene().audioShift = value.intValue());
         this.audioShift.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.director.audio_shift_tooltip"));
         this.openAudioFolder = new GuiIconElement(mc, Icons.FOLDER, (b) -> GuiUtils.openWebLink(ClientProxy.audio.folder.toURI()));
@@ -249,7 +250,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         }
 
         right.add(this.teleport);
-        right.add(Elements.label(IKey.lang("blockbuster.gui.director.target"), 16).color(0xcccccc).anchor(0, 1), this.target);
+        right.add(Elements.label(IKey.lang("blockbuster.gui.director.target")).color(0xcccccc).marginTop(12), this.target);
         this.replayEditor.add(this.pickMorph);
 
         /* Scene manager */
@@ -617,14 +618,14 @@ public class GuiScenePanel extends GuiBlockbusterPanel
             int x = this.scenes.area.ex() - 20;
             int y = this.scenes.area.y - 20;
 
-            Gui.drawRect(x, y, x + 20, y + 20, 0x88000000);
+            Gui.drawRect(x, y, x + 20, y + 20, ColorUtils.HALF_BLACK);
         }
 
         /* Draw additional stuff */
         if (this.mainView.delegate == this.replays)
         {
-            Gui.drawRect(this.selector.area.x, this.selector.area.y, this.selector.area.ex() + 20, this.selector.area.ey(), 0x88000000);
-            this.drawGradientRect(this.selector.area.x, this.selector.area.y - 16, this.selector.area.ex() + 20, this.selector.area.y, 0x00000000, 0x88000000);
+            Gui.drawRect(this.selector.area.x, this.selector.area.y, this.selector.area.ex() + 20, this.selector.area.ey(), ColorUtils.HALF_BLACK);
+            this.drawGradientRect(this.selector.area.x, this.selector.area.y - 16, this.selector.area.ex() + 20, this.selector.area.y, 0, ColorUtils.HALF_BLACK);
 
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.scenes.title"), this.area.x + 10, this.area.y + 10, 0xffffff);
 
