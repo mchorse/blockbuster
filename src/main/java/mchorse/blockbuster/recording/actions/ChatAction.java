@@ -3,6 +3,7 @@ package mchorse.blockbuster.recording.actions;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.recording.RecordUtils;
+import mchorse.mclib.utils.TextUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -20,28 +21,6 @@ public class ChatAction extends Action
     public ChatAction()
     {}
 
-    public static String processNameTag(String name)
-    {
-        StringBuilder builder = new StringBuilder();
-
-        for (int i = 0, c = name.length(); i < c; i++)
-        {
-            char character = name.charAt(i);
-
-            if (character == '\\' && i < c - 1 && name.charAt(i + 1) == '[')
-            {
-                builder.append('[');
-                i += 1;
-            }
-            else
-            {
-                builder.append(character == '[' ? '§' : character);
-            }
-        }
-
-        return builder.toString();
-    }
-
     public ChatAction(String message)
     {
         this.message = message;
@@ -57,7 +36,7 @@ public class ChatAction extends Action
             message = prefix.replace("%NAME%", actor == null ? "Player" : actor.getName()) + message;
         }
 
-        return processNameTag(message);
+        return TextUtils.processColoredText(message);
     }
 
     @Override
