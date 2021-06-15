@@ -19,6 +19,7 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,7 +33,6 @@ public class BlockGreen extends Block
         super(Material.CLAY);
         this.setCreativeTab(Blockbuster.blockbusterTab);
         this.setResistance(6000000.0F);
-        this.setLightLevel(1.0F);
 
         this.setDefaultState(this.getDefaultState().withProperty(COLOR, ChromaColor.GREEN));
     }
@@ -92,6 +92,12 @@ public class BlockGreen extends Block
     public float getAmbientOcclusionLightValue(IBlockState state)
     {
         return 1;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int getPackedLightmapCoords(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return 15728880; // 15 << 20 | 15 << 4
     }
 
     public static enum ChromaColor implements IStringSerializable
