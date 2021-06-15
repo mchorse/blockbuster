@@ -197,8 +197,7 @@ public class OBJParser
         List<String> lines = readAllLines(this.objFile);
 
         OBJDataMesh mesh = null;
-        OBJDataGroup group = null;
-        boolean firstUse = false;
+        OBJMaterial material = null;
 
         for (String line : lines)
         {
@@ -226,14 +225,9 @@ public class OBJParser
                 {
                     mesh = new OBJDataMesh();
                     mesh.name = name;
-
-                    group = new OBJDataGroup();
-                    mesh.groups.add(group);
-
                     this.objects.add(mesh);
                 }
 
-                firstUse = true;
             }
 
             /* Vertices */
@@ -254,38 +248,34 @@ public class OBJParser
             /* Material group */
             else if (first.equals("usemtl"))
             {
-                OBJMaterial material = this.materials.get(processMaterialName(tokens[1]));
-
-                group = firstUse ? group : new OBJDataGroup();
-                group.material = material;
-
-                if (!firstUse)
-                {
-                    mesh.groups.add(group);
-                }
-
-                firstUse = false;
+                material = this.materials.get(processMaterialName(tokens[1]));
             }
             /* Collect faces */
             else if (first.equals("f"))
             {
+                List<OBJFace> faceList = mesh.groups.get(material);
+                if (faceList == null) {
+                    faceList = new ArrayList<OBJFace>();
+                    mesh.groups.put(material, faceList);
+                }
+                
                 String[] faces = SubCommandBase.dropFirstArgument(tokens);
 
                 if (faces.length == 4)
                 {
                     /* Support for quads, yay! */
-                    group.faces.add(new OBJFace(new String[] {faces[0], faces[1], faces[2]}));
-                    group.faces.add(new OBJFace(new String[] {faces[0], faces[2], faces[3]}));
+                    faceList.add(new OBJFace(new String[] {faces[0], faces[1], faces[2]}));
+                    faceList.add(new OBJFace(new String[] {faces[0], faces[2], faces[3]}));
                 }
                 else if (faces.length == 3)
                 {
-                    group.faces.add(new OBJFace(faces));
+                    faceList.add(new OBJFace(faces));
                 }
                 else if (faces.length > 4)
                 {
                     for (int i = 0, c = faces.length - 2; i < c; i++)
                     {
-                        group.faces.add(new OBJFace(new String[] {faces[0], faces[i + 1], faces[i + 2]}));
+                        faceList.add(new OBJFace(new String[] {faces[0], faces[i + 1], faces[i + 2]}));
                     }
                 }
             }
@@ -303,9 +293,9 @@ public class OBJParser
         {
             MeshesOBJ meshObject = new MeshesOBJ();
 
-            for (OBJDataGroup group : obj.groups)
+            for (Map.Entry<OBJMaterial, List<OBJFace>> group : obj.groups.entrySet())
             {
-                List<OBJFace> faces = group.faces;
+                List<OBJFace> faces = group.getValue();
                 MeshOBJ mesh = new MeshOBJ(faces.size());
 
                 int i = 0;
@@ -320,7 +310,7 @@ public class OBJParser
                     }
                 }
 
-                mesh.material = group.material;
+                mesh.material = group.getKey();
                 meshObject.meshes.add(mesh);
             }
 

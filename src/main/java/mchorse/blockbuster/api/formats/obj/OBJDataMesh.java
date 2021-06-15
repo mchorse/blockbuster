@@ -1,7 +1,8 @@
 package mchorse.blockbuster.api.formats.obj;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Mesh from OBJ file
@@ -11,5 +12,5 @@ import java.util.List;
 public class OBJDataMesh
 {
     public String name;
-    public List<OBJDataGroup> groups = new ArrayList<OBJDataGroup>();
+    public Map<OBJMaterial, List<OBJFace>> groups = new HashMap<OBJMaterial, List<OBJFace>>();
 }
