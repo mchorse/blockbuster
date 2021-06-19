@@ -353,6 +353,7 @@ public class ModelCustomRenderer extends ModelRenderer
                 }
 
                 GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
+                this.renderRenderer();
                 GlStateManager.popMatrix();
             }
         }
