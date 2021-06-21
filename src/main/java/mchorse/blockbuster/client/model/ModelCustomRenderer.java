@@ -5,6 +5,7 @@ import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.OrientedBB;
+import mchorse.blockbuster_pack.morphs.CustomMorph.LimbProperties;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.metamorph.bodypart.BodyPart;
 import net.minecraft.client.model.ModelRenderer;
@@ -126,11 +127,19 @@ public class ModelCustomRenderer extends ModelRenderer
     {
         GlStateManager.color(this.limb.color[0], this.limb.color[1], this.limb.color[2], this.limb.opacity);
 
+        lastBrightnessX = OpenGlHelper.lastBrightnessX;
+        lastBrightnessY = OpenGlHelper.lastBrightnessY;
+        
         if (!this.limb.lighting)
         {
-            lastBrightnessX = OpenGlHelper.lastBrightnessX;
-            lastBrightnessY = OpenGlHelper.lastBrightnessY;
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+        }
+        
+        if (this.trasnform instanceof LimbProperties)
+        {
+            LimbProperties limb = (LimbProperties) this.trasnform;
+            GlStateManager.color(limb.color.r, limb.color.g, limb.color.b, limb.color.a);
+            limb.applyGlow(lastBrightnessX, lastBrightnessY);
         }
 
         if (!this.limb.shading)
@@ -149,11 +158,8 @@ public class ModelCustomRenderer extends ModelRenderer
      */
     protected void disable()
     {
-        if (!this.limb.lighting)
-        {
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
-        }
-
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+        
         if (!this.limb.shading)
         {
             GlStateManager.enableLighting();
@@ -422,7 +428,7 @@ public class ModelCustomRenderer extends ModelRenderer
 
     protected void renderRenderer()
     {
-        if (this.limb.opacity <= 0)
+        if (this.limb.opacity <= 0 || this.trasnform instanceof LimbProperties && ((LimbProperties) this.trasnform).color.a <= 0)
         {
             return;
         }

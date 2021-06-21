@@ -298,6 +298,11 @@ blockbuster.gui:
             add: Add a shape key...
             add_to: "Add \"%s\" shape key"
             remove: Remove this shape key
+        
+        limb:
+            glow: Limb Glow
+            color: Limb Color
+            fixed: Fixate movement
 
     image:
         crop: Crop
