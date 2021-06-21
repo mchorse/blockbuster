@@ -123,11 +123,10 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
             super.doRender(entity, x, y, z, entityYaw, partialTicks);
         }
 
-        this.captured --;
-
-        if (this.captured <= 0)
+        if (this.captured > 0)
         {
-            this.captured = 0;
+            this.captured --;
+
             MatrixUtils.releaseMatrix();
         }
     }
@@ -137,12 +136,10 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     {
         super.renderLivingAt(entityLivingBaseIn, x, y, z);
 
-        if (this.captured == 0)
+        if (this.captured == 0 && MatrixUtils.captureMatrix())
         {
-            MatrixUtils.captureMatrix();
+            this.captured ++;
         }
-
-        this.captured ++;
     }
 
     /**

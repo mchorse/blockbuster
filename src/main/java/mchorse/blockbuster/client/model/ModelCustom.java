@@ -12,6 +12,7 @@ import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
+import mchorse.blockbuster_pack.morphs.CustomMorph.LimbProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
@@ -26,12 +27,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
 
 /**
  * Custom Model class
@@ -261,7 +263,10 @@ public class ModelCustom extends ModelBiped
             float PI = (float) Math.PI;
 
             /* Reseting the angles */
-            this.applyLimbPose(limb);
+            if (this.applyLimbPose(limb))
+            {
+                continue;
+            }
 
             if (limb.limb.cape && entityIn instanceof EntityLivingBase && this.current != null)
             {
@@ -438,11 +443,17 @@ public class ModelCustom extends ModelBiped
     /**
      * Apply transform from current pose on given limb
      */
-    public void applyLimbPose(ModelCustomRenderer limb)
+    public boolean applyLimbPose(ModelCustomRenderer limb)
     {
         ModelTransform trans = this.pose.limbs.get(limb.limb.name);
 
         limb.applyTransform(trans == null ? ModelTransform.DEFAULT : trans);
+        
+        if (trans instanceof LimbProperties)
+        {
+            return ((LimbProperties) trans).fixed;
+        }
+        return false;
     }
 
     /**
