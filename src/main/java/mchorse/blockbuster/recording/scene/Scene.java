@@ -895,6 +895,14 @@ public class Scene
 
     public void copy(Scene scene)
     {
+        /* There is no need to copy itself, copying itself will lead to
+         * lost of replay data as it clears its replays and then will have
+         * nothing to copy over... */
+        if (this == scene)
+        {
+            return;
+        }
+
         this.replays.clear();
         this.replays.addAll(scene.replays);
 
