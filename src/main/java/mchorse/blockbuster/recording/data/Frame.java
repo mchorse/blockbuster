@@ -324,9 +324,9 @@ public class Frame
      */
     public void toBytes(DataOutput out) throws IOException
     {
-        out.writeFloat((float) this.x);
-        out.writeFloat((float) this.y);
-        out.writeFloat((float) this.z);
+        out.writeDouble(this.x);
+        out.writeDouble(this.y);
+        out.writeDouble(this.z);
 
         out.writeFloat(this.yaw);
         out.writeFloat(this.yawHead);
@@ -370,9 +370,9 @@ public class Frame
      */
     public void fromBytes(DataInput in) throws IOException
     {
-        this.x = in.readFloat();
-        this.y = in.readFloat();
-        this.z = in.readFloat();
+        this.x = in.readDouble();
+        this.y = in.readDouble();
+        this.z = in.readDouble();
 
         this.yaw = in.readFloat();
         this.yawHead = in.readFloat();
@@ -418,9 +418,9 @@ public class Frame
      */
     public void toNBT(NBTTagCompound tag)
     {
-        tag.setFloat("X", (float) this.x);
-        tag.setFloat("Y", (float) this.y);
-        tag.setFloat("Z", (float) this.z);
+        tag.setDouble("X", this.x);
+        tag.setDouble("Y", this.y);
+        tag.setDouble("Z", this.z);
 
         tag.setFloat("MX", (float) this.motionX);
         tag.setFloat("MY", (float) this.motionX);
@@ -467,9 +467,9 @@ public class Frame
      */
     public void fromNBT(NBTTagCompound tag)
     {
-        this.x = tag.getFloat("X");
-        this.y = tag.getFloat("Y");
-        this.z = tag.getFloat("Z");
+        this.x = tag.getDouble("X");
+        this.y = tag.getDouble("Y");
+        this.z = tag.getDouble("Z");
 
         this.motionX = tag.getFloat("MX");
         this.motionY = tag.getFloat("MY");
