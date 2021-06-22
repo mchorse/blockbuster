@@ -16,14 +16,18 @@ import mchorse.mclib.utils.files.entries.AbstractEntry;
 import mchorse.mclib.utils.files.entries.FileEntry;
 import mchorse.mclib.utils.files.entries.FolderEntry;
 import mchorse.mclib.utils.resources.RLUtils;
+import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.creative.categories.MorphCategory;
 import mchorse.metamorph.api.creative.sections.MorphSection;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.vanilla_pack.morphs.BlockMorph;
 import mchorse.vanilla_pack.morphs.ItemMorph;
 import mchorse.vanilla_pack.morphs.LabelMorph;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FilenameUtils;
@@ -69,6 +73,22 @@ public class BlockbusterSection extends MorphSection
         this.extra.add(new ItemMorph());
         this.extra.add(new LabelMorph());
         this.extra.add(new BlockMorph());
+
+        this.addFromNBT("{DisplayName:\"McHorse\",Skin:\"blockbuster:textures/entity/mchorse/skin.png\",BodyParts:[{Limb:\"head\",Morph:{Name:\"blockbuster.mchorse/head\"}}],Name:\"blockbuster.fred_3d\"}");
+    }
+
+    private void addFromNBT(String nbt)
+    {
+        try
+        {
+            NBTTagCompound tag = JsonToNBT.getTagFromJson(nbt);
+            CustomMorph morph = new CustomMorph();
+
+            morph.fromNBT(tag);
+            this.extra.add(morph);
+        }
+        catch (Exception e)
+        {}
     }
 
     public void addStructure(String name, boolean sort)

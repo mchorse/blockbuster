@@ -83,6 +83,7 @@ public class AudioLibrary
 
             WavePlayer player = new WavePlayer().initialize(wave);
             Waveform waveform = new Waveform();
+
             waveform.populate(wave, Blockbuster.audioWaveformDensity.get(), 40);
 
             audio = new AudioFile(name + ".wav", file, player, waveform, file.lastModified());

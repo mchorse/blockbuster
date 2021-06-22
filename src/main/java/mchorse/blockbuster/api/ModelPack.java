@@ -144,8 +144,13 @@ public class ModelPack
             this.addDefaultModel("eyes/3.0");
             this.addDefaultModel("eyes/3.0_1px");
             this.addDefaultModel("eyes/alex");
-            this.addDefaultModel("eyes/fred");
             this.addDefaultModel("eyes/steve");
+            this.addDefaultModel("eyes/fred");
+            this.addDefaultModel("eyes/head");
+            this.addDefaultModel("eyes/head_3d");
+
+            /* Of course I know him, he's me */
+            this.addDefaultModel("mchorse/head");
         }
         catch (Exception e)
         {
