@@ -5,7 +5,6 @@ import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingProvider;
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
 import mchorse.blockbuster.network.common.structure.PacketStructureList;
@@ -16,6 +15,7 @@ import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
@@ -81,24 +81,13 @@ public class CapabilityHandler
         Entity target = event.getTarget();
         EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
 
-        if (target instanceof EntityActor)
+        if (target instanceof EntityLivingBase)
         {
-            EntityActor actor = (EntityActor) target;
-
-            if (actor.isPlaying())
-            {
-                RecordUtils.sendRequestedRecord(actor.getEntityId(), actor.playback.record.filename, player);
-            }
-        }
-
-        if (target instanceof EntityPlayer)
-        {
-            EntityPlayer other = (EntityPlayer) target;
-            RecordPlayer playback = EntityUtils.getRecordPlayer(other);
+            RecordPlayer playback = EntityUtils.getRecordPlayer((EntityLivingBase) target);
 
             if (playback != null)
             {
-                RecordUtils.sendRequestedRecord(other.getEntityId(), playback.record.filename, player);
+                RecordUtils.sendRequestedRecord(target.getEntityId(), playback.record.filename, player);
             }
         }
     }

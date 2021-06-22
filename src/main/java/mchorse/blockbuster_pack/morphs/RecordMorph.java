@@ -206,7 +206,7 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
             this.actor.playback.tick = (int) (this.randomSkip * Math.random());
             this.actor.manual = true;
 
-            Record record = ClientProxy.manager.records.get(this.record);
+            Record record = ClientProxy.manager.getClient(this.record);
 
             if (record == null && !this.record.isEmpty())
             {
@@ -240,7 +240,7 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
 
             if (player.record == null)
             {
-                player.record = ClientProxy.manager.records.get(this.record);
+                player.record = ClientProxy.manager.getClient(this.record);
 
                 if (player.record != null)
                 {

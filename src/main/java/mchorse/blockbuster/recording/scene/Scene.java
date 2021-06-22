@@ -6,6 +6,8 @@ import io.netty.buffer.Unpooled;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.audio.AudioState;
+import mchorse.blockbuster.capabilities.recording.IRecording;
+import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.audio.PacketAudio;
@@ -568,6 +570,10 @@ public class Scene
                 {
                     e.printStackTrace();
                 }
+
+                IRecording recording = Recording.get(player);
+
+                recording.setFakePlayer(true);
 
                 /* There is no way to construct a CPacketClientSettings on the
                  * server side without using this hack, because the other constructor

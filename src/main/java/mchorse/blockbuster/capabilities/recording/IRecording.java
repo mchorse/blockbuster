@@ -73,4 +73,14 @@ public interface IRecording
      * Get the record player which animates this player 
      */
     public RecordPlayer getRecordPlayer();
+
+    /**
+     * Whether this player is fake
+     */
+    public boolean isFakePlayer();
+
+    /**
+     * Set fake player
+     */
+    public void setFakePlayer(boolean fakePlayer);
 }
