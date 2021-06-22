@@ -21,6 +21,7 @@ import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Direction;
+import mchorse.mclib.utils.MatrixUtils.Transformation;
 import mchorse.mclib.utils.OpHelper;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
@@ -34,6 +35,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
 public class GuiModelBlockPanel extends GuiBlockbusterPanel
 {
@@ -399,6 +403,30 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
             this.model.rx = (float) x;
             this.model.ry = (float) y;
             this.model.rz = (float) z;
+        }
+
+        @Override
+        protected void prepareRotation(Matrix4f mat)
+        {
+            Transformation.RotationOrder order = Transformation.RotationOrder.valueOf(model.order.toString());
+            float[] rot = new float[] {(float) this.rx.value, (float) this.ry.value, (float) this.rz.value};
+            Matrix4f trans = new Matrix4f();
+            trans.setIdentity();
+            trans.set(Transformation.getRotationMatrix(order.thirdIndex, rot[order.thirdIndex]));
+            mat.mul(trans);
+            trans.set(Transformation.getRotationMatrix(order.secondIndex, rot[order.secondIndex]));
+            mat.mul(trans);
+            trans.set(Transformation.getRotationMatrix(order.firstIndex, rot[order.firstIndex]));
+            mat.mul(trans);
+        }
+
+        @Override
+        protected void postRotation(Transformation transform)
+        {
+            Vector3f result = transform.getRotation(Transformation.RotationOrder.valueOf(model.order.toString()), new Vector3f((float) this.rx.value, (float) this.ry.value, (float) this.rz.value));
+            this.rx.setValueAndNotify(result.x);
+            this.ry.setValueAndNotify(result.y);
+            this.rz.setValueAndNotify(result.z);
         }
     }
 }
