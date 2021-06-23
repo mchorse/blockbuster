@@ -48,7 +48,8 @@ blockbuster.gui.me:
         last_limb: 您不能移除最后一个肢体...
         rename_limb: "重命名当前肢体："
         parent_limb: "为当前所选的肢体选择一个父级肢体..."
-
+        obj_limb: 您不能对 OBJ/VOX 文件提供的肢体执行此操作...
+        
         slots:
             none: 无
             head: 头盔

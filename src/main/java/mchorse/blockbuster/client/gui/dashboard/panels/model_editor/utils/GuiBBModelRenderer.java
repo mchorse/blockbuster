@@ -1,5 +1,11 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils;
 
+import java.util.List;
+import java.util.Map;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.formats.obj.ShapeKey;
@@ -15,6 +21,7 @@ import mchorse.mclib.utils.DummyEntity;
 import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -24,14 +31,11 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * Model renderer which renders Blockbuster models 
  */
 public class GuiBBModelRenderer extends GuiModelRenderer
-{
+{    
     public boolean swinging;
     private float swing;
     private float swingAmount;
@@ -189,8 +193,27 @@ public class GuiBBModelRenderer extends GuiModelRenderer
 
             if (targetLimb != null)
             {
-                targetLimb.postRender(1F / 16F);
-                this.renderLimbHighlight(this.limb);
+                if (model.limbs.length > 1)
+                {
+                    if (targetLimb.getClass() != ModelCustomRenderer.class)
+                    {
+                        this.renderObjHighlight(targetLimb);
+                    }
+                    else
+                    {
+                        targetLimb.postRender(1F / 16F);
+                        this.renderLimbHighlight(this.limb);
+                    }
+                }
+                else
+                {
+                    if (this.origin)
+                    {
+                        targetLimb.postRender(1F / 16F);
+                        Draw.axis(0.25F);
+                    }
+                }
+
                 this.renderAnchorPreview(targetLimb);
             }
         }
@@ -274,6 +297,70 @@ public class GuiBBModelRenderer extends GuiModelRenderer
 
         GlStateManager.disableAlpha();
         GlStateManager.disableBlend();
+
+        if (this.origin)
+        {
+            Draw.axis(0.25F);
+        }
+    }
+    
+    protected void renderObjHighlight(ModelCustomRenderer renderer)
+    {
+        float f = 1F / 16F;
+        
+        GlStateManager.pushMatrix();
+        
+        GL11.glClearStencil(0);
+        GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+        GL11.glEnable(GL11.GL_STENCIL_TEST);
+        GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_REPLACE, GL11.GL_REPLACE);
+        GL11.glColorMask(false, false, false, false);
+        
+        if (renderer.parent != null)
+        {
+            renderer.parent.postRender(f);
+        }
+
+        List<ModelRenderer> children = renderer.childModels;
+        renderer.childModels = null;
+        renderer.setupStencilRendering(1);
+        renderer.render(f);
+        renderer.childModels = children;
+
+        GL11.glStencilMask(0);
+        GL11.glStencilFunc(GL11.GL_EQUAL, 1, -1);
+        GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        GL11.glColorMask(true, true, true, true);
+        
+        GL11.glLoadIdentity();
+        GlStateManager.matrixMode(GL11.GL_PROJECTION);
+        GlStateManager.pushMatrix();
+        GL11.glLoadIdentity();
+
+        GlStateManager.enableBlend();
+        GlStateManager.color(0F, 0.5F, 1F, 0.2F);
+        
+        GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
+        GL11.glVertex3f(-1.0F, -1.0F, 0.0F);
+        GL11.glVertex3f(1.0F, -1.0F, 0.0F);
+        GL11.glVertex3f(-1.0F, 1.0F, 0.0F);
+        GL11.glVertex3f(1.0F, 1.0F, 0.0F);
+        GL11.glEnd();
+        GL11.glFlush();
+        
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        GlStateManager.disableBlend();
+        
+        GL11.glStencilMask(-1);
+        GL11.glStencilFunc(GL11.GL_NEVER, 0, 0);
+        GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        GL11.glDisable(GL11.GL_STENCIL_TEST);
+        
+        GlStateManager.popMatrix();
+        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+        GlStateManager.popMatrix();
+
+        renderer.postRender(f);
 
         if (this.origin)
         {
