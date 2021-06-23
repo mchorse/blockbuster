@@ -108,6 +108,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
 
         this.animation = new GuiAnimation(mc, true);
         this.animation.flex().relative(this).x(1F, -130).w(130);
+        this.animation.interpolations.removeFromParent();
 
         /* General options */
         this.model = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.builder.pick_model"), (b) -> this.models.toggleVisible());
@@ -138,9 +139,9 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         options.add(this.model, this.scale, this.scaleGui);
 
         this.shapeKeys = new GuiShapeKeysEditor(mc, () -> this.morph.model);
-        this.shapeKeys.flex().relative(this.animation).x(10).y(1F, 10).w(1F, -20).hTo(options.area, -10);
+        this.shapeKeys.flex().relative(this.poseOnSneak).y(-125).w(1F).h(120);
 
-        this.add(this.reset, this.create, this.poseOnSneak, this.list, this.animation, options, this.shapeKeys, this.transforms, this.models);
+        this.add(this.reset, this.create, this.poseOnSneak, this.shapeKeys, this.list, this.animation, options, this.transforms, this.models, this.animation.interpolations);
     }
 
     private GuiContextMenu limbContextMenu()
@@ -174,7 +175,14 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         if (this.shapeKeys.isVisible())
         {
             this.shapeKeys.fillData(this.morph.getCurrentPose().shapes);
+            this.list.flex().xy(0, 40).w(110).hTo(this.shapeKeys.area, -10);
         }
+        else
+        {
+            this.list.flex().xy(0, 40).w(110).hTo(this.poseOnSneak.area, -5);
+        }
+
+        this.resize();
     }
 
     @Override
