@@ -25,7 +25,16 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
     public List<IResourceEntry> shapes = new ArrayList<IResourceEntry>();
 
     private OBJParser parser;
-    private long lastModified;
+    private long lastModified = -1;
+
+    public ModelLazyLoaderOBJ(IResourceEntry model, IResourceEntry obj, IResourceEntry mtl, List<IResourceEntry> shapes)
+    {
+        super(model);
+
+        this.obj = obj;
+        this.mtl = mtl;
+        this.shapes.addAll(shapes);
+    }
 
     public ModelLazyLoaderOBJ(IResourceEntry model, IResourceEntry obj, IResourceEntry mtl, File shapes)
     {

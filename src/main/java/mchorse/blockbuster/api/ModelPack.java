@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.ImmutableList;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.api.loaders.IModelLoader;
@@ -15,8 +16,11 @@ import mchorse.blockbuster.api.loaders.ModelLoaderOBJ;
 import mchorse.blockbuster.api.loaders.ModelLoaderVOX;
 import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderJSON;
+import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderOBJ;
+import mchorse.blockbuster.api.resource.IResourceEntry;
 import mchorse.blockbuster.api.resource.StreamEntry;
 import net.minecraftforge.common.DimensionManager;
+import org.apache.commons.compress.archivers.StreamingNotSupportedException;
 
 /**
  * Model pack class
@@ -141,8 +145,19 @@ public class ModelPack
             this.addDefaultModel("cape");
 
             /* Eyes related models */
+            List<String> shapes = ImmutableList.of(
+                "eyebrow_l",
+                "eyebrow_r",
+                "eyelid_lb",
+                "eyelid_lt",
+                "eyelid_rb",
+                "eyelid_rt"
+            );
+
             this.addDefaultModel("eyes/3.0");
             this.addDefaultModel("eyes/3.0_1px");
+            this.addDefaultModelWithShapes("eyes/3.1", shapes);
+            this.addDefaultModelWithShapes("eyes/3.1_simple", shapes);
             this.addDefaultModel("eyes/alex");
             this.addDefaultModel("eyes/steve");
             this.addDefaultModel("eyes/fred");
@@ -192,6 +207,33 @@ public class ModelPack
             ClassLoader loader = this.getClass().getClassLoader();
 
             lazy = new ModelLazyLoaderJSON(new StreamEntry(path + id + ".json", 0, loader));
+            lazy.setLastTime(-1);
+
+            this.models.put(id, lazy);
+            this.changed.put(id, lazy);
+            this.removed.remove(id);
+        }
+    }
+
+    private void addDefaultModelWithShapes(String id, List<String> shapes) throws Exception
+    {
+        IModelLazyLoader lazy = this.models.get(id);
+
+        if (lazy == null)
+        {
+            String path = "assets/blockbuster/models/entity/";
+            ClassLoader loader = this.getClass().getClassLoader();
+
+            StreamEntry json = new StreamEntry(path + id + ".json", 0, loader);
+            StreamEntry obj = new StreamEntry(path + id + "/base.obj", 0, loader);
+            List<IResourceEntry> s = new ArrayList<IResourceEntry>();
+
+            for (String shape : shapes)
+            {
+                s.add(new StreamEntry(path + id + "/"  + shape + ".obj", 0, loader));
+            }
+
+            lazy = new ModelLazyLoaderOBJ(json, obj, new StreamEntry(null, 0, loader), s);
             lazy.setLastTime(-1);
 
             this.models.put(id, lazy);
