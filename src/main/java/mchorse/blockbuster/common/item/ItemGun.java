@@ -105,7 +105,7 @@ public class ItemGun extends Item
 
             EntityGunProjectile last = null;
 
-            for (int i = 0; i < props.projectiles; i++)
+            for (int i = 0; i < Math.max(props.projectiles, 1); i++)
             {
                 AbstractMorph morph = props.projectileMorph;
 
@@ -126,11 +126,16 @@ public class ItemGun extends Item
                 projectile.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
                 projectile.shoot(player, pitch, yaw, 0, props.speed, 0);
                 projectile.setInitialMotion();
-                world.spawnEntity(projectile);
+
+                if (props.projectiles > 0)
+                {
+                    world.spawnEntity(projectile);
+                }
+
                 last = projectile;
             }
 
-            if (!props.fireCommand.isEmpty() && last != null)
+            if (!props.fireCommand.isEmpty())
             {
                 player.getServer().commandManager.executeCommand(last, props.fireCommand);
             }
