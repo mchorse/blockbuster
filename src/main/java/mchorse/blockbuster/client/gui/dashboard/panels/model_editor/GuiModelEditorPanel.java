@@ -309,6 +309,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         {
             this.renderModel.pose = oldPose;
             this.modelRenderer.setPose(oldPose);
+            this.poseEditor.set(this.transform);
         }
 
         this.dirty();
