@@ -26,6 +26,7 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
     public GuiButtonElement detachScene;
     public GuiToggleElement actions;
     public GuiToggleElement reload;
+    public GuiToggleElement stopScene;
     public GuiButtonElement reloadScene;
     public GuiTrackpadElement audioShift;
 
@@ -49,14 +50,19 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
             }
         });
 
-        this.reload = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.aperture.config.reload"), CameraHandler.reload, (b) ->
+        this.reload = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.aperture.config.reload"), CameraHandler.reload.get(), (b) ->
         {
-            CameraHandler.reload = this.reload.isToggled();
+            CameraHandler.reload.set(this.reload.isToggled());
         });
 
-        this.actions = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.aperture.config.actions"), CameraHandler.actions, (b) ->
+        this.actions = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.aperture.config.actions"), CameraHandler.actions.get(), (b) ->
         {
-            CameraHandler.actions = this.actions.isToggled();
+            CameraHandler.actions.set(this.actions.isToggled());
+        });
+        
+        this.stopScene = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.aperture.config.stop_scene"), CameraHandler.stopScene.get(), (b) ->
+        {
+            CameraHandler.stopScene.set(this.stopScene.isToggled());
         });
 
         this.reloadScene = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.aperture.config.reload_scene"), (b) ->
@@ -87,7 +93,7 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
         });
         this.audioShift.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.director.audio_shift_tooltip"));
 
-        this.add(this.detachScene, this.reload, this.actions, this.reloadScene);
+        this.add(this.detachScene, this.reload, this.actions, this.stopScene, this.reloadScene);
         this.add(Elements.label(IKey.lang("blockbuster.gui.director.audio_shift")).background(), this.audioShift);
 
         instance = this;
@@ -102,8 +108,9 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
     @Override
     public void update()
     {
-        this.reload.toggled(CameraHandler.reload);
-        this.actions.toggled(CameraHandler.actions);
+        this.reload.toggled(CameraHandler.reload.get());
+        this.actions.toggled(CameraHandler.actions.get());
+        this.stopScene.toggled(CameraHandler.stopScene.get());
     }
 
     @Override

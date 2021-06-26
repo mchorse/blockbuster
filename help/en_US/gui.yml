@@ -798,6 +798,7 @@ blockbuster.gui:
             detach: Detach scene
             reload: Reload actors
             actions: Preview actions
+            stop_scene: Stop scene after close
             reload_scene: Reload scene
 
         keys:

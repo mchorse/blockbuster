@@ -808,6 +808,7 @@ blockbuster.gui:
             detach: 解綁場景
             reload: 重載演員
             actions: 預覽動作
+            stop_scene: 退出後結束場景
             reload_scene: 重載場景
 
         keys:
