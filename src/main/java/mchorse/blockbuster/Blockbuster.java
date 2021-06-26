@@ -1,5 +1,6 @@
 package mchorse.blockbuster;
 
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.commands.CommandAction;
 import mchorse.blockbuster.commands.CommandDamage;
 import mchorse.blockbuster.commands.CommandModelBlock;
@@ -311,6 +312,8 @@ public class Blockbuster
         audioWaveformTime.clientSide();
 
         audioSync = builder.getBoolean("audio_sync", true);
+
+        CameraHandler.registerConfig(builder);
     }
 
     @EventHandler

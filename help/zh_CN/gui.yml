@@ -808,6 +808,7 @@ blockbuster.gui:
             detach: 解绑场景
             reload: 重载演员
             actions: 预览动作
+            stop_scene: 退出后结束场景
             reload_scene: 重载场景
 
         keys:

@@ -8,6 +8,7 @@ import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.events.CameraEditorEvent;
 import mchorse.aperture.network.common.PacketCameraProfileList;
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerCameraProfileList;
@@ -39,6 +40,8 @@ import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.ScrollArea;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.config.ConfigBuilder;
+import mchorse.mclib.config.values.ValueBoolean;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
@@ -76,12 +79,17 @@ public class CameraHandler
     /**
      * Whether director should be reloaded when entering camera editor GUI
      */
-    public static boolean reload = true;
+    public static ValueBoolean reload;
 
     /**
      * Whether actions should played back also
      */
-    public static boolean actions = true;
+    public static ValueBoolean actions;
+    
+    /**
+     * Whether scene should be stopped when exiting camera editor GUI
+     */
+    public static ValueBoolean stopScene;
 
     /**
      * Camera editor integrations
@@ -152,6 +160,19 @@ public class CameraHandler
         Dispatcher.DISPATCHER.register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
 
         Dispatcher.DISPATCHER.register(PacketAudioShift.class, ServerHandlerAudioShift.class, Side.SERVER);
+    }
+    
+    public static void registerConfig(ConfigBuilder builder)
+    {
+        if (CameraHandler.isApertureLoaded())
+        {
+            builder.category("aperture");
+            reload = builder.getBoolean("reload", true);
+            actions = builder.getBoolean("actions", true);
+            stopScene = builder.getBoolean("stop_scene", false);
+            
+            builder.getCategory().clientSide().invisible();
+        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -354,7 +375,7 @@ public class CameraHandler
 
         if (location != null)
         {
-            Dispatcher.sendToServer(new PacketSceneGoto(location, event.position, CameraHandler.actions));
+            Dispatcher.sendToServer(new PacketSceneGoto(location, event.position, CameraHandler.actions.get()));
         }
 
         GuiBlockbusterPanels dashboard = mchorse.blockbuster.ClientProxy.panels;
@@ -573,7 +594,7 @@ public class CameraHandler
                     /* Camera editor opens */
                     CameraHandler.tick = tick;
 
-                    if (CameraHandler.reload)
+                    if (CameraHandler.reload.get())
                     {
                         Dispatcher.sendToServer(new PacketScenePlay(location, PacketScenePlay.START, tick));
                     }
@@ -603,9 +624,14 @@ public class CameraHandler
                 cameraEditorElements.prepend(panel.records);
                 editorElement.add(panel.selector, panel.editor);
             }
-            else if (current instanceof GuiCameraEditor)
+            else if (location != null && current instanceof GuiCameraEditor)
             {
                 mchorse.blockbuster.ClientProxy.panels.recordingEditorPanel.save();
+
+                if (!((GuiCameraEditor) current).getRunner().isRunning() && stopScene.get())
+                {
+                    Dispatcher.sendToServer(new PacketScenePlay(location, PacketScenePlay.STOP, 0));
+                }
             }
         }
     }
