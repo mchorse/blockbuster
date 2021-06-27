@@ -163,8 +163,8 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
         this.randomBouncinessRow.add(this.randomBounciness);
         
         this.fields.add(this.controlToggleElements, this.realisticCollisionDrag, this.drag, this.bounciness, this.randomBouncinessRow , this.radius, this.expire, this.expirationDelay);
-        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.collision.damping.title"), 20).anchor(0, 1F), this.damp, this.randomDamp);
-        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.collision.split_particle.title"), 20).anchor(0, 1F), this.splitParticle,  this.splitParticleSpeedThreshold);
+        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.collision.damping.title")).marginTop(12), this.damp, this.randomDamp);
+        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.collision.split_particle.title")).marginTop(12), this.splitParticle,  this.splitParticleSpeedThreshold);
     }
 
     @Override

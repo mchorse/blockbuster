@@ -3,41 +3,27 @@ package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.recording.actions.DropAction;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiSlotElement;
-import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class GuiDropActionPanel extends GuiActionPanel<DropAction>
 {
-    public GuiInventoryElement inventory;
     public GuiSlotElement slot;
 
     public GuiDropActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
     {
         super(mc, panel);
 
-        this.inventory = new GuiInventoryElement(mc, this::pickItem);
-        this.slot = new GuiSlotElement(mc,0, this::setSlot);
-
+        this.slot = new GuiSlotElement(mc,0, this::pickItem);
         this.slot.flex().relative(this.area).xy(0.5F, 0.5F).anchor(0.5F, 0.5F);
-        this.inventory.flex().under(this.slot.flex(), 10).x(0.5F).anchorX(0.5F);
-        this.add(this.slot, this.inventory);
-    }
 
-    private void setSlot(GuiSlotElement slot)
-    {
-        this.inventory.linked = slot;
-        this.inventory.setVisible(true);
+        this.add(this.slot);
     }
 
     public void pickItem(ItemStack stack)
     {
-        this.action.itemData = stack.isEmpty() ? null : stack.writeToNBT(new NBTTagCompound());
-        this.slot.stack = stack;
-
-        this.inventory.linked = null;
-        this.inventory.setVisible(false);
+        this.action.itemData = stack.isEmpty() ? null : stack.serializeNBT();
+        this.slot.setStack(stack);
     }
 
     @Override
@@ -45,7 +31,6 @@ public class GuiDropActionPanel extends GuiActionPanel<DropAction>
     {
         super.fill(action);
 
-        this.slot.stack = action.itemData == null ? ItemStack.EMPTY : new ItemStack(action.itemData);
-        this.inventory.setVisible(false);
+        this.slot.setStack(action.itemData == null ? ItemStack.EMPTY : new ItemStack(action.itemData));
     }
 }

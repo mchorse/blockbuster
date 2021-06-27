@@ -35,6 +35,7 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.MathUtils;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
@@ -335,8 +336,8 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 
         if (this.modal.isVisible())
         {
-            this.open.area.draw(0x88000000);
-            this.modal.area.draw(0x88000000);
+            this.open.area.draw(ColorUtils.HALF_BLACK);
+            this.modal.area.draw(ColorUtils.HALF_BLACK);
         }
     }
 }

@@ -23,6 +23,7 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiDrawable;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.Label;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
@@ -111,7 +112,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         /* Nice shadow on bottom */
         this.prepend(new GuiDrawable((n) ->
         {
-            this.drawGradientRect(0, this.area.ey() - 30, this.area.w, this.area.ey(), 0x00000000, 0x88000000);
+            this.drawGradientRect(0, this.area.ey() - 30, this.area.w, this.area.ey(), 0, ColorUtils.HALF_BLACK);
         }));
 
         /* Morph panels */

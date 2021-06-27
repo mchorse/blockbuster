@@ -9,6 +9,7 @@ import mchorse.mclib.client.gui.mclib.GuiAbstractDashboard;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -181,7 +182,7 @@ public class GuiFirstTime extends GuiElement
         @Override
         public void draw(GuiContext context)
         {
-            this.area.draw(0x88000000);
+            this.area.draw(ColorUtils.HALF_BLACK);
 
             super.draw(context);
         }

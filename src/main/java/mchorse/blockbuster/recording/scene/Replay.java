@@ -3,7 +3,7 @@ package mchorse.blockbuster.recording.scene;
 import com.google.common.base.Objects;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.recording.actions.ChatAction;
+import mchorse.mclib.utils.TextUtils;
 import mchorse.metamorph.api.MorphAPI;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -69,7 +69,7 @@ public class Replay
      */
     public void apply(EntityActor actor)
     {
-        String name = ChatAction.processNameTag(this.name);
+        String name = TextUtils.processColoredText(this.name);
 
         actor.setCustomNameTag(name);
         actor.setEntityInvulnerable(this.invincible);

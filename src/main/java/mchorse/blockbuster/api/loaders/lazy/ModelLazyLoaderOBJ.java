@@ -25,7 +25,17 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
     public List<IResourceEntry> shapes = new ArrayList<IResourceEntry>();
 
     private OBJParser parser;
-    private long lastModified;
+    private long lastModified = -1;
+    private File shapesFolder;
+
+    public ModelLazyLoaderOBJ(IResourceEntry model, IResourceEntry obj, IResourceEntry mtl, List<IResourceEntry> shapes)
+    {
+        super(model);
+
+        this.obj = obj;
+        this.mtl = mtl;
+        this.shapes.addAll(shapes);
+    }
 
     public ModelLazyLoaderOBJ(IResourceEntry model, IResourceEntry obj, IResourceEntry mtl, File shapes)
     {
@@ -50,6 +60,8 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
         {
             return;
         }
+
+        this.shapesFolder = shapes;
 
         for (File file : files)
         {
@@ -89,7 +101,56 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
             hasChanged = hasChanged || shape.hasChanged();
         }
 
+        File[] files = this.shapesFolder == null ? null : this.shapesFolder.listFiles();
+
+        if (files != null)
+        {
+            boolean haveShapesChanged = this.hasShapesFolderChanged(files);
+
+            /* Update shapes */
+            if (haveShapesChanged)
+            {
+                if (this.shapesFolder != null)
+                {
+                    this.setupShapes(this.shapesFolder);
+                }
+
+                this.lastModified = -1;
+                this.parser = null;
+            }
+
+            hasChanged = hasChanged || haveShapesChanged;
+        }
+
         return hasChanged;
+    }
+
+    private boolean hasShapesFolderChanged(File[] files)
+    {
+        int matching = 0;
+        int total = 0;
+
+        for (File file : files)
+        {
+            String name = file.getName();
+
+            if (name.endsWith(".obj"))
+            {
+                total += 1;
+            }
+
+            for (IResourceEntry entry : this.shapes)
+            {
+                if (entry.getName().equals(name))
+                {
+                    matching += 1;
+
+                    break;
+                }
+            }
+        }
+
+        return matching != total;
     }
 
     @Override
@@ -147,11 +208,14 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
             }
 
             this.parser = null;
-            this.lastModified = 0;
+            this.lastModified = -1;
 
             return meshes;
         }
-        catch (Exception e) {}
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
         return null;
     }

@@ -206,7 +206,10 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                 this.currentPose = custom.currentPose;
             }
 
-            this.animation.mergeShape(pose.shapes);
+            if (pose != null)
+            {
+                this.animation.mergeShape(pose.shapes);
+            }
         }
 
         this.parts.pause(previous, offset);
@@ -658,7 +661,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                 this.currentPose = custom.currentPose;
                 this.customPose = custom.customPose == null ? null : custom.customPose.copy();
                 this.animation.merge(custom.animation);
-                this.animation.mergeShape(pose.shapes);
+
+                if (pose != null)
+                {
+                    this.animation.mergeShape(pose.shapes);
+                }
             }
             else
             {

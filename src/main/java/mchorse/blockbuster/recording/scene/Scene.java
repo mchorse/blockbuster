@@ -6,6 +6,8 @@ import io.netty.buffer.Unpooled;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.audio.AudioState;
+import mchorse.blockbuster.capabilities.recording.IRecording;
+import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.audio.PacketAudio;
@@ -569,6 +571,10 @@ public class Scene
                     e.printStackTrace();
                 }
 
+                IRecording recording = Recording.get(player);
+
+                recording.setFakePlayer(true);
+
                 /* There is no way to construct a CPacketClientSettings on the
                  * server side without using this hack, because the other constructor
                  * is available only on the client side...
@@ -889,6 +895,14 @@ public class Scene
 
     public void copy(Scene scene)
     {
+        /* There is no need to copy itself, copying itself will lead to
+         * lost of replay data as it clears its replays and then will have
+         * nothing to copy over... */
+        if (this == scene)
+        {
+            return;
+        }
+
         this.replays.clear();
         this.replays.addAll(scene.replays);
 

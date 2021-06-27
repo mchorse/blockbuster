@@ -3,6 +3,7 @@ package mchorse.blockbuster.audio;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
+import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.wav.Waveform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -47,7 +48,7 @@ public class AudioRenderer
         int half = w / 2;
 
         /* Draw background */
-        GuiDraw.drawVerticalGradientRect(x + 2, y + 2, x + w - 2, y + h, 0x00000000, 0x88000000);
+        GuiDraw.drawVerticalGradientRect(x + 2, y + 2, x + w - 2, y + h, 0, ColorUtils.HALF_BLACK);
         Gui.drawRect(x + 1, y, x + 2, y + h, 0xaaffffff);
         Gui.drawRect(x + w - 2, y, x + w - 1, y + h, 0xaaffffff);
         Gui.drawRect(x, y + h - 1, x + w, y + h, 0xffffffff);

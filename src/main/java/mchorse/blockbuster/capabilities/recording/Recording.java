@@ -16,6 +16,7 @@ public class Recording implements IRecording
     public Map<String, ItemInfo> recordings = new HashMap<String, ItemInfo>();
     public BlockPos teleportPos;
     public RecordPlayer player;
+    public boolean fakePlayer;
 
     public static IRecording get(EntityPlayer player)
     {
@@ -107,6 +108,18 @@ public class Recording implements IRecording
     public RecordPlayer getRecordPlayer()
     {
         return this.player;
+    }
+
+    @Override
+    public boolean isFakePlayer()
+    {
+        return this.fakePlayer;
+    }
+
+    @Override
+    public void setFakePlayer(boolean fakePlayer)
+    {
+        this.fakePlayer = fakePlayer;
     }
 
     /**

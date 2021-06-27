@@ -102,8 +102,9 @@ public class GuiSnowstormCollisionLightingSection extends GuiSnowstormSection
             this.parent.dirty();
         });
 
-        GuiLabel label = Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"), 20).anchor(0, 0.5F);
+        GuiLabel label = Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"));
 
+        label.marginTop(12);
         this.first = Elements.row(mc, 5, 0, 20, this.r, this.g);
         this.second = Elements.row(mc, 5, 0, 20, this.b, this.a);
         this.fields.add(this.enabled);

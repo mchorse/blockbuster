@@ -16,10 +16,10 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
-import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.OpHelper;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -56,7 +56,6 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     private GuiModelBlockList list;
     private GuiElement subChildren;
 
-    private GuiInventoryElement inventory;
     private GuiSlotElement[] slots = new GuiSlotElement[6];
 
     private Map<BlockPos, TileEntityModel> old = new HashMap<BlockPos, TileEntityModel>();
@@ -141,12 +140,11 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.add(toggle);
 
         /* Inventory */
-        this.inventory = new GuiInventoryElement(mc, this::pickItem);
-        this.inventory.setVisible(false);
-
         for (int i = 0; i < this.slots.length; i++)
         {
-            this.slots[i] = new GuiSlotElement(mc, i, this.inventory);
+            final int slot = i;
+
+            this.slots[i] = new GuiSlotElement(mc, i, (stack) -> this.pickItem(stack, slot));
             this.slots[i].flex().relative(this.area).anchor(0.5F, 0.5F);
             this.subChildren.add(this.slots[i]);
         }
@@ -157,9 +155,6 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.slots[3].flex().x(0.5F + 0.125F).y(0.5F, 15);
         this.slots[4].flex().x(0.5F + 0.125F).y(0.5F, -15);
         this.slots[5].flex().x(0.5F + 0.125F).y(0.5F, -45);
-
-        this.inventory.flex().relative(this.area).xy(0.5F, 0.5F).anchor(0.5F, 0.5F);
-        this.subChildren.add(this.inventory);
     }
 
     @Override
@@ -168,18 +163,10 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         return false;
     }
 
-    private void pickItem(ItemStack stack)
+    private void pickItem(ItemStack stack, int slot)
     {
-        if (this.inventory.linked != null)
-        {
-            GuiSlotElement slot = this.inventory.linked;
-
-            slot.stack = stack == null ? null : stack.copy();
-
-            this.model.slots[slot.slot] = slot.stack;
-            this.model.updateEntity();
-            this.inventory.unlink();
-        }
+        this.model.slots[slot] = stack.copy();
+        this.model.updateEntity();
     }
 
     private void setMorph(AbstractMorph morph)
@@ -320,7 +307,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
             for (int i = 0; i < this.slots.length; i++)
             {
-                this.slots[i].stack = this.model.slots[i];
+                this.slots[i].setStack(this.model.slots[i]);
             }
         }
     }
@@ -339,7 +326,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
                 int w = Math.max(this.font.getStringWidth(morph.name), this.font.getStringWidth(morph.getDisplayName()));
 
-                Gui.drawRect(x - w / 2 - 3, y - 20, x + w / 2 + 3, y, 0x88000000);
+                Gui.drawRect(x - w / 2 - 3, y - 20, x + w / 2 + 3, y, ColorUtils.HALF_BLACK);
 
                 this.drawCenteredString(this.font, morph.getDisplayName(), x, y - this.font.FONT_HEIGHT * 2, 0xffffff);
                 this.drawCenteredString(this.font, morph.name, x, y - this.font.FONT_HEIGHT, 0xcccccc);

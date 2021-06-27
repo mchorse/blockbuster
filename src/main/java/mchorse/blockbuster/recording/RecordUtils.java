@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,6 +106,11 @@ public class RecordUtils
         return Utils.serverFile("blockbuster/records", filename);
     }
 
+    public static InputStream getLocalReplay(String filename)
+    {
+        return RecordUtils.class.getResourceAsStream("/assets/blockbuster/records/" + filename + ".dat");
+    }
+
     /**
      * Get list of all available replays
      */
@@ -180,6 +186,7 @@ public class RecordUtils
             record.resetUnload();
 
             Dispatcher.sendTo(new PacketFramesLoad(filename, record.preDelay, record.postDelay, record.frames), player);
+            System.out.println("Sent " + filename + " to " + player.getName());
         }
     }
 
@@ -195,6 +202,7 @@ public class RecordUtils
             record.resetUnload();
 
             Dispatcher.sendTo(new PacketRequestedFrames(id, record.filename, record.preDelay, record.postDelay, record.frames), player);
+            System.out.println("Sent " + filename + " to " + player.getName() + " with " + id);
         }
         else if (record == null)
         {
@@ -208,7 +216,17 @@ public class RecordUtils
      */
     private static boolean playerNeedsAction(String filename, EntityPlayer player)
     {
+        if (RecordUtils.getLocalReplay(filename) != null)
+        {
+            return false;
+        }
+
         IRecording recording = Recording.get(player);
+
+        if (recording.isFakePlayer())
+        {
+            return false;
+        }
 
         boolean has = recording.hasRecording(filename);
         long time = replayFile(filename).lastModified();

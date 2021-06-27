@@ -838,7 +838,11 @@ public class Record
      */
     public void load(File file) throws IOException
     {
-        NBTTagCompound compound = CompressedStreamTools.readCompressed(new FileInputStream(file));
+        this.load(CompressedStreamTools.readCompressed(new FileInputStream(file)));
+    }
+
+    public void load(NBTTagCompound compound)
+    {
         NBTTagCompound map = null;
 
         this.version = compound.getShort("Version");

@@ -16,13 +16,17 @@ import mchorse.metamorph.api.MorphAPI;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -403,6 +407,33 @@ public class RecordManager
             record.load(file);
 
             this.records.put(filename, record);
+        }
+
+        return record;
+    }
+
+    /**
+     * Get record on the client side
+     */
+    @SideOnly(Side.CLIENT)
+    public Record getClient(String filename)
+    {
+        Record record = this.records.get(filename);
+
+        if (record == null)
+        {
+            try
+            {
+                InputStream stream = RecordUtils.getLocalReplay(filename);
+                NBTTagCompound tag = CompressedStreamTools.readCompressed(stream);
+
+                record = new Record(filename);
+                record.load(tag);
+
+                this.records.put(filename, record);
+            }
+            catch (Exception e)
+            {}
         }
 
         return record;

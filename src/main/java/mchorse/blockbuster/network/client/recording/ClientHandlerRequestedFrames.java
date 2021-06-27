@@ -29,10 +29,9 @@ public class ClientHandlerRequestedFrames extends ClientMessageHandler<PacketReq
         record.postDelay = message.postDelay;
 
         ClientProxy.manager.records.put(record.filename, record);
-        EntityLivingBase actor = (EntityLivingBase) player.world.getEntityByID(message.id);
-        RecordPlayer playback = EntityUtils.getRecordPlayer(actor);
+        RecordPlayer playback = EntityUtils.getRecordPlayer((EntityLivingBase) player.world.getEntityByID(message.id));
 
-        if (actor != null && playback != null)
+        if (playback != null)
         {
             playback.record = record;
         }

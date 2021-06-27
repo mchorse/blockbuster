@@ -12,6 +12,7 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
 
 public abstract class GuiSnowstormSection extends GuiElement
@@ -27,7 +28,7 @@ public abstract class GuiSnowstormSection extends GuiElement
         super(mc);
         
         this.parent = parent;
-        this.title = Elements.label(IKey.lang(this.getTitle())).background(() -> 0x88000000 + McLib.primaryColor.get());
+        this.title = Elements.label(IKey.lang(this.getTitle())).background(() -> ColorUtils.HALF_BLACK + McLib.primaryColor.get());
         this.fields = new GuiElement(mc);
         this.fields.flex().column(5).stretch().vertical().height(20);
 

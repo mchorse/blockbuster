@@ -53,7 +53,8 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
         });
         this.surface.tooltip(IKey.lang("blockbuster.gui.snowstorm.shape.surface_tooltip"));
 
-        this.radiusLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.shape.radius"), 20).anchor(0, 1F);
+        this.radiusLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.shape.radius"));
+        this.radiusLabel.marginTop(12);
         this.radius = new GuiTextElement(mc, 10000, (str) ->
         {
             BedrockComponentShapeSphere sphere = (BedrockComponentShapeSphere) this.component;
@@ -61,7 +62,8 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
             sphere.radius = this.parse(str, this.radius, sphere.radius);
         });
 
-        this.label = Elements.label(IKey.lang(""), 20).anchor(0, 1F);
+        this.label = Elements.label(IKey.lang(""));
+        this.label.marginTop(12);
         this.x = new GuiTextElement(mc, 10000, (str) -> this.updateNormalDimension(str, this.x, 0));
         this.x.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
         this.y = new GuiTextElement(mc, 10000, (str) -> this.updateNormalDimension(str, this.y, 1));
@@ -71,7 +73,7 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 
         this.modeLabel.label.set("blockbuster.gui.snowstorm.shape.shape");
 
-        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.shape.offset"), 20).anchor(0, 1F), this.offsetX, this.offsetY, this.offsetZ, this.direction, this.surface);
+        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.shape.offset")).marginTop(12), this.offsetX, this.offsetY, this.offsetZ, this.direction, this.surface);
     }
     
     @Override

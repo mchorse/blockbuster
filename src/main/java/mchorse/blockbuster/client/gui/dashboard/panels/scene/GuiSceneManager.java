@@ -16,6 +16,7 @@ import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
@@ -196,7 +197,7 @@ public class GuiSceneManager extends GuiElement
     public void draw(GuiContext context)
     {
         this.area.draw(0xaa000000);
-        Gui.drawRect(this.area.x, this.area.y, this.area.ex(), this.area.y + 20, 0x88000000);
+        Gui.drawRect(this.area.x, this.area.y, this.area.ex(), this.area.y + 20, ColorUtils.HALF_BLACK);
         this.font.drawStringWithShadow(I18n.format("blockbuster.gui.scenes.title"), this.area.x + 6, this.area.y + 7, 0xffffff);
 
         super.draw(context);

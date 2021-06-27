@@ -13,6 +13,7 @@ import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
+import mchorse.blockbuster.recording.data.Record;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -625,9 +626,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
             if (this.playback == null)
             {
-                if (ClientProxy.manager.records.containsKey(filename))
+                Record record = ClientProxy.manager.getClient(filename);
+
+                if (record != null)
                 {
-                    this.playback = new RecordPlayer(ClientProxy.manager.records.get(filename), Mode.FRAMES, this);
+                    this.playback = new RecordPlayer(record, Mode.FRAMES, this);
                 }
                 else
                 {

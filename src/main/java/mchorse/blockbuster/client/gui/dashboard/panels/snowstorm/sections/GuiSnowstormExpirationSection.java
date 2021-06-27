@@ -15,7 +15,6 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiSlotElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
-import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.framework.tooltips.LabelTooltip;
 import mchorse.mclib.client.gui.utils.Elements;
@@ -37,7 +36,6 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
     public GuiTrackpadElement c;
     public GuiTrackpadElement d;
 
-    public GuiInventoryElement inventory;
     public GuiBlocksSection inBlocksSection;
     public GuiBlocksSection notInBlocksSection;
 
@@ -87,25 +85,12 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
         });
         this.d.tooltip(IKey.str("D"));
 
-        this.inventory = new GuiInventoryElement(mc, (stack) ->
-        {
-            if (!(stack.getItem() instanceof ItemBlock))
-            {
-                this.inventory.linked.stack = ItemStack.EMPTY;
-            }
-            else
-            {
-                this.inventory.linked.stack = stack;
-                this.inventory.unlink();
-                this.parent.dirty();
-            }
-        });
         this.inBlocksSection = new GuiBlocksSection(mc, IKey.lang("blockbuster.gui.snowstorm.expiration.in_blocks"), this);
         this.notInBlocksSection = new GuiBlocksSection(mc, IKey.lang("blockbuster.gui.snowstorm.expiration.not_in_blocks"), this);
 
         this.fields.add(Elements.row(mc, 5, 0, 20, Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"), 20).anchor(0, 0.5F), this.mode));
         this.fields.add(this.expression);
-        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.expiration.kill_plane"), 20).anchor(0, 1F)
+        this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.expiration.kill_plane")).marginTop(12)
             .tooltip(IKey.lang("blockbuster.gui.snowstorm.expiration.kill_plane_tooltip")));
         this.fields.add(Elements.row(mc, 5, 0, 20, this.a, this.b));
         this.fields.add(Elements.row(mc, 5, 0, 20, this.c, this.d));
@@ -142,17 +127,6 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
         this.c.setValue(this.plane.c);
         this.d.setValue(this.plane.d);
 
-        this.inventory.setVisible(false);
-
-        if (!this.inventory.hasParent())
-        {
-            GuiElement element = this.getParentContainer();
-
-            this.inventory.flex().relative(element).xy(0.5F, 0.5F).anchor(0.5F, 0.5F);
-            this.inventory.resize();
-            element.add(this.inventory);
-        }
-
         this.inBlocksSection.setComponent(this.inBlocks);
         this.notInBlocksSection.setComponent(this.notInBlocks);
     }
@@ -174,11 +148,11 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
             {
                 GuiSlotElement slot = (GuiSlotElement) child;
 
-                if (slot.stack.getItem() instanceof ItemBlock)
+                if (slot.getStack().getItem() instanceof ItemBlock)
                 {
-                    component.blocks.add(((ItemBlock) slot.stack.getItem()).getBlock());
+                    component.blocks.add(((ItemBlock) slot.getStack().getItem()).getBlock());
                 }
-                else if (slot.stack.isEmpty())
+                else if (slot.getStack().isEmpty())
                 {
                     component.blocks.add(Blocks.AIR);
                 }
@@ -234,9 +208,16 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 
         public void addBlock(Block block)
         {
-            GuiSlotElement slotElement = new GuiSlotElement(this.mc, 0, this.parent.inventory);
+            GuiSlotElement slotElement = new GuiSlotElement(this.mc, 0, null);
 
-            slotElement.stack = new ItemStack(block, 1);
+            slotElement.callback = (stack) ->
+            {
+                if (!(stack.getItem() instanceof ItemBlock))
+                {
+                    slotElement.setStack(ItemStack.EMPTY);
+                }
+            };
+            slotElement.setStack(new ItemStack(block, 1));
             slotElement.context(() -> new GuiSimpleContextMenu(this.mc).action(Icons.REMOVE, IKey.lang("Remove block"), () ->
             {
                 slotElement.removeFromParent();
