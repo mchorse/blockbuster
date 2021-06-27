@@ -251,9 +251,16 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         SequenceEntry entry = null;
         SequenceEntry lastEntry = null;
         int i = this.reverse ? size - 1 : 0;
+
+        duration = 0;
+
+        if (this.isRandom)
+        {
+            i = this.getRandomIndex(duration);
+        }
+
         float lastDuration = 0;
         float prevLastDuration = 0;
-        duration = 0;
 
         while (duration <= tick)
         {
@@ -491,6 +498,10 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     {
         super.toNBT(tag);
 
+        if (this.reverse) tag.setBoolean("Reverse", this.reverse);
+        if (this.isRandom) tag.setBoolean("Random", this.isRandom);
+        if (this.isTrulyRandom) tag.setBoolean("TrulyRandom", this.isTrulyRandom);
+
         if (!this.morphs.isEmpty())
         {
             NBTTagList list = new NBTTagList();
@@ -502,16 +513,16 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
             tag.setTag("List", list);
         }
-
-        if (this.reverse) tag.setBoolean("Reverse", this.reverse);
-        if (this.isRandom) tag.setBoolean("Random", this.isRandom);
-        if (this.isTrulyRandom) tag.setBoolean("TrulyRandom", this.isTrulyRandom);
     }
 
     @Override
     public void fromNBT(NBTTagCompound tag)
     {
         super.fromNBT(tag);
+
+        if (tag.hasKey("Reverse")) this.reverse = tag.getBoolean("Reverse");
+        if (tag.hasKey("Random")) this.isRandom = tag.getBoolean("Random");
+        if (tag.hasKey("TrulyRandom")) this.isTrulyRandom = tag.getBoolean("TrulyRandom");
 
         if (tag.hasKey("List", NBT.TAG_LIST))
         {
@@ -530,10 +541,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             this.timer = 0;
             this.updateMorph(0);
         }
-
-        if (tag.hasKey("Reverse")) this.reverse = tag.getBoolean("Reverse");
-        if (tag.hasKey("Random")) this.isRandom = tag.getBoolean("Random");
-        if (tag.hasKey("TrulyRandom")) this.isTrulyRandom = tag.getBoolean("TrulyRandom");
     }
 
     /**
