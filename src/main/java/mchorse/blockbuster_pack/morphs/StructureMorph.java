@@ -1,42 +1,32 @@
 package mchorse.blockbuster_pack.morphs;
 
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.client.ClientHandlerStructure;
 import mchorse.blockbuster.network.common.structure.PacketStructure;
 import mchorse.blockbuster.network.common.structure.PacketStructureRequest;
 import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
+import mchorse.blockbuster_pack.morphs.structure.StructureAnimation;
+import mchorse.blockbuster_pack.morphs.structure.StructureRenderer;
+import mchorse.blockbuster_pack.morphs.structure.StructureStatus;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.management.PlayerList;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
 
 import java.io.File;
 import java.util.HashMap;
@@ -181,11 +171,11 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
 
         if (renderer != null)
         {
-            if (renderer.vbo < 0)
+            if (renderer.status != StructureStatus.LOADED)
             {
-                if (renderer.vbo == -1)
+                if (renderer.status == StructureStatus.UNLOADED)
                 {
-                    renderer.vbo = -2;
+                    renderer.status = StructureStatus.LOADING;
                     Dispatcher.sendToServer(new PacketStructureRequest(this.structure));
                 }
 
@@ -227,11 +217,11 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
 
         if (renderer != null)
         {
-            if (renderer.vbo < 0)
+            if (renderer.status != StructureStatus.LOADED)
             {
-                if (renderer.vbo == -1)
+                if (renderer.status == StructureStatus.UNLOADED)
                 {
-                    renderer.vbo = -2;
+                    renderer.status = StructureStatus.LOADING;
                     Dispatcher.sendToServer(new PacketStructureRequest(this.structure));
                 }
 
@@ -389,161 +379,6 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
         if (!animation.hasNoTags())
         {
             tag.setTag("Animation", animation);
-        }
-    }
-
-    /**
-     * Structure renderer
-     * 
-     * All it does is renders compiled display list and also has the 
-     * method {@link #delete()} to clean up GL memory. 
-     */
-    @SideOnly(Side.CLIENT)
-    public static class StructureRenderer
-    {
-        public int vbo = -1;
-        public int count = 0;
-        public BlockPos size;
-        public ClientHandlerStructure.FakeWorld world;
-
-        public StructureRenderer()
-        {}
-
-        public StructureRenderer(BlockPos size, ClientHandlerStructure.FakeWorld world)
-        {
-            this.size = size;
-            this.world = world;
-
-            this.rebuild();
-        }
-
-        public void rebuild()
-        {
-            /* Create VBO */
-            int vbo = GL15.glGenBuffers();
-
-            Tessellator tess = Tessellator.getInstance();
-            BufferBuilder buffer = tess.getBuffer();
-
-            this.render(buffer);
-
-            int count = buffer.getVertexCount();
-
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
-            GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.getByteBuffer(), GL15.GL_STATIC_DRAW);
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-
-            buffer.finishDrawing();
-
-            this.count = count;
-            this.vbo = vbo;
-        }
-
-        public void render()
-        {
-            GL11.glNormal3f(0, 0.6F, 0);
-
-            if (Blockbuster.cachedStructureRendering.get())
-            {
-                GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vbo);
-
-                GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-                GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
-                GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-
-                GlStateManager.glVertexPointer(3, 5126, 28, 0);
-                GlStateManager.glColorPointer(4, 5121, 28, 12);
-                GlStateManager.glTexCoordPointer(2, 5126, 28, 16);
-                OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapTexUnit);
-                GlStateManager.glTexCoordPointer(2, 5122, 28, 24);
-                OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
-
-                GlStateManager.glDrawArrays(GL11.GL_QUADS, 0, this.count);
-
-                GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
-                GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
-                GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-
-                GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-            }
-            else
-            {
-                Tessellator tess = Tessellator.getInstance();
-                BufferBuilder buffer = tess.getBuffer();
-
-                this.render(buffer);
-
-                tess.draw();
-            }
-        }
-
-        public void render(BufferBuilder buffer)
-        {
-            BlockPos origin = new BlockPos(1, 1, 1);
-            int w = this.size.getX();
-            int h = this.size.getY();
-            int d = this.size.getZ();
-
-            BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
-
-            /* Centerize the geometry */
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-            buffer.setTranslation(-w / 2F - origin.getX(), -origin.getY(), -d / 2F - origin.getZ());
-
-            for (BlockPos.MutableBlockPos pos : BlockPos.getAllInBoxMutable(origin, origin.add(w, h, d)))
-            {
-                IBlockState state = this.world.getBlockState(pos);
-                Block block = state.getBlock();
-
-                if (block.getDefaultState().getRenderType() != EnumBlockRenderType.INVISIBLE)
-                {
-                    dispatcher.renderBlock(state, pos, this.world, buffer);
-                }
-            }
-
-            buffer.setTranslation(0, 0, 0);
-        }
-
-        public void renderTEs()
-        {
-            if (this.world == null)
-            {
-                return;
-            }
-
-            for (TileEntity te : this.world.loadedTileEntityList)
-            {
-                BlockPos pos = te.getPos();
-                TileEntityRendererDispatcher.instance.render(te, pos.getX() - this.size.getX() / 2D - 1, pos.getY() - 1, pos.getZ() - this.size.getZ() / 2D - 1, 0);
-            }
-        }
-
-        public void delete()
-        {
-            if (this.vbo > 0)
-            {
-                GL15.glDeleteBuffers(this.vbo);
-                this.vbo = -1;
-                this.count = 0;
-            }
-        }
-    }
-
-    public static class StructureAnimation extends Animation
-    {
-        public ModelTransform last = new ModelTransform();
-
-        public void merge(StructureMorph last, StructureMorph next)
-        {
-            this.merge(next.animation);
-            this.last.copy(last.pose);
-        }
-
-        public void apply(ModelTransform transform, float partialTicks)
-        {
-            float factor = this.getFactor(partialTicks);
-
-            transform.interpolate(this.last, transform, factor, this.interp);
         }
     }
 }

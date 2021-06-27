@@ -3,7 +3,7 @@ package mchorse.blockbuster.network.client;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.common.structure.PacketStructureList;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
-import mchorse.blockbuster_pack.morphs.StructureMorph.StructureRenderer;
+import mchorse.blockbuster_pack.morphs.structure.StructureRenderer;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;

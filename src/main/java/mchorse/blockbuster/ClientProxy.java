@@ -28,7 +28,7 @@ import mchorse.blockbuster.utils.mclib.BlockbusterJarTree;
 import mchorse.blockbuster.utils.mclib.BlockbusterTree;
 import mchorse.blockbuster_pack.client.render.RenderCustomActor;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
-import mchorse.blockbuster_pack.morphs.StructureMorph.StructureRenderer;
+import mchorse.blockbuster_pack.morphs.structure.StructureRenderer;
 import mchorse.mclib.McLib;
 import mchorse.mclib.utils.files.FileTree;
 import mchorse.mclib.utils.files.GlobalTree;
