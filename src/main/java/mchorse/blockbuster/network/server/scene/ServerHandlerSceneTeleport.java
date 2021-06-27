@@ -23,7 +23,7 @@ public class ServerHandlerSceneTeleport extends ServerMessageHandler<PacketScene
             int tick = message.offset;
             String filename = message.id;
             Record record = CommandRecord.getRecord(filename);
-            Frame frame = record.frames.get(tick);
+            Frame frame = record.frames.get(Math.max(tick - record.preDelay, 0));
 
             player.connection.setPlayerLocation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
         }
