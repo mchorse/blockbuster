@@ -155,17 +155,20 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         if(this.orientedBBlimbs == null || force)
         {
             this.orientedBBlimbs = new HashMap<>();
-            
-            for(ModelLimb limb : this.model.limbs.values())
+
+            if (this.model != null)
             {
-                List<OrientedBB> newObbs = new ArrayList<>();
-                
-                for(OrientedBB obb : limb.obbs)
+                for(ModelLimb limb : this.model.limbs.values())
                 {
-                    newObbs.add(obb.clone()); 
+                    List<OrientedBB> newObbs = new ArrayList<>();
+
+                    for(OrientedBB obb : limb.obbs)
+                    {
+                        newObbs.add(obb.clone());
+                    }
+
+                    this.orientedBBlimbs.put(limb, newObbs);
                 }
-                
-                this.orientedBBlimbs.put(limb, newObbs);
             }
         }
     }
