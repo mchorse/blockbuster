@@ -14,7 +14,6 @@ blockbuster.config:
         green_screen_sky_color: 色度天空颜色
         url_skins_sync_download: 同步的 URL 下载
         add_utility_blocks: 添加实用方块
-        cached_structure_rendering: 缓存结构渲染
         bb_gun_sync_distance: BB 枪距离同步
         
     model_block:

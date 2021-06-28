@@ -14,7 +14,6 @@ blockbuster.config:
         green_screen_sky_color: Цвет хроманеба
         url_skins_sync_download: Синхронная загрузка ссылок
         add_utility_blocks: Добавить полезные блоки
-        cached_structure_rendering: Кэшированное отображение структур
         bb_gun_sync_distance: Дистанция синхронизации ББ Оружия
     
     model_block:

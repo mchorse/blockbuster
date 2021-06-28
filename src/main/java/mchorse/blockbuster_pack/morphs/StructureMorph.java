@@ -40,6 +40,8 @@ import java.util.Objects;
 
 public class StructureMorph extends AbstractMorph implements IAnimationProvider, ISyncableMorph
 {
+    private static final ResourceLocation DEFAULT_BIOME = new ResourceLocation("ocean");
+
     /**
      * Map of baked structures 
      */
@@ -59,8 +61,8 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
     /**
      * The biome used for render;
      */
-    public String biome = "ocean";
-    
+    public ResourceLocation biome = DEFAULT_BIOME;
+
     /**
      * Whether this structuer use world lighting.
      */
@@ -105,7 +107,7 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
                 STRUCTURE_CACHE.put(name, modified);
             }
 
-            if (modified != null && modified.longValue() < file.lastModified())
+            if (modified < file.lastModified())
             {
                 STRUCTURE_CACHE.put(name, file.lastModified());
 
@@ -149,6 +151,13 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
         return this.animation;
     }
 
+    public Biome getBiome()
+    {
+        Biome biome = Biome.REGISTRY.getObject(this.biome);
+
+        return biome == null ? Biomes.DEFAULT : biome;
+    }
+
     @Override
     public void pause(AbstractMorph previous, int offset)
     {
@@ -173,13 +182,7 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
     @SideOnly(Side.CLIENT)
     protected String getSubclassDisplayName()
     {
-        Biome biome;
-        String biomeName = this.biome;
-        biome = Biome.REGISTRY.getObject(new ResourceLocation(biomeName));
-        if (biome == null)
-            biome = Biomes.DEFAULT;
-        
-        String suffix = this.structure != null && !this.structure.isEmpty() ? " (" + this.structure + "-" + this.biome + ")" : "";
+        String suffix = this.structure != null && !this.structure.isEmpty() ? " (" + this.structure + "-" + this.biome.getResourcePath() + ")" : "";
 
         return I18n.format("blockbuster.morph.structure") + suffix;
     }
@@ -366,6 +369,8 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
 
             result = result && Objects.equals(this.structure, morph.structure);
             result = result && Objects.equals(this.pose, morph.pose);
+            result = result && Objects.equals(this.biome, morph.biome);
+            result = result && this.lighting == morph.lighting;
         }
 
         return result;
@@ -401,7 +406,7 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
         if (tag.hasKey("Structure")) this.structure = tag.getString("Structure");
         if (tag.hasKey("Pose")) this.pose.fromNBT(tag.getCompoundTag("Pose"));
         if (tag.hasKey("Animation")) this.animation.fromNBT(tag.getCompoundTag("Animation"));
-        if (tag.hasKey("Biome")) this.biome = tag.getString("Biome");
+        if (tag.hasKey("Biome")) this.biome = new ResourceLocation(tag.getString("Biome"));
         if (tag.hasKey("Lighting")) this.lighting = tag.getBoolean("Lighting");
     }
 
@@ -427,9 +432,11 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
             tag.setTag("Animation", animation);
         }
         
-        if (!"ocean".equals(this.biome))
+        if (!this.biome.equals(DEFAULT_BIOME))
         {
-            tag.setString("Biome", this.biome);
+            ResourceLocation biome = this.biome == null ? DEFAULT_BIOME : this.biome;
+
+            tag.setString("Biome", biome.toString());
         }
         
         if (!this.lighting)

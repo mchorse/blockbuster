@@ -1,9 +1,7 @@
 package mchorse.blockbuster_pack.morphs.structure;
 
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.client.ClientHandlerStructure;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
-import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -16,11 +14,8 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.entity.Entity;
-import net.minecraft.init.Biomes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
@@ -116,13 +111,7 @@ public class StructureRenderer
     {
         GL11.glNormal3f(0, 0.6F, 0);
         
-        Biome biome;
-        String biomeName = morph.biome;
-        biome = Biome.REGISTRY.getObject(new ResourceLocation(biomeName));
-        if (biome == null)
-        {
-            biome = Biomes.DEFAULT;
-        }
+        Biome biome = morph.getBiome();
         
         if (this.buffers.get(biome) == null)
         {

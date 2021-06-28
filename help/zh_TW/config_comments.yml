@@ -8,7 +8,6 @@ blockbuster.config.comments:
         green_screen_sky_color: 指定天空顏色，用於色度天空功能
         url_skins_sync_download: 同步下載來自 URL 的皮膚。這能讓 URL 皮膚也能夠實現 3D 外層功能，代價是凍結遊戲進程（假死）進行下載
         add_utility_blocks: 在 Blockbuster 的創造模式選項卡中添加命令和結構塊等方塊，以簡化獲取這些物品的過程
-        cached_structure_rendering: 啟用後，結構偽裝系統將使用更高性能的方式來渲染結構，但會造成壹些來自模組的方塊消失，例如 Chisel&Bits
         bb_gun_sync_distance: 若距離大於 0，該選項會啟用 BB 槍的炮彈同步功能，使炮彈與服務器同步，但代價是會產生抖動傳送
 
     model_block:
