@@ -592,6 +592,9 @@ blockbuster.gui:
     record_morph:
         random_skip: Random Skip
 
+    structure_morph:
+        lighting: Lighting
+
     texture:
         title: Texture manager
         subtitle: This GUI allows you to view and manage textures loaded by Minecraft during runtime

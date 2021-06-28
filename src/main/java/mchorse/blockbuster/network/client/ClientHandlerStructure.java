@@ -7,6 +7,7 @@ import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
+import net.minecraft.init.Biomes;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameType;
@@ -15,6 +16,7 @@ import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.WorldType;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.structure.template.PlacementSettings;
 import net.minecraft.world.gen.structure.template.Template;
@@ -111,7 +113,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
     public static class FakeWorld extends World
     {
         public ChunkProviderClient clientChunkProvider;
-        public int combinedLight;
+        public Biome biome;
 
         public FakeWorld(ISaveHandler saveHandlerIn, WorldInfo info, WorldProvider providerIn, Profiler profilerIn, boolean client)
         {
@@ -119,6 +121,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
 
             /* If not called, there would be NPE any time blocks accessed */
             this.chunkProvider = this.createChunkProvider();
+            this.biome = Biomes.DEFAULT;
         }
 
         @Override
@@ -149,15 +152,10 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
             return true;
         }
 
-        public void setLightLevel(float lastBrightnessX, float lastBrightnessY)
-        {
-            this.combinedLight = (int) lastBrightnessX + (int) lastBrightnessY * 65536;
-        }
-
         @Override
-        public int getCombinedLight(BlockPos pos, int lightValue)
+        public Biome getBiome(BlockPos pos)
         {
-            return this.combinedLight;
+            return this.biome;
         }
     }
 }
