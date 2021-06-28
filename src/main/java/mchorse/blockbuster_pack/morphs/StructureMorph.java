@@ -8,6 +8,7 @@ import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
 import mchorse.blockbuster_pack.morphs.structure.StructureAnimation;
 import mchorse.blockbuster_pack.morphs.structure.StructureRenderer;
 import mchorse.blockbuster_pack.morphs.structure.StructureStatus;
+import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
@@ -15,13 +16,17 @@ import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Biomes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.management.PlayerList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
@@ -50,6 +55,16 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
      * The name of the structure which should be rendered 
      */
     public String structure = "";
+    
+    /**
+     * The biome used for render;
+     */
+    public String biome = "ocean";
+    
+    /**
+     * Whether this structuer use world lighting.
+     */
+    public boolean lighting = true;
 
     /**
      * TSR for structure morph
@@ -158,7 +173,13 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
     @SideOnly(Side.CLIENT)
     protected String getSubclassDisplayName()
     {
-        String suffix = this.structure != null && !this.structure.isEmpty() ? " (" + this.structure + ")" : "";
+        Biome biome;
+        String biomeName = this.biome;
+        biome = Biome.REGISTRY.getObject(new ResourceLocation(biomeName));
+        if (biome == null)
+            biome = Biomes.DEFAULT;
+        
+        String suffix = this.structure != null && !this.structure.isEmpty() ? " (" + this.structure + "-" + this.biome + ")" : "";
 
         return I18n.format("blockbuster.morph.structure") + suffix;
     }
@@ -188,6 +209,9 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
 
             Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
+            float lastX = OpenGlHelper.lastBrightnessX;
+            float lastY = OpenGlHelper.lastBrightnessY;
+            
             GlStateManager.enableDepth();
             GlStateManager.enableAlpha();
             GlStateManager.disableCull();
@@ -199,13 +223,15 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
             GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
 
-            renderer.render();
-            renderer.renderTEs();
+            renderer.render(this);
+            renderer.renderTEs(this);
             GlStateManager.disableLighting();
             GlStateManager.popMatrix();
             GlStateManager.enableCull();
             GlStateManager.disableAlpha();
             GlStateManager.disableDepth();
+            
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastX, lastY);
         }
     }
 
@@ -230,8 +256,11 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
 
             float lastX = OpenGlHelper.lastBrightnessX;
             float lastY = OpenGlHelper.lastBrightnessY;
-
-            renderer.world.setLightLevel(lastX, lastY);
+            
+            if (GuiModelRenderer.isRendering() && !this.lighting)
+            {
+                Minecraft.getMinecraft().entityRenderer.enableLightmap();
+            }
 
             Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
@@ -251,22 +280,35 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
             }
 
             transform.transform();
-
+            
+            RenderHelper.disableStandardItemLighting();
+            
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
-            renderer.render();
+            renderer.render(this);
 
             GlStateManager.disableBlend();
             GlStateManager.disableAlpha();
             GlStateManager.shadeModel(GL11.GL_FLAT);
+            
+            GlStateManager.enableLighting();
+            GlStateManager.enableLight(0);
+            GlStateManager.enableLight(1);
+            GlStateManager.enableColorMaterial();
 
             GL11.glColor4f(1, 1, 1, 1);
-            renderer.renderTEs();
-
+            renderer.renderTEs(this);
+            
             GlStateManager.popMatrix();
+            
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastX, lastY);
+            if (GuiModelRenderer.isRendering() && !this.lighting)
+            {
+                Minecraft.getMinecraft().entityRenderer.disableLightmap();
+            }
         }
     }
 
@@ -296,6 +338,8 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
             this.structure = morph.structure;
             this.pose.copy(morph.pose);
             this.animation.copy(morph.animation);
+            this.biome = morph.biome;
+            this.lighting = morph.lighting;
         }
     }
 
@@ -357,6 +401,8 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
         if (tag.hasKey("Structure")) this.structure = tag.getString("Structure");
         if (tag.hasKey("Pose")) this.pose.fromNBT(tag.getCompoundTag("Pose"));
         if (tag.hasKey("Animation")) this.animation.fromNBT(tag.getCompoundTag("Animation"));
+        if (tag.hasKey("Biome")) this.biome = tag.getString("Biome");
+        if (tag.hasKey("Lighting")) this.lighting = tag.getBoolean("Lighting");
     }
 
     @Override
@@ -379,6 +425,16 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
         if (!animation.hasNoTags())
         {
             tag.setTag("Animation", animation);
+        }
+        
+        if (!"ocean".equals(this.biome))
+        {
+            tag.setString("Biome", this.biome);
+        }
+        
+        if (!this.lighting)
+        {
+            tag.setBoolean("Lighting", this.lighting);
         }
     }
 }

@@ -2,25 +2,35 @@ package mchorse.blockbuster_pack.morphs.structure;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.client.ClientHandlerStructure;
+import mchorse.blockbuster_pack.morphs.StructureMorph;
+import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
+import net.minecraft.entity.Entity;
+import net.minecraft.init.Biomes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Structure renderer
@@ -31,11 +41,16 @@ import java.nio.ByteBuffer;
 @SideOnly(Side.CLIENT)
 public class StructureRenderer
 {
+    public static int renderTimes = 0;
+    
     public StructureStatus status = StructureStatus.UNLOADED;
-    public ByteBuffer buffer;
+    public Map<Biome, int[]> buffers = new HashMap<Biome, int[]>();
     public int count = 0;
     public BlockPos size;
     public ClientHandlerStructure.FakeWorld world;
+    public VertexFormat worldLighting;
+    public VertexFormat structureLighting;
+    public Map<TileEntity, Integer> tileEntityLighting = new LinkedHashMap<TileEntity, Integer>();
 
     public StructureRenderer()
     {}
@@ -45,71 +60,82 @@ public class StructureRenderer
         this.size = size;
         this.world = world;
 
-        this.rebuild();
+        this.setupFormat();
+        this.status = StructureStatus.LOADED;
     }
 
-    public void rebuild()
+    public void setupFormat()
+    {
+        /* Check if optifine changed format. */
+        if (!DefaultVertexFormats.BLOCK.equals(this.structureLighting))
+        {
+            this.buffers.clear();
+            this.structureLighting = DefaultVertexFormats.BLOCK;
+            this.worldLighting = new VertexFormat();
+            for (VertexFormatElement element : this.structureLighting.getElements())
+            {
+                if (DefaultVertexFormats.TEX_2S.equals(element))
+                {
+                    this.worldLighting.addElement(new VertexFormatElement(0, VertexFormatElement.EnumType.SHORT, VertexFormatElement.EnumUsage.PADDING, 2));
+                }
+                else
+                {
+                    this.worldLighting.addElement(element);
+                }
+            }
+        }
+    }
+
+    public void rebuild(Biome biome)
     {
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buffer = tess.getBuffer();
 
+        this.world.biome = biome;
+        buffer.begin(GL11.GL_QUADS, this.structureLighting);
         this.render(buffer);
         buffer.finishDrawing();
 
         int count = buffer.getVertexCount();
-        ByteBuffer byteBuffer = buffer.getByteBuffer();
+        int[] vertexData = new int[count * this.structureLighting.getIntegerSize()];
+        buffer.getByteBuffer().asIntBuffer().get(vertexData);
 
-        this.buffer = GLAllocation.createDirectByteBuffer(byteBuffer.capacity());
-        this.buffer.put(byteBuffer);
+        this.buffers.put(biome, vertexData);
         this.count = count;
-        this.status = StructureStatus.LOADED;
-    }
-
-    public void render()
-    {
-        GL11.glNormal3f(0, 0.6F, 0);
-
-        if (Blockbuster.cachedStructureRendering.get())
+        
+        if (this.tileEntityLighting.isEmpty())
         {
-            if (this.buffer == null)
+            for (TileEntity te : this.world.loadedTileEntityList)
             {
-                this.rebuild();
-            }
-
-            if (this.buffer != null)
-            {
-                int stride = 28;
-
-                GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-                GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
-                GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-
-                this.buffer.position(0);
-                GlStateManager.glVertexPointer(3, GL11.GL_FLOAT, stride, this.buffer);
-                this.buffer.position(12);
-                GlStateManager.glColorPointer(4, GL11.GL_UNSIGNED_BYTE, stride, this.buffer);
-                this.buffer.position(16);
-                OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
-                GlStateManager.glTexCoordPointer(2, GL11.GL_FLOAT, stride, this.buffer);
-                OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapTexUnit);
-                this.buffer.position(24);
-                GlStateManager.glTexCoordPointer(2, GL11.GL_SHORT, stride, this.buffer);
-                OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
-
-                GlStateManager.glDrawArrays(GL11.GL_QUADS, 0, this.count);
-
-                GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
-                GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
-                GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+                this.tileEntityLighting.put(te, this.world.getCombinedLight(te.getPos(), 0));
             }
         }
-        else
+    }
+
+    public void render(StructureMorph morph)
+    {
+        GL11.glNormal3f(0, 0.6F, 0);
+        
+        Biome biome;
+        String biomeName = morph.biome;
+        biome = Biome.REGISTRY.getObject(new ResourceLocation(biomeName));
+        if (biome == null)
+        {
+            biome = Biomes.DEFAULT;
+        }
+        
+        if (this.buffers.get(biome) == null)
+        {
+            this.setupFormat();
+            this.rebuild(biome);
+        }
+        
+        if (this.buffers.get(biome) != null)
         {
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buffer = tess.getBuffer();
-
-            this.render(buffer);
-
+            buffer.begin(GL11.GL_QUADS, morph.lighting ? this.worldLighting : this.structureLighting);
+            buffer.addVertexData(this.buffers.get(biome));
             tess.draw();
         }
     }
@@ -124,7 +150,6 @@ public class StructureRenderer
         BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
 
         /* Centerize the geometry */
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
         buffer.setTranslation(-w / 2F - origin.getX(), -origin.getY(), -d / 2F - origin.getZ());
 
         for (BlockPos.MutableBlockPos pos : BlockPos.getAllInBoxMutable(origin, origin.add(w, h, d)))
@@ -141,25 +166,46 @@ public class StructureRenderer
         buffer.setTranslation(0, 0, 0);
     }
 
-    public void renderTEs()
+    public void renderTEs(StructureMorph morph)
     {
+        if (renderTimes >= 10 || GL11.glGetInteger(GL11.GL_MODELVIEW_STACK_DEPTH) >= GL11.glGetInteger(GL11.GL_MAX_MODELVIEW_STACK_DEPTH) - 4)
+        {
+            return;
+        }
+        
         if (this.world == null)
         {
             return;
         }
 
-        for (TileEntity te : this.world.loadedTileEntityList)
+        renderTimes++;
+        
+        for (Entry<TileEntity, Integer> entry : this.tileEntityLighting.entrySet())
         {
+            if (!morph.lighting)
+            {
+                int block = entry.getValue() % 65536;
+                int sky = entry.getValue() / 65536;
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, block, sky);
+            }
+            
+            TileEntity te = entry.getKey();
             BlockPos pos = te.getPos();
+            
             TileEntityRendererDispatcher.instance.render(te, pos.getX() - this.size.getX() / 2D - 1, pos.getY() - 1, pos.getZ() - this.size.getZ() / 2D - 1, 0);
+            /* For Beacon & End Gateway */
+            GlStateManager.disableFog();
         }
+            
+        renderTimes--;
     }
 
     public void delete()
     {
-        if (this.buffer != null)
+        if (!this.buffers.isEmpty())
         {
-            this.buffer = null;
+            this.buffers.clear();
+            this.tileEntityLighting.clear();
             this.count = 0;
             this.status = StructureStatus.UNLOADED;
         }

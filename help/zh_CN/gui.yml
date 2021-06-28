@@ -570,6 +570,9 @@ blockbuster.gui:
     record_morph:
         random_skip: 随机跳过
 
+    structure_morph:
+        lighting: 使用外部光照
+
     texture:
         title: 材质管理器
         subtitle: 该界面可用于查看和管理已在 Minecraft 运行时中载入的材质
