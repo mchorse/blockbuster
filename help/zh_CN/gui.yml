@@ -265,6 +265,9 @@ blockbuster.gui:
             interact_entity:
                 title: 与实体交互 Interact with entity
                 desc: 与当前演员所看向的实体进行交互（使用如命名牌、物品展示框或模型实体进行交互）
+            close_container:
+                title: 关闭箱子 Close Container
+                desc: 关闭演员所打开的容器，这通常可以关闭演员先前所交互的箱子。（仅适用于假玩家）
 
     # Playback GUI
     playback:

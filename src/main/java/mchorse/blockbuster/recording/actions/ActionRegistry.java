@@ -187,5 +187,6 @@ public class ActionRegistry
         NEXT_ID = 21;
 
         register("interact_entity", InteractEntityAction.class);
+        register("close_container", CloseContainerAction.class);
     }
 }
