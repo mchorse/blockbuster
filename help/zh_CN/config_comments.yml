@@ -14,7 +14,7 @@ blockbuster.config.comments:
         model_block_disable_rendering: 是否渲染模型方块
         model_block_disable_item_rendering: 是否关闭模型方块的物品渲染（有人想要关掉吗？）
         restore: 该选项可恢复旧版的一个 BUG，从而能够恢复不小心被拆掉的模型方块。
-        reset_on_playback: 启用后，当场景开始播放所以回放时，所有的模型方块就会自动复位
+        reset_on_playback: 启用后，当场景开始播放所有回放时，所有的模型方块就会自动复位
 
     recording:
         recording_countdown: 录制倒计时（秒）
@@ -56,3 +56,4 @@ blockbuster.config.comments:
         waveform_width: 音频条的宽度，以浮点百分比表示（0 和 1 之间）
         waveform_height: 音频条的高度，单位为像素
         waveform_filename: 音频中播放的音频的文件名是否显示
+        waveform_time: 音轨的播放时间是否显示。需要注意的是，音轨的播放时间不一定代表场景的当前播放时间！

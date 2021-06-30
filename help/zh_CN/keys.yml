@@ -6,5 +6,5 @@ key:
 
         plause_director: 播放/停止回放
         record_director: 录制回放
-        pause_director: 暂停回放
+        pause_director: 暂停场景回放 / 取消录制
         open_gun: 配置枪

@@ -12,7 +12,7 @@ blockbuster.info:
 
         replace_texture: "{f}材質 %s{f} 已被替換為材質 %s{f}。"
         restore_texture: "{f}材質 %s{f} 已還原為初始狀態。"
-        
+
         not_loaded: "{f}材質 %s{f} 沒有加載。"
 
         started_combining: "{f}開始合並 %s{f} 中的皮膚..."
@@ -42,3 +42,6 @@ blockbuster.info:
         dead: "{f}已終止錄制 %s{f}，因為玩家已死亡。"
         message: "{f}若要開始錄制 %s{f}，%s{f}！"
         clickhere: 點擊這裏
+
+    action:
+        cancel: "{f}當前錄制進程已取消。"
