@@ -1,24 +1,24 @@
 # Blockbuster error strings
 #
-# This file is responsible for storing error messages across whole mod（there 
+# This file is responsible for storing error messages across whole mod（there
 # are a lot of strings in the mod）.
 
 blockbuster.error:
     # Actor error strings
     actor:
         not_attached: "{f}该激活工具还未链接到导演方块上！"
-    
+
     # General command errors
     commands:
         load_chunks: 无法加载渲染范围里所有已创建的区块！请参阅日志了解详细的错误信息。
-        
+
         restore_texture: "{f}材质 %s{f} 无法被恢复，因为它没有被该命令更改过。"
         replace_texture: "{f}材质 %s{f} 和 %s{f} 未被加载！"
         replace_texture_one: "{f}材质 %s{f} 未被加载！"
-        
+
         no_player: "{f}无法找到玩家 %s{f}！"
         no_entity: "{f}无法找到目标选择器所指定的实体 %s{f}！"
-        
+
         convert_model: "{f}指定了错误的模型 %s{f}！它必须要是 {7}steve{f} 或是 {7}fred{f}。"
         convert_skin: "{f}在转换 %s{f}/%s{f} 皮肤过程中，出现了错误：%s{f}"
         convert_skin_size: "{f}皮肤的大小为 %s{f}x%s{f}，且/皮肤的比例必须为 1:1 或 2:1！"
@@ -33,7 +33,7 @@ blockbuster.error:
         stopped: "{f}场景 %s{f} 已停止播放！"
 
         no_scene: "{f}不存在名为 %s{f} 的场景。"
-    
+
     # Errors for /model export
     model:
         export:
@@ -41,9 +41,9 @@ blockbuster.error:
             wrong_type: "{f}无法以 %s{f} 的形式导出模型（因为它没有渲染器，或为非活动的实体渲染器）。"
             no_model: "{f}无法将模型 %s{f} 导出为 OBJ，因为无法找到该模型！"
             obj: "{f}无法导出模型 %s{f}！"
-        
+
         reload: 您需要成为 OP 用户才能重载模型！
-    
+
     # Record command errors
     record:
         no_action: "{f}文件名为 %s{f} 的玩家回放内容在 %s{f} Tick 时没有动作！"
@@ -61,6 +61,7 @@ blockbuster.error:
         cant_restore: "{f}无法回退一个版本，因为临时文件现在不应该存在..."
         wrong_axis: "{f}给定的 \"%s{f}\" 不是合法的轴。轴应该为 {7}x{r} 或者 {7}z{r}！"
         invalid_math_expression: "给定的数学表达式 \"%s{r}\" 不是有效的数学表达式！"
+        wrong_apply_property: "{f}给定需要应用的属性 %s{f} 错误！"
 
     # Recording errors
     recording:

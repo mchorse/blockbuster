@@ -95,6 +95,8 @@ blockbuster.gui:
         fake_player: 假玩家
         tp_back: 传送回来
         tp_back_tooltip: 将您传送回开始位置
+        render_last: 最后渲染
+        render_last_tooltip: 使演员在最后被渲染，可以解决在大多数情况下，不透明的演员出现在使用了半透明伪装的演员后面的显示问题。\n\n该选项需要先启用“始终渲染演员”模组选项，并且该演员的“假玩家”选项需要保持禁用。
         health: 生命值
         edit_record: 编辑回放
         update_data: 更新数据
@@ -274,7 +276,7 @@ blockbuster.gui:
 
     builder:
         pose_editor: 姿势编辑器
-        body_part: 身体部分
+        body_part: 身体附件
         materials: 材质
         nbt: NBT
 
@@ -287,7 +289,7 @@ blockbuster.gui:
         pick_texture: 选择材质贴图
 
         limbs: 肢体
-        body_parts: 身体部分
+        body_parts: 身体附件
         use_target: 使用目标
 
         shape_keys: 形态键
@@ -314,7 +316,7 @@ blockbuster.gui:
         rotation: 坐标旋转
         keying: 键控
         keying_tooltip: 该选项会清除屏幕中，由这个伪装（在帧缓冲器中）渲染的颜色数据，最终可以用于 Minema 的“使用 Alpha 通道”选项输出已键控（抠像）的画面，而不需要外部视频编辑软件
-        
+
     sequencer:
         duration: 持续长度
         random: 随机
@@ -324,6 +326,7 @@ blockbuster.gui:
         no_morph: （没有伪装）
         morphs: 伪装
         random_order: 随机顺序
+        truly_random_order: 完全随机
         ticks: Ticks
 
         preview_tick: 该序列伪装的预览 Tick 数
@@ -353,7 +356,7 @@ blockbuster.gui:
         dy: Y 偏移
         dz: Z 偏移
         local_rotation: 局部旋转
-        local_rotation_tooltip: 当绑定于身体部分时，原版粒子会相对于身体部分的旋转来发射，否则它们会相对于世界发射
+        local_rotation_tooltip: 当绑定于身体附件时，原版粒子会相对于身体附件的旋转来发射，否则它们会相对于世界发射
         speed: 速度
         count: 数量
         args: 附加参数
@@ -398,16 +401,35 @@ blockbuster.gui:
             title: 粒子空间属性
 
             position: 相对位置
+            position_tooltip: 粒子将在实体空间进行模拟。
             rotation: 相对旋转
+            rotation_tooltip: 粒子旋转将在实体空间中进行模拟。只有在“相对位置”也被启用的情况下才有效。
+            scale: 相对缩放
+            scale_tooltip: 会根据目标的比例来缩放粒子。在启用“相对位置”和“相对旋转”时效果最好。它在碰撞方面的效果并不好！
             direction: 相对方向
+            direction_tooltip: 会根据目标在生成时的旋转情况旋转一次方向矢量。
             acceleration: 相对加速度
+            acceleration_tooltip: 会在整个生命周期内根据目标的旋转来旋转加速度向量。
             gravity: 重力
+            scale_billboard: 缩放材质
+            scale_billboard_tooltip: 根据目标的比例来缩放粒子的材质大小。
+            object_velocity_title: 对象
+            linear_velocity: 速度
+            linear_velocity_tooltip: 会让对象给粒子一个初速度。该速度会根据 Snowstorm 伪装的位置变化来计算，再乘以给定的系数。它会被添加至粒子在生成时间的速度中去。
+            angular_velocity: 角速度
+            angular_velocity_tooltip: 角度速度会根据 Snowstorm 伪装的旋转变化来计算，并乘以给定的系数。它会被添加至粒子在生成时间的速度中去。半径为 Snowstorm 伪装身体附件的位移。
+
 
         initialization:
             title: 初始化表达式
 
+            emitter_expression_title: 发射器表达式（基岩版）
             create: 起始表达式，会在发射器启动时运行
             update: 更新表达式，会在每一 Tick 中运行
+
+            particle_expression_title: 粒子表达式（Blockbuster）
+            particle_update_expression: 粒子表达式，会为每个粒子运行。它们对每个粒子都是相对运行的
+
 
         rate:
             title: 生成频率
@@ -465,6 +487,12 @@ blockbuster.gui:
 
             position: 位置
             position_speed: 初速度
+            speed: 速度
+            acceleration_title: 加速度
+            acceleration_x: X 加速度
+            acceleration_y: Y 加速度
+            acceleration_z: Z 加速度
+            position_drag_title: 空气阻力
             position_drag: 运动阻力
 
             rotation: 旋转
@@ -526,6 +554,7 @@ blockbuster.gui:
             title: 颜色与发光
 
             lighting: 发光
+            lighting_tooltip: 使用 Minecraft 的阴影进行渲染。若禁用该选项，粒子就会发光。
 
             solid: 纯色
             expression: 表达式
@@ -544,6 +573,8 @@ blockbuster.gui:
             preserve_energy_tooltip: 保留能量选项可用于保留粒子在碰撞后的速度
             entity_collision: 与实体碰撞
             momentum: 实体碰撞动量
+            realistic_collision_drag: 真实碰撞阻力
+            realistic_collision_drag_tooltip: 当粒子停止碰撞时，碰撞阻力将被重置。启用该选项也会解决粒子在高碰撞阻力值下加速离开的问题。
             drag: 在粒子与世界中的方块碰撞后，碰撞阻力所增加的阻力（减速）大小
             bounciness: 碰撞后粒子的加速度乘以弹性
             random_direction: 随机方向 - 随机化方向矢量。该参数不影响速度。
@@ -587,24 +618,28 @@ blockbuster.gui:
         export_error: "该材质无法导出... 请检查运行日志以查看错误信息！"
         open_folder: "打开导出文件夹..."
         copy: "将当前所选的材质复制为文字路径（域:路径）"
-        
+
     gun:
         title: 枪配置
         fire_props: 发射属性
         projectile_props: 炮弹属性
         impact_props: 撞击属性
         transforms: 变换
-        
+
         default_morph: 默认伪装
-        fire_morph: 发射时显示的伪装
-        fire_command: 发射时执行以下命令：
+        fire_morph: 开火伪装
+        fire_command: 发射时的命令
         delay: 延迟
         projectiles: 炮弹
         scatter: 分散程度
-        launch: 发射自己
-        
-        projectile_morph: 作为炮弹的伪装
-        tick_command: 在 Tick 频率上执行的命令
+        scatter_x: 水平分散
+        scatter_y: 垂直分散
+        launch: 发射玩家
+        ammo_stack: 该选项可以指定一个物品，并且会在射击时被消耗掉。如果在生存模式下射击时没有这类物品及其数量，炮弹则不会被射出。\n\n可以把它看作是一个弹药选项。
+
+
+        projectile_morph: 炮弹伪装
+        tick_command: 以 Tick 频率执行的命令
         ticking: Tick 频率
         life_span: 寿命
         yaw: 偏航
@@ -618,19 +653,29 @@ blockbuster.gui:
         gravity: 引力
         fade_in: 缓入
         fade_out: 缓出
-        
-        impact_morph: 撞击后的伪装
+
+        impact_morph: 撞击伪装
         impact_delay: 撞击延迟
-        impact_command: 撞击时执行的命令
+        impact_command: 撞击时的命令
+        impact_entity_command: 撞击到实体时的命令
         vanish: 消失 # or Spanish
         sticks: 附着
         bounce: 反弹
         hits: 反弹次数
         damage: 伤害
+        knockback_horizontal: 水平方向的击退系数，0 表示没有击退，数值越大，实体被击退的就越远
+        knockback_vertical: 垂直方向的击退系数，0 表示没有击退，数值越大，实体被击退的就越远。若水平击退系数为 0，则该选项不会生效
         bounce_factor: 系数
+        vanish_command: 消失时的命令
         vanish_delay: 消失延迟
         penetration: 穿透系数 - 炮弹会穿透多厚的方块（该选项仅在启用“附着”时才有效）
-        
+
+        collision: 碰撞
+        ignore_blocks: 忽略方块
+        ignore_blocks_tooltip: 该选项可以使炮弹穿过方块，而不是弹跳、滑动或粘住
+        ignore_entities: 忽略实体
+        ignore_entities_tooltip: 该选项可以使炮弹穿过实体，而不是造成伤害、击退或执行撞击到实体时的命令
+
         gun_transforms: 枪变换
         projectile_transforms: 炮弹变换
 

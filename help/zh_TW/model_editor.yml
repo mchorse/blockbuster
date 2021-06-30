@@ -6,15 +6,15 @@ blockbuster.gui.me:
 
     limbs:
         title: 肢體
-        
+
         size: 肢體尺寸
         size_offset: 尺寸偏移
-        texture: 材質偏移
         item_scale: 物品縮放
+        texture: 材質偏移
         anchor: 錨點
         origin: OBJ/VOX 源
         slot: 盔甲槽
-        
+
         color: 顏色
         opacity: 不透明度
         mirror: 鏡像
@@ -25,7 +25,7 @@ blockbuster.gui.me:
         none: 無
         right: 右
         left: 左
-        
+
         appearance: 外觀
 
         animation: 動畫
@@ -42,12 +42,12 @@ blockbuster.gui.me:
 
         rename: 重命名
         parent: 父級
-        
+
         new_limb: 為新肢體命名...
-        last_limb: 您不能移除最後壹個肢體...
+        last_limb: 您不能移除最後一個肢體...
         rename_limb: "重命名當前肢體："
-        parent_limb: "為當前所選的肢體選擇壹個父級肢體..."
-        
+        parent_limb: "為當前所選的肢體選擇一個父級肢體..."
+
         slots:
             none: 無
             head: 頭盔
@@ -59,15 +59,15 @@ blockbuster.gui.me:
             right_leg: 右腿
             left_foot: 左鞋
             right_foot: 右鞋
-    
+
     models:
         title: 模型
         save: 保存模型
         export: 從生物中新建模型
         name: "為模型命名："
         pick: "選擇您想從中導出肢體的生物："
-        error: "糟糕，由於壹個錯誤，導致無法新建模型：%s"
-    
+        error: "糟糕，由於一個錯誤，導致無法新建模型：%s"
+
     options:
         name: 顯示名稱
         texture: 材質尺寸
@@ -80,24 +80,29 @@ blockbuster.gui.me:
         extrude_inwards: 向內擠壓系數。該選項可以控制高清皮膚的體素塊會向內擠壓多少，因為最大系數越高，體素塊越薄。
         provides_obj: 提供 OBJ
         provides_mtl: 提供 MTL
+        legacy_obj: 舊版 OBJ 載入模式
+        legacy_obj_tooltip: 啟用後，OBJ 模型將使用舊版方式進行加載，包含一些不一樣的地方，比如則 X 軸上會被翻轉。\n\n禁用後，OBJ 模型將使用新版方式進行加載，會更符合 OBJ 模型應有的外觀。
         default_texture: 選擇默認材質
-    
+
     poses:
         title: 姿勢
         new_pose: "為新姿勢命名："
+
         paste_pose: "為粘貼的姿勢命名："
         import_pose: "在此輸入姿勢的 NBT 數據來導入它到當前的姿勢："
         import_pose_tooltip: "使用 NBT 標簽來導入姿勢的屬性"
-        copy_pose: "選擇要復制的當前肢體屬性的姿勢。"
-        copy_pose_tooltip: "從另壹個姿勢復制姿勢屬性"
+        copy_pose: "選擇要覆制的當前肢體屬性的姿勢。"
+        copy_pose_tooltip: "從另一個姿勢覆制姿勢屬性"
         apply_pose: "選擇您想要應用至當前肢體的姿勢。"
         apply_pose_tooltip: "將當前肢體的姿勢應用至其他姿勢上"
+        rename_pose: "為該姿勢輸入一個新名稱："
         standard: "您無法移除必須的姿勢..."
         hitbox: 碰撞箱尺寸
 
         context:
             copy: 拷貝姿勢
             paste: 粘貼姿勢
+            rename: 重命名姿勢
 
     tooltips:
         save: 保存模型
