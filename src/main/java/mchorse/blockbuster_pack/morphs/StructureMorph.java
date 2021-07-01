@@ -59,12 +59,12 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
     public String structure = "";
     
     /**
-     * The biome used for render;
+     * The biome used for render
      */
     public ResourceLocation biome = DEFAULT_BIOME;
 
     /**
-     * Whether this structuer use world lighting.
+     * Whether this structure use world lighting.
      */
     public boolean lighting = true;
 
@@ -369,6 +369,7 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
 
             result = result && Objects.equals(this.structure, morph.structure);
             result = result && Objects.equals(this.pose, morph.pose);
+            result = result && Objects.equals(this.animation, morph.animation);
             result = result && Objects.equals(this.biome, morph.biome);
             result = result && this.lighting == morph.lighting;
         }
