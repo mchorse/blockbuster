@@ -126,6 +126,7 @@ public class GuiSnowstormSpaceSection extends GuiSnowstormComponentSection<Bedro
         this.position.toggled(this.component.position);
         this.rotation.toggled(this.component.rotation);
         this.scale.toggled(this.component.scale);
+        this.scaleBillboard.toggled(this.component.scaleBillboard);
         this.direction.toggled(this.component.direction);
         this.acceleration.toggled(this.component.acceleration);
         this.gravity.toggled(this.component.gravity);
@@ -137,13 +138,13 @@ public class GuiSnowstormSpaceSection extends GuiSnowstormComponentSection<Bedro
 
     private void updateButtons()
     {
-        this.scaleBillboard.removeFromParent();
+        /*this.scaleBillboard.removeFromParent();
 
         if (this.scale.isToggled())
         {
             this.scaleColumns.add(this.scaleBillboard);
         }
 
-        this.resizeParent();
+        this.resizeParent();*/
     }
 }
