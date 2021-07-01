@@ -103,7 +103,7 @@ public class GuiSnowstormSpaceSection extends GuiSnowstormComponentSection<Bedro
         this.objectVelocity.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.space.angular_velocity")).marginTop(12), this.angularVelocity);
 
         this.scaleColumns.add(this.scale);
-
+        this.scaleColumns.add(this.scaleBillboard);
 
         this.fields.add(this.position, this.rotation, this.scaleColumns, this.direction, this.acceleration, this.gravity, this.objectVelocity);
     }

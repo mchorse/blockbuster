@@ -2,14 +2,14 @@ blockbuster.success:
     commands:
         mipmaped_texture: "{f}材質 %s{f} 已成功 Mipmap 化！"
         demipmaped_texture: "{f}材質的 Mipmap %s{f} 已刪除！"
-        
+
         texture_filter_linear: "{f}材質的過濾器已變更為線性！"
         texture_filter_nearest: "{f}材質的過濾器已變更為最近的臨近物！"
-        
+
         convert_skin: "{f}成功轉換 %s{r}/%s{r} 皮膚！"
 
-        item_nbt: "{f}所持物品的 NBT 數據已復制到剪貼板！"
-        model_report: "{f}模型文件夾的報告已成功復制到您的剪貼板！"
+        item_nbt: "{f}所持物品的 NBT 數據已覆制到剪貼板！"
+        model_report: "{f}模型文件夾的報告已成功覆制到您的剪貼板！"
 
     scene:
         play: "{f}場景 %s{f} 已開始播放！"
@@ -19,19 +19,19 @@ blockbuster.success:
         export:
             saved: "{f}實體模型 %s{f} 已經保存在 %s{f}。"
             obj: "{f}已成功導出 %s{f} 模型到 OBJ！"
-        
+
         reload: "{f}服務器已重載模型！"
         skin_moved: "{f}皮膚 %s{f} 已移動至 %s{f} 模型的皮膚文件夾，文件名為 %s{f}！"
 
     record:
         changed_origin: "{f}玩家回放的來源已經成功從 %s{f} 從（%s{f}, %s{f}, %s{f}）更換為（%s{f}, %s{f}, %s{f}）！"
-        duped: "{f}玩家回放 %s{f} 已被成功復制到 %s{f}！"
+        duped: "{f}玩家回放 %s{f} 已被成功覆制到 %s{f}！"
         clean: "{f}玩家回放 %s{f} 的屬性 %s{f} 已成功從 %s{f} 到 %s{f} 清除！"
         prolonged: "{f}已在玩家回放 %s{f} 設定延遲。其播放前、後延遲分別是：%s{f} 和 %s{f}。"
         faded: "{f}玩家回放 %s{f} 的最後 %s{f} 幀會用於拖至起點。"
         flipped: "{f}已在玩家回放 %s{f} 以 %s{f} 軸，在 %s{f} 坐標翻轉！"
         cut: "{f}玩家回放 %s{f} 已裁剪。留下了 %s{f} 幀 和 %s{f} 幀之間的內容。"
-        restored: "{f}已恢復到玩家回放 %s{f} 的第 %s{f} 版本！"
+        restored: "{f}已恢覆到玩家回放 %s{f} 的第 %s{f} 版本！"
         reversed: "{f}已翻轉玩家回放 %s{f}！"
         fill: "{f}成功填充 %s{f} 幀到 %s{f} Tick 處的 %s{f} 玩家回放（最終長度為 %s{f} Tick）！"
         erase: "{f}成功抹去 %s{f} 幀到 %s{f} Tick 處的 %s{f} 玩家回放（最終長度為 %s{f} Tick）！"
@@ -40,3 +40,4 @@ blockbuster.success:
         remove_body_yaw: "{f}玩家回放 %s{f} 的身體偏航已被移除！"
         renamed: "{f}玩家回放 %s{f} 已成功重命名為 %s{f}！"
         camera: "{f}玩家回放 %s{f} 已成功生成相機配置文件 %s{f}！"
+        apply: "{f}玩家回放 %s{f} 的 %s{f} 屬性已成功應用了來自玩家回放 %s{f} 的屬性，應用範圍為 %s{f} 至 %s{f}！"

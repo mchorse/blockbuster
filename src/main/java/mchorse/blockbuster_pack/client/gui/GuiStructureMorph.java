@@ -2,6 +2,9 @@ package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
+import mchorse.mclib.client.gui.framework.elements.list.GuiSearchListElement;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -9,6 +12,13 @@ import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiAnimation;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class GuiStructureMorph extends GuiAbstractMorph<StructureMorph>
 {
@@ -32,6 +42,8 @@ public class GuiStructureMorph extends GuiAbstractMorph<StructureMorph>
     {
         public GuiPoseTransformations pose;
         public GuiAnimation animation;
+        public GuiToggleElement lighting;
+        public GuiSearchBiomeList biomes;
 
         public GuiStructureMorphPanel(Minecraft mc, GuiStructureMorph editor)
         {
@@ -42,8 +54,18 @@ public class GuiStructureMorph extends GuiAbstractMorph<StructureMorph>
 
             this.animation = new GuiAnimation(mc, true);
             this.animation.flex().relative(this).x(1F, -130).w(130);
+            
+            this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.structure_morph.lighting"), (b) -> this.morph.lighting = b.isToggled());
+            this.lighting.flex().relative(this).x(1F, -10).y(1F, -10).w(110).anchor(1F, 1F);
+            
+            this.biomes = new GuiSearchBiomeList(mc, this::accept);
+            this.biomes.list.sort();
+            this.biomes.flex().relative(this).x(0F).w(150).h(1F).anchorX(0F);
+            this.biomes.list.background(0x80000000);
+            this.biomes.resize();
+            this.biomes.list.scroll.scrollSpeed = 15;
 
-            this.add(this.pose, this.animation);
+            this.add(this.pose, this.animation, this.lighting, this.biomes);
         }
 
         @Override
@@ -53,6 +75,55 @@ public class GuiStructureMorph extends GuiAbstractMorph<StructureMorph>
 
             this.pose.set(morph.pose);
             this.animation.fill(morph.animation);
+            this.lighting.toggled(morph.lighting);
+            this.biomes.filter("", true);
+            this.biomes.list.setCurrent(morph.biome);
+        }
+
+        private void accept(List<ResourceLocation> sel)
+        {
+            this.morph.biome = sel.get(0);
+        }
+    }
+    
+    public static class GuiSearchBiomeList extends GuiSearchListElement<ResourceLocation>
+    {
+        public GuiSearchBiomeList(Minecraft mc, Consumer<List<ResourceLocation>> callback)
+        {
+            super(mc, callback);
+        }
+
+        @Override
+        protected GuiListElement<ResourceLocation> createList(Minecraft mc, Consumer<List<ResourceLocation>> callback)
+        {
+            return new GuiBiomeList(mc, callback);
+        }
+    }
+    
+    public static class GuiBiomeList extends GuiListElement<ResourceLocation>
+    {
+
+        public GuiBiomeList(Minecraft mc, Consumer<List<ResourceLocation>> callback)
+        {
+            super(mc, callback);
+            for (ResourceLocation location : Biome.REGISTRY.getKeys())
+            {
+                this.add(location);
+            }
+        }
+        
+        @Override
+        protected boolean sortElements()
+        {
+            Collections.<ResourceLocation>sort(this.list, Comparator.comparing(this::elementToString));
+
+            return true;
+        }
+
+        @Override
+        protected String elementToString(ResourceLocation element)
+        {
+            return Biome.REGISTRY.getObject(element).getBiomeName();
         }
     }
 }

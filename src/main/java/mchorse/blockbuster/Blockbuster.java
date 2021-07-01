@@ -153,7 +153,6 @@ public class Blockbuster
     public static ValueInt chromaSkyColor;
     public static ValueBoolean syncedURLTextureDownload;
     public static ValueBoolean addUtilityBlocks;
-    public static ValueBoolean cachedStructureRendering;
     public static ValueFloat bbGunSyncDistance;
 
     public static ValueBoolean modelBlockDisableRendering;
@@ -232,8 +231,6 @@ public class Blockbuster
         syncedURLTextureDownload.clientSide();
         addUtilityBlocks = builder.getBoolean("add_utility_blocks", false);
         addUtilityBlocks.clientSide();
-        cachedStructureRendering = builder.getBoolean("cached_structure_rendering", true);
-        cachedStructureRendering.clientSide();
         bbGunSyncDistance = builder.getFloat("bb_gun_sync_distance", 0, 0, 100);
         bbGunSyncDistance.clientSide();
 

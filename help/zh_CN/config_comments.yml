@@ -8,14 +8,13 @@ blockbuster.config.comments:
         green_screen_sky_color: 指定天空颜色，用于色度天空功能
         url_skins_sync_download: 同步下载来自 URL 的皮肤。这能让 URL 皮肤也能够实现 3D 外层功能，代价是冻结游戏进程（假死）进行下载
         add_utility_blocks: 在 Blockbuster 的创造模式选项卡中添加命令和结构块等方块，以简化获取这些物品的过程
-        cached_structure_rendering: 启用后，结构伪装系统将使用更高性能的方式来渲染结构，但会造成一些来自模组的方块消失，例如 Chisel&Bits
         bb_gun_sync_distance: 若距离大于 0，该选项会启用 BB 枪的炮弹同步功能，使炮弹与服务器同步，但代价是会产生抖动传送
 
     model_block:
         model_block_disable_rendering: 是否渲染模型方块
         model_block_disable_item_rendering: 是否关闭模型方块的物品渲染（有人想要关掉吗？）
         restore: 该选项可恢复旧版的一个 BUG，从而能够恢复不小心被拆掉的模型方块。
-        reset_on_playback: 启用后，当场景开始播放所以回放时，所有的模型方块就会自动复位
+        reset_on_playback: 启用后，当场景开始播放所有回放时，所有的模型方块就会自动复位
 
     recording:
         recording_countdown: 录制倒计时（秒）
@@ -57,3 +56,4 @@ blockbuster.config.comments:
         waveform_width: 音频条的宽度，以浮点百分比表示（0 和 1 之间）
         waveform_height: 音频条的高度，单位为像素
         waveform_filename: 音频中播放的音频的文件名是否显示
+        waveform_time: 音轨的播放时间是否显示。需要注意的是，音轨的播放时间不一定代表场景的当前播放时间！

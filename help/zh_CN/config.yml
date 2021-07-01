@@ -14,13 +14,12 @@ blockbuster.config:
         green_screen_sky_color: 色度天空颜色
         url_skins_sync_download: 同步的 URL 下载
         add_utility_blocks: 添加实用方块
-        cached_structure_rendering: 缓存结构渲染
         bb_gun_sync_distance: BB 枪距离同步
-        
+
     model_block:
         title: 模型方块
         tooltip: 与模型方块相关的选项
-        
+
         model_block_disable_rendering: 禁用模型方块渲染
         model_block_disable_item_rendering: 禁用物品栏渲染
         restore: 恢复模型方块
@@ -37,11 +36,11 @@ blockbuster.config:
         record_attack_on_swipe: 挥手攻击
         record_commands: 录制命令
         record_chat_prefix: 聊天动作前缀
-        record_pause_preview: 更好的预览
+        record_pause_preview: 预览增强
 
     scenes:
         title: 场景
-        tooltip: 所有与场景相关的选项 
+        tooltip: 所有与场景相关的选项
 
         save_update: 保存后更新场景
 
@@ -87,3 +86,4 @@ blockbuster.config:
         waveform_width: 音频条宽度
         waveform_height: 音频条高度
         waveform_filename: 显示音频条的文件名
+        waveform_time: 显示音频条的播放时间

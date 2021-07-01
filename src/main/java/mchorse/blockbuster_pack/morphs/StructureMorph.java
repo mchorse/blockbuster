@@ -1,42 +1,37 @@
 package mchorse.blockbuster_pack.morphs;
 
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.client.ClientHandlerStructure;
 import mchorse.blockbuster.network.common.structure.PacketStructure;
 import mchorse.blockbuster.network.common.structure.PacketStructureRequest;
 import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
+import mchorse.blockbuster_pack.morphs.structure.StructureAnimation;
+import mchorse.blockbuster_pack.morphs.structure.StructureRenderer;
+import mchorse.blockbuster_pack.morphs.structure.StructureStatus;
+import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Biomes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.management.PlayerList;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
 
 import java.io.File;
 import java.util.HashMap;
@@ -45,6 +40,8 @@ import java.util.Objects;
 
 public class StructureMorph extends AbstractMorph implements IAnimationProvider, ISyncableMorph
 {
+    private static final ResourceLocation DEFAULT_BIOME = new ResourceLocation("ocean");
+
     /**
      * Map of baked structures 
      */
@@ -60,6 +57,16 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
      * The name of the structure which should be rendered 
      */
     public String structure = "";
+    
+    /**
+     * The biome used for render
+     */
+    public ResourceLocation biome = DEFAULT_BIOME;
+
+    /**
+     * Whether this structure use world lighting.
+     */
+    public boolean lighting = true;
 
     /**
      * TSR for structure morph
@@ -100,7 +107,7 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
                 STRUCTURE_CACHE.put(name, modified);
             }
 
-            if (modified != null && modified.longValue() < file.lastModified())
+            if (modified < file.lastModified())
             {
                 STRUCTURE_CACHE.put(name, file.lastModified());
 
@@ -144,6 +151,13 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
         return this.animation;
     }
 
+    public Biome getBiome()
+    {
+        Biome biome = Biome.REGISTRY.getObject(this.biome);
+
+        return biome == null ? Biomes.DEFAULT : biome;
+    }
+
     @Override
     public void pause(AbstractMorph previous, int offset)
     {
@@ -168,7 +182,7 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
     @SideOnly(Side.CLIENT)
     protected String getSubclassDisplayName()
     {
-        String suffix = this.structure != null && !this.structure.isEmpty() ? " (" + this.structure + ")" : "";
+        String suffix = this.structure != null && !this.structure.isEmpty() ? " (" + this.structure + "-" + this.biome.getResourcePath() + ")" : "";
 
         return I18n.format("blockbuster.morph.structure") + suffix;
     }
@@ -181,11 +195,11 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
 
         if (renderer != null)
         {
-            if (renderer.vbo < 0)
+            if (renderer.status != StructureStatus.LOADED)
             {
-                if (renderer.vbo == -1)
+                if (renderer.status == StructureStatus.UNLOADED)
                 {
-                    renderer.vbo = -2;
+                    renderer.status = StructureStatus.LOADING;
                     Dispatcher.sendToServer(new PacketStructureRequest(this.structure));
                 }
 
@@ -198,6 +212,9 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
 
             Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
+            float lastX = OpenGlHelper.lastBrightnessX;
+            float lastY = OpenGlHelper.lastBrightnessY;
+            
             GlStateManager.enableDepth();
             GlStateManager.enableAlpha();
             GlStateManager.disableCull();
@@ -209,13 +226,15 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
             GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
 
-            renderer.render();
-            renderer.renderTEs();
+            renderer.render(this);
+            renderer.renderTEs(this);
             GlStateManager.disableLighting();
             GlStateManager.popMatrix();
             GlStateManager.enableCull();
             GlStateManager.disableAlpha();
             GlStateManager.disableDepth();
+            
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastX, lastY);
         }
     }
 
@@ -227,11 +246,11 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
 
         if (renderer != null)
         {
-            if (renderer.vbo < 0)
+            if (renderer.status != StructureStatus.LOADED)
             {
-                if (renderer.vbo == -1)
+                if (renderer.status == StructureStatus.UNLOADED)
                 {
-                    renderer.vbo = -2;
+                    renderer.status = StructureStatus.LOADING;
                     Dispatcher.sendToServer(new PacketStructureRequest(this.structure));
                 }
 
@@ -240,8 +259,11 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
 
             float lastX = OpenGlHelper.lastBrightnessX;
             float lastY = OpenGlHelper.lastBrightnessY;
-
-            renderer.world.setLightLevel(lastX, lastY);
+            
+            if (GuiModelRenderer.isRendering() && !this.lighting)
+            {
+                Minecraft.getMinecraft().entityRenderer.enableLightmap();
+            }
 
             Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
@@ -261,22 +283,35 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
             }
 
             transform.transform();
-
+            
+            RenderHelper.disableStandardItemLighting();
+            
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
-            renderer.render();
+            renderer.render(this);
 
             GlStateManager.disableBlend();
             GlStateManager.disableAlpha();
             GlStateManager.shadeModel(GL11.GL_FLAT);
+            
+            GlStateManager.enableLighting();
+            GlStateManager.enableLight(0);
+            GlStateManager.enableLight(1);
+            GlStateManager.enableColorMaterial();
 
             GL11.glColor4f(1, 1, 1, 1);
-            renderer.renderTEs();
-
+            renderer.renderTEs(this);
+            
             GlStateManager.popMatrix();
+            
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastX, lastY);
+            if (GuiModelRenderer.isRendering() && !this.lighting)
+            {
+                Minecraft.getMinecraft().entityRenderer.disableLightmap();
+            }
         }
     }
 
@@ -306,6 +341,8 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
             this.structure = morph.structure;
             this.pose.copy(morph.pose);
             this.animation.copy(morph.animation);
+            this.biome = morph.biome;
+            this.lighting = morph.lighting;
         }
     }
 
@@ -332,6 +369,9 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
 
             result = result && Objects.equals(this.structure, morph.structure);
             result = result && Objects.equals(this.pose, morph.pose);
+            result = result && Objects.equals(this.animation, morph.animation);
+            result = result && Objects.equals(this.biome, morph.biome);
+            result = result && this.lighting == morph.lighting;
         }
 
         return result;
@@ -367,6 +407,8 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
         if (tag.hasKey("Structure")) this.structure = tag.getString("Structure");
         if (tag.hasKey("Pose")) this.pose.fromNBT(tag.getCompoundTag("Pose"));
         if (tag.hasKey("Animation")) this.animation.fromNBT(tag.getCompoundTag("Animation"));
+        if (tag.hasKey("Biome")) this.biome = new ResourceLocation(tag.getString("Biome"));
+        if (tag.hasKey("Lighting")) this.lighting = tag.getBoolean("Lighting");
     }
 
     @Override
@@ -390,160 +432,17 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
         {
             tag.setTag("Animation", animation);
         }
-    }
-
-    /**
-     * Structure renderer
-     * 
-     * All it does is renders compiled display list and also has the 
-     * method {@link #delete()} to clean up GL memory. 
-     */
-    @SideOnly(Side.CLIENT)
-    public static class StructureRenderer
-    {
-        public int vbo = -1;
-        public int count = 0;
-        public BlockPos size;
-        public ClientHandlerStructure.FakeWorld world;
-
-        public StructureRenderer()
-        {}
-
-        public StructureRenderer(BlockPos size, ClientHandlerStructure.FakeWorld world)
+        
+        if (!this.biome.equals(DEFAULT_BIOME))
         {
-            this.size = size;
-            this.world = world;
+            ResourceLocation biome = this.biome == null ? DEFAULT_BIOME : this.biome;
 
-            this.rebuild();
+            tag.setString("Biome", biome.toString());
         }
-
-        public void rebuild()
+        
+        if (!this.lighting)
         {
-            /* Create VBO */
-            int vbo = GL15.glGenBuffers();
-
-            Tessellator tess = Tessellator.getInstance();
-            BufferBuilder buffer = tess.getBuffer();
-
-            this.render(buffer);
-
-            int count = buffer.getVertexCount();
-
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
-            GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.getByteBuffer(), GL15.GL_STATIC_DRAW);
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-
-            buffer.finishDrawing();
-
-            this.count = count;
-            this.vbo = vbo;
-        }
-
-        public void render()
-        {
-            GL11.glNormal3f(0, 0.6F, 0);
-
-            if (Blockbuster.cachedStructureRendering.get())
-            {
-                GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vbo);
-
-                GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-                GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
-                GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-
-                GlStateManager.glVertexPointer(3, 5126, 28, 0);
-                GlStateManager.glColorPointer(4, 5121, 28, 12);
-                GlStateManager.glTexCoordPointer(2, 5126, 28, 16);
-                OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapTexUnit);
-                GlStateManager.glTexCoordPointer(2, 5122, 28, 24);
-                OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
-
-                GlStateManager.glDrawArrays(GL11.GL_QUADS, 0, this.count);
-
-                GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
-                GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
-                GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-
-                GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-            }
-            else
-            {
-                Tessellator tess = Tessellator.getInstance();
-                BufferBuilder buffer = tess.getBuffer();
-
-                this.render(buffer);
-
-                tess.draw();
-            }
-        }
-
-        public void render(BufferBuilder buffer)
-        {
-            BlockPos origin = new BlockPos(1, 1, 1);
-            int w = this.size.getX();
-            int h = this.size.getY();
-            int d = this.size.getZ();
-
-            BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
-
-            /* Centerize the geometry */
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-            buffer.setTranslation(-w / 2F - origin.getX(), -origin.getY(), -d / 2F - origin.getZ());
-
-            for (BlockPos.MutableBlockPos pos : BlockPos.getAllInBoxMutable(origin, origin.add(w, h, d)))
-            {
-                IBlockState state = this.world.getBlockState(pos);
-                Block block = state.getBlock();
-
-                if (block.getDefaultState().getRenderType() != EnumBlockRenderType.INVISIBLE)
-                {
-                    dispatcher.renderBlock(state, pos, this.world, buffer);
-                }
-            }
-
-            buffer.setTranslation(0, 0, 0);
-        }
-
-        public void renderTEs()
-        {
-            if (this.world == null)
-            {
-                return;
-            }
-
-            for (TileEntity te : this.world.loadedTileEntityList)
-            {
-                BlockPos pos = te.getPos();
-                TileEntityRendererDispatcher.instance.render(te, pos.getX() - this.size.getX() / 2D - 1, pos.getY() - 1, pos.getZ() - this.size.getZ() / 2D - 1, 0);
-            }
-        }
-
-        public void delete()
-        {
-            if (this.vbo > 0)
-            {
-                GL15.glDeleteBuffers(this.vbo);
-                this.vbo = -1;
-                this.count = 0;
-            }
-        }
-    }
-
-    public static class StructureAnimation extends Animation
-    {
-        public ModelTransform last = new ModelTransform();
-
-        public void merge(StructureMorph last, StructureMorph next)
-        {
-            this.merge(next.animation);
-            this.last.copy(last.pose);
-        }
-
-        public void apply(ModelTransform transform, float partialTicks)
-        {
-            float factor = this.getFactor(partialTicks);
-
-            transform.interpolate(this.last, transform, factor, this.interp);
+            tag.setBoolean("Lighting", this.lighting);
         }
     }
 }

@@ -2,10 +2,10 @@ blockbuster.success:
     commands:
         mipmaped_texture: "{f}材质 %s{f} 已成功 Mipmap 化！"
         demipmaped_texture: "{f}材质的 Mipmap %s{f} 已删除！"
-        
+
         texture_filter_linear: "{f}材质的过滤器已变更为线性！"
         texture_filter_nearest: "{f}材质的过滤器已变更为最近的临近物！"
-        
+
         convert_skin: "{f}成功转换 %s{r}/%s{r} 皮肤！"
 
         item_nbt: "{f}所持物品的 NBT 数据已复制到剪贴板！"
@@ -19,7 +19,7 @@ blockbuster.success:
         export:
             saved: "{f}实体模型 %s{f} 已经保存在 %s{f}。"
             obj: "{f}已成功导出 %s{f} 模型到 OBJ！"
-        
+
         reload: "{f}服务器已重载模型！"
         skin_moved: "{f}皮肤 %s{f} 已移动至 %s{f} 模型的皮肤文件夹，文件名为 %s{f}！"
 
@@ -40,3 +40,4 @@ blockbuster.success:
         remove_body_yaw: "{f}玩家回放 %s{f} 的身体偏航已被移除！"
         renamed: "{f}玩家回放 %s{f} 已成功重命名为 %s{f}！"
         camera: "{f}玩家回放 %s{f} 已成功生成相机配置文件 %s{f}！"
+        apply: "{f}玩家回放 %s{f} 的 %s{f} 属性已成功应用了来自玩家回放 %s{f} 的属性，应用范围为 %s{f} 至 %s{f}！"
