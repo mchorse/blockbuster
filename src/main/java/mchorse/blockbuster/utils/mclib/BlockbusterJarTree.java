@@ -51,6 +51,7 @@ public class BlockbusterJarTree extends FileTree
         this.add("textures/entity/skin_masks/right_legwear.png");
         this.add("textures/entity/actor.png");
         this.add("textures/entity/cape.png");
+        this.add("textures/entity/pixel.png");
         this.add("textures/gui/icon.png");
     }
 
