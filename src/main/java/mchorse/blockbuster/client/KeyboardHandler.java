@@ -53,6 +53,7 @@ public class KeyboardHandler
     {
         ClientProxy.manager.reset();
         ClientProxy.recordingOverlay.setVisible(false);
+        RenderingHandler.resetEmitters();
 
         Minecraft.getMinecraft().addScheduledTask(StructureMorph::cleanUp);
     }

@@ -211,6 +211,11 @@ public class RenderingHandler
         }
     }
 
+    public static void resetEmitters()
+    {
+        emitters.clear();
+    }
+
     /**
      * Called by ASM
      */
