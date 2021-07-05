@@ -35,6 +35,8 @@ blockbuster:
 
             prolong: "{r}This command allows to specify a pre and post delay for given {7}<filename>{r} player recording."
             remove: "{r}Removes all actions on {7}<tick>{r} in player recording by {7}<filename>{r}. If you'll specify {7}[index]{r}, command will remove only one action in {7}<tick>{r} at {7}[index]{r}."
+            delete: "{r}Deletes the recording file by {7}<filename>{r}."
+            delete_modal: "Are you sure you want to delete this recording file?"
             remove_body_yaw: "{r}Removes body yaw properties from given player recording."
             rename: "{r}This command renames given {7}<filename>{r} player recording to a new name {7}<new_filename>{r}. It also renames past versions of the {7}<filename>{r} player recording, if there are any."
             restore: "{r}Restores previous version {7}<iteration>{r} of a player recording by name {7}<filename>{r}. For example {7}/record restore test 1{r} will swap {7}test.dat{r} and {7}test.dat~1{r} player recording files places."
