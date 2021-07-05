@@ -1,14 +1,26 @@
 package mchorse.blockbuster.commands.record;
 
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.commands.CommandRecord;
+import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.mclib.client.gui.framework.elements.GuiConfirmationScreen;
+import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.network.mclib.Dispatcher;
+import mchorse.mclib.network.mclib.common.PacketConfirm;
+import mchorse.mclib.utils.OpHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Command /record remove
@@ -54,14 +66,16 @@ public class SubCommandRecordRemove extends SubCommandRecordBase
             throw new CommandException("record.tick_out_range", tick, record.actions.size() - 1);
         }
 
-        this.removeActions(args, record, tick);
+        this.removeActions(args, sender, record, tick);
     }
 
     /**
      * Remove action(s) from given record at given tick
      */
-    private void removeActions(String[] args, Record record, int tick) throws CommandException
+    private void removeActions(String[] args, ICommandSender sender, Record record, int tick) throws CommandException
     {
+        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+
         if (args.length > 2)
         {
             int index = CommandBase.parseInt(args[2]);
@@ -77,22 +91,51 @@ public class SubCommandRecordRemove extends SubCommandRecordBase
                 throw new CommandException("record.index_out_range", index, actions.size() - 1);
             }
 
-            /* Remove action at given tick */
-            if (actions.size() <= 1)
+            dispatchConfirm(player, (value) ->
             {
-                record.actions.set(tick, null);
-            }
-            else
-            {
-                actions.remove(index);
-            }
+                /* Remove action at given tick */
+                if (actions.size() <= 1)
+                {
+                    record.actions.set(tick, null);
+                }
+                else
+                {
+                    actions.remove(index);
+                }
+            });
         }
         else
         {
-            /* Remove all actions at tick */
-            record.actions.set(tick, null);
+            dispatchConfirm(player, (value) ->
+            {
+                /* Remove all actions at tick */
+                record.actions.set(tick, null);
+            });
         }
 
         record.dirty = true;
+    }
+
+    private void dispatchConfirm(EntityPlayerMP player, Consumer<Boolean> callback)
+    {
+        Dispatcher.sendTo(new PacketConfirm((test)->
+        {
+            this.dispatchClient();
+        }, (value) ->
+        {
+            if (value)
+            {
+                callback.accept(value);
+            }
+        }), player);
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void dispatchClient()
+    {
+        Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmationScreen(IKey.lang("blockbuster.commands.record.remove_modal"), (value) ->
+        {
+            Dispatcher.sendToServer(new PacketConfirm(value));
+        }));
     }
 }

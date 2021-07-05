@@ -1,6 +1,7 @@
 package mchorse.blockbuster.commands.record;
 
 import mchorse.blockbuster.CommonProxy;
+import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.mclib.client.gui.framework.elements.GuiConfirmationScreen;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -12,6 +13,8 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SubCommandRecordDelete extends SubCommandRecordBase
 {
@@ -44,17 +47,19 @@ public class SubCommandRecordDelete extends SubCommandRecordBase
     {
         EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 
-        if (!OpHelper.isPlayerOp(player)) return;
+        if (!OpHelper.isPlayerOp(player))
+        {
+            throw new CommandException("record.delete_rights");
+        }
 
         String filename = args[0];
+
+        CommandRecord.getRecord(filename);
+
         Dispatcher.sendTo(new PacketConfirm((test)->
         {
-            Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmationScreen(IKey.lang("blockbuster.commands.record.delete_modal"), (value) ->
-            {
-                Dispatcher.sendToServer(new PacketConfirm(value));
-            }));
-        },
-        (value) ->
+            this.dispatchClient();
+        }, (value) ->
         {
             if(value)
             {
@@ -68,5 +73,14 @@ public class SubCommandRecordDelete extends SubCommandRecordBase
                 {}
             }
         }), player);
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void dispatchClient()
+    {
+        Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmationScreen(IKey.lang("blockbuster.commands.record.delete_modal"), (value) ->
+        {
+            Dispatcher.sendToServer(new PacketConfirm(value));
+        }));
     }
 }

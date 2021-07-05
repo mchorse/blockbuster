@@ -35,6 +35,7 @@ blockbuster:
 
             prolong: "{r}This command allows to specify a pre and post delay for given {7}<filename>{r} player recording."
             remove: "{r}Removes all actions on {7}<tick>{r} in player recording by {7}<filename>{r}. If you'll specify {7}[index]{r}, command will remove only one action in {7}<tick>{r} at {7}[index]{r}."
+            remove_modal: "Are you sure you want to remove the actions at the given ticks?"
             delete: "{r}Deletes the recording file by {7}<filename>{r}."
             delete_modal: "Are you sure you want to delete this recording file?"
             remove_body_yaw: "{r}Removes body yaw properties from given player recording."
