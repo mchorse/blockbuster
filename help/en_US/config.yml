@@ -66,6 +66,7 @@ blockbuster.config:
         
         damage_control: Damage control
         damage_control_distance: Damage distance
+        damage_control_message: Damage control message
 
     model_folders:
         title: Model Folders

@@ -45,6 +45,7 @@ blockbuster.config.comments:
     damage_control:
         damage_control: Whether damage control is enabled
         damage_control_distance: Radius of effect for damage control
+        damage_control_message: Displays a warning if the currently pointed block has been managed by damage control
 
     model_folders:
         path: Absolute path to additional model Folder (on windows add the drive letter)

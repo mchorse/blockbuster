@@ -186,6 +186,7 @@ public class Blockbuster
 
     public static ValueBoolean damageControl;
     public static ValueInt damageControlDistance;
+    public static ValueBoolean damageControlMessage;
 
     public static ValueString modelFolderPath;
 
@@ -281,6 +282,7 @@ public class Blockbuster
         /* Damage control */
         damageControl = builder.category("damage_control").getBoolean("damage_control", true);
         damageControlDistance = builder.getInt("damage_control_distance", 64, 1, 1024);
+        damageControlMessage = builder.getBoolean("damage_control_message", true);
 
         /* Model Folder */
         modelFolderPath = builder.category("model_folders").getString("path", "");

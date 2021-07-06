@@ -45,3 +45,6 @@ blockbuster.info:
 
     action:
         cancel: "{f}当前录制进程已取消。"
+
+    damage_control:
+        message: "{f}目标方块由场景 %s{f} 的破坏控制管理。"

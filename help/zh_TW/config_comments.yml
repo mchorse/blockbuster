@@ -43,6 +43,7 @@ blockbuster.config.comments:
     damage_control:
         damage_control: 破壞控制是否啟用
         damage_control_distance: 破壞控制效果的半徑範圍
+        damage_control_message: 顯示當前指向方塊是否由破壞控制管理
 
     model_folders:
         path: 附加模型文件夾的絕對路徑（Windows 用戶請加上盤符）
