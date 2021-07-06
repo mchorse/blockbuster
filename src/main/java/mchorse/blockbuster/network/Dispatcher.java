@@ -31,6 +31,7 @@ import mchorse.blockbuster.network.client.scene.ClientHandlerScenes;
 import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketActorRotate;
 import mchorse.blockbuster.network.common.PacketCaption;
+import mchorse.blockbuster.network.common.PacketDamageControlCheck;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
@@ -76,6 +77,7 @@ import mchorse.blockbuster.network.common.structure.PacketStructureList;
 import mchorse.blockbuster.network.common.structure.PacketStructureListRequest;
 import mchorse.blockbuster.network.common.structure.PacketStructureRequest;
 import mchorse.blockbuster.network.server.ServerHandlerActorRotate;
+import mchorse.blockbuster.network.server.ServerHandlerDamageControlCheck;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerModifyModelBlock;
 import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
@@ -197,6 +199,9 @@ public class Dispatcher
 
             /* Audio */
             register(PacketAudio.class, ClientHandlerAudio.class, Side.CLIENT);
+            
+            /* Damage Control */
+            register(PacketDamageControlCheck.class, ServerHandlerDamageControlCheck.class, Side.SERVER);
 
             CameraHandler.registerMessages();
         }

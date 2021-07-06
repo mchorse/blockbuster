@@ -11,6 +11,7 @@ import mchorse.blockbuster.recording.actions.BreakBlockAnimation;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -51,6 +52,10 @@ public class WorldEventListener implements IWorldEventListener
             if (oldState.getBlock() instanceof BlockDirector)
             {
                 return;
+            }
+            else if (oldState.getBlock() == Blocks.PISTON_EXTENSION)
+            {
+                oldState = Blocks.AIR.getDefaultState();
             }
 
             CommonProxy.damage.addBlock(pos, oldState, worldIn);

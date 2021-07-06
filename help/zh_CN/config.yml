@@ -64,6 +64,7 @@ blockbuster.config:
 
         damage_control: 破坏控制
         damage_control_distance: 破坏距离
+        damage_control_message: 破坏控制提示
 
     model_folders:
         title: 模型文件夹
