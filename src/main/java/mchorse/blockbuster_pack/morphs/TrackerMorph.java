@@ -173,11 +173,13 @@ public class TrackerMorph extends AbstractMorph
         {
             this.mergeBasic(morph);
 
-            this.hidden = ((TrackerMorph) morph).hidden;
+            TrackerMorph trackerMorph = (TrackerMorph) morph;
+
+            this.hidden = trackerMorph.hidden;
 
             if (this.tracker != null)
             {
-                return this.tracker.canMerge(morph);
+                return this.tracker.canMerge(trackerMorph.tracker);
             }
         }
 
@@ -205,7 +207,7 @@ public class TrackerMorph extends AbstractMorph
     @Override
     public void reset()
     {
-        this.tracker = null;
+        this.tracker = new ApertureTracker();
         this.hidden = false;
     }
 

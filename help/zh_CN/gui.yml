@@ -642,6 +642,8 @@ blockbuster.gui:
         type:
             title: 类型
             aperture_tracker: Aperture 伪装追踪器
+            minema: Minema 伪装追踪器
+            apcam: Aperture 调整器
         hidden: 隐藏追踪器标志
 
         aperture_tracker:
@@ -822,3 +824,12 @@ blockbuster.gui:
             reload_scene: 重载当前场景
 
             add_morph_action: 添加伪装动作
+        
+        modifiers:
+            tracker: 追踪器
+            tracker_description: 将相机绑定于场景中的一个 “Aperture调整器”追踪器伪装 之上
+
+            panels:
+                tracker_tooltip: 输入追踪器伪装的名称（类型必须为“Aperture调整器”）
+                main_cam: 作为主要相机
+                main_cam_tooltip: 开启此选项后，此调整器之前的所有相机变换将在此追踪器空间进行重新计算，否则，调整器将只修改坐标数据
