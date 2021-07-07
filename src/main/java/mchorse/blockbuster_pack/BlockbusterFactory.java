@@ -8,6 +8,7 @@ import mchorse.blockbuster_pack.client.gui.GuiRecordMorph;
 import mchorse.blockbuster_pack.client.gui.GuiSequencerMorph;
 import mchorse.blockbuster_pack.client.gui.GuiSnowstormMorph;
 import mchorse.blockbuster_pack.client.gui.GuiStructureMorph;
+import mchorse.blockbuster_pack.client.gui.GuiTrackerMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.blockbuster_pack.morphs.ParticleMorph;
@@ -15,6 +16,7 @@ import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.blockbuster_pack.morphs.SnowstormMorph;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
+import mchorse.blockbuster_pack.morphs.TrackerMorph;
 import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -52,6 +54,7 @@ public class BlockbusterFactory implements IMorphFactory
         editors.add(new GuiStructureMorph(mc));
         editors.add(new GuiParticleMorph(mc));
         editors.add(new GuiSnowstormMorph(mc));
+        editors.add(new GuiTrackerMorph(mc));
     }
 
     @Override
@@ -86,6 +89,10 @@ public class BlockbusterFactory implements IMorphFactory
         {
             morph = new SnowstormMorph();
         }
+        else if (name.equals("tracker"))
+        {
+            morph = new TrackerMorph();
+        }
         else
         {
             /* Custom model morphs */
@@ -103,6 +110,6 @@ public class BlockbusterFactory implements IMorphFactory
     @Override
     public boolean hasMorph(String morph)
     {
-        return morph.startsWith("blockbuster.") || morph.equals("sequencer") || morph.equals("structure") || morph.equals("particle") || morph.equals("snowstorm");
+        return morph.startsWith("blockbuster.") || morph.equals("sequencer") || morph.equals("structure") || morph.equals("particle") || morph.equals("snowstorm") || morph.equals("tracker");
     }
 }
