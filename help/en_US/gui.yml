@@ -598,6 +598,14 @@ blockbuster.gui:
         lighting: Lighting
         anchor: Anchor point
 
+    tracker_morph:
+        name: Tracker
+        label:
+            title: Name
+        type:
+            title: Type
+        hidden: Hide pointer
+
     texture:
         title: Texture manager
         subtitle: This GUI allows you to view and manage textures loaded by Minecraft during runtime
