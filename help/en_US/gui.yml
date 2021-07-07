@@ -633,6 +633,8 @@ blockbuster.gui:
         type:
             title: Type
             aperture_tracker: Aperture Morph tracker
+            minema: Minema Morph tracker
+            apcam: Aperture Modifier
         hidden: Hide pointer
 
         aperture_tracker:
@@ -812,3 +814,12 @@ blockbuster.gui:
             reload_scene: Reload current scene
 
             add_morph_action: Add morph action
+        
+        modifiers:
+            tracker: Tracker
+            tracker_description: Attaches the camera to a tracker morph of type "Aperture Modifier" in current scene
+
+            panels:
+                tracker_tooltip: Enter the name of the tracker morph (type must be "Aperture Modifier")
+                main_cam: As the main camera
+                main_cam_tooltip: When this option is turned on, all camera transformations prior to this modifier will be recalculated in this tracker space; otherwise, the modifier will only modify the coordinate data

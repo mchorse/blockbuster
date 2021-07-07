@@ -4,13 +4,18 @@ import mchorse.aperture.Aperture;
 import mchorse.aperture.ClientProxy;
 import mchorse.aperture.camera.CameraAPI;
 import mchorse.aperture.camera.minema.MinemaIntegration;
+import mchorse.aperture.camera.ModifierRegistry;
 import mchorse.aperture.client.gui.GuiCameraEditor;
+import mchorse.aperture.client.gui.GuiModifiersManager;
+import mchorse.aperture.client.gui.panels.modifiers.GuiRemapperModifierPanel;
 import mchorse.aperture.events.CameraEditorEvent;
 import mchorse.aperture.network.common.PacketCameraProfileList;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
+import mchorse.blockbuster.aperture.camera.modifiers.TrackerModifier;
 import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
+import mchorse.blockbuster.aperture.gui.panels.modifiers.GuiTrackerModifierPanel;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerCameraProfileList;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerSceneLength;
 import mchorse.blockbuster.aperture.network.common.PacketAudioShift;
@@ -42,6 +47,7 @@ import mchorse.mclib.client.gui.utils.ScrollArea;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.config.ConfigBuilder;
 import mchorse.mclib.config.values.ValueBoolean;
+import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
@@ -131,8 +137,32 @@ public class CameraHandler
     {
         if (CameraHandler.isApertureLoaded())
         {
-            registerHandlers();
+            registerModifiers();
         }
+    }
+
+    public static void registerClient()
+    {
+        if (CameraHandler.isApertureLoaded())
+        {
+            registerHandlers();
+            
+            registerClientModifiers();
+        }
+    }
+
+    @Method(modid = Aperture.MOD_ID)
+    private static void registerModifiers()
+    {
+        ModifierRegistry.register("tracker", TrackerModifier.class);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Method(modid = Aperture.MOD_ID)
+    private static void registerClientModifiers()
+    {
+        GuiModifiersManager.PANELS.put(TrackerModifier.class, GuiTrackerModifierPanel.class);
+        ModifierRegistry.registerClient(TrackerModifier.class, "blockbuster.gui.aperture.modifiers.tracker", new Color(0.5F, 0.5F, 0.5F));
     }
 
     @Method(modid = Aperture.MOD_ID)

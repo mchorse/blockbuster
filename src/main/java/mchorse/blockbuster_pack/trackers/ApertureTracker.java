@@ -55,15 +55,14 @@ public class ApertureTracker extends BaseTracker
     }
 
     @Override
-    public boolean canMerge(AbstractMorph morph)
+    public boolean canMerge(BaseTracker tracker)
     {
-        TrackerMorph trackerMorph = (TrackerMorph) morph;
-
-        if (trackerMorph.tracker != null)
+        if (tracker != null && tracker instanceof ApertureTracker)
         {
-            this.combineTracking = ((ApertureTracker) trackerMorph.tracker).combineTracking;
+            ApertureTracker apTracker = (ApertureTracker) tracker;
+            this.combineTracking = apTracker.combineTracking;
 
-            return trackerMorph.tracker.name.equals(this.name);
+            return super.canMerge(tracker);
         }
 
         return false;
