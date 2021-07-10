@@ -68,6 +68,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -445,7 +446,7 @@ public class ActionHandler
     }
 
     /**
-     * Event listener for world tick event.
+     * Event listener for server tick event.
      *
      * This is probably not the optimal solution, but I'm not really sure how
      * to schedule things in Minecraft other way than timers and ticks.
@@ -454,7 +455,7 @@ public class ActionHandler
      * down recording process.
      */
     @SubscribeEvent
-    public void onWorldTick(ServerTickEvent event)
+    public void onServerTick(ServerTickEvent event)
     {
         if (event.phase == Phase.START)
         {
@@ -463,6 +464,27 @@ public class ActionHandler
 
         CommonProxy.manager.tick();
         CommonProxy.scenes.tick();
+    }
+
+    /**
+     * Event listener for world tick event.
+     * 
+     * This stuff will be called between networking and world tick. 
+     * I think it's a good time to spawn actors and execute unsafe actions. 
+     * 
+     * Because if actions to modify the world are performed while the actor 
+     * is updating, they will be displayed to the client with a delay of 
+     * 1 tick.
+     */
+    @SubscribeEvent
+    public void onWorldServerTick(WorldTickEvent event)
+    {
+        if (event.phase == Phase.END || event.world.isRemote)
+        {
+            return;
+        }
+
+        CommonProxy.scenes.worldTick(event.world);
     }
 
     /**

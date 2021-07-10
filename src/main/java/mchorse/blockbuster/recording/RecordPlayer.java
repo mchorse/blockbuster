@@ -1,5 +1,9 @@
 package mchorse.blockbuster.recording;
 
+import java.util.Queue;
+
+import com.google.common.collect.Queues;
+
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.scene.Replay;
@@ -12,9 +16,13 @@ import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketEntityTeleport;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
  * Record player class
@@ -65,6 +73,8 @@ public class RecordPlayer
     public Replay replay;
 
     public boolean realPlayer;
+
+    public Queue<IMessage> unsentPackets = Queues.<IMessage>newArrayDeque();
 
     public RecordPlayer(Record record, Mode mode, EntityLivingBase actor)
     {
@@ -138,7 +148,7 @@ public class RecordPlayer
         {
             boolean both = this.mode == Mode.BOTH;
 
-            if (this.mode == Mode.ACTIONS || both) this.applyAction(this.tick, actor, false);
+            if (this.mode == Mode.ACTIONS || both) this.applyAction(this.tick, actor, true);
             if (this.mode == Mode.FRAMES || both) this.applyFrame(this.tick, actor, false);
 
             this.record.resetUnload();
@@ -153,6 +163,11 @@ public class RecordPlayer
         this.tick++;
     }
 
+    public void applyUnsafeActions()
+    {
+        this.applyAction(this.tick, actor, false);
+    }
+
     /**
      * Pause the playing actor
      */
@@ -162,11 +177,13 @@ public class RecordPlayer
         this.actor.noClip = true;
         this.actor.setEntityInvulnerable(true);
 
+        this.applyFrame(this.tick - 1, this.actor, true);
+
         if (this.actor.isServerWorld())
         {
             this.record.applyPreviousMorph(this.actor, this.replay, this.tick, Record.MorphType.PAUSE);
 
-            Dispatcher.sendToTracked(this.actor, new PacketActorPause(this.actor.getEntityId(), true, this.tick));
+            this.sendToTracked(new PacketActorPause(this.actor.getEntityId(), true, this.tick));
         }
     }
 
@@ -188,11 +205,13 @@ public class RecordPlayer
             this.actor.setEntityInvulnerable(this.replay.invincible);
         }
 
+        this.applyFrame(this.tick, this.actor, true);
+
         if (this.actor.isServerWorld())
         {
             this.record.applyPreviousMorph(this.actor, this.replay, tick, Record.MorphType.FORCE);
 
-            Dispatcher.sendToTracked(this.actor, new PacketActorPause(this.actor.getEntityId(), false, this.tick));
+            this.sendToTracked(new PacketActorPause(this.actor.getEntityId(), false, this.tick));
         }
     }
 
@@ -224,7 +243,7 @@ public class RecordPlayer
 
         this.tick = original;
         this.record.resetUnload();
-        this.record.applyFrame(tick, this.actor, true, this.realPlayer);
+        this.record.applyFrame(this.playing ? tick : Math.max(0, tick - 1), this.actor, true, this.realPlayer);
 
         if (actions)
         {
@@ -232,13 +251,13 @@ public class RecordPlayer
 
             if (this.replay != null)
             {
-                this.record.applyPreviousMorph(this.actor, this.replay, tick, Record.MorphType.PAUSE);
+                this.record.applyPreviousMorph(this.actor, this.replay, tick, this.playing ? Record.MorphType.FORCE : Record.MorphType.PAUSE);
             }
         }
 
         if (this.actor.isServerWorld())
         {
-            Dispatcher.sendToTracked(this.actor, new PacketSyncTick(this.actor.getEntityId(), tick));
+            this.sendToTracked(new PacketActorPause(this.actor.getEntityId(), !this.playing, this.tick));
         }
     }
 
@@ -260,40 +279,11 @@ public class RecordPlayer
         this.kill = kill;
         this.sync = false;
 
-        this.applyFrame(tick, this.actor, true);
+        this.applyFrame(this.playing ? tick : tick - 1, this.actor, true);
 
         EntityUtils.setRecordPlayer(this.actor, this);
 
-        /* Checks whether actor isn't already spawned in the world */
-        if (this.actor.world.getEntityByID(this.actor.getEntityId()) != this.actor)
-        {
-            if (this.actor instanceof EntityActor)
-            {
-                this.actor.world.spawnEntity(this.actor);
-            }
-            else if (this.actor instanceof EntityPlayer)
-            {
-                if (this.record.playerData != null)
-                {
-                    if (!this.realPlayer)
-                    {
-                        this.actor.readEntityFromNBT(this.record.playerData);
-                    }
-
-                    if (MPMHelper.isLoaded() && this.record.playerData.hasKey("MPMData", NBT.TAG_COMPOUND))
-                    {
-                        MPMHelper.setMPMData((EntityPlayer) this.actor, this.record.playerData.getCompoundTag("MPMData"));
-                    }
-                }
-
-                if (!this.realPlayer)
-                {
-                    this.actor.world.getMinecraftServer().getPlayerList().playerLoggedIn((EntityPlayerMP) this.actor);
-                }
-            }
-        }
-
-        Dispatcher.sendToTracked(this.actor, new PacketPlayback(this.actor.getEntityId(), true, this.realPlayer, filename));
+        this.sendToTracked(new PacketPlayback(this.actor.getEntityId(), true, this.realPlayer, filename));
 
         if (this.realPlayer && this.actor instanceof EntityPlayerMP)
         {
@@ -330,5 +320,54 @@ public class RecordPlayer
     public void applyAction(int tick, EntityLivingBase target, boolean safe)
     {
         this.record.applyAction(tick - this.record.preDelay, target, safe);
+    }
+
+    public void sendToTracked(IMessage packet)
+    {
+        if (this.actor.world.getEntityByID(this.actor.getEntityId()) != this.actor)
+        {
+            this.unsentPackets.add(packet);
+        }
+        else
+        {
+            Dispatcher.sendToTracked(this.actor, packet);
+        }
+    }
+
+    public void checkAndSpawn()
+    {
+        /* Checks whether actor isn't already spawned in the world */
+        if (this.actor.world.getEntityByID(this.actor.getEntityId()) != this.actor)
+        {
+            if (this.actor instanceof EntityActor)
+            {
+                this.actor.world.spawnEntity(this.actor);
+            }
+            else if (this.actor instanceof EntityPlayer)
+            {
+                if (this.record.playerData != null)
+                {
+                    if (!this.realPlayer)
+                    {
+                        this.actor.readEntityFromNBT(this.record.playerData);
+                    }
+
+                    if (MPMHelper.isLoaded() && this.record.playerData.hasKey("MPMData", NBT.TAG_COMPOUND))
+                    {
+                        MPMHelper.setMPMData((EntityPlayer) this.actor, this.record.playerData.getCompoundTag("MPMData"));
+                    }
+                }
+
+                if (!this.realPlayer)
+                {
+                    this.actor.world.getMinecraftServer().getPlayerList().playerLoggedIn((EntityPlayerMP) this.actor);
+                }
+            }
+
+            while (!this.unsentPackets.isEmpty())
+            {
+                Dispatcher.sendToTracked(this.actor, this.unsentPackets.poll());
+            }
+        }
     }
 }

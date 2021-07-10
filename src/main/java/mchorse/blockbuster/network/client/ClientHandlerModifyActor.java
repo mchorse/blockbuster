@@ -17,7 +17,7 @@ public class ClientHandlerModifyActor extends ClientMessageHandler<PacketModifyA
 
         if (actor != null)
         {
-            actor.applyModifyPacket(message);
+            actor.modify.add(message);
         }
     }
 }

@@ -281,6 +281,22 @@ public class Scene
         }
     }
 
+    public void worldTick(World world)
+    {
+        for (RecordPlayer player : this.actors.values())
+        {
+            if (player.actor.world == world)
+            {
+                if (this.playing)
+                {
+                    player.checkAndSpawn();
+                }
+
+                player.applyUnsafeActions();
+            }
+        }
+    }
+
     /**
      * Check whether collected actors are still playing
      */

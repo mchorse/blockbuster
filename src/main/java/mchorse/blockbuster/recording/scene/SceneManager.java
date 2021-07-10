@@ -60,6 +60,19 @@ public class SceneManager
     }
 
     /**
+     * Spawn actors and execute unsafe actions
+     */
+    public void worldTick(World world)
+    {
+        for (Map.Entry<String, Scene> entry : this.scenes.entrySet())
+        {
+            Scene scene = entry.getValue();
+
+            scene.worldTick(world);
+        }
+    }
+
+    /**
      * Tick scenes
      */
     public void tick()

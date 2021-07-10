@@ -28,13 +28,16 @@ import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestProfiles;
 import mchorse.blockbuster.audio.AudioRenderer;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
 import mchorse.blockbuster.network.common.scene.sync.PacketSceneGoto;
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
+import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.blockbuster.recording.scene.SceneLocation;
+import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
@@ -52,6 +55,7 @@ import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -65,6 +69,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -442,6 +447,22 @@ public class CameraHandler
         if (location != null)
         {
             Dispatcher.sendToServer(new PacketScenePlay(location, PacketScenePlay.RESTART, event.position));
+            
+            List<String> replays = new ArrayList<String>();
+            
+            for (Replay replay : mchorse.blockbuster.ClientProxy.panels.scenePanel.getReplays())
+            {
+                replays.add(replay.id);
+            }
+            
+            for (EntityActor actor : Minecraft.getMinecraft().world.getEntities(EntityActor.class, actor -> {
+                return actor.isEntityAlive() && EntityUtils.getRecordPlayer(actor) != null
+                        && EntityUtils.getRecordPlayer(actor).record != null
+                        && replays.contains(EntityUtils.getRecordPlayer(actor).record.filename);
+            }))
+            {
+                actor.setDead();
+            }
         }
     }
 

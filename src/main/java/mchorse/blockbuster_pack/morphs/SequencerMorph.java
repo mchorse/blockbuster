@@ -113,12 +113,23 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
         found.applyCurrent(morph);
         this.currentMorph.setDirect(morph);
+        
+        this.timer = offset;
+        this.duration = found.totalDuration;
+        this.current = found.index;
     }
 
     @Override
     public boolean isPaused()
     {
         return this.animation.paused;
+    }
+
+    @Override
+    public void resume()
+    {
+        this.animation.paused = false;
+        MorphUtils.resume(this.currentMorph.get());
     }
 
     @Override
@@ -244,13 +255,14 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         /* A shortcut in case the durations of every sequence is zero */
         if (duration <= 0)
         {
-            return new FoundMorph(this.morphs.get(size - 1), size == 1 ? null : this.morphs.get(size - 2), 0, 0, 0);
+            return new FoundMorph(size - 1, this.morphs.get(size - 1), size == 1 ? null : this.morphs.get(size - 2), 0, 0, 0);
         }
 
         /* Now the main fun part */
         SequenceEntry entry = null;
         SequenceEntry lastEntry = null;
         int i = this.reverse ? size - 1 : 0;
+        int index = i;
 
         duration = 0;
 
@@ -269,6 +281,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             lastEntry = entry;
 
             entry = this.morphs.get(i);
+            index = i;
 
             if (this.isRandom)
             {
@@ -282,7 +295,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             duration += entry.getDuration(this.getRandomSeed(duration));
         }
 
-        return entry == null ? null : new FoundMorph(entry, lastEntry, duration, lastDuration, prevLastDuration);
+        return entry == null ? null : new FoundMorph(index, entry, lastEntry, duration, lastDuration, prevLastDuration);
     }
 
     /**
@@ -652,14 +665,16 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
      */
     public static class FoundMorph
     {
+        public int index;
         public SequenceEntry current;
         public SequenceEntry previous;
         public float totalDuration;
         public float lastDuration;
         public float prevLastDuration;
 
-        public FoundMorph(SequenceEntry current, SequenceEntry previous, float totalDuration, float lastDuration, float prevLastDuration)
+        public FoundMorph(int index, SequenceEntry current, SequenceEntry previous, float totalDuration, float lastDuration, float prevLastDuration)
         {
+            this.index = index;
             this.current = current;
             this.previous = previous;
             this.totalDuration = totalDuration;
