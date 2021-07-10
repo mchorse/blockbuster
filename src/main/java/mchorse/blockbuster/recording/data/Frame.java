@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -188,13 +189,13 @@ public class Frame
         {
             if (this.isMounted)
             {
-                mount.rotationYaw = this.mountYaw;
+                mount.rotationYaw += MathHelper.wrapDegrees(this.mountYaw - mount.rotationYaw);
                 mount.rotationPitch = this.mountPitch;
             }
 
-            actor.rotationYaw = this.yaw;
+            actor.rotationYaw += MathHelper.wrapDegrees(this.yaw - actor.rotationYaw);
             actor.rotationPitch = this.pitch;
-            actor.rotationYawHead = this.yawHead;
+            actor.rotationYawHead += MathHelper.wrapDegrees(this.yawHead - actor.rotationYawHead);
         }
 
         /* Motion and fall distance */
