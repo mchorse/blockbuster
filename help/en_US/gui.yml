@@ -327,7 +327,7 @@ blockbuster.gui:
         duration: Duration
         random: Random
         set_duration: Set duration
-        set_duration_tooltip: "When enabled, this option will take the calculated duration and assign it to picked morph that supports \"animates\" property"
+        set_duration_tooltip: "When enabled, this option will take the calculated duration and assign it to picked morph that supports \"animates\" property, the actual duration will be set to \"1\""
         reverse: Reverse
         no_morph: (no morph)
         morphs: Morphs
