@@ -341,6 +341,13 @@ blockbuster.gui:
         random_order: 随机顺序
         truly_random_order: 完全随机
         ticks: Ticks
+        add_part_tooltip: 添加一个伪装至列表，新伪装通常会被添加至列表末尾。按住 Ctrl 键则会将其添加为所选伪装的下一个伪装
+        loop: 循环
+        loop_tooltip: 设置循环次数，设为 0 则为无限循环
+        loop_offset: 循环后位移
+        loop_offset_count: 循环位移次数
+        end_point: 结束点
+        end_point_tooltip: 将当前伪装设为序列发生器的结束点，若此序列发生器为随机序列，结束点将用于记录循环次数
 
         preview_tick: 该序列伪装的预览 Tick 数
 
