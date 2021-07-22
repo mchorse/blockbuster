@@ -341,6 +341,13 @@ blockbuster.gui:
         random_order: 隨機順序
         truly_random_order: 完全隨機
         ticks: Ticks
+        add_part_tooltip: 添加一個偽裝至清單，新偽裝通常會被添加至清單末尾。按住 Ctrl 鍵則會將其添加為所選偽裝的下一個偽裝
+        loop: 迴圈
+        loop_tooltip: 設定迴圈次數，設為 0 則為無限迴圈
+        loop_offset: 迴圈後位移
+        loop_offset_count: 迴圈位移次數
+        end_point: 結束點
+        end_point_tooltip: 將當前偽裝設為序列發生器的結束點，若此序列發生器為隨機序列，結束點將用於記錄迴圈次數
 
         preview_tick: 該序列偽裝的預覽 Tick 數
 
