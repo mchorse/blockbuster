@@ -12,6 +12,7 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
+import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -69,9 +70,24 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     public float lastDuration;
 
     /**
+     * Is current morph enabled set duration
+     */
+    public boolean morphSetDuration;
+
+    /**
+     * Record loop count
+     */
+    public int loopCount;
+
+    /**
      * Is current morph the first morph of a loop
      */
     public boolean isFirstMorph = false;
+
+    /**
+     * Last update tick
+     */
+    public float lastUpdate;
 
     /**
      * Reverse playback 
@@ -138,6 +154,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         }
 
         MorphUtils.pause(morph, previous, (int) (offset - found.lastDuration));
+        MorphUtils.resume(morph);
 
         found.applyCurrent(morph);
         this.currentMorph.setDirect(morph);
@@ -149,6 +166,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         this.isFirstMorph = found.isFirstMorph;
         this.lastDuration = found.lastDuration;
         this.morphSetDuration = found.current.setDuration;
+        this.lastUpdate = offset;
     }
 
     @Override
@@ -210,9 +228,16 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        float progress = this.timer + partialTicks;
+
         if (!this.isPaused())
         {
-            this.updateMorph(this.timer + partialTicks);
+            this.updateClient(entity, progress);
+        }
+        else
+        {
+            partialTicks = 0;
+            progress = this.timer;
         }
 
         AbstractMorph morph = this.currentMorph.get();
@@ -251,6 +276,17 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
                 x += offset.x;
                 y += offset.y;
                 z += offset.z;
+            }
+
+            float ticks = progress - this.lastDuration;
+            float duration = this.duration - this.lastDuration;
+
+            int tick = (int) ticks;
+            partialTicks = ticks - tick;
+
+            if (this.morphSetDuration && duration > 0 && this.updateSetDuration(morph))
+            {
+                partialTicks = ticks / duration;
             }
 
             morph.render(entity, x, y, z, entityYaw, partialTicks);
@@ -324,7 +360,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             return null;
         }
 
-        float duration = this.getDuration();
+        float duration = this.getMaxDuration();
         int size = this.morphs.size();
 
         /* A shortcut in case the durations of every sequence is zero */
@@ -422,17 +458,56 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
         return duration;
     }
+    
+    /**
+     * Get maxium duration
+     */
+    public float getMaxDuration()
+    {
+        float duration = 0F;
+
+        for (SequenceEntry entry : this.morphs)
+        {
+            duration += entry.duration + Math.max(entry.random, 0);
+        }
+
+        return duration;
+    }
 
     @Override
     public void update(EntityLivingBase target)
     {
-        this.updateCycle();
-
-        AbstractMorph morph = this.currentMorph.get();
-
-        if (morph != null)
+        if (this.isPaused())
         {
-            morph.update(target);
+            return;
+        }
+
+        this.timer++;
+
+        if (target.world.isRemote)
+        {
+            this.updateClient(target, this.timer);
+        }
+    }
+
+    /**
+     * Update timer and morph for render
+     */
+    @SideOnly(Side.CLIENT)
+    protected void updateClient(EntityLivingBase entity, float progress)
+    {
+        this.updateMorph(progress);
+
+        if (!this.currentMorph.isEmpty())
+        {
+            int delta = (int) (progress - this.lastDuration) - (int) Math.max(this.lastUpdate - this.lastDuration, 0);
+
+            while (delta-- > 0)
+            {
+                this.currentMorph.get().update(entity);
+
+                this.lastUpdate = progress;
+            }
         }
     }
 
@@ -518,18 +593,15 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
                 AbstractMorph morph = MorphUtils.copy(entry.morph);
                 float duration = entry.getDuration(this.getRandomSeed(this.duration));
 
-                if (entry.setDuration && morph instanceof IAnimationProvider)
-                {
-                    ((IAnimationProvider) morph).getAnimation().duration = (int) duration;
-                }
-
                 this.currentMorph.set(morph);
+                this.lastDuration = this.duration;
                 this.duration += duration;
+                this.morphSetDuration = entry.setDuration;
             }
 
             if (!this.morphs.isEmpty())
             {
-                boolean durationZero = this.morphs.get(this.current).duration == 0;
+                boolean durationZero = this.duration - this.lastDuration < 0.0001 && this.getMaxDuration() < 0.0001;
 
                 if (this.timer >= this.duration && !durationZero)
                 {
@@ -537,6 +609,37 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
                 }
             }
         }
+    }
+
+    /**
+     * Set animation's duration to 1
+     */
+    protected boolean updateSetDuration(AbstractMorph morph)
+    {
+        boolean result = false;
+
+        if (!(morph instanceof SequencerMorph) && morph instanceof IMorphProvider)
+        {
+            result |= updateSetDuration(((IMorphProvider) morph).getMorph());
+        }
+
+        if (morph instanceof IAnimationProvider)
+        {
+            ((IAnimationProvider) morph).getAnimation().duration = 1;
+            ((IAnimationProvider) morph).getAnimation().progress = 0;
+
+            result = true;
+        }
+
+        if (morph instanceof IBodyPartProvider)
+        {
+            for (BodyPart part : ((IBodyPartProvider) morph).getBodyPart().parts)
+            {
+                result |= this.updateSetDuration(part.morph.get());
+            }
+        }
+
+        return result;
     }
 
     @Override
@@ -647,6 +750,8 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
                 this.offset[2] = sequencer.offset[2];
                 this.offsetCount = sequencer.offsetCount;
 
+                this.lastUpdate = 0;
+
                 return true;
             }
         }
@@ -664,6 +769,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         this.timer = 0;
         this.loopCount = 0;
         this.isFirstMorph = false;
+        this.lastUpdate = 0;
     }
 
     @Override
@@ -671,7 +777,8 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     {
         super.reset();
 
-        this.timer = this.current = 0;
+        this.current = -1;
+        this.timer = 0;
         this.duration = 0;
         this.loopCount = 0;
         this.reverse = false;
@@ -680,6 +787,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         this.loop = 0;
         this.offset[0] = this.offset[1] = this.offset[2] = 0;
         this.offsetCount = 0;
+        this.lastUpdate = 0;
     }
 
     @Override
@@ -734,6 +842,8 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             this.current = -1;
             this.duration = 0;
             this.timer = 0;
+            this.loopCount = 0;
+            this.lastUpdate = 0;
             this.updateMorph(0);
         }
     }

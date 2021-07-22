@@ -334,7 +334,7 @@ blockbuster.gui:
         duration: 持续长度
         random: 随机
         set_duration: 设置持续时间
-        set_duration_tooltip: "启用后，该选项会获取计算后的持续时间，并将其分配给你选取的那些支持\"动画\"属性的伪装"
+        set_duration_tooltip: "启用后，该选项会获取计算后的持续时间，并将其分配给你选取的那些支持\"动画\"属性的伪装，实际持续时间将会被设为 \"1\""
         reverse: 反转
         no_morph: （没有伪装）
         morphs: 伪装

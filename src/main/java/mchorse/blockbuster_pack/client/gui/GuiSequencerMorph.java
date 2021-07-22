@@ -218,6 +218,12 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             {
                 if (this.entry != null)
                 {
+                    this.morph.current = -1;
+                    this.morph.timer = 0;
+                    this.morph.duration = 0;
+                    this.morph.loopCount = 0;
+                    this.morph.lastUpdate = 0;
+
                     this.entry.duration = value.floatValue();
                     this.stopPlayback();
                 }
@@ -229,6 +235,12 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             {
                 if (this.entry != null)
                 {
+                    this.morph.current = -1;
+                    this.morph.timer = 0;
+                    this.morph.duration = 0;
+                    this.morph.loopCount = 0;
+                    this.morph.lastUpdate = 0;
+
                     this.entry.random = value.floatValue();
                     this.stopPlayback();
                 }
