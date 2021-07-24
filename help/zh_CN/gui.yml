@@ -351,6 +351,9 @@ blockbuster.gui:
 
         preview_tick: 该序列伪装的预览 Tick 数
 
+        generate_morph: 生成伪装
+        generate_morph_tooltip: 从当前预览生成一个伪装
+
         keys:
             toggle: 播放/暂停播放序列
             stop: 停止播放序列

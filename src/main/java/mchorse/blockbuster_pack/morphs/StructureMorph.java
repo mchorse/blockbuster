@@ -13,6 +13,7 @@ import mchorse.mclib.utils.Interpolations;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
+import mchorse.metamorph.api.morphs.utils.IMorphGenerator;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -39,7 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class StructureMorph extends AbstractMorph implements IAnimationProvider, ISyncableMorph
+public class StructureMorph extends AbstractMorph implements IAnimationProvider, ISyncableMorph, IMorphGenerator
 {
     private static final ResourceLocation DEFAULT_BIOME = new ResourceLocation("ocean");
 
@@ -182,6 +183,23 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
     public boolean isPaused()
     {
         return this.animation.paused;
+    }
+
+    @Override
+    public boolean canGenerate()
+    {
+        return this.animation.isInProgress();
+    }
+
+    @Override
+    public AbstractMorph genCurrentMorph(float partialTicks)
+    {
+        StructureMorph morph = (StructureMorph) this.copy();
+
+        this.animation.apply(morph.pose, partialTicks);
+        morph.animation.duration = this.animation.progress;
+
+        return morph;
     }
 
     @Override
@@ -366,6 +384,8 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
             this.anchorX = morph.anchorX;
             this.anchorY = morph.anchorY;
             this.anchorZ = morph.anchorZ;
+
+            this.animation.reset();
         }
     }
 
@@ -423,6 +443,14 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
         }
 
         return super.canMerge(morph);
+    }
+
+    @Override
+    public void reset()
+    {
+        super.reset();
+
+        this.animation.reset();
     }
 
     @Override

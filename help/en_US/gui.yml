@@ -344,6 +344,9 @@ blockbuster.gui:
 
         preview_tick: Preview tick of this sequencer morph
 
+        generate_morph: Generate morph
+        generate_morph_tooltip: Generate a morph from current preview
+
         keys:
             toggle: Toggle sequencer playback
             stop: Stop sequencer playback

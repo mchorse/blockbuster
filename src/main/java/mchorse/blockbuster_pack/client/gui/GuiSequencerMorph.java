@@ -22,7 +22,11 @@ import mchorse.mclib.utils.MathUtils;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
+import mchorse.metamorph.api.morphs.utils.IMorphGenerator;
+import mchorse.metamorph.bodypart.BodyPart;
+import mchorse.metamorph.bodypart.IBodyPartProvider;
 import mchorse.metamorph.client.gui.creative.GuiMorphRenderer;
 import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
@@ -97,6 +101,8 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         public GuiIconElement plause;
         public GuiIconElement stop;
         public GuiElement previewBar;
+        
+        public GuiButtonElement generateMorph;
 
         public GuiSequencerMorphRenderer previewRenderer;
 
@@ -293,9 +299,55 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.previewBar.flex().relative(this).x(130).y(10).wTo(this.elementsTop.flex()).h(20).row(5).preferred(1);
             this.previewBar.add(this.plause, this.preview, this.stop);
 
+            this.generateMorph = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.sequencer.generate_morph"), (element) ->
+            {
+                SequencerMorph previewer = GuiSequencerMorphRenderer.PREVIEWER;
+                AbstractMorph morph = previewer.getMorph();
+                
+                if (morph instanceof IMorphGenerator)
+                {
+                    float progress = this.previewRenderer.partialTicks + previewer.timer - previewer.lastDuration;
+                    float duration = previewer.duration - previewer.lastDuration;
+                    float partialTicks;
+
+                    if (previewer.morphSetDuration)
+                    {
+                        if (duration > 0.0001)
+                        {
+                            partialTicks = progress / duration;
+                        }
+                        else
+                        {
+                            partialTicks = 1;
+                        }
+                    }
+                    else
+                    {
+                        partialTicks = progress - (int) progress;
+                    }
+                    
+                    morph = ((IMorphGenerator) morph).genCurrentMorph(partialTicks);
+                    this.setMorphDuration(morph, (int) Math.min(progress, duration));
+                    
+                    SequenceEntry entry = new SequenceEntry(morph);
+                    entry.duration = Math.min(progress, duration);
+                    entry.setDuration = true;
+
+                    this.list.getList().add(entry);
+                    this.list.setIndex(this.list.getList().size() - 1);
+
+                    this.select(entry);
+                    this.list.update();
+
+                    this.stopPlayback();
+                }
+            });
+            this.generateMorph.flex().relative(this).x(0.5F).y(1.0F, -20).wh(100, 30).anchor(0.5F, 1.0F);
+            this.generateMorph.tooltip(IKey.lang("blockbuster.gui.sequencer.generate_morph_tooltip"));
+
             this.elements.add(this.pick, this.duration, this.random, this.setDuration, this.endPoint);
             this.elementsTop.add(Elements.label(IKey.lang("blockbuster.gui.sequencer.loop")), this.loop, Elements.label(IKey.lang("blockbuster.gui.sequencer.loop_offset")), this.offsetX, this.offsetY, this.offsetZ, this.offsetCount);
-            this.add(this.addPart, this.removePart, this.randomOrder, this.trulyRandomOrder, this.reverse, this.list, this.elements, this.elementsTop, this.previewBar);
+            this.add(this.addPart, this.removePart, this.randomOrder, this.trulyRandomOrder, this.reverse, this.list, this.elements, this.elementsTop, this.previewBar, this.generateMorph);
 
             this.keys().register(((LabelTooltip) this.plause.tooltip).label, Keyboard.KEY_SPACE, () -> this.plause.clickItself(GuiBase.getCurrent()))
                 .held(Keyboard.KEY_LSHIFT)
@@ -444,6 +496,39 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         private void updateLogic(GuiContext context)
         {
             this.preview.setValue(this.previewRenderer.tick + this.previewRenderer.partialTicks);
+
+            boolean canGenerate = false;
+            
+            if (this.previewRenderer.morph == GuiSequencerMorphRenderer.PREVIEWER && !this.previewRenderer.playing)
+            {
+                AbstractMorph morph = GuiSequencerMorphRenderer.PREVIEWER.getMorph();
+
+                if (morph instanceof IMorphGenerator)
+                {
+                    canGenerate = ((IMorphGenerator) morph).canGenerate();
+                }
+            }
+
+            this.generateMorph.setVisible(canGenerate);
+        }
+
+        public void setMorphDuration(AbstractMorph morph, int duration)
+        {
+            if (morph instanceof IAnimationProvider)
+            {
+                Animation animation = ((IAnimationProvider) morph).getAnimation();
+
+                animation.duration = duration;
+                animation.reset();
+            }
+            
+            if (morph instanceof IBodyPartProvider)
+            {
+                for (BodyPart part : ((IBodyPartProvider) morph).getBodyPart().parts)
+                {
+                    this.setMorphDuration(part.morph.get(), duration);
+                }
+            }
         }
 
         @Override

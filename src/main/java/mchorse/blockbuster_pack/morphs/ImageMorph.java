@@ -9,6 +9,7 @@ import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
+import mchorse.metamorph.api.morphs.utils.IMorphGenerator;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -38,7 +39,7 @@ import java.util.Objects;
  * 
  * This bad boy is basically replacement for Imaginary
  */
-public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISyncableMorph
+public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISyncableMorph, IMorphGenerator
 {
     public static final Matrix4f matrix = new Matrix4f();
 
@@ -150,6 +151,32 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
     public Animation getAnimation()
     {
         return this.animation;
+    }
+
+    @Override
+    public boolean canGenerate()
+    {
+        return this.animation.isInProgress();
+    }
+
+    @Override
+    public AbstractMorph genCurrentMorph(float partialTicks)
+    {
+        ImageMorph morph = (ImageMorph) this.copy();
+
+        morph.image.from(this);
+        this.animation.apply(morph.image, partialTicks);
+
+        morph.color = morph.image.color.getRGBAColor();
+        morph.crop.set(morph.image.crop);
+        morph.pose.copy(morph.image.pose);
+        morph.offsetX = morph.image.x;
+        morph.offsetY = morph.image.y;
+        morph.rotation = morph.image.rotation;
+
+        morph.animation.duration = this.animation.progress;
+
+        return morph;
     }
 
     @Override

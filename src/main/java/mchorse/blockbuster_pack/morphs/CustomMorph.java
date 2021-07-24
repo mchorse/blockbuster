@@ -25,7 +25,9 @@ import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
+import mchorse.metamorph.api.morphs.utils.IMorphGenerator;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
+import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.Minecraft;
@@ -60,7 +62,7 @@ import java.util.Map;
  * This is a morph which allows players to use Blockbuster's custom 
  * models as morphs.
  */
-public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAnimationProvider, ISyncableMorph
+public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAnimationProvider, ISyncableMorph, IMorphGenerator
 {
     /**
      * OrientedBoundingBoxes List by limbs
@@ -235,6 +237,36 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     public Animation getAnimation()
     {
         return this.animation;
+    }
+
+    @Override
+    public boolean canGenerate()
+    {
+        return this.animation.isInProgress();
+    }
+
+    @Override
+    public AbstractMorph genCurrentMorph(float partialTicks)
+    {
+        CustomMorph morph = (CustomMorph) this.copy();
+
+        if (this.getCurrentPose() != null)
+        {
+            morph.customPose = this.convertProp(this.animation.calculatePose(this.getCurrentPose(), partialTicks));
+            morph.customPose.shapes.clear();
+            morph.customPose.shapes.addAll(this.getShapesForRendering(partialTicks));
+        }
+
+        morph.animation.duration = this.animation.progress;
+
+        morph.parts.parts.clear();
+
+        for (BodyPart part : this.parts.parts)
+        {
+            morph.parts.parts.add(part.genCurrentBodyPart(this, partialTicks));
+        }
+
+        return morph;
     }
 
     public List<ShapeKey> getShapesForRendering(float partialTick)
