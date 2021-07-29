@@ -1,17 +1,15 @@
 package mchorse.blockbuster.utils.mclib;
 
-import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.utils.ResourcePackUtils;
 import mchorse.mclib.utils.files.FileTree;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
 import mchorse.mclib.utils.files.entries.FileEntry;
 import mchorse.mclib.utils.files.entries.FolderEntry;
-import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
-import org.apache.commons.compress.compressors.FileNameUtil;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
-import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Blockbuster jar file tree
@@ -22,42 +20,34 @@ public class BlockbusterJarTree extends FileTree
     {
         this.root = new FolderEntry("blockbuster", null, null);
 
-        this.add("textures/entity/eye_masks/1px.png");
-        this.add("textures/entity/eye_masks/1px_l.2px_r.png");
-        this.add("textures/entity/eye_masks/2px.png");
-        this.add("textures/entity/eye_masks/2px_l.1px_r.png");
-        this.add("textures/entity/eyes/steve.png");
-        this.add("textures/entity/eyes/alex.png");
-        this.add("textures/entity/mchorse/eyes.png");
-        this.add("textures/entity/mchorse/head.png");
-        this.add("textures/entity/mchorse/skin.png");
-        this.add("textures/entity/skin_masks/body.png");
-        this.add("textures/entity/skin_masks/bodywear.png");
-        this.add("textures/entity/skin_masks/full_body.png");
-        this.add("textures/entity/skin_masks/full_head.png");
-        this.add("textures/entity/skin_masks/full_left_arm.png");
-        this.add("textures/entity/skin_masks/full_left_leg.png");
-        this.add("textures/entity/skin_masks/full_right_arm.png");
-        this.add("textures/entity/skin_masks/full_right_leg.png");
-        this.add("textures/entity/skin_masks/head.png");
-        this.add("textures/entity/skin_masks/left_arm.png");
-        this.add("textures/entity/skin_masks/left_armwear.png");
-        this.add("textures/entity/skin_masks/left_leg.png");
-        this.add("textures/entity/skin_masks/left_legwear.png");
-        this.add("textures/entity/skin_masks/outer_head.png");
-        this.add("textures/entity/skin_masks/right_arm.png");
-        this.add("textures/entity/skin_masks/right_armwear.png");
-        this.add("textures/entity/skin_masks/right_leg.png");
-        this.add("textures/entity/skin_masks/right_legwear.png");
-        this.add("textures/entity/actor.png");
-        this.add("textures/entity/cape.png");
-        this.add("textures/entity/pixel.png");
-        this.add("textures/gui/icon.png");
+        List<ResourceLocation> allPictures = ResourcePackUtils.getAllPictures(Minecraft.getMinecraft().getResourceManager());
+
+        allPictures.sort(Comparator.comparing(ResourceLocation::getResourcePath));
+
+        for (ResourceLocation location : allPictures)
+        {
+            this.add(location);
+        }
+
+        this.recursiveSort(this.root);
     }
 
-    protected void add(String path)
+    private void recursiveSort(FolderEntry folder)
     {
-        String[] splits = path.split("/");
+        folder.getRawEntries().sort(FileTree.SORTER);
+
+        for (AbstractEntry entry : folder.getRawEntries())
+        {
+            if (entry instanceof FolderEntry)
+            {
+                this.recursiveSort((FolderEntry) entry);
+            }
+        }
+    }
+
+    protected void add(ResourceLocation location)
+    {
+        String[] splits = location.getResourcePath().split("/");
         FolderEntry entry = this.root;
 
         main:
@@ -80,7 +70,6 @@ public class BlockbusterJarTree extends FileTree
             entry = folder;
         }
 
-        ResourceLocation location = new ResourceLocation(Blockbuster.MOD_ID, path);
         FileEntry file = new FileEntry(splits[splits.length - 1] , null, location);
 
         entry.getRawEntries().add(file);
@@ -88,7 +77,8 @@ public class BlockbusterJarTree extends FileTree
 
     private void addBackEntryTo(FolderEntry entry)
     {
-        Collections.sort(entry.getRawEntries(), FileTree.SORTER);
+        entry.getRawEntries().sort(FileTree.SORTER);
+
         FileTree.addBackEntry(entry);
     }
 }
