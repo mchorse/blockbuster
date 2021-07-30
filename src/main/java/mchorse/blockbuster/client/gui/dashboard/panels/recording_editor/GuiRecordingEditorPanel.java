@@ -149,6 +149,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
             .held(Keyboard.KEY_LCONTROL).category(category);
         this.selector.keys().register(IKey.lang("blockbuster.gui.record_editor.teleport"), Keyboard.KEY_T, this::teleport)
             .held(Keyboard.KEY_LCONTROL).category(category);
+        this.selector.keys().register(IKey.lang("blockbuster.gui.record_editor.unselect"), Keyboard.KEY_ESCAPE, () -> this.selectAction(null))
+            .category(category).active(() -> this.editor.delegate != null);
     }
 
     private void cutAction()
@@ -419,6 +421,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
             Action old = this.editor.delegate.action;
 
             Dispatcher.sendToServer(new PacketAction(this.record.filename, this.selector.tick, this.selector.index, old));
+            
+            this.editor.delegate = null;
         }
     }
 

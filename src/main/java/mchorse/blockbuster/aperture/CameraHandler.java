@@ -399,6 +399,22 @@ public class CameraHandler
         return screen instanceof GuiCameraEditor;
     }
 
+    @SideOnly(Side.CLIENT)
+    public static void updatePlayerPosition()
+    {
+        if (isApertureLoaded())
+        {
+            updateCameraPlayerPosition();
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Method(modid = Aperture.MOD_ID)
+    private static void updateCameraPlayerPosition()
+    {
+        ClientProxy.cameraEditor.position.set(Minecraft.getMinecraft().player);
+    }
+
     /* Event listeners */
 
     @SubscribeEvent

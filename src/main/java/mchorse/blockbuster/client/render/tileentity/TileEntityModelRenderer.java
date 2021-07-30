@@ -5,6 +5,7 @@ import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.mclib.client.Draw;
 import mchorse.mclib.utils.MatrixUtils;
+import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -62,6 +63,13 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             }
 
             EntityLivingBase entity = te.entity;
+            boolean editing = false;
+
+            if (EntityUtils.getMorph(entity) != null)
+            {
+                morph = EntityUtils.getMorph(entity);
+                editing = true;
+            }
 
             /* Apply entity rotations */
             BlockPos pos = te.getPos();
@@ -85,26 +93,29 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             boolean wasSet = MatrixUtils.captureMatrix();
 
-            if (te.order == RotationOrder.ZYX)
+            if (!editing)
             {
-                GlStateManager.rotate(te.rx, 1, 0, 0);
-                GlStateManager.rotate(te.ry, 0, 1, 0);
-                GlStateManager.rotate(te.rz, 0, 0, 1);
-            }
-            else
-            {
-                GlStateManager.rotate(te.rz, 0, 0, 1);
-                GlStateManager.rotate(te.ry, 0, 1, 0);
-                GlStateManager.rotate(te.rx, 1, 0, 0);
-            }
+                if (te.order == RotationOrder.ZYX)
+                {
+                    GlStateManager.rotate(te.rx, 1, 0, 0);
+                    GlStateManager.rotate(te.ry, 0, 1, 0);
+                    GlStateManager.rotate(te.rz, 0, 0, 1);
+                }
+                else
+                {
+                    GlStateManager.rotate(te.rz, 0, 0, 1);
+                    GlStateManager.rotate(te.ry, 0, 1, 0);
+                    GlStateManager.rotate(te.rx, 1, 0, 0);
+                }
 
-            if (te.one)
-            {
-                GlStateManager.scale(te.sx, te.sx, te.sx);
-            }
-            else
-            {
-                GlStateManager.scale(te.sx, te.sy, te.sz);
+                if (te.one)
+                {
+                    GlStateManager.scale(te.sx, te.sx, te.sx);
+                }
+                else
+                {
+                    GlStateManager.scale(te.sx, te.sy, te.sz);
+                }
             }
 
             morph.render(entity, 0, 0, 0, 0, partialTicks);

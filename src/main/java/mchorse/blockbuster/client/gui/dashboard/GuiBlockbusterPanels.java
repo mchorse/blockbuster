@@ -1,6 +1,8 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.client.gui.GuiImmersiveEditor;
+import mchorse.blockbuster.client.gui.GuiImmersiveMorphMenu;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiTextureManagerPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.scene.GuiScenePanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlockPanel;
@@ -19,6 +21,7 @@ import mchorse.mclib.events.RemoveDashboardPanels;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsMenu;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -39,11 +42,13 @@ public class GuiBlockbusterPanels
     public GuiSnowstorm particleEditor;
 
     public GuiCreativeMorphsMenu morphs;
+    public GuiImmersiveEditor immersiveEditor;
 
     public void picker(Consumer<AbstractMorph> callback)
     {
         this.morphs.removeFromParent();
         this.morphs.callback = callback;
+        this.immersiveEditor.callback = callback;
     }
 
     public void addMorphs(GuiElement parent, boolean editing, AbstractMorph morph)
@@ -53,6 +58,7 @@ public class GuiBlockbusterPanels
             return;
         }
 
+        this.morphs.reload();
         this.morphs.flex().reset().relative(parent).wh(1F, 1F);
         this.morphs.resize();
         this.morphs.setSelected(morph);
@@ -63,6 +69,21 @@ public class GuiBlockbusterPanels
         }
 
         parent.add(this.morphs);
+    }
+
+    public GuiImmersiveEditor showImmersiveEditor(boolean editing, AbstractMorph morph, Consumer<GuiImmersiveMorphMenu> updateCallback)
+    {
+        this.immersiveEditor.show();
+        this.immersiveEditor.morphs.setSelected(morph);
+        this.immersiveEditor.morphs.updateCallback = updateCallback;
+        this.immersiveEditor.morphs.target = null;
+
+        if (editing)
+        {
+            this.immersiveEditor.morphs.enterEditMorph();
+        }
+
+        return this.immersiveEditor;
     }
 
     @SubscribeEvent
@@ -84,6 +105,7 @@ public class GuiBlockbusterPanels
         this.particleEditor = new GuiSnowstorm(mc, dashboard);
 
         this.morphs = new GuiCreativeMorphsMenu(mc, null);
+        this.immersiveEditor = new GuiImmersiveEditor(mc);
 
         dashboard.panels.registerPanel(this.scenePanel, IKey.lang("blockbuster.gui.dashboard.director"), BBIcons.SCENE);
         dashboard.panels.registerPanel(this.modelPanel, IKey.lang("blockbuster.gui.dashboard.model"), Icons.BLOCK);
@@ -104,6 +126,7 @@ public class GuiBlockbusterPanels
         this.recordingEditorPanel = null;
 
         this.morphs = null;
+        this.immersiveEditor = null;
     }
 
     @SubscribeEvent

@@ -145,7 +145,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         }
 
         float partial = context.partialTicks;
-        float headYaw = this.yaw;
+        float headYaw = this.yaw - (this.customEntity ? this.entityYawBody : 0);
         float headPitch = -this.pitch;
 
         final float factor = 1 / 16F;
@@ -153,7 +153,8 @@ public class GuiBBModelRenderer extends GuiModelRenderer
 
         if (!this.looking)
         {
-            headYaw = headPitch = 0;
+            headYaw = this.customEntity ? this.entityYawHead - this.entityYawBody : 0;
+            headPitch = this.customEntity ? this.entityPitch : 0;
         }
 
         this.updateModel(limbSwing, headYaw, headPitch, factor, partial);
@@ -164,7 +165,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         GlStateManager.scale(model.model.scale[0], model.model.scale[1], model.model.scale[2]);
         GlStateManager.scale(-1.0F * scale, -1.0F * scale, 1.0F * scale);
         GlStateManager.translate(0.0F, -1.501F, 0.0F);
-        GlStateManager.rotate(180, 0, 1, 0);
+        GlStateManager.rotate(180 + (this.customEntity ? this.entityYawBody : 0), 0, 1, 0);
 
         if (this.texture != null)
         {
@@ -172,7 +173,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         }
 
         this.tryPicking(context);
-        this.renderModel(this.entity, headYaw, headPitch, this.timer, context.mouseX, context.mouseY, partial, factor);
+        this.renderModel(this.entity, headYaw, headPitch, this.customEntity ? this.entityTicksExisted : this.timer, context.mouseX, context.mouseY, partial, factor);
 
         if (this.items)
         {
@@ -238,7 +239,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         this.model.pose = this.pose;
         this.model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp(1.0F - (this.swipe - 1.0F * partial) / 6.0F, 0.0F, 1.0F);
         this.model.setLivingAnimations(this.entity, headYaw, headPitch, partial);
-        this.model.setRotationAngles(limbSwing, this.swingAmount, this.timer, headYaw, headPitch, factor, this.entity);
+        this.model.setRotationAngles(limbSwing, this.swingAmount, this.customEntity ? this.entityTicksExisted : this.timer, headYaw, headPitch, factor, this.entity);
     }
 
     protected void renderModel(EntityLivingBase dummy, float headYaw, float headPitch, int timer, int yaw, int pitch, float partial, float factor)
@@ -251,7 +252,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     {
         if (this.model != null)
         {
-            this.model.renderForStencil(this.entity, this.swing + context.partialTicks, this.swingAmount, this.timer, this.yaw, this.pitch, 1 / 16F);
+            this.model.renderForStencil(this.entity, this.swing + context.partialTicks, this.swingAmount, this.customEntity ? this.entityTicksExisted : this.timer, this.yaw, this.pitch, 1 / 16F);
         }
     }
 
