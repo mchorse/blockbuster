@@ -3,8 +3,10 @@ package mchorse.blockbuster_pack.client.gui;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiSearchListElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -22,6 +24,8 @@ import java.util.function.Consumer;
 
 public class GuiStructureMorph extends GuiAbstractMorph<StructureMorph>
 {
+    private static IKey ANCHOR_POINT = IKey.lang("blockbuster.gui.structure_morph.anchor");
+
     public GuiStructureMorphPanel general;
 
     public GuiStructureMorph(Minecraft mc)
@@ -44,6 +48,9 @@ public class GuiStructureMorph extends GuiAbstractMorph<StructureMorph>
         public GuiAnimation animation;
         public GuiToggleElement lighting;
         public GuiSearchBiomeList biomes;
+        public GuiTrackpadElement anchorX;
+        public GuiTrackpadElement anchorY;
+        public GuiTrackpadElement anchorZ;
 
         public GuiStructureMorphPanel(Minecraft mc, GuiStructureMorph editor)
         {
@@ -54,9 +61,15 @@ public class GuiStructureMorph extends GuiAbstractMorph<StructureMorph>
 
             this.animation = new GuiAnimation(mc, true);
             this.animation.flex().relative(this).x(1F, -130).w(130);
-            
+
             this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.structure_morph.lighting"), (b) -> this.morph.lighting = b.isToggled());
             this.lighting.flex().relative(this).x(1F, -10).y(1F, -10).w(110).anchor(1F, 1F);
+            this.anchorX = new GuiTrackpadElement(mc, (v) -> this.morph.anchorX = v.floatValue());
+            this.anchorY = new GuiTrackpadElement(mc, (v) -> this.morph.anchorY = v.floatValue());
+            this.anchorZ = new GuiTrackpadElement(mc, (v) -> this.morph.anchorZ = v.floatValue());
+            this.anchorX.flex().relative(this.anchorY).y(-5).w(1F).anchorY(1);
+            this.anchorY.flex().relative(this.anchorZ).y(-5).w(1F).anchorY(1);
+            this.anchorZ.flex().relative(this.lighting).y(-5).w(1F).anchorY(1);
             
             this.biomes = new GuiSearchBiomeList(mc, this::accept);
             this.biomes.list.sort();
@@ -65,7 +78,7 @@ public class GuiStructureMorph extends GuiAbstractMorph<StructureMorph>
             this.biomes.resize();
             this.biomes.list.scroll.scrollSpeed = 15;
 
-            this.add(this.pose, this.animation, this.lighting, this.biomes);
+            this.add(this.pose, this.animation, this.lighting, this.anchorZ, this.anchorY, this.anchorX, this.biomes);
         }
 
         @Override
@@ -78,11 +91,22 @@ public class GuiStructureMorph extends GuiAbstractMorph<StructureMorph>
             this.lighting.toggled(morph.lighting);
             this.biomes.filter("", true);
             this.biomes.list.setCurrent(morph.biome);
+            this.anchorX.setValue(morph.anchorX);
+            this.anchorY.setValue(morph.anchorY);
+            this.anchorZ.setValue(morph.anchorZ);
         }
 
         private void accept(List<ResourceLocation> sel)
         {
             this.morph.biome = sel.get(0);
+        }
+
+        @Override
+        public void draw(GuiContext context)
+        {
+            this.font.drawStringWithShadow(ANCHOR_POINT.get(), this.anchorX.area.x, this.anchorX.area.y - 12, 0xffffff);
+
+            super.draw(context);
         }
     }
     

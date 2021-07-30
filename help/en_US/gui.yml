@@ -594,6 +594,7 @@ blockbuster.gui:
 
     structure_morph:
         lighting: Lighting
+        anchor: Anchor point
 
     texture:
         title: Texture manager
