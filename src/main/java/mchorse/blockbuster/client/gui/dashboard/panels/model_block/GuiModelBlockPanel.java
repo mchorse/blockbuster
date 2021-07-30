@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_block;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.client.gui.GuiImmersiveMorphMenu;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
@@ -29,6 +30,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
@@ -116,7 +118,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
         column.flex().relative(this).w(120).column(5).vertical().stretch().height(20).padding(10);
 
-        this.pickMorph = new GuiNestedEdit(mc, (editing) -> ClientProxy.panels.addMorphs(this, editing, this.model.morph.get()));
+        this.pickMorph = new GuiNestedEdit(mc, (editing) -> ClientProxy.panels.showImmersiveEditor(editing, this.model.morph.get(), this::updateMorphEditor));
 
         GuiButtonElement look = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.model_block.look"), (button) ->
         {
@@ -181,6 +183,26 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         }
 
         this.pickMorph.setMorph(morph);
+    }
+
+    private void updateMorphEditor(GuiImmersiveMorphMenu menu)
+    {
+        if (this.model == null)
+        {
+            return;
+        }
+
+        TileEntity te = this.model.getWorld().getTileEntity(this.model.getPos());
+
+        if (te != this.model)
+        {
+            if (te instanceof TileEntityModel)
+            {
+                this.setModelBlock((TileEntityModel) te);
+            }
+        }
+
+        menu.target = this.model.entity;
     }
 
     @Override

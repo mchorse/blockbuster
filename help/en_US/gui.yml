@@ -32,6 +32,9 @@ blockbuster.gui:
         sneak: Apply on sneak
         reset: Reset pose
         create: Create pose
+
+        keys:
+            toggle_gui_model: Toggle in-editor model rendering
     
     dashboard: 
         main: Dashboard
@@ -179,6 +182,8 @@ blockbuster.gui:
         paste: Paste action
         capture: Record from cursor
         teleport: Teleport at cursor
+
+        unselect: Unselect action
 
         drop: Drop block
         damage: Damage

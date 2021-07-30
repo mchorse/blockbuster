@@ -39,6 +39,9 @@ blockbuster.gui:
         reset: 重置姿势
         create: 创建姿势
 
+        keys:
+            toggle_gui_model: 切换编辑器内模型渲染
+
     dashboard:
         main: 仪表盘
         director: 场景
@@ -186,6 +189,8 @@ blockbuster.gui:
         paste: 粘贴动作
         capture: 从光标处开始录制
         teleport: 从光标处进行传送
+
+        unselect: 取消选择
 
         drop: 掉落方块
         damage: 伤害

@@ -444,6 +444,76 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         return entry == null ? null : new FoundMorph(lastIndex, entry, lastEntry, duration, lastDuration, prevLastDuration, lastLoopCount, lastIsFirstMorph);
     }
 
+    public int getTickAt(int index)
+    {
+        if (this.morphs.isEmpty() || index < 0 || this.getMaxDuration() < 0.0001F || this.isRandom && this.isTrulyRandom)
+        {
+            return (int) this.getDuration();
+        }
+
+        int size = this.morphs.size();
+
+        int i = -1;
+        float duration = 0;
+
+        int loopCount = 0;
+
+        while (i != index)
+        {
+            SequenceEntry entry = null;
+            
+            if (i > 0 && i < size)
+            {
+                entry = this.morphs.get(i);
+            }
+
+            if (entry != null && entry.endPoint && this.loop > 0 && this.loopCount >= this.loop - 1)
+            {
+                break;
+            }
+            
+            if (this.isRandom)
+            {
+                if (entry != null && entry.endPoint)
+                {
+                    loopCount++;
+                }
+
+                i = this.getRandomIndex(duration);
+            }
+            else
+            {
+                int next = i + (this.reverse ? -1 : 1);
+                int current = MathUtils.cycler(next, 0, size - 1);
+
+                if (current != next)
+                {
+                    if (this.loop > 0 && loopCount >= this.loop - 1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        if (i == -1)
+                        {
+                            this.loopCount = 0;
+                        }
+                        else
+                        {
+                            this.loopCount++;
+                        }
+                    }
+                }
+
+                i = current;
+            }
+
+            duration += this.morphs.get(i).getDuration(this.getRandomSeed(duration));
+        }
+
+        return (int) duration;
+    }
+
     /**
      * Get duration of this sequencer morph for a single cycle
      */

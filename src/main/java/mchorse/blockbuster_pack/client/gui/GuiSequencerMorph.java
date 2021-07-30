@@ -34,6 +34,7 @@ import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -65,6 +66,12 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
     protected GuiModelRenderer createMorphRenderer(Minecraft mc)
     {
         return new GuiSequencerMorphRenderer(mc);
+    }
+
+    @Override
+    public int getCurrentTick()
+    {
+        return this.general.getCurrentTick();
     }
 
     /**
@@ -214,7 +221,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
                 SequenceEntry entry = this.entry;
 
-                this.editor.morphs.nestEdit(entry.morph, editing, (morph) ->
+                this.editor.morphs.nestEdit(entry.morph, editing, true, (morph) ->
                 {
                     entry.morph = MorphUtils.copy(morph);
                 });
@@ -531,6 +538,18 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             }
         }
 
+        public int getCurrentTick()
+        {
+            if (this.previewRenderer.morph == GuiSequencerMorphRenderer.PREVIEWER)
+            {
+                return this.previewRenderer.tick;
+            }
+            else
+            {
+                return this.morph.getTickAt(this.list.getIndex());
+            }
+        }
+
         @Override
         public void fromNBT(NBTTagCompound tag)
         {
@@ -621,6 +640,11 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         @Override
         protected void drawUserModel(GuiContext context)
         {
+            this.doRender(context, this.entity, 0.0D, 0.0D, 0.0D);
+        }
+
+        public void doRender(GuiContext context, EntityLivingBase entity, double x, double y, double z)
+        {
             if (this.morph == null)
             {
                 return;
@@ -640,7 +664,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                 }
             }
 
-            MorphUtils.render(this.morph, this.entity, 0.0D, 0.0D, 0.0D, this.yaw, this.partialTicks);
+            MorphUtils.render(this.morph, entity, x, y, z, this.yaw, this.partialTicks);
 
             this.lastTick = context.tick;
         }
