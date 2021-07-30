@@ -1,3 +1,16 @@
+## Version 2.3.1
+
+This patch update fixes a couple of bugs.
+
+**Compatible** with McLib `2.3.1`, Metamorph `1.2.7` and Aperture `1.6`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+* Added a feature when duplicating a scene, all player recordings will be renamed using rename prefix algorithm to avoid overwriting player recordings from previous scene
+* Added a feature to pack manually models into Blockbuster's jar (see `assets/blockbuster/models/user/` folder)
+* Added anchor point option to `structure` morph
+* Added support for loading n-gons in OBJs models
+* Added shadow option to `image` morph
+* Removed eye height animation to being laggy
+
 ## Version 2.3
 
 This update doesn't have any aim, but rather has a lot of random features, nothing groundbreaking though.
@@ -74,6 +87,7 @@ This update doesn't have any aim, but rather has a lot of random features, nothi
     * `blockbuster/textures/entity/eye_masks/` are eyes masks that allow erasing 2 and 1 pixel high eye holes with multi-skin
     * `blockbuster/textures/entity/skin_masks/` are skin masks (by Silverx) that allow erasing body parts on Minecraft player skins
     * `blockbuster/textures/entity/mchorse/` are McHorse's eyes, head and skin textures
+    * `blockbuster/textures/entity/pixel.png` is a white pixel that can be used with image morph for glow effects (use the color filter to change the color of the pixel)
 * Changed shape keys' relative option to be enabled by default
 * Fixed shape keys incorrectly calculating after morph merging
 * Fixed OBJ files not being copied when duplicating a model (reported by SergiDPlay)
