@@ -309,6 +309,8 @@ blockbuster.gui:
         rotation: Coordinate rotation
         keying: Keying
         keying_tooltip: This option clears the color data on the screen (in framebuffer) where this morph was rendered, which can be used for Minema's 'Use alpha' option to record keyed footage without external video editing plugins
+        shadow: Shadow
+        shadow_tooltip: Whether this image morph should cast shadow with Optifine's shaders (this can fix image morph shading itself when too big), without Optifine it's useless
 
     sequencer:
         duration: Duration
@@ -594,6 +596,7 @@ blockbuster.gui:
 
     structure_morph:
         lighting: Lighting
+        anchor: Anchor point
 
     texture:
         title: Texture manager

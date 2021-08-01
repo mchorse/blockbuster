@@ -56,7 +56,7 @@ public class SubCommandRecordFill extends SubCommandRecordBase
             add = false;
         }
 
-        Frame original = record.getFrame(tick).clone();
+        Frame original = record.getFrame(tick).copy();
 
         List<Frame> frames = record.frames;
         List<List<Action>> actions = record.actions;
@@ -75,7 +75,7 @@ public class SubCommandRecordFill extends SubCommandRecordBase
 
         for (int i = 0; i < count; i ++)
         {
-            frames.add(original.clone());
+            frames.add(original.copy());
             actions.add(null);
         }
 

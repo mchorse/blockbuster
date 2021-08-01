@@ -657,7 +657,7 @@ public class Record
 
         for (Frame frame : this.frames)
         {
-            record.frames.add(frame.clone());
+            record.frames.add(frame.copy());
         }
 
         for (List<Action> actions : this.actions)

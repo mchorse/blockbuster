@@ -13,6 +13,7 @@ blockbuster:
             calculate_body_yaw: "{r}Automatically calculates body yaw for given player recording{r}."
             camera: "{r}Generates a new (or updates exisitng) player recording named {7}<filename>{r} using the the data from server side {7}<camera_profile>{r}. Optional offset {7}[x]{r}, {7}[y]{r} and {7}[z]{r} can be provided that will shift the position by given XYZ offset."
             clean: "{r}This command cleans given {7}<property>{r} in {7}<filename>{r} player recording from {7}[from]{r} tick to {7}[to]{r} (not including {7}[to]{r}) tick to the value specified either in {7}[value]{r} argument (it accepts relative values) or the value at frame {7}[from]{r} or the first frame."
+            create: "{r}This command creates a player recording named {7}<filename>{r} with {7}<duration>{r} frames. {7}[x]{r}, {7}[y]{r}, {7}[z]{r}, {7}[yaw]{r}, and {7}[pitch]{r} can be optionally specified to override current sender's position and rotation (relative {7}~{r} values are supported)."
             cut: "{r}This command removes all actions in player recording {7}<filename>{r} before {7}<before>{r} and after {7}<after>{r} (pre and post delays shouldn't be taken into account giving {7}<from>{r} and {7}<to>{r} arguments)."
             dupe: "{r}This command duplicates given {7}<filename>{r} player recording to a new player recording file with given {7}<new_filename>{r}."
             erase: "{r}This command removes {7}<count>{r} actions in player recording {7}<filename>{r} starting at tick {7}<from>{r}."

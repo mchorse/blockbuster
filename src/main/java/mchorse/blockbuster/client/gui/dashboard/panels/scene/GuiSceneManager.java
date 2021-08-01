@@ -108,6 +108,7 @@ public class GuiSceneManager extends GuiElement
                 scene.copy(this.parent.getLocation().getScene());
                 scene.setId(name);
                 scene.setupIds();
+                scene.renamePrefix(scene.getId(), (id) -> id + "_copy");
                 this.sceneList.add(name);
                 this.sceneList.sort();
                 this.sceneList.setCurrent(name);
