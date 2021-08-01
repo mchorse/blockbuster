@@ -8,6 +8,7 @@ import mchorse.blockbuster.commands.record.SubCommandRecordApply;
 import mchorse.blockbuster.commands.record.SubCommandRecordCalculateBodyYaw;
 import mchorse.blockbuster.commands.record.SubCommandRecordCamera;
 import mchorse.blockbuster.commands.record.SubCommandRecordClean;
+import mchorse.blockbuster.commands.record.SubCommandRecordCreate;
 import mchorse.blockbuster.commands.record.SubCommandRecordCut;
 import mchorse.blockbuster.commands.record.SubCommandRecordDupe;
 import mchorse.blockbuster.commands.record.SubCommandRecordErase;
@@ -55,6 +56,7 @@ public class CommandRecord extends SubCommandBase
         }
 
         this.add(new SubCommandRecordClean());
+        this.add(new SubCommandRecordCreate());
         this.add(new SubCommandRecordCut());
         this.add(new SubCommandRecordDupe());
         this.add(new SubCommandRecordErase());

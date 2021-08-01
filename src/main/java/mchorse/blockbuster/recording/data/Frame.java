@@ -273,8 +273,7 @@ public class Frame
     /**
      * Create a copy of this frame 
      */
-    @Override
-    public Frame clone()
+    public Frame copy()
     {
         Frame frame = new Frame();
 
