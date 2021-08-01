@@ -564,16 +564,27 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
 
     public static class ImageAnimation extends Animation
     {
-        public ImageProperties last = new ImageProperties();
+        public ImageProperties last;
 
         public void merge(ImageMorph last, ImageMorph next)
         {
             this.merge(next.animation);
+
+            if (this.last == null)
+            {
+                this.last = new ImageProperties();
+            }
+
             this.last.from(last);
         }
 
         public void apply(ImageProperties properties, float partialTicks)
         {
+            if (this.last == null)
+            {
+                return;
+            }
+
             float factor = this.getFactor(partialTicks);
 
             properties.color.r = this.interp.interpolate(this.last.color.r, properties.color.r, factor);
