@@ -9,6 +9,7 @@ import mchorse.blockbuster_pack.morphs.structure.StructureAnimation;
 import mchorse.blockbuster_pack.morphs.structure.StructureRenderer;
 import mchorse.blockbuster_pack.morphs.structure.StructureStatus;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
+import mchorse.mclib.utils.Interpolations;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
@@ -74,6 +75,11 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
     public ModelTransform pose = new ModelTransform();
 
     public StructureAnimation animation = new StructureAnimation();
+
+    /* Rotation point */
+    public float anchorX;
+    public float anchorY;
+    public float anchorZ;
 
     @SideOnly(Side.CLIENT)
     public static void request()
@@ -274,15 +280,29 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
 
             ModelTransform transform = this.pose;
 
+            float anchorX = this.anchorX;
+            float anchorY = this.anchorY;
+            float anchorZ = this.anchorZ;
+
             if (this.animation.isInProgress())
             {
                 transform = new ModelTransform();
                 transform.copy(this.pose);
 
                 this.animation.apply(transform, partialTicks);
+
+                if (this.animation.lastAnchorX != null)
+                {
+                    float factor = this.animation.getFactor(partialTicks);
+
+                    anchorX = this.animation.interp.interpolate(this.animation.lastAnchorX, anchorX, factor);
+                    anchorY = this.animation.interp.interpolate(this.animation.lastAnchorY, anchorY, factor);
+                    anchorZ = this.animation.interp.interpolate(this.animation.lastAnchorZ, anchorZ, factor);
+                }
             }
 
             transform.transform();
+            GlStateManager.translate(anchorX, anchorY, anchorZ);
             
             RenderHelper.disableStandardItemLighting();
             
@@ -343,6 +363,9 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
             this.animation.copy(morph.animation);
             this.biome = morph.biome;
             this.lighting = morph.lighting;
+            this.anchorX = morph.anchorX;
+            this.anchorY = morph.anchorY;
+            this.anchorZ = morph.anchorZ;
         }
     }
 
@@ -372,6 +395,9 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
             result = result && Objects.equals(this.animation, morph.animation);
             result = result && Objects.equals(this.biome, morph.biome);
             result = result && this.lighting == morph.lighting;
+            result = result && this.anchorX == morph.anchorX;
+            result = result && this.anchorY == morph.anchorY;
+            result = result && this.anchorZ == morph.anchorZ;
         }
 
         return result;
@@ -409,6 +435,9 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
         if (tag.hasKey("Animation")) this.animation.fromNBT(tag.getCompoundTag("Animation"));
         if (tag.hasKey("Biome")) this.biome = new ResourceLocation(tag.getString("Biome"));
         if (tag.hasKey("Lighting")) this.lighting = tag.getBoolean("Lighting");
+        if (tag.hasKey("AnchorX")) this.anchorX = tag.getFloat("AnchorX");
+        if (tag.hasKey("AnchorY")) this.anchorY = tag.getFloat("AnchorY");
+        if (tag.hasKey("AnchorZ")) this.anchorZ = tag.getFloat("AnchorZ");
     }
 
     @Override
@@ -443,6 +472,21 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
         if (!this.lighting)
         {
             tag.setBoolean("Lighting", this.lighting);
+        }
+
+        if (this.anchorX != 0)
+        {
+            tag.setFloat("AnchorX", this.anchorX);
+        }
+
+        if (this.anchorY != 0)
+        {
+            tag.setFloat("AnchorY", this.anchorY);
+        }
+
+        if (this.anchorZ != 0)
+        {
+            tag.setFloat("AnchorZ", this.anchorZ);
         }
     }
 }

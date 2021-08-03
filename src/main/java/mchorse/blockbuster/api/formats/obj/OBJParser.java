@@ -277,9 +277,16 @@ public class OBJParser
                     group.faces.add(new OBJFace(new String[] {faces[0], faces[1], faces[2]}));
                     group.faces.add(new OBJFace(new String[] {faces[0], faces[2], faces[3]}));
                 }
-                else
+                else if (faces.length == 3)
                 {
                     group.faces.add(new OBJFace(faces));
+                }
+                else if (faces.length > 4)
+                {
+                    for (int i = 0, c = faces.length - 2; i < c; i++)
+                    {
+                        group.faces.add(new OBJFace(new String[] {faces[0], faces[i + 1], faces[i + 2]}));
+                    }
                 }
             }
         }

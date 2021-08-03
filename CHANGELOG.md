@@ -1,3 +1,125 @@
+## Version 2.3.1
+
+This patch update fixes a couple of bugs.
+
+**Compatible** with McLib `2.3.1`, Metamorph `1.2.7` and Aperture `1.6`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+* Added a feature when duplicating a scene, all player recordings will be renamed using rename prefix algorithm to avoid overwriting player recordings from previous scene
+* Added a feature to pack manually models into Blockbuster's jar (see `assets/blockbuster/models/user/` folder)
+* Added anchor point option to `structure` morph
+* Added support for loading n-gons in OBJs models
+* Added shadow option to `image` morph
+* Removed eye height animation to being laggy
+
+## Version 2.3
+
+This update doesn't have any aim, but rather has a lot of random features, nothing groundbreaking though.
+
+**Compatible** with McLib `2.3`, Metamorph `1.2.7` and Aperture `1.6`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+<a href="https://youtu.be/vO1tAgNsCUo"><img src="https://img.youtube.com/vi/vO1tAgNsCUo/0.jpg"></a> 
+
+### General
+
+* Added limiting of editing Blockbuster data on the server to OP only
+* Added Emoticons version check for those who forget to update
+* Added search bar to texture manager panel (suggested by ALL.Creator)
+* Added audio bar playback time display option (suggested by gewenzsko)
+* Added reset transformation to pose transformations
+* Added a replay option to render actor last (suggested by gewenzsko)
+* Added depth sorting of always rendered actors
+* Added canceling of player recording by pressing pause scene keybind (suggested by Chunk7)
+* Added truly random option to `sequencer` morph
+* Added outline and background to selected replay in the scene menu (suggested by Chunk7)
+* Changed model block to be uneditable in adventure mode (suggested by The Darvin Studio)
+* Fixed `sequencer` morph entry doesn't get copied when it should be
+* Fixed break block animation not working in first person playback (reported by Silent)
+* Fixed jittery body yaw rotation in first person playback (reported by zoombie)
+* Fixed custom model blocks are dropped as default Steve model blocks in survival (reported by The Minebox)
+* Fixed scene's loops option (reported by Centryfuga)
+* Fixed concurrent modification crash when a scene launches another scene (reported by gewenzsko)
+* Fixed ignored option wasn't being handled properly in better preview
+* Fixed crash with first person playback on dedicated server (reported by gewenzsko)
+* Fixed floating point precision with long coordinates for player recordings
+* Fixed interpolation list overflown by pick model button
+
+### BB gun
+
+* Added ammo item stack option to BB gun
+* Added knockback factor option to BB gun (suggested by Centryfuga)
+* Added on vaniash and on entity impact command options to BB gun (suggested by Centryfuga)
+* Added ignore blocks, ignore entities (suggested by Centryfuga) and vertical knockback
+* Changed BB gun's scatter to radial model, which allows creating 360 degree guns (suggested by Joziah2)
+* Fixed BB gun projectiles bounce off of non opaque blocks (reported by Centryfuga)
+* Fixed collision and clipping of BB gun projectiles (reported by Chryfi and Centryfuga)
+* Fixed BB gun with one projectile with sequencer and random enabled not being truly random (reported by Chunk7)
+* Fixed firing command not working with 0 projectiles
+
+### Commands
+
+* Added `/record apply <target> <source> <properties> [relative] [from] [to]` command, which applies certain properties from one player recording's frames on top of another
+* Added `/mount <target> [destination]` command (suggested by Jvonlins)
+* Added `/action cancel` command to cancel recording (suggested by El_Redstoniano)
+* Fixed `/record append` player recording not working with `0` countdown (reported by gewenzsko)
+* Fixed `/record origin` not rotating body yaw (reported by RunnyHero)
+* Fixed `/scene loop` resetting the scene
+
+### Models
+
+* Added NBT presets to custom models
+* Added legacy OBJ loading option to allow disabling an old way of loading models which are flipped on X axis
+* Added ability to edit shape keys per pose
+* Added rename pose context menu to model editor
+* Added more default models:
+    * `eyes/3.0` which is eyes rig 3.0 (suggested by Jvonlins)
+    * `eyes/3.0_1px` which is eyes rig 3.0 but 1 pixel high
+    * `eyes/3.1` which is eyes rig 3.1 (3.0 but with with bends)
+    * `eyes/3.1_simple` which is eyes rig 3.1 (3.1 but with less bends)
+    * `eyes/alex` which is `alex` but with 3D head for covering eyes holes
+    * `eyes/fred` which is `fred` but with 3D head for covering eyes holes
+    * `eyes/steve` which is `steve` but with 3D head for covering eyes holes
+    * `eyes/head` which is just `fred` model's 3D head for using with Emoticons morphs for covering eye holes
+    * `eyes/head_3D` which is just `fred` model's 3D (but also outer layer 3D) head for using with Emoticons morphs for covering eye holes
+    * `mchorse/head` which is McHorse's head model
+* Added McHorse morph in Blockbuster extra
+* Added factory textures that can be accessed in texture picker:
+    * `blockbuster/textures/entity/eyes/` are default eye skins for Steve and Alex
+    * `blockbuster/textures/entity/eye_masks/` are eyes masks that allow erasing 2 and 1 pixel high eye holes with multi-skin
+    * `blockbuster/textures/entity/skin_masks/` are skin masks (by Silverx) that allow erasing body parts on Minecraft player skins
+    * `blockbuster/textures/entity/mchorse/` are McHorse's eyes, head and skin textures
+    * `blockbuster/textures/entity/pixel.png` is a white pixel that can be used with image morph for glow effects (use the color filter to change the color of the pixel)
+* Changed shape keys' relative option to be enabled by default
+* Fixed shape keys incorrectly calculating after morph merging
+* Fixed OBJ files not being copied when duplicating a model (reported by SergiDPlay)
+* Fixed shape keys normal interpolation
+* Fixed `steve` armor shoes swinging
+* Fixed shape keys merging NPE crashing
+* Fixed shape keys not reloading
+
+### Snowstorm particles
+
+* Added saving of collapsed tabs in particle editor (developed by Chryfi)
+* Added inertia option (developed by Chryfi)
+* Added realistic collision drag (developed by Chryfi)
+* Added tangential velocity (developed by Chryfi)
+* Added local velocity (developed by Chryfi)
+* Added local scale (developed by Chryfi)
+* Added scale texture (developed by Chryfi)
+* Changed duplication of particle effects also saves it immediately (suggested by El_Redstoniano)
+* Fixed Snowstorm particle effects not loading upon entering the world (reported by Jvonlins)
+* Fixed NPE crash when particle doesn't exist anymore on the disk but was still present in the list (reported by zoombie)
+* Fixed NPE crash in Snowstorm's morph editor when particle doesn't exist anymore (reported by Chryfi)
+* Fixed once lifetime emitter component working incorrectly
+
+### Structure morph
+
+* Added animation and transformations options to `structure` morph (suggested by Chunk7)
+* Added `structure` morph's name display (suggested by Guider)
+* Added biome picker for `structure` morph (developed by NyaNLI)
+* Added lighting option for `structure` morph (developed by NyaNLI)
+* Fixed `structure` morph not rendering without disabling cached rendering (fixed by NyaNLI)
+* Removed Cached structure rendering
+
 ## Version 2.2.2
 
 This patch update was made to complement BB guns tutorial video.

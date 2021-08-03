@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -819,6 +820,11 @@ public class Scene
 
     public void renamePrefix(String newPrefix)
     {
+        this.renamePrefix(newPrefix, null);
+    }
+
+    public void renamePrefix(String newPrefix, Function<String, String> process)
+    {
         for (Replay replay : this.replays)
         {
             Matcher matcher = PREFIX.matcher(replay.id);
@@ -826,6 +832,10 @@ public class Scene
             if (matcher.find())
             {
                 replay.id = newPrefix + "_" + matcher.group(2);
+            }
+            else if (process != null)
+            {
+                replay.id = process.apply(replay.id);
             }
         }
     }

@@ -67,6 +67,7 @@ public class StructureRenderer
             this.buffers.clear();
             this.structureLighting = DefaultVertexFormats.BLOCK;
             this.worldLighting = new VertexFormat();
+
             for (VertexFormatElement element : this.structureLighting.getElements())
             {
                 if (DefaultVertexFormats.TEX_2S.equals(element))

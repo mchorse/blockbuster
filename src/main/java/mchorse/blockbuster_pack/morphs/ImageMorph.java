@@ -4,6 +4,7 @@ import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.MatrixUtils;
+import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
@@ -105,6 +106,11 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
      */
     public boolean keying;
 
+    /**
+     * Whether Optifine's shadow should be disabled
+     */
+    public boolean shadow = true;
+
     public ImageAnimation animation = new ImageAnimation();
     public ImageProperties image = new ImageProperties();
 
@@ -179,6 +185,11 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        if (!this.shadow && ReflectionUtils.isOptifineShadowPass())
+        {
+            return;
+        }
+
         if (this.texture == null)
         {
             return;
@@ -412,6 +423,7 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
             this.rotation = morph.rotation;
             this.pose.copy(morph.pose);
             this.keying = morph.keying;
+            this.shadow = morph.shadow;
             this.animation.copy(morph.animation);
             this.animation.reset();
         }
@@ -438,6 +450,7 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
             result = result && image.rotation == this.rotation;
             result = result && Objects.equals(image.pose, this.pose);
             result = result && image.keying == this.keying;
+            result = result && image.shadow == this.shadow;
             result = result && Objects.equals(image.animation, this.animation);
         }
 
@@ -506,6 +519,7 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         if (this.rotation != 0) tag.setFloat("Rotation", this.rotation);
         if (!this.pose.isDefault()) tag.setTag("Pose", this.pose.toNBT());
         if (this.keying) tag.setBoolean("Keying", this.keying);
+        if (!this.shadow) tag.setBoolean("Shadow", this.shadow);
 
         NBTTagCompound animation = this.animation.toNBT();
 
@@ -536,6 +550,7 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         if (tag.hasKey("Animation")) this.animation.fromNBT(tag.getCompoundTag("Animation"));
         if (tag.hasKey("Pose")) this.pose.fromNBT(tag.getCompoundTag("Pose"));
         if (tag.hasKey("Keying")) this.keying = tag.getBoolean("Keying");
+        if (tag.hasKey("Shadow")) this.shadow = tag.getBoolean("Shadow");
 
         if (tag.hasKey("Scale"))
         {
@@ -549,16 +564,27 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
 
     public static class ImageAnimation extends Animation
     {
-        public ImageProperties last = new ImageProperties();
+        public ImageProperties last;
 
         public void merge(ImageMorph last, ImageMorph next)
         {
             this.merge(next.animation);
+
+            if (this.last == null)
+            {
+                this.last = new ImageProperties();
+            }
+
             this.last.from(last);
         }
 
         public void apply(ImageProperties properties, float partialTicks)
         {
+            if (this.last == null)
+            {
+                return;
+            }
+
             float factor = this.getFactor(partialTicks);
 
             properties.color.r = this.interp.interpolate(this.last.color.r, properties.color.r, factor);

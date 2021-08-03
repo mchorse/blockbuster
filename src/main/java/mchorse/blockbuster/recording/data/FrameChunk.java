@@ -86,7 +86,7 @@ public class FrameChunk
 
                 if (i < this.offset)
                 {
-                    frame = i < oldFrames.size() ? oldFrames.get(i) : merged.get(0).clone();
+                    frame = i < oldFrames.size() ? oldFrames.get(i) : merged.get(0).copy();
                 }
                 else if (i > newSize)
                 {

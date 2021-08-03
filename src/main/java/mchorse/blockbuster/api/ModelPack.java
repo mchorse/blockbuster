@@ -1,13 +1,8 @@
 package mchorse.blockbuster.api;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.ImmutableList;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.api.loaders.IModelLoader;
@@ -17,10 +12,20 @@ import mchorse.blockbuster.api.loaders.ModelLoaderVOX;
 import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderJSON;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderOBJ;
+import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderVOX;
 import mchorse.blockbuster.api.resource.IResourceEntry;
 import mchorse.blockbuster.api.resource.StreamEntry;
 import net.minecraftforge.common.DimensionManager;
-import org.apache.commons.compress.archivers.StreamingNotSupportedException;
+import org.apache.commons.io.IOUtils;
+
+import java.io.File;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Model pack class
@@ -54,6 +59,8 @@ public class ModelPack
 
     private long lastTime;
 
+    private Map<String, ModelUserItem> packed = new HashMap<String, ModelUserItem>();
+
     public ModelPack()
     {
         this.loaders.add(new ModelLoaderVOX());
@@ -61,6 +68,20 @@ public class ModelPack
         this.loaders.add(new ModelLoaderJSON());
 
         this.setupFolders();
+        this.setupPackedModels();
+    }
+
+    private void setupPackedModels()
+    {
+        try
+        {
+            InputStream stream = this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/user.json");
+            String json = IOUtils.toString(stream, Charset.defaultCharset());
+
+            this.packed = new Gson().fromJson(json, new TypeToken<Map<String, ModelUserItem>>(){}.getType());
+        }
+        catch (Exception e)
+        {}
     }
 
     public IModelLazyLoader create(File file)
@@ -166,10 +187,63 @@ public class ModelPack
 
             /* Of course I know him, he's me */
             this.addDefaultModel("mchorse/head");
+
+            if (this.packed != null)
+            {
+                for (Map.Entry<String, ModelUserItem> entry : this.packed.entrySet())
+                {
+                    this.addUserModel(entry.getKey(), entry.getValue());
+                }
+            }
         }
         catch (Exception e)
         {
             e.printStackTrace();
+        }
+    }
+
+    private void addUserModel(String id, ModelUserItem userItem)
+    {
+        IModelLazyLoader lazy = this.models.get(id);
+
+        if (lazy == null)
+        {
+            String path = "assets/blockbuster/models/user/" + id;
+            ClassLoader loader = this.getClass().getClassLoader();
+
+            StreamEntry json = new StreamEntry(path + "/model.json", 0, loader);
+
+            if (userItem.obj != null)
+            {
+                String mtlPath = userItem.mtl == null ? null : path + "/" + userItem.mtl;
+                StreamEntry obj = new StreamEntry(path + "/" + userItem.obj, 0, loader);
+                StreamEntry mtl = new StreamEntry(mtlPath, 0, loader);
+                List<IResourceEntry> s = new ArrayList<IResourceEntry>();
+
+                if (userItem.shapes != null)
+                {
+                    for (String shape : userItem.shapes)
+                    {
+                        s.add(new StreamEntry(path + "/"  + shape, 0, loader));
+                    }
+                }
+
+                lazy = new ModelLazyLoaderOBJ(json, obj, mtl, s);
+            }
+            else if (userItem.vox != null)
+            {
+                lazy = new ModelLazyLoaderVOX(json, new StreamEntry(path + "/" + userItem.vox, 0, loader));
+            }
+            else
+            {
+                lazy = new ModelLazyLoaderJSON(json);
+            }
+
+            lazy.setLastTime(-1);
+
+            this.models.put(id, lazy);
+            this.changed.put(id, lazy);
+            this.removed.remove(id);
         }
     }
 

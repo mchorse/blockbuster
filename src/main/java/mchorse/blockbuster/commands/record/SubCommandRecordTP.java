@@ -6,9 +6,9 @@ import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Command /record tp
@@ -40,17 +40,14 @@ public class SubCommandRecordTP extends SubCommandRecordBase
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         String filename = args[0];
-        int tick = args.length > 1 ? CommandBase.parseInt(args[1], 0) : 0;
+        int tick = args.length > 1 ? CommandBase.parseInt(args[1]) : 0;
         Record record = CommandRecord.getRecord(filename);
 
-        if (tick < 0 || tick >= record.frames.size())
-        {
-            throw new CommandException("record.tick_out_range", tick, record.frames.size() - 1);
-        }
+        tick = MathHelper.clamp(tick, 0, record.frames.size() - 1);
 
-        EntityPlayer player = getCommandSenderAsPlayer(sender);
+        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
         Frame frame = record.frames.get(tick);
 
-        ((EntityPlayerMP) player).connection.setPlayerLocation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
+        player.connection.setPlayerLocation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
     }
 }
