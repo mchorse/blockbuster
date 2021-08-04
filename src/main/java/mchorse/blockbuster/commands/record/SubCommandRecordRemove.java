@@ -8,6 +8,7 @@ import mchorse.blockbuster.recording.data.Record;
 import mchorse.mclib.client.gui.framework.elements.GuiConfirmationScreen;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.network.mclib.Dispatcher;
+import mchorse.mclib.network.mclib.client.ClientHandlerConfirm;
 import mchorse.mclib.network.mclib.common.PacketConfirm;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.client.Minecraft;
@@ -93,14 +94,17 @@ public class SubCommandRecordRemove extends SubCommandRecordBase
 
             dispatchConfirm(player, (value) ->
             {
-                /* Remove action at given tick */
-                if (actions.size() <= 1)
+                if (value)
                 {
-                    record.actions.set(tick, null);
-                }
-                else
-                {
-                    actions.remove(index);
+                    /* Remove action at given tick */
+                    if (actions.size() <= 1)
+                    {
+                        record.actions.set(tick, null);
+                    }
+                    else
+                    {
+                        actions.remove(index);
+                    }
                 }
             });
         }
@@ -108,8 +112,11 @@ public class SubCommandRecordRemove extends SubCommandRecordBase
         {
             dispatchConfirm(player, (value) ->
             {
-                /* Remove all actions at tick */
-                record.actions.set(tick, null);
+                if (value)
+                {
+                    /* Remove all actions at tick */
+                    record.actions.set(tick, null);
+                }
             });
         }
 
@@ -118,24 +125,9 @@ public class SubCommandRecordRemove extends SubCommandRecordBase
 
     private void dispatchConfirm(EntityPlayerMP player, Consumer<Boolean> callback)
     {
-        Dispatcher.sendTo(new PacketConfirm((test)->
+        Dispatcher.sendTo(new PacketConfirm(ClientHandlerConfirm.GUI.MCSCREEN, "blockbuster.commands.record.remove_modal", (value) ->
         {
-            this.dispatchClient();
-        }, (value) ->
-        {
-            if (value)
-            {
-                callback.accept(value);
-            }
+            callback.accept(value);
         }), player);
-    }
-
-    @SideOnly(Side.CLIENT)
-    private void dispatchClient()
-    {
-        Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmationScreen(IKey.lang("blockbuster.commands.record.remove_modal"), (value) ->
-        {
-            Dispatcher.sendToServer(new PacketConfirm(value));
-        }));
     }
 }
