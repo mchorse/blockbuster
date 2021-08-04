@@ -10,6 +10,7 @@ import mchorse.blockbuster.commands.record.SubCommandRecordCamera;
 import mchorse.blockbuster.commands.record.SubCommandRecordClean;
 import mchorse.blockbuster.commands.record.SubCommandRecordCreate;
 import mchorse.blockbuster.commands.record.SubCommandRecordCut;
+import mchorse.blockbuster.commands.record.SubCommandRecordDelete;
 import mchorse.blockbuster.commands.record.SubCommandRecordDupe;
 import mchorse.blockbuster.commands.record.SubCommandRecordErase;
 import mchorse.blockbuster.commands.record.SubCommandRecordFade;
@@ -68,6 +69,7 @@ public class CommandRecord extends SubCommandBase
         this.add(new SubCommandRecordOrigin());
         this.add(new SubCommandRecordProcess());
         this.add(new SubCommandRecordProlong());
+        this.add(new SubCommandRecordDelete());
         this.add(new SubCommandRecordRemove());
         this.add(new SubCommandRecordDelete());
         this.add(new SubCommandRecordRemoveBodyYaw());
