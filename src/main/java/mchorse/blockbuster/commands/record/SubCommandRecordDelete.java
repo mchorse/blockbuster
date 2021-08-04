@@ -6,6 +6,7 @@ import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.mclib.client.gui.framework.elements.GuiConfirmationScreen;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.network.mclib.Dispatcher;
+import mchorse.mclib.network.mclib.client.ClientHandlerConfirm;
 import mchorse.mclib.network.mclib.common.PacketConfirm;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.client.Minecraft;
@@ -56,10 +57,7 @@ public class SubCommandRecordDelete extends SubCommandRecordBase
 
         CommandRecord.getRecord(filename);
 
-        Dispatcher.sendTo(new PacketConfirm((test)->
-        {
-            this.dispatchClient();
-        }, (value) ->
+        Dispatcher.sendTo(new PacketConfirm(ClientHandlerConfirm.GUI.MCSCREEN, "blockbuster.commands.record.delete_modal", (value) ->
         {
             if(value)
             {
@@ -73,14 +71,5 @@ public class SubCommandRecordDelete extends SubCommandRecordBase
                 {}
             }
         }), player);
-    }
-
-    @SideOnly(Side.CLIENT)
-    private void dispatchClient()
-    {
-        Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmationScreen(IKey.lang("blockbuster.commands.record.delete_modal"), (value) ->
-        {
-            Dispatcher.sendToServer(new PacketConfirm(value));
-        }));
     }
 }
