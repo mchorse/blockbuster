@@ -270,7 +270,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
                     }
                 }
 
-                float yaw = Interpolations.lerpYaw(entity.prevRotationYaw, entity.rotationYaw, partialTicks);
+                float yaw = Interpolations.lerpYaw(entity.prevRenderYawOffset, entity.renderYawOffset, partialTicks);
                 offset = offset.rotateYaw((float) Math.toRadians(-yaw));
 
                 x += offset.x;

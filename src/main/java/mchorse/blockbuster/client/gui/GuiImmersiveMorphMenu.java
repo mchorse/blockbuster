@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui;
 
 import java.util.Stack;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
@@ -9,6 +10,7 @@ import javax.vecmath.Vector3f;
 import org.lwjgl.input.Keyboard;
 
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster_pack.client.gui.GuiSequencerMorph.GuiSequencerMorphRenderer;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
@@ -44,6 +46,8 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
     public EntityLivingBase target;
     public Consumer<GuiImmersiveMorphMenu> updateCallback;
     public boolean hideGuiModel = true;
+
+    public Function<Integer, Frame> frameProvider;
 
     private boolean useFov = false;
 
@@ -105,6 +109,7 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
         super.finish();
 
         this.useFov = false;
+        this.frameProvider = null;
 
         if (this.updateCallback != null)
         {
@@ -166,6 +171,18 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
                 renderer.setRotation(this.lastYaw, this.lastPitch);
                 renderer.setScale(this.lastScale);
             }
+        }
+    }
+
+    public Frame getFrame(int tick)
+    {
+        if (this.frameProvider != null && !this.isNested())
+        {
+            return this.frameProvider.apply(tick);
+        }
+        else
+        {
+            return null;
         }
     }
 
@@ -272,10 +289,9 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
     {
         GuiModelRenderer renderer = this.editor.delegate.renderer;
 
-        renderer.hideModel = this.isImmersionMode() && this.preview.renderComplete && this.hideGuiModel;
+        renderer.hideModel = this.isImmersionMode() && this.preview.renderComplete && this.hideGuiModel && (!this.doRenderOnionSkin || !this.haveOnionSkin());
         renderer.customEntity = this.isImmersionMode();
         renderer.fullScreen = this.isImmersionMode();
-
 
         if (renderer.customEntity)
         {

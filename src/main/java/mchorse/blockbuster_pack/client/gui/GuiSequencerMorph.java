@@ -1,5 +1,8 @@
 package mchorse.blockbuster_pack.client.gui;
 
+import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.client.gui.GuiImmersiveMorphMenu;
+import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
 import mchorse.mclib.client.gui.framework.GuiBase;
@@ -8,6 +11,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.framework.elements.input.GuiColorElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
@@ -16,6 +20,7 @@ import mchorse.mclib.client.gui.framework.tooltips.LabelTooltip;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.DummyEntity;
 import mchorse.mclib.utils.MathUtils;
@@ -27,6 +32,8 @@ import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
 import mchorse.metamorph.api.morphs.utils.IMorphGenerator;
 import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
+import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsList;
+import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsList.OnionSkin;
 import mchorse.metamorph.client.gui.creative.GuiMorphRenderer;
 import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
@@ -36,11 +43,14 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 @SideOnly(Side.CLIENT)
@@ -108,10 +118,21 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         public GuiIconElement plause;
         public GuiIconElement stop;
         public GuiElement previewBar;
-        
+
         public GuiButtonElement generateMorph;
 
+        /* Onion skins */
+        public GuiTrackpadElement prevSkins;
+        public GuiColorElement prevColor;
+        public GuiTrackpadElement nextSkins;
+        public GuiColorElement nextColor;
+        public GuiColorElement loopColor;
+
         public GuiSequencerMorphRenderer previewRenderer;
+
+        private boolean isFrameSkin;
+        private Vec3d offsetSkinPos;
+        private OnionSkin offsetSkin;
 
         public GuiSequencerMorphPanel(Minecraft mc, GuiSequencerMorph editor)
         {
@@ -119,7 +140,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
             this.elements = new GuiElement(mc);
             this.elements.flex().relative(this).xy(1F, 1F).w(130).anchor(1F, 1F).column(5).vertical().stretch().padding(10);
-            
+
             this.elementsTop = new GuiElement(mc);
             this.elementsTop.flex().relative(this).xy(1F, 0F).w(130).anchor(1F, 0F).column(5).vertical().stretch().padding(10);
 
@@ -187,6 +208,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             {
                 this.morph.offset[0] = value.floatValue();
                 this.stopPlayback();
+                this.updateOnionSkins();
             });
             this.offsetX.tooltip(IKey.lang("mclib.gui.transforms.x"));
 
@@ -194,6 +216,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             {
                 this.morph.offset[1] = value.floatValue();
                 this.stopPlayback();
+                this.updateOnionSkins();
             });
             this.offsetY.tooltip(IKey.lang("mclib.gui.transforms.y"));
 
@@ -201,6 +224,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             {
                 this.morph.offset[2] = value.floatValue();
                 this.stopPlayback();
+                this.updateOnionSkins();
             });
             this.offsetZ.tooltip(IKey.lang("mclib.gui.transforms.z"));
 
@@ -208,6 +232,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             {
                 this.morph.offsetCount = value.intValue();
                 this.stopPlayback();
+                this.updateOnionSkins();
             });
             this.offsetCount.tooltip(IKey.lang("blockbuster.gui.sequencer.loop_offset_count"));
             this.offsetCount.integer().limit(0);
@@ -220,6 +245,11 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                 }
 
                 SequenceEntry entry = this.entry;
+
+                if (entry.morph instanceof SequencerMorph)
+                {
+                    this.editor.morphs.onionSkins.clear();
+                }
 
                 this.editor.morphs.nestEdit(entry.morph, editing, true, (morph) ->
                 {
@@ -239,6 +269,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
                     this.entry.duration = value.floatValue();
                     this.stopPlayback();
+                    this.updateOnionSkins();
                 }
             });
             this.duration.tooltip(IKey.lang("blockbuster.gui.sequencer.duration"));
@@ -256,6 +287,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
                     this.entry.random = value.floatValue();
                     this.stopPlayback();
+                    this.updateOnionSkins();
                 }
             });
             this.random.tooltip(IKey.lang("blockbuster.gui.sequencer.random"));
@@ -270,6 +302,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             {
                 this.morph.reverse = b.isToggled();
                 this.stopPlayback();
+                this.updateOnionSkins();
             });
 
             this.randomOrder = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.sequencer.random_order"), false, (b) ->
@@ -277,6 +310,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                 this.morph.isRandom = b.isToggled();
                 this.stopPlayback();
                 this.updatePreviewBar();
+                this.updateOnionSkins();
             });
 
             this.trulyRandomOrder = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.sequencer.truly_random_order"), false, (b) ->
@@ -310,7 +344,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             {
                 SequencerMorph previewer = GuiSequencerMorphRenderer.PREVIEWER;
                 AbstractMorph morph = previewer.getMorph();
-                
+
                 if (morph instanceof IMorphGenerator)
                 {
                     float progress = this.previewRenderer.partialTicks + previewer.timer - previewer.lastDuration;
@@ -332,10 +366,10 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                     {
                         partialTicks = progress - (int) progress;
                     }
-                    
+
                     morph = ((IMorphGenerator) morph).genCurrentMorph(partialTicks);
                     this.setMorphDuration(morph, (int) Math.min(progress, duration));
-                    
+
                     SequenceEntry entry = new SequenceEntry(morph);
                     entry.duration = Math.min(progress, duration);
                     entry.setDuration = true;
@@ -352,8 +386,24 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.generateMorph.flex().relative(this).x(0.5F).y(1.0F, -20).wh(100, 30).anchor(0.5F, 1.0F);
             this.generateMorph.tooltip(IKey.lang("blockbuster.gui.sequencer.generate_morph_tooltip"));
 
+            this.prevSkins = new GuiTrackpadElement(mc, Blockbuster.seqOnionSkinPrev, (value) -> this.updateOnionSkins()).limit(0, 10, true);
+            this.prevSkins.tooltip(IKey.lang(Blockbuster.seqOnionSkinPrev.getLabelKey()));
+
+            this.prevColor = new GuiColorElement(mc, Blockbuster.seqOnionSkinPrevColor, (value) -> this.updateOnionSkins()).noLabel();
+            this.prevColor.tooltip(IKey.lang(Blockbuster.seqOnionSkinPrevColor.getLabelKey()));
+
+            this.nextSkins = new GuiTrackpadElement(mc, Blockbuster.seqOnionSkinNext, (value) -> this.updateOnionSkins()).limit(0, 10, true);
+            this.nextSkins.tooltip(IKey.lang(Blockbuster.seqOnionSkinNext.getLabelKey()));
+
+            this.nextColor = new GuiColorElement(mc, Blockbuster.seqOnionSkinNextColor, (value) -> this.updateOnionSkins()).noLabel();
+            this.nextColor.tooltip(IKey.lang(Blockbuster.seqOnionSkinNextColor.getLabelKey()));
+
+            this.loopColor = new GuiColorElement(mc, Blockbuster.seqOnionSkinLoopColor, (value) -> this.updateOnionSkins()).noLabel();
+            this.loopColor.tooltip(IKey.lang(Blockbuster.seqOnionSkinLoopColor.getLabelKey()));
+
             this.elements.add(this.pick, this.duration, this.random, this.setDuration, this.endPoint);
-            this.elementsTop.add(Elements.label(IKey.lang("blockbuster.gui.sequencer.loop")), this.loop, Elements.label(IKey.lang("blockbuster.gui.sequencer.loop_offset")), this.offsetX, this.offsetY, this.offsetZ, this.offsetCount);
+            this.elementsTop.add(Elements.label(IKey.lang("blockbuster.config.onion_skin.title")), this.combinElements(this.prevSkins, this.prevColor), this.combinElements(this.nextSkins, this.nextColor), 
+                    Elements.label(IKey.lang("blockbuster.gui.sequencer.loop")), this.loop, Elements.label(IKey.lang("blockbuster.gui.sequencer.loop_offset")), this.offsetX, this.offsetY, this.offsetZ, this.combinElements(this.offsetCount, this.loopColor));
             this.add(this.addPart, this.removePart, this.randomOrder, this.trulyRandomOrder, this.reverse, this.list, this.elements, this.elementsTop, this.previewBar, this.generateMorph);
 
             this.keys().register(((LabelTooltip) this.plause.tooltip).label, Keyboard.KEY_SPACE, () -> this.plause.clickItself(GuiBase.getCurrent()))
@@ -362,7 +412,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.keys().register(((LabelTooltip) this.stop.tooltip).label, Keyboard.KEY_SPACE, () -> this.stop.clickItself(GuiBase.getCurrent()))
                 .held(Keyboard.KEY_LMENU)
                 .category(GuiAbstractMorph.KEY_CATEGORY);
-            
+
             this.previewRenderer = (GuiSequencerMorphRenderer) editor.renderer; 
         }
 
@@ -391,6 +441,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             }
 
             this.elements.setVisible(entry != null);
+            this.updateOnionSkins();
         }
 
         /* Playback preview */
@@ -492,6 +543,12 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         }
 
         @Override
+        public void startEditing()
+        {
+            this.updateOnionSkins();
+        }
+
+        @Override
         public void draw(GuiContext context)
         {
             this.updateLogic(context);
@@ -505,7 +562,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.preview.setValue(this.previewRenderer.tick + this.previewRenderer.partialTicks);
 
             boolean canGenerate = false;
-            
+
             if (this.previewRenderer.morph == GuiSequencerMorphRenderer.PREVIEWER && !this.previewRenderer.playing)
             {
                 AbstractMorph morph = GuiSequencerMorphRenderer.PREVIEWER.getMorph();
@@ -517,6 +574,41 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             }
 
             this.generateMorph.setVisible(canGenerate);
+
+            GuiCreativeMorphsList editor = this.editor.morphs;
+
+            if (editor instanceof GuiImmersiveMorphMenu && ((GuiImmersiveMorphMenu) editor).getFrame(0) != null)
+            {
+                if (!this.isFrameSkin)
+                {
+                    this.updateOnionSkins();
+                }
+            }
+            else
+            {
+                for (OnionSkin skin : editor.onionSkins)
+                {
+                    if (this.previewRenderer.customEntity)
+                    {
+                        skin.pitch = this.previewRenderer.entityPitch;
+                        skin.yawHead = this.previewRenderer.entityYawHead;
+                        skin.yawBody = this.previewRenderer.entityYawBody;
+                    }
+                    else
+                    {
+                        skin.pitch = 0F;
+                        skin.yawHead = 0F;
+                        skin.yawBody = 0F;
+                    }
+
+                    if (skin == this.offsetSkin)
+                    {
+                        Vec3d pos = this.offsetSkinPos.rotateYaw((float) -Math.toRadians(skin.yawBody));
+
+                        skin.offset.set(pos.x, pos.y, pos.z);
+                    }
+                }
+            }
         }
 
         public void setMorphDuration(AbstractMorph morph, int duration)
@@ -547,6 +639,163 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             else
             {
                 return this.morph.getTickAt(this.list.getIndex());
+            }
+        }
+
+        private GuiElement combinElements(GuiTrackpadElement trackpad, GuiColorElement color)
+        {
+            GuiElement element = new GuiElement(this.mc);
+            element.flex().relative(trackpad).h(1F);
+            element.add(color, trackpad);
+
+            trackpad.flex().relative(element).xy(0F, 0F).wTo(color.area);
+            color.flex().relative(element).anchorX(1F).xy(1F, 0F).w(() -> (float) color.flex().getH()).h(1F);
+
+            return element;
+        }
+
+        public void updateOnionSkins()
+        {
+            this.isFrameSkin = false;
+
+            List<OnionSkin> skins = this.editor.morphs.onionSkins;
+
+            skins.clear();
+
+            if (this.list.isDeselected() || this.morph.isRandom)
+            {
+                return;
+            }
+
+            Map<OnionSkin, Integer> tickMap = new HashMap<OnionSkin, Integer>();
+            Color prevColor = this.prevColor.picker.color;
+            Color nextColor = this.nextColor.picker.color;
+            Color loopColor = this.loopColor.picker.color;
+
+            float pitch = this.previewRenderer.customEntity ? this.previewRenderer.entityPitch : 0;
+            float yawHead = this.previewRenderer.customEntity ? this.previewRenderer.entityYawHead : 0;
+            float yawBody = this.previewRenderer.customEntity ? this.previewRenderer.entityYawBody : 0;
+
+            int sign = this.morph.reverse ? -1 : 1;
+
+            for (int i = 1; i <= this.prevSkins.value; i++)
+            {
+                int index = this.list.getIndex() - sign * i;
+
+                if (index < 0 || index >= this.list.getList().size())
+                {
+                    break;
+                }
+
+                SequenceEntry entry = this.list.getList().get(index);
+
+                if (entry.morph != null)
+                {
+                    float factor = 1F - (i - 1) / (float) this.prevSkins.value;
+                    OnionSkin skin = new OnionSkin()
+                            .morph(entry.morph.copy())
+                            .color(prevColor.r, prevColor.g, prevColor.b, prevColor.a * factor)
+                            .offset(0, 0, 0, pitch, yawHead, yawBody);
+
+                    if (entry.morph instanceof IAnimationProvider)
+                    {
+                        MorphUtils.pause(skin.morph, null, 0);
+                    }
+                    else
+                    {
+                        MorphUtils.pause(skin.morph, null, (int) entry.duration);
+                    }
+
+                    skins.add(skin);
+                    tickMap.put(skin, this.morph.getTickAt(index));
+                }
+            }
+
+            for (int i = 1; i <= this.nextSkins.value; i++)
+            {
+                int index = this.list.getIndex() + sign * i;
+
+                if (index < 0 || index >= this.list.getList().size())
+                {
+                    break;
+                }
+
+                SequenceEntry entry = this.list.getList().get(index);
+
+                if (entry.morph != null)
+                {
+                    float factor = 1F - (i - 1) / (float) this.nextSkins.value;
+                    OnionSkin skin = new OnionSkin()
+                            .morph(entry.morph.copy())
+                            .color(nextColor.r, nextColor.g, nextColor.b, nextColor.a * factor)
+                            .offset(0, 0, 0, pitch, yawHead, yawBody);
+
+                    if (entry.morph instanceof IAnimationProvider)
+                    {
+                        MorphUtils.pause(skin.morph, null, 0);
+                    }
+                    else
+                    {
+                        MorphUtils.pause(skin.morph, null, (int) entry.duration);
+                    }
+
+                    skins.add(skin);
+                    tickMap.put(skin, this.morph.getTickAt(index));
+                }
+            }
+
+            GuiImmersiveMorphMenu menu = null;
+            Frame current = null;
+
+            if (this.editor.morphs instanceof GuiImmersiveMorphMenu)
+            {
+                menu = (GuiImmersiveMorphMenu) this.editor.morphs;
+                current = menu.getFrame(this.getCurrentTick());
+                this.isFrameSkin = current != null;
+            }
+
+            if (this.offsetCount.value > 0)
+            {
+                double baseMul = 0.0625 * (this.morph.reverse ? -1 : 1);
+                SequenceEntry entry = this.list.getList().get(this.morph.reverse ? this.list.getList().size() - 1 : 0);
+                OnionSkin skin = new OnionSkin()
+                        .morph(entry.morph.copy())
+                        .color(loopColor.r, loopColor.g, loopColor.b, loopColor.a)
+                        .offset(this.offsetX.value * baseMul, this.offsetY.value * baseMul, this.offsetZ.value * baseMul, pitch, yawHead, yawBody);
+
+                MorphUtils.pause(skin.morph, null, 0);
+                skins.add(skin);
+                tickMap.put(skin, (int) this.morph.getDuration());
+
+                this.offsetSkin = skin;
+                this.offsetSkinPos = new Vec3d(skin.offset.x, skin.offset.y, skin.offset.z);
+
+                if (!this.isFrameSkin)
+                {
+                    Vec3d pos = this.offsetSkinPos.rotateYaw((float) -Math.toRadians(skin.yawBody));
+
+                    skin.offset.set(pos.x, pos.y, pos.z);
+                }
+            }
+            else
+            {
+                this.offsetSkin = null;
+            }
+
+            if (current != null)
+            {
+                boolean hasBodyYaw = current.hasBodyYaw;
+
+                for (OnionSkin skin : skins)
+                {
+                    Frame skinFrame = menu.getFrame(tickMap.get(skin));
+                    Vec3d pos = new Vec3d(skin.offset.x, skin.offset.y, skin.offset.z);
+
+                    pos = pos.rotateYaw((float) -Math.toRadians(hasBodyYaw ? skinFrame.bodyYaw : skinFrame.yaw));
+                    pos = pos.add(new Vec3d(skinFrame.x - current.x, skinFrame.y - current.y, skinFrame.z - current.z));
+                    pos = pos.rotateYaw((float) Math.toRadians(current.yaw));
+                    skin.offset(pos.x, pos.y, pos.z, skinFrame.pitch, skinFrame.yawHead - current.yawHead, hasBodyYaw ? skinFrame.bodyYaw - current.bodyYaw : skinFrame.yawHead - current.yawHead);
+                }
             }
         }
 
