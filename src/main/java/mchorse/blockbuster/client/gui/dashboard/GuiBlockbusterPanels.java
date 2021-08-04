@@ -77,6 +77,7 @@ public class GuiBlockbusterPanels
         this.immersiveEditor.morphs.setSelected(morph);
         this.immersiveEditor.morphs.updateCallback = updateCallback;
         this.immersiveEditor.morphs.target = null;
+        this.immersiveEditor.morphs.frameProvider = null;
 
         if (editing)
         {

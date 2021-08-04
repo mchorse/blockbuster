@@ -88,3 +88,12 @@ blockbuster.config:
         waveform_height: 音頻條高度
         waveform_filename: 顯示音頻條的文件名
         waveform_time: 顯示音頻條的播放時間
+
+    onion_skin:
+        title: 洋葱皮
+
+        seq_prev: 先前的偽裝
+        seq_prev_color: 先前的偽裝顏色
+        seq_next: 後續的偽裝
+        seq_next_color: 後續的偽裝顏色
+        seq_loop_color: 迴圈位移標記

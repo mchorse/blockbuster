@@ -61,3 +61,6 @@ blockbuster.config.comments:
         waveform_filename: Whether filename of the played audio in the audio should be shown
         waveform_time: Whether audio track's playback time should be displayed. Keep in mind that audio track's playback time doesn't necessarily represent scene's current playback time!
         audio_sync: Whether the audio should always try to sync between server and client. This does not affect the playback and syncing when rejoining on a server with running audio. This option is for starting audio playback while being on the server. This configuration is a server side option.
+
+    onion_skin:
+        morph_action_color: Display the previous morph during editing

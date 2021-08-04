@@ -13,6 +13,7 @@ import mchorse.blockbuster.utils.mclib.ValueAudioButtons;
 import mchorse.blockbuster.utils.mclib.ValueMainButtons;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.McLib;
+import mchorse.mclib.client.gui.utils.ValueColors;
 import mchorse.mclib.commands.utils.L10n;
 import mchorse.mclib.config.ConfigBuilder;
 import mchorse.mclib.config.values.ValueBoolean;
@@ -200,6 +201,13 @@ public class Blockbuster
     public static ValueBoolean audioWaveformTime;
     public static ValueBoolean audioSync;
 
+    public static ValueInt morphActionOnionSkinColor;
+    public static ValueInt seqOnionSkinPrev;
+    public static ValueInt seqOnionSkinPrevColor;
+    public static ValueInt seqOnionSkinNext;
+    public static ValueInt seqOnionSkinNextColor;
+    public static ValueInt seqOnionSkinLoopColor;
+
     /**
      * "Macro" for getting resource location for Blockbuster mod items,
      * entities, blocks, etc.
@@ -314,6 +322,18 @@ public class Blockbuster
         audioWaveformTime.clientSide();
 
         audioSync = builder.getBoolean("audio_sync", true);
+
+        /* Onion skin */
+        builder.category("onion_skin");
+
+        morphActionOnionSkinColor = builder.getInt("morph_action_color", 0x7FFFFF00).colorAlpha();
+        seqOnionSkinPrev = builder.getInt("seq_prev", 0);
+        seqOnionSkinPrevColor = builder.getInt("seq_prev_color", 0xCCFF0000).colorAlpha();
+        seqOnionSkinNext = builder.getInt("seq_next", 0);
+        seqOnionSkinNextColor = builder.getInt("seq_next_color", 0xCC00FF00).colorAlpha();
+        seqOnionSkinLoopColor = builder.getInt("seq_loop_color", 0xC07F7FFF).colorAlpha();
+
+        builder.getCategory().invisible().markClientSide();
 
         CameraHandler.registerConfig(builder);
     }

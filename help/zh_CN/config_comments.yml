@@ -58,3 +58,6 @@ blockbuster.config.comments:
         waveform_height: 音频条的高度，单位为像素
         waveform_filename: 音频中播放的音频的文件名是否显示
         waveform_time: 音轨的播放时间是否显示。需要注意的是，音轨的播放时间不一定代表场景的当前播放时间！
+    
+    onion_skin:
+        morph_action_color: 在编辑过程中渲染上一个伪装
