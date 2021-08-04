@@ -5,11 +5,13 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelHandler;
+import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.api.formats.obj.ShapeKey;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.RenderCustomModel;
+import mchorse.blockbuster.common.OrientedBB;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.mclib.utils.resources.RLUtils;
@@ -53,6 +55,11 @@ import java.util.Map;
  */
 public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAnimationProvider, ISyncableMorph
 {
+    /**
+     * OrientedBoundingBoxes List by limbs
+     */
+    public Map<ModelLimb, List<OrientedBB>> orientedBBlimbs;
+    
     /**
      * Morph's model
      */
@@ -137,6 +144,33 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
         this.settings = this.settings.copy();
         this.settings.hands = true;
+    }
+    
+    /**
+     * This method fills the obbsLimb Map with data from the model blueprint.
+     * @param force if true it ignores that orientedBBlimbs might already be filled
+     */
+    public void fillObbs(boolean force)
+    {
+        if(this.orientedBBlimbs == null || force)
+        {
+            this.orientedBBlimbs = new HashMap<>();
+
+            if (this.model != null)
+            {
+                for(ModelLimb limb : this.model.limbs.values())
+                {
+                    List<OrientedBB> newObbs = new ArrayList<>();
+
+                    for(OrientedBB obb : limb.obbs)
+                    {
+                        newObbs.add(obb.clone());
+                    }
+
+                    this.orientedBBlimbs.put(limb, newObbs);
+                }
+            }
+        }
     }
 
     @Override
@@ -233,6 +267,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         this.name = "blockbuster." + model;
         this.key = null;
         this.model = Blockbuster.proxy.models.models.get(model);
+        
+        fillObbs(true);
     }
 
     @Override
@@ -310,6 +346,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         {
             this.lastUpdate = ModelHandler.lastUpdate;
             this.model = Blockbuster.proxy.models.models.get(this.getKey());
+
+            fillObbs(true);
         }
     }
 
@@ -323,6 +361,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     @SideOnly(Side.CLIENT)
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)
     {
+        if(this.model != null)
+        {
+            fillObbs(false);
+        }
+        
         this.updateModel();
 
         ModelCustom model = ModelCustom.MODELS.get(this.getKey());
@@ -450,6 +493,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        if(this.model != null)
+        {
+            fillObbs(false);
+        }
+        
         this.updateModel();
 
         if (this.model != null)

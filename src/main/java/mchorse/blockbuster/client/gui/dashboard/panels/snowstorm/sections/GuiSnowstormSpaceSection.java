@@ -79,7 +79,7 @@ public class GuiSnowstormSpaceSection extends GuiSnowstormComponentSection<Bedro
             this.component.gravity = b.isToggled();
             this.parent.dirty();
         });
-        
+
         this.objectVelocity = new GuiElement(mc);
         this.scaleColumns = new GuiElement(mc);
 
