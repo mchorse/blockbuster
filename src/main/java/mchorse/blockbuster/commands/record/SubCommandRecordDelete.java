@@ -10,6 +10,7 @@ import mchorse.mclib.network.mclib.client.ClientHandlerConfirm;
 import mchorse.mclib.network.mclib.common.PacketConfirm;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -34,7 +35,7 @@ public class SubCommandRecordDelete extends SubCommandRecordBase
     @Override
     public String getSyntax()
     {
-        return "{l}{6}/{r}record {8}delete{r} {7}<filename>{r}";
+        return "{l}{6}/{r}record {8}delete{r} {7}<filename> [force]{r}";
     }
 
     @Override
@@ -55,22 +56,37 @@ public class SubCommandRecordDelete extends SubCommandRecordBase
 
         String filename = args[0];
 
+        //throws exception if recording doesn't exist
         CommandRecord.getRecord(filename);
 
-        Dispatcher.sendTo(new PacketConfirm(ClientHandlerConfirm.GUI.MCSCREEN, IKey.format("blockbuster.commands.record.delete_modal", filename),
-                (value) ->
+        boolean force = (args.length>1) ? CommandBase.parseBoolean(args[1]) : false;
+
+        if (force)
         {
-            if(value)
-            {
-                try
-                {
-                    RecordUtils.replayFile(filename).delete();
-                    RecordUtils.unloadRecord(CommonProxy.manager.records.get(filename));
-                    CommonProxy.manager.records.remove(filename);
-                }
-                catch (NullPointerException e)
-                {}
-            }
-        }), player);
+            this.deleteRecording(filename);
+        }
+        else
+        {
+            Dispatcher.sendTo(new PacketConfirm(ClientHandlerConfirm.GUI.MCSCREEN, IKey.format("blockbuster.commands.record.delete_modal", filename),
+                    (value) ->
+                    {
+                        if(value)
+                        {
+                            this.deleteRecording(filename);
+                        }
+                    }), player);
+        }
+    }
+
+    private void deleteRecording(String filename)
+    {
+        try
+        {
+            RecordUtils.replayFile(filename).delete();
+            RecordUtils.unloadRecord(CommonProxy.manager.records.get(filename));
+            CommonProxy.manager.records.remove(filename);
+        }
+        catch (NullPointerException e)
+        {}
     }
 }
