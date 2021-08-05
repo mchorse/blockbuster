@@ -71,6 +71,7 @@ public class CommandRecord extends SubCommandBase
         this.add(new SubCommandRecordProlong());
         this.add(new SubCommandRecordDelete());
         this.add(new SubCommandRecordRemove());
+        this.add(new SubCommandRecordDelete());
         this.add(new SubCommandRecordRemoveBodyYaw());
         this.add(new SubCommandRecordRename());
         this.add(new SubCommandRecordRestore());

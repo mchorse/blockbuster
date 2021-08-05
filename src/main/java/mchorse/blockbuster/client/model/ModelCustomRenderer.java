@@ -22,6 +22,8 @@ import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
+import mchorse.blockbuster.common.OrientedBB;
+import mchorse.mclib.utils.MatrixUtils;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -235,6 +237,8 @@ public class ModelCustomRenderer extends ModelRenderer
                                 this.childModels.get(k).render(scale);
                             }
                         }
+
+                        updateObbs();
                     }
                     else
                     {
@@ -249,7 +253,8 @@ public class ModelCustomRenderer extends ModelRenderer
                                 this.childModels.get(j).render(scale);
                             }
                         }
-
+                        
+                        updateObbs();
                         GlStateManager.translate(-this.rotationPointX * scale, -this.rotationPointY * scale, -this.rotationPointZ * scale);
                     }
                 }
@@ -282,10 +287,36 @@ public class ModelCustomRenderer extends ModelRenderer
                             this.childModels.get(i).render(scale);
                         }
                     }
+                    
+                    updateObbs();
                 }
-
+                
                 GlStateManager.translate(-this.offsetX, -this.offsetY, -this.offsetZ);
+                
                 GlStateManager.popMatrix();
+            }
+        }
+    }
+    
+    public void updateObbs()
+    {
+        if(this.model != null && this.model.current != null && this.model.current.orientedBBlimbs != null )
+        {
+            if(this.model.current.orientedBBlimbs.get(this.limb) != null)
+            {
+                for(OrientedBB obb : this.model.current.orientedBBlimbs.get(this.limb))
+                {
+                    if (MatrixUtils.matrix != null)
+                    {
+                        MatrixUtils.Transformation modelView = MatrixUtils.extractTransformations(MatrixUtils.matrix, MatrixUtils.readModelView(OrientedBB.modelView));
+
+                        obb.rotation.set(modelView.getRotation3f());
+                        obb.offset.set(modelView.getTranslation3f());
+                        obb.scale.set(modelView.getScale3f());
+                    }
+
+                    obb.buildCorners();
+                }
             }
         }
     }
@@ -326,6 +357,7 @@ public class ModelCustomRenderer extends ModelRenderer
                 GlStateManager.popMatrix();
             }
         }
+        
     }
 
     /**

@@ -11,6 +11,7 @@ import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRender
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.OrientedBB;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordRecorder;
 import mchorse.blockbuster.recording.data.Frame;
@@ -58,6 +59,7 @@ public class RenderingHandler
     private static TileEntityGunItemStackRenderer gun = new TileEntityGunItemStackRenderer();
     private static EntityLivingBase lastItemHolder;
     public static Set<Record> recordsToRender = new HashSet<Record>();
+    public static Set<OrientedBB> obbsToRender = new HashSet<OrientedBB>();
 
     private boolean wasPaused;
 
@@ -387,6 +389,15 @@ public class RenderingHandler
         }
 
         recordsToRender.clear();
+        
+        if (mc.gameSettings.showDebugInfo && !obbsToRender.isEmpty())
+        {
+            for(OrientedBB obb : this.obbsToRender) 
+            {
+            	obb.render(event);
+            }
+        }
+        obbsToRender.clear();
     }
 
     private void renderPaths(RenderWorldLastEvent event, Set<Record> recordsToRender)

@@ -9,6 +9,7 @@ import mchorse.blockbuster.api.ModelLimb.Holding;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.api.formats.obj.ShapeKey;
+import mchorse.blockbuster.common.OrientedBB;
 import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import net.minecraft.client.Minecraft;
@@ -98,6 +99,19 @@ public class ModelCustom extends ModelBiped
         else
         {
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        }
+
+        if(this.current!=null)
+        {
+            for (List<OrientedBB> obbs : this.current.orientedBBlimbs.values())
+            {
+                for(OrientedBB obb : obbs)
+                {
+                    obb.center.set( entityIn.prevPosX + (entityIn.posX - entityIn.prevPosX) * Minecraft.getMinecraft().getRenderPartialTicks(),
+                            entityIn.prevPosY + (entityIn.posY - entityIn.prevPosY) * Minecraft.getMinecraft().getRenderPartialTicks(),
+                            entityIn.prevPosZ + (entityIn.posZ - entityIn.prevPosZ) * Minecraft.getMinecraft().getRenderPartialTicks());
+                }
+            }
         }
 
         for (ModelRenderer limb : this.renderable)
