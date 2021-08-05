@@ -125,7 +125,7 @@ public class SubCommandRecordRemove extends SubCommandRecordBase
 
     private void dispatchConfirm(EntityPlayerMP player, Consumer<Boolean> callback)
     {
-        Dispatcher.sendTo(new PacketConfirm(ClientHandlerConfirm.GUI.MCSCREEN, "blockbuster.commands.record.remove_modal", (value) ->
+        Dispatcher.sendTo(new PacketConfirm(ClientHandlerConfirm.GUI.MCSCREEN, IKey.lang("blockbuster.commands.record.remove_modal"),(value) ->
         {
             callback.accept(value);
         }), player);
