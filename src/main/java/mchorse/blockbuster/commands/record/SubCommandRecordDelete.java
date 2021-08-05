@@ -57,7 +57,8 @@ public class SubCommandRecordDelete extends SubCommandRecordBase
 
         CommandRecord.getRecord(filename);
 
-        Dispatcher.sendTo(new PacketConfirm(ClientHandlerConfirm.GUI.MCSCREEN, "blockbuster.commands.record.delete_modal", (value) ->
+        Dispatcher.sendTo(new PacketConfirm(ClientHandlerConfirm.GUI.MCSCREEN, IKey.format("blockbuster.commands.record.delete_modal", filename),
+                (value) ->
         {
             if(value)
             {
