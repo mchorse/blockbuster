@@ -37,7 +37,7 @@ import org.apache.commons.io.FileUtils;
 import org.lwjgl.input.Keyboard;
 
 import java.io.File;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 public class GuiModelEditorPanel extends GuiBlockbusterPanel
@@ -269,7 +269,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
         try
         {
-            FileUtils.write(file, output, Charset.defaultCharset());
+            FileUtils.write(file, output, StandardCharsets.UTF_8);
 
             IModelLazyLoader previous = Blockbuster.proxy.pack.models.get(this.modelName);
 
