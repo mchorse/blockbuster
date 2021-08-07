@@ -20,7 +20,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -76,7 +76,7 @@ public class ModelPack
         try
         {
             InputStream stream = this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/user.json");
-            String json = IOUtils.toString(stream, Charset.defaultCharset());
+            String json = IOUtils.toString(stream, StandardCharsets.UTF_8);
 
             this.packed = new Gson().fromJson(json, new TypeToken<Map<String, ModelUserItem>>(){}.getType());
         }

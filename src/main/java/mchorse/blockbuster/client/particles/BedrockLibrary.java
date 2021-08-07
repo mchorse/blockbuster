@@ -5,7 +5,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,7 +89,7 @@ public class BedrockLibrary
 
         try
         {
-            return BedrockScheme.parse(FileUtils.readFileToString(file, Charset.defaultCharset()));
+            return BedrockScheme.parse(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
         }
         catch (Exception e)
         {
@@ -116,7 +116,7 @@ public class BedrockLibrary
     {
         try
         {
-            return BedrockScheme.parse(IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/particles/" + name + ".json"), Charset.defaultCharset())).factory(true);
+            return BedrockScheme.parse(IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/particles/" + name + ".json"), StandardCharsets.UTF_8)).factory(true);
         }
         catch (Exception e)
         {
@@ -133,7 +133,7 @@ public class BedrockLibrary
 
         try
         {
-            FileUtils.writeStringToFile(file, json, Charset.defaultCharset());
+            FileUtils.writeStringToFile(file, json, StandardCharsets.UTF_8);
         }
         catch (Exception e)
         {}
