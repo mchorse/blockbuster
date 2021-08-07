@@ -113,7 +113,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.list.context(this::limbContextMenu);
 
         this.transforms = new GuiPoseTransformations(mc);
-        this.transforms.flex().relative(this.area).set(0, 0, 190, 70).x(0.5F, -95).y(1, -75);
+        this.transforms.flex().relative(this.area).set(0, 0, 256, 70).x(0.5F, -128).y(1, -75);
 
         this.animation = new GuiAnimation(mc, true);
         this.animation.flex().relative(this).x(1F, -130).w(130);

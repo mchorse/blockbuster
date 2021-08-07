@@ -57,7 +57,7 @@ public class GuiStructureMorph extends GuiAbstractMorph<StructureMorph>
             super(mc, editor);
 
             this.pose = new GuiPoseTransformations(mc);
-            this.pose.flex().relative(this.area).set(0, 0, 190, 70).x(0.5F, -95).y(1, -75);
+            this.pose.flex().relative(this.area).set(0, 0, 256, 70).x(0.5F, -128).y(1, -75);
 
             this.animation = new GuiAnimation(mc, true);
             this.animation.flex().relative(this).x(1F, -130).w(130);

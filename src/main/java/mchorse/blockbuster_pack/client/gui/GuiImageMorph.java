@@ -117,7 +117,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             super(mc, editor);
 
             this.pose = new GuiPoseTransformations(mc);
-            this.pose.flex().relative(this.area).set(0, 0, 190, 70).x(0.5F, -95).y(1, -75);
+            this.pose.flex().relative(this.area).set(0, 0, 256, 70).x(0.5F, -128).y(1, -75);
             this.texture = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.builder.pick_texture"), (b) ->
             {
                 this.picker.refresh();
