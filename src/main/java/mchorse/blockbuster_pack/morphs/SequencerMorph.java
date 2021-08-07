@@ -211,7 +211,8 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
         if (morph != null)
         {
-            morph.renderOnScreen(player, x, y, scale, alpha);
+            
+            MorphUtils.renderOnScreen(morph, player, x, y, scale, alpha);
         }
         
         if (this.timer > this.duration)
@@ -289,7 +290,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
                 partialTicks = ticks / duration;
             }
 
-            morph.render(entity, x, y, z, entityYaw, partialTicks);
+            MorphUtils.render(morph, entity, x, y, z, entityYaw, partialTicks);
         }
     }
 
