@@ -27,6 +27,7 @@ import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.DummyEntity;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsList;
 import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsList.OnionSkin;
 import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import net.minecraft.client.Minecraft;
@@ -53,8 +54,8 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 
         this.onionSkin = new GuiColorElement(mc, Blockbuster.morphActionOnionSkinColor);
 
-        this.onionSkinPanel = Elements.column(mc, 0, 5, Elements.label(IKey.lang("blockbuster.config.onion_skin.title")), this.onionSkin);
-        this.onionSkin.flex().relative(this.area).x(0F, 10).y(1F, -20).w(150).anchorY(1F);
+        this.onionSkinPanel = Elements.column(mc, 10, 5, Elements.label(IKey.lang("blockbuster.config.onion_skin.title")), this.onionSkin);
+        this.onionSkinPanel.flex().relative(this.area).x(0F, 10).y(1F, -20).w(150).anchorY(1F);
 
         this.add(this.pickMorph, this.onionSkinPanel);
 
@@ -112,15 +113,24 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
         {
             this.lastTick = -1;
 
-            GuiImmersiveEditor editor = ClientProxy.panels.showImmersiveEditor(editing, this.action.morph, this::updateMorphEditor);
+            if (Blockbuster.immersiveRecordEditor.get())
+            {
+                GuiImmersiveEditor editor = ClientProxy.panels.showImmersiveEditor(editing, this.action.morph, this::updateMorphEditor);
 
-            this.addOnionSkin();
+                this.updateMorphEditor(editor.morphs);
+                editor.morphs.target = this.actor;
+                editor.keepViewport();
 
-            this.updateMorphEditor(editor.morphs);
-            editor.morphs.target = this.actor;
-            editor.keepViewport();
+                editor.morphs.frameProvider = this::getFrame;
 
-            editor.morphs.frameProvider = this::getFrame;
+                this.addOnionSkin(editor.morphs);
+            }
+            else
+            {
+                ClientProxy.panels.addMorphs(this, editing, this.action.morph);
+
+                this.addOnionSkin(ClientProxy.panels.morphs);
+            }
         }
         else
         {
@@ -225,7 +235,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
         }
     }
 
-    public void addOnionSkin()
+    public void addOnionSkin(GuiCreativeMorphsList morphs)
     {
         if (this.onionSkin.picker.color.a < 0.003921F)
         {
@@ -268,6 +278,6 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
             }
         }
 
-        ClientProxy.panels.immersiveEditor.morphs.lastOnionSkins = skins;
+        morphs.lastOnionSkins = skins;
     }
 }

@@ -97,3 +97,9 @@ blockbuster.config:
         seq_next: 后续的伪装
         seq_next_color: 后续的伪装颜色
         seq_loop_color: 循环位移标记
+
+    immersive_editor:
+        title: 沉浸式编辑器
+
+        model_block: 模型方块
+        record_editor: 回放编辑器

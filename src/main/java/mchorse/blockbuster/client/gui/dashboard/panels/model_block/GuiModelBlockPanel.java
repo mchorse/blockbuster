@@ -118,7 +118,17 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
         column.flex().relative(this).w(120).column(5).vertical().stretch().height(20).padding(10);
 
-        this.pickMorph = new GuiNestedEdit(mc, (editing) -> ClientProxy.panels.showImmersiveEditor(editing, this.model.morph.get(), this::updateMorphEditor));
+        this.pickMorph = new GuiNestedEdit(mc, (editing) -> 
+        {
+            if (Blockbuster.immersiveModelBlock.get())
+            {
+                ClientProxy.panels.showImmersiveEditor(editing, this.model.morph.get(), this::updateMorphEditor);
+            }
+            else
+            {
+                ClientProxy.panels.addMorphs(this, editing, this.model.morph.get());
+            }
+        });
 
         GuiButtonElement look = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.model_block.look"), (button) ->
         {
