@@ -100,3 +100,9 @@ blockbuster.config:
         seq_next: Next morphs
         seq_next_color: Next morph's color
         seq_loop_color: Offset marker
+
+    immersive_editor:
+        title: Immersive editor
+
+        model_block: Model block
+        record_editor: Record editor

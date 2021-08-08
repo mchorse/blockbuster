@@ -64,3 +64,7 @@ blockbuster.config.comments:
 
     onion_skin:
         morph_action_color: Display the previous morph during editing
+
+    immersive_editor:
+        model_block: Whether to use the immersive editor for model block
+        record_editor: Whether to use the immersive editor for the record editor when using the Aperture camera editor

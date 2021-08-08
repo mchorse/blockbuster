@@ -61,3 +61,7 @@ blockbuster.config.comments:
 
     onion_skin:
         morph_action_color: 在編輯過程中渲染上一個偽裝
+
+    immersive_editor:
+        model_block: 是否為模型方塊啟用沉浸式編輯器
+        record_editor: 當使用Aperture相機編輯器時，是否為回放編輯器啟用沉浸式編輯器

@@ -208,6 +208,9 @@ public class Blockbuster
     public static ValueInt seqOnionSkinNextColor;
     public static ValueInt seqOnionSkinLoopColor;
 
+    public static ValueBoolean immersiveModelBlock;
+    public static ValueBoolean immersiveRecordEditor;
+
     /**
      * "Macro" for getting resource location for Blockbuster mod items,
      * entities, blocks, etc.
@@ -334,6 +337,14 @@ public class Blockbuster
         seqOnionSkinLoopColor = builder.getInt("seq_loop_color", 0xC07F7FFF).colorAlpha();
 
         builder.getCategory().invisible().markClientSide();
+
+        /* Immersive editor */
+        builder.category("immersive_editor");
+
+        immersiveModelBlock = builder.getBoolean("model_block", true);
+        immersiveRecordEditor = builder.getBoolean("record_editor", true);
+
+        builder.getCategory().markClientSide();
 
         CameraHandler.registerConfig(builder);
     }
