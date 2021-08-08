@@ -40,6 +40,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -820,14 +821,42 @@ public class Scene
 
     public void renamePrefix(String newPrefix)
     {
-        this.renamePrefix(newPrefix, null);
+        this.renamePrefix(null, newPrefix, null);
     }
 
-    public void renamePrefix(String newPrefix, Function<String, String> process)
+    public void renamePrefix(@Nullable String oldPrefix, String newPrefix, Function<String, String> process)
     {
+        //default format <scene name>_<id>
+        Pattern oldprefixPattern = (oldPrefix != null) ? Pattern.compile("^"+oldPrefix+"_") : Pattern.compile("");
+
         for (Replay replay : this.replays)
         {
             Matcher matcher = PREFIX.matcher(replay.id);
+            Matcher matcherOld = oldprefixPattern.matcher(replay.id);
+
+            /* test whether <scene name> is at the beginning
+            *  and whether there are multiple indexes*/
+            if(oldPrefix != null && matcherOld.find())
+            {
+                String indexes = replay.id.substring(oldPrefix.length()+1); //length+1 to exclude "_"
+                Pattern subStringIndexes = Pattern.compile("[^_]+");
+                Matcher matcherIndexes = subStringIndexes.matcher(indexes);
+
+                int counter = 0;
+
+                while(matcherIndexes.find())
+                {
+                    counter++;
+                }
+
+                /*there are mutliple indexes seperated by _*/
+                if (counter>1)
+                {
+                    replay.id = newPrefix + "_" + indexes;
+
+                    continue;
+                }
+            }
 
             if (matcher.find())
             {
@@ -914,7 +943,11 @@ public class Scene
         }
 
         this.replays.clear();
-        this.replays.addAll(scene.replays);
+
+        scene.replays.forEach((element) ->
+        {
+            this.replays.add(element.copy());
+        });
 
         this.loops = scene.loops;
         this.title = scene.title;

@@ -123,6 +123,8 @@ blockbuster.gui:
 
         add_modal: "Enter a name for a new scene:"
         dupe_modal: "Enter a name for duplicated scene:"
+        dupe_recordings: "Copy recordings"
+        dupe_recordings_tooltip: "When enabled, player recordings will be duplicated to files with new names"
         rename_modal: "Enter a new name for current scene:"
         remove_modal: "Are you sure you want to remove this scene?"
     
