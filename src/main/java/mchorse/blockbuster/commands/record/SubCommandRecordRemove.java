@@ -90,7 +90,7 @@ public class SubCommandRecordRemove extends SubCommandRecordBase
                 throw new CommandException("record.already_empty", args[1], args[0]);
             }
 
-            if (index < -1 && index >= actions.size())
+            if (index < -1 || index >= actions.size())
             {
                 throw new CommandException("record.index_out_range", index, actions.size() - 1);
             }
