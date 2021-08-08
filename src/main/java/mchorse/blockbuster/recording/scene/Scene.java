@@ -836,7 +836,7 @@ public class Scene
 
             /* test whether <scene name> is at the beginning
             *  and whether there are multiple indexes*/
-            if(oldPrefix != null && matcherOld.find())
+            if (oldPrefix != null && matcherOld.find())
             {
                 String indexes = replay.id.substring(oldPrefix.length()+1); //length+1 to exclude "_"
                 Pattern subStringIndexes = Pattern.compile("[^_]+");
@@ -844,13 +844,13 @@ public class Scene
 
                 int counter = 0;
 
-                while(matcherIndexes.find())
+                while (matcherIndexes.find())
                 {
                     counter++;
                 }
 
-                /*there are mutliple indexes seperated by _*/
-                if (counter>1)
+                /* there are mutliple indexes seperated by _ */
+                if (counter > 1)
                 {
                     replay.id = newPrefix + "_" + indexes;
 
