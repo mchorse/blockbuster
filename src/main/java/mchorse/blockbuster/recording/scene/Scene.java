@@ -69,6 +69,11 @@ public class Scene
     public static final Pattern PREFIX = Pattern.compile("^(.+)_([^_]+)$");
 
     /**
+     * Pattern for finding indexes
+     */
+    public static final Pattern INDEXES = Pattern.compile("[^_]+");
+
+    /**
      * Scene's id/filename
      */
     private String id = "";
@@ -827,20 +832,16 @@ public class Scene
     public void renamePrefix(@Nullable String oldPrefix, String newPrefix, Function<String, String> process)
     {
         //default format <scene name>_<id>
-        Pattern oldprefixPattern = (oldPrefix != null) ? Pattern.compile("^"+oldPrefix+"_") : Pattern.compile("");
-
         for (Replay replay : this.replays)
         {
             Matcher matcher = PREFIX.matcher(replay.id);
-            Matcher matcherOld = oldprefixPattern.matcher(replay.id);
 
             /* test whether <scene name> is at the beginning
             *  and whether there are multiple indexes*/
-            if (oldPrefix != null && matcherOld.find())
+            if (oldPrefix != null && replay.id.startsWith(oldPrefix+"_"))
             {
                 String indexes = replay.id.substring(oldPrefix.length()+1); //length+1 to exclude "_"
-                Pattern subStringIndexes = Pattern.compile("[^_]+");
-                Matcher matcherIndexes = subStringIndexes.matcher(indexes);
+                Matcher matcherIndexes = INDEXES.matcher(indexes);
 
                 int counter = 0;
 
