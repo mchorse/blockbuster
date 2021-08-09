@@ -628,6 +628,32 @@ public class CameraHandler
         return get() != null;
     }
 
+    @SideOnly(Side.CLIENT)
+    public static void moveRecordPanel(GuiRecordingEditorPanel panel)
+    {
+        if (isApertureLoaded())
+        {
+            moveRecordPanelToEditor(panel);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Method(modid = Aperture.MOD_ID)
+    private static void moveRecordPanelToEditor(GuiRecordingEditorPanel panel)
+    {
+        GuiCameraEditor editor = ClientProxy.getCameraEditor();
+
+        panel.selector.removeFromParent();
+        panel.selector.flex().relative(editor.viewport);
+        panel.editor.removeFromParent();
+        panel.editor.flex().relative(editor.viewport);
+        panel.records.removeFromParent();
+        panel.records.flex().relative(editor.viewport).h(1F, editorElement.isVisible() ? -80 : 0);
+
+        cameraEditorElements.prepend(panel.records);
+        editorElement.add(panel.selector, panel.editor);
+    }
+
     /**
      * Camera editor GUI handler
      *
@@ -675,21 +701,14 @@ public class CameraHandler
             {
                 GuiDashboard.get();
 
-                GuiCameraEditor editor = ClientProxy.getCameraEditor();
                 GuiRecordingEditorPanel panel = mchorse.blockbuster.ClientProxy.panels.recordingEditorPanel;
 
                 panel.open();
                 panel.appear();
-                panel.selector.removeFromParent();
-                panel.selector.flex().relative(editor.viewport);
-                panel.editor.removeFromParent();
-                panel.editor.flex().relative(editor.viewport);
-                panel.records.removeFromParent();
-                panel.records.flex().relative(editor.viewport).h(1F, editorElement.isVisible() ? -80 : 0);
-                panel.records.setVisible(false);
 
-                cameraEditorElements.prepend(panel.records);
-                editorElement.add(panel.selector, panel.editor);
+                moveRecordPanelToEditor(panel);
+
+                panel.records.setVisible(false);
             }
             else if (location != null && current instanceof GuiCameraEditor)
             {

@@ -283,12 +283,12 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         if (this.selector.index == 0)
         {
             this.selector.index = -1;
-            this.editor.setDelegate(null);
+            this.setDelegate(null);
         }
         else
         {
             this.selector.index--;
-            this.editor.setDelegate(this.getPanel(this.record.getAction(this.selector.tick, this.selector.index)));
+            this.setDelegate(this.getPanel(this.record.getAction(this.selector.tick, this.selector.index)));
         }
 
         this.selector.recalculateVertical();
@@ -451,12 +451,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
     {
         this.save();
 
-        if (this.editor.delegate != null)
-        {
-            this.editor.delegate.disappear();
-        }
-
-        this.editor.setDelegate(getPanel(action));
+        this.setDelegate(getPanel(action));
     }
 
     public void selectRecord(Record record)
@@ -464,7 +459,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.record = record;
         this.selector.setVisible(record != null);
         this.selector.update();
-        this.editor.setDelegate(null);
+        this.setDelegate(null);
         this.list.setVisible(false);
     }
 
@@ -491,7 +486,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.selector.recalculateVertical();
         this.selector.tick = tick;
         this.selector.index = this.record.actions.get(tick).size() - 1;
-        this.editor.setDelegate(getPanel(action));
+
+        this.setDelegate(getPanel(action));
         Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, -1, action, true));
     }
 
@@ -507,6 +503,16 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         }
 
         this.editor.resize();
+    }
+
+    public void setDelegate(GuiActionPanel<? extends Action> panel)
+    {
+        if (this.editor.delegate != null)
+        {
+            this.editor.delegate.disappear();
+        }
+
+        this.editor.setDelegate(panel);
     }
 
     @Override

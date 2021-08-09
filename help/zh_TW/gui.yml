@@ -809,6 +809,13 @@ blockbuster.gui:
         keys:
             cycle: 在面板間循環切換
 
+    immersive_editor:
+        hide_outer_panel: 按下 F1 隱藏外部介面
+
+        keys:
+            category: 沉浸式編輯器
+            toggle_outer_panel: 切換外部介面
+
     interpolations:
         linear: 線性
         quad_in: 二次方緩入

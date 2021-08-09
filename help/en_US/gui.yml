@@ -799,6 +799,13 @@ blockbuster.gui:
         keys:
             cycle: Cycle between panels
 
+    immersive_editor:
+        hide_outer_panel: Press F1 to hide the outer screen
+
+        keys:
+            category: Immersive editor
+            toggle_outer_panel: Toggle outer screen
+
     interpolations:
         linear: Linear
         quad_in: Quadratic In

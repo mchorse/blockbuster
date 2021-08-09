@@ -45,6 +45,9 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 
     private OnionSkin skin;
 
+    private boolean isImmersiveEditing;
+    private boolean showRecordList;
+
     public GuiMorphActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
     {
         super(mc, panel);
@@ -86,6 +89,11 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
         ClientProxy.panels.morphs.finish();
         ClientProxy.panels.morphs.removeFromParent();
 
+        if (this.isImmersiveEditing)
+        {
+            ClientProxy.panels.closeImmersiveEditor();
+        }
+
         this.action.morph = MorphUtils.copy(this.action.morph);
 
         super.disappear();
@@ -117,13 +125,23 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
             {
                 GuiImmersiveEditor editor = ClientProxy.panels.showImmersiveEditor(editing, this.action.morph, this::updateMorphEditor);
 
-                this.updateMorphEditor(editor.morphs);
-                editor.morphs.target = this.actor;
-                editor.keepViewport();
+                this.tryKeepViewport(editor);
 
                 editor.morphs.frameProvider = this::getFrame;
+                editor.onClose = this::onImmersiveEditorClose;
+
+                this.panel.records.removeFromParent();
+                this.panel.records.flex().relative(editor.outerPanel);
+                this.panel.selector.removeFromParent();
+                this.panel.selector.flex().relative(editor.outerPanel);
+
+                editor.outerPanel.add(this.panel.records, this.panel.selector);
 
                 this.addOnionSkin(editor.morphs);
+
+                this.isImmersiveEditing = true;
+                this.showRecordList = this.panel.records.isVisible();
+                this.panel.records.setVisible(true);
             }
             else
             {
@@ -140,34 +158,23 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 
     public void updateMorphEditor(GuiImmersiveMorphMenu menu)
     {
-        CameraHandler.updatePlayerPosition();
-
         Record record = ClientProxy.manager.records.get(this.panel.record.filename);
         int tick = this.panel.selector.tick;
 
-        if (menu.isEditMode())
+        if (menu.isNested())
         {
-            if (menu.isNested())
-            {
-                tick = this.lastTick;
-            }
-            else
-            {
-                tick += menu.editor.delegate.getCurrentTick();
-            }
+            tick = this.lastTick;
         }
-        else if (this.panel.selector.cursor != -1)
+        else
         {
-            tick = this.panel.selector.cursor;
+            tick += menu.editor.delegate.getCurrentTick();
         }
 
         if (tick != this.lastTick)
         {
-            this.lastTick = tick;
-
             Dispatcher.sendToServer(new PacketSceneGoto(CameraHandler.get(), tick, CameraHandler.actions.get()));
 
-            if (record != null)
+            if (record != null && record.getFrameSafe(0) != null)
             {
                 record.applyFrame(Math.max(tick - 1, 0), this.actor, true, true);
 
@@ -178,6 +185,12 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
                     this.actor.renderYawOffset = frame.bodyYaw;
                 }
             }
+            else
+            {
+                menu.target = null;
+            }
+
+            this.lastTick = tick;
         }
 
         boolean refreshTarget = true;
@@ -218,6 +231,30 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
             pos = pos.rotateYaw((float) Math.toRadians(yaw));
 
             this.skin.offset(pos.x, pos.y, pos.z, last.pitch, last.yawHead - yaw, last.bodyYaw - yaw);
+        }
+    }
+
+    public void tryKeepViewport(GuiImmersiveEditor editor)
+    {
+        GuiImmersiveMorphMenu menu = editor.morphs;
+        Record record = ClientProxy.manager.records.get(this.panel.record.filename);
+        int tick = this.panel.selector.tick;
+
+        if (menu.isEditMode())
+        {
+            tick += menu.editor.delegate.getCurrentTick();
+        }
+        else
+        {
+            tick = this.panel.selector.cursor;
+        }
+
+        if (record != null && record.getFrameSafe(0) != null)
+        {
+            record.applyFrame(Math.max(tick - 1, 0), this.actor, true, true);
+
+            menu.target = this.actor;
+            editor.keepViewport();
         }
     }
 
@@ -279,5 +316,17 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
         }
 
         morphs.lastOnionSkins = skins;
+    }
+
+    public void onImmersiveEditorClose(GuiImmersiveEditor editor)
+    {
+        this.isImmersiveEditing = false;
+
+        this.panel.records.setVisible(this.showRecordList);
+
+        CameraHandler.updatePlayerPosition();
+        CameraHandler.moveRecordPanel(this.panel);
+
+        Dispatcher.sendToServer(new PacketSceneGoto(CameraHandler.get(), this.panel.selector.cursor, CameraHandler.actions.get()));
     }
 }
