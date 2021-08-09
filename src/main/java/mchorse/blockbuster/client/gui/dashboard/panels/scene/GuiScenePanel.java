@@ -540,7 +540,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
             {
                 GuiModal.addModal(this, () ->
                 {
-                    GuiPopUpModal modal = new GuiPopUpModal(this.mc, IKey.lang("This replay name is already taken in this scene. You may proceed if you wish to."));
+                    GuiPopUpModal modal = new GuiPopUpModal(this.mc, IKey.lang("blockbuster.gui.director.rename_replay_dupe_modal"));
                     modal.flex().relative(this.parent).wh(220, 50);
 
                     return modal;
