@@ -36,7 +36,7 @@ public class ClientHandlerActorPause extends ClientMessageHandler<PacketActorPau
 
                 Frame frame = record.getFrameSafe(message.tick - record.preDelay - 1);
 
-                if (frame.hasBodyYaw)
+                if (frame != null && frame.hasBodyYaw)
                 {
                     actor.renderYawOffset = frame.bodyYaw;
                 }

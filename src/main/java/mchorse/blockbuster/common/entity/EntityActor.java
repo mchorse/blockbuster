@@ -222,7 +222,9 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         boolean spawn = this.ticksExisted < 2;
         Record record = this.playback.record;
 
-        if (spawn && record != null)
+        spawn &= record != null && record.getFrame(0) != null;
+
+        if (spawn)
         {
             this.playback.applyFrame(this.playback.tick - 1, this, true);
 
@@ -245,7 +247,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             if (frame.hasBodyYaw)
             {
                 this.renderYawOffset = frame.bodyYaw;
-            }        }
+            }
+        }
     }
 
     /**
