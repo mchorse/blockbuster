@@ -151,6 +151,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
             .held(Keyboard.KEY_LCONTROL).category(category);
         this.selector.keys().register(IKey.lang("blockbuster.gui.record_editor.unselect"), Keyboard.KEY_ESCAPE, () -> this.selectAction(null))
             .category(category).active(() -> this.editor.delegate != null);
+        this.keys().register(IKey.lang("blockbuster.gui.aperture.keys.toggle_list"), Keyboard.KEY_L, () -> this.open.clickItself(GuiBase.getCurrent()))
+            .held(Keyboard.KEY_LCONTROL).category(category);
     }
 
     private void cutAction()
@@ -361,6 +363,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.prepend(this.records);
         this.add(this.editor, this.selector);
 
+        this.updateEditorWidth();
+
         if (this.record != null && this.record != ClientProxy.manager.records.get(this.record.filename))
         {
             this.selectRecord(this.record.filename);
@@ -489,6 +493,20 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.selector.index = this.record.actions.get(tick).size() - 1;
         this.editor.setDelegate(getPanel(action));
         Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, -1, action, true));
+    }
+
+    public void updateEditorWidth()
+    {
+        if (this.records.isVisible())
+        {
+            this.editor.flex().wTo(this.records.area);
+        }
+        else
+        {
+            this.editor.flex().w(1F);
+        }
+
+        this.editor.resize();
     }
 
     @Override
