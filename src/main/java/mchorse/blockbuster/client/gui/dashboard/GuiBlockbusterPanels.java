@@ -87,6 +87,11 @@ public class GuiBlockbusterPanels
         return this.immersiveEditor;
     }
 
+    public void closeImmersiveEditor()
+    {
+        this.immersiveEditor.closeThisScreen();
+    }
+
     @SubscribeEvent
     public void onRegister(RegisterDashboardPanels event)
     {

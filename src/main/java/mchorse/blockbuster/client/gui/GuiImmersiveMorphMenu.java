@@ -65,7 +65,8 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
 
         this.bar.add(close);
 
-        this.keys().register(IKey.lang("blockbuster.gui.morphs.keys.toggle_gui_model"), Keyboard.KEY_W, () -> this.hideGuiModel = !this.hideGuiModel).category(this.exitKey.category).active(() -> this.isImmersionMode());
+        this.keys().register(IKey.lang("blockbuster.gui.morphs.keys.toggle_gui_model"), Keyboard.KEY_F3, () -> this.hideGuiModel = !this.hideGuiModel)
+            .category(GuiImmersiveEditor.CATEGORY).active(() -> this.isImmersionMode());
     }
 
     @Override
@@ -110,11 +111,6 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
 
         this.useFov = false;
         this.frameProvider = null;
-
-        if (this.updateCallback != null)
-        {
-            this.updateCallback.accept(this);
-        }
     }
 
     @Override
