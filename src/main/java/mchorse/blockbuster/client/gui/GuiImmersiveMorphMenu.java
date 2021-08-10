@@ -49,16 +49,14 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
 
     public Function<Integer, Frame> frameProvider;
 
-    private boolean useFov = false;
-
     private PreviewMorph preview = new PreviewMorph();
     private AbstractMorph lastMorph;
 
     private Stack<Boolean> stack = new Stack<>();
 
-    public GuiImmersiveMorphMenu(Minecraft mc, Consumer<AbstractMorph> callback)
+    public GuiImmersiveMorphMenu(Minecraft mc)
     {
-        super(mc, true, callback);
+        super(mc, true, null);
 
         GuiButtonElement close = new GuiButtonElement(mc, IKey.str("X"), (b) -> this.exit());
         close.flex().w(20);
@@ -109,7 +107,6 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
     {
         super.finish();
 
-        this.useFov = false;
         this.frameProvider = null;
     }
 
@@ -127,47 +124,6 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
         }
 
         super.draw(context);
-    }
-
-    public void keepViewport()
-    {
-        if (!this.isNested() && this.target != null)
-        {
-            EntityPlayer player = this.mc.player;
-
-            Vector3f temp = new Vector3f((float) player.posX, (float) player.posY + player.getEyeHeight(), (float) player.posZ);
-            Vector3f vec = new Vector3f();
-            vec.set(0.0F, 0.0F, 2.05F);
-
-            Matrix4f mat = new Matrix4f();
-            mat.rotX(player.rotationPitch / 180.0F * 3.1415927F);
-            mat.transform(vec);
-            mat.rotY(-player.rotationYaw / 180.0F * 3.1415927F);
-            mat.transform(vec);
-
-            temp.x += vec.x - this.target.posX;
-            temp.y += vec.y - this.target.posY;
-            temp.z += vec.z - this.target.posZ;
-
-            mat.rotY((this.target.rotationYaw) / 180.0F * 3.1415927F);
-            mat.transform(temp);
-
-            this.useFov = true;
-            this.keepViewport = true;
-            this.lastPos.set(temp);
-            this.lastPitch = player.rotationPitch;
-            this.lastYaw = player.rotationYaw - this.target.rotationYaw - 180F;
-            this.lastScale = 2F;
-
-            if (this.isEditMode())
-            {
-                GuiModelRenderer renderer = this.editor.delegate.renderer;
-
-                renderer.setPosition(this.lastPos.x, this.lastPos.y, this.lastPos.z);
-                renderer.setRotation(this.lastYaw, this.lastPitch);
-                renderer.setScale(this.lastScale);
-            }
-        }
     }
 
     public Frame getFrame(int tick)
@@ -214,7 +170,7 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
 
                 Vector3f temp = new Vector3f(renderer.pos);
                 Vector3f vec = new Vector3f();
-                vec.set(0.0F, 0.0F, -renderer.scale - 0.05F);
+                vec.set(0.0F, 0.0F, (renderer.flight ? 0F : -renderer.scale) - 0.05F);
 
                 renderer.pitch = MathUtils.clamp(renderer.pitch, -90F, 90F);
 
@@ -257,21 +213,9 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onFovModifierEvent(FOVModifier event)
     {
-        if (this.useFov)
-        {
-            event.setFOV(this.mc.gameSettings.fovSetting);
-        }
-
         if (this.isImmersionMode())
         {
-            if (this.useFov)
-            {
-                this.editor.delegate.renderer.fov = event.getFOV();
-            }
-            else
-            {
-                event.setFOV(this.editor.delegate.renderer.fov);
-            }
+            event.setFOV(this.editor.delegate.renderer.fov);
         }
     }
 
