@@ -48,7 +48,7 @@ public class GuiBlockbusterPanels
     {
         this.morphs.removeFromParent();
         this.morphs.callback = callback;
-        this.immersiveEditor.callback = callback;
+        this.immersiveEditor.morphs.callback = callback;
     }
 
     public void addMorphs(GuiElement parent, boolean editing, AbstractMorph morph)

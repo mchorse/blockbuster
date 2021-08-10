@@ -425,7 +425,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
             Action old = this.editor.delegate.action;
 
             Dispatcher.sendToServer(new PacketAction(this.record.filename, this.selector.tick, this.selector.index, old));
-            
+
             this.editor.delegate = null;
         }
     }

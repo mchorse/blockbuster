@@ -47,6 +47,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 
     private boolean isImmersiveEditing;
     private boolean showRecordList;
+    private int cursor;
 
     public GuiMorphActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
     {
@@ -123,9 +124,9 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 
             if (Blockbuster.immersiveRecordEditor.get())
             {
-                GuiImmersiveEditor editor = ClientProxy.panels.showImmersiveEditor(editing, this.action.morph, this::updateMorphEditor);
+                this.cursor = Math.max(0, CameraHandler.getOffset());
 
-                this.tryKeepViewport(editor);
+                GuiImmersiveEditor editor = ClientProxy.panels.showImmersiveEditor(editing, this.action.morph, this::updateMorphEditor);
 
                 editor.morphs.frameProvider = this::getFrame;
                 editor.onClose = this::onImmersiveEditorClose;
@@ -234,30 +235,6 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
         }
     }
 
-    public void tryKeepViewport(GuiImmersiveEditor editor)
-    {
-        GuiImmersiveMorphMenu menu = editor.morphs;
-        Record record = ClientProxy.manager.records.get(this.panel.record.filename);
-        int tick = this.panel.selector.tick;
-
-        if (menu.isEditMode())
-        {
-            tick += menu.editor.delegate.getCurrentTick();
-        }
-        else
-        {
-            tick = this.panel.selector.cursor;
-        }
-
-        if (record != null && record.getFrameSafe(0) != null)
-        {
-            record.applyFrame(Math.max(tick - 1, 0), this.actor, true, true);
-
-            menu.target = this.actor;
-            editor.keepViewport();
-        }
-    }
-
     public Frame getFrame(int tick)
     {
         Record record = ClientProxy.manager.records.get(this.panel.record.filename);
@@ -327,6 +304,6 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
         CameraHandler.updatePlayerPosition();
         CameraHandler.moveRecordPanel(this.panel);
 
-        Dispatcher.sendToServer(new PacketSceneGoto(CameraHandler.get(), this.panel.selector.cursor, CameraHandler.actions.get()));
+        Dispatcher.sendToServer(new PacketSceneGoto(CameraHandler.get(), this.cursor, CameraHandler.actions.get()));
     }
 }

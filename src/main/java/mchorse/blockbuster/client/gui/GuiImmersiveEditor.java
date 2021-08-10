@@ -41,27 +41,19 @@ public class GuiImmersiveEditor extends GuiBase
     public int lastTPS;
     public GameType lastMode;
 
-    public boolean resetViewport;
     public double lastPosX;
     public double lastPosY;
     public double lastPosZ;
     public float lastRotPitch;
     public float lastRotYaw;
 
-    public Consumer<AbstractMorph> callback;
     public Consumer<GuiImmersiveEditor> onClose;
 
     public GuiImmersiveEditor(Minecraft mc)
     {
         this.mc = mc;
 
-        this.morphs = new GuiImmersiveMorphMenu(mc, (morph) -> 
-        {
-            if (this.callback != null)
-            {
-                this.callback.accept(MorphUtils.copy(morph));
-            }
-        });
+        this.morphs = new GuiImmersiveMorphMenu(mc);
         this.morphs.flex().relative(this.viewport).xy(0F, 0F).wh(1F, 1F);
 
         this.outerPanel = new GuiOuterScreen(mc);
@@ -79,7 +71,6 @@ public class GuiImmersiveEditor extends GuiBase
         this.lastTPS = this.mc.gameSettings.thirdPersonView;
         this.lastMode = EntityUtils.getGameMode();
 
-        this.resetViewport = true;
         this.lastPosX = this.mc.player.posX;
         this.lastPosY = this.mc.player.posY;
         this.lastPosZ = this.mc.player.posZ;
@@ -106,18 +97,6 @@ public class GuiImmersiveEditor extends GuiBase
         }
 
         MinecraftForge.EVENT_BUS.register(this.morphs);
-
-        if (this.callback != null)
-        {
-            this.callback.accept(MorphUtils.copy(this.morphs.getSelected()));
-        }
-    }
-
-    public void keepViewport()
-    {
-        this.resetViewport = false;
-
-        this.morphs.keepViewport();
     }
 
     @Override
@@ -153,18 +132,10 @@ public class GuiImmersiveEditor extends GuiBase
         this.mc.gameSettings.thirdPersonView = this.lastTPS;
         this.mc.player.sendChatMessage("/gamemode " + this.lastMode.getID());
 
-        if (this.resetViewport)
-        {
-            this.mc.player.setPositionAndRotation(this.lastPosX, this.lastPosY, this.lastPosZ, this.lastRotYaw, this.lastRotPitch);
-        }
+        this.mc.player.setPositionAndRotation(this.lastPosX, this.lastPosY, this.lastPosZ, this.lastRotYaw, this.lastRotPitch);
 
         this.lastScreen = null;
         MinecraftForge.EVENT_BUS.unregister(this.morphs);
-
-        if (this.callback != null)
-        {
-            this.callback.accept(this.morphs.getSelected());
-        }
 
         if (this.onClose != null)
         {
@@ -220,7 +191,7 @@ public class GuiImmersiveEditor extends GuiBase
             {
                 IGuiElement element = list.get(i);
 
-                if (element.isEnabled() && element.mouseClicked(context))
+                if (element.isEnabled() && element.mouseScrolled(context))
                 {
                     return true;
                 }
@@ -240,7 +211,7 @@ public class GuiImmersiveEditor extends GuiBase
 
                 if (element.isEnabled())
                 {
-                    element.mouseClicked(context);
+                    element.mouseReleased(context);
                 }
             }
         }
