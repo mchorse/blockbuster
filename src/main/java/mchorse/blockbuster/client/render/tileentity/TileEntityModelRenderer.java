@@ -64,12 +64,10 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             }
 
             EntityLivingBase entity = te.entity;
-            boolean editing = false;
 
             if (EntityUtils.getMorph(entity) != null)
             {
                 morph = EntityUtils.getMorph(entity);
-                editing = true;
             }
 
             /* Apply entity rotations */
@@ -94,30 +92,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             boolean wasSet = MatrixUtils.captureMatrix();
 
-            if (!editing)
-            {
-                if (te.order == RotationOrder.ZYX)
-                {
-                    GlStateManager.rotate(te.rx, 1, 0, 0);
-                    GlStateManager.rotate(te.ry, 0, 1, 0);
-                    GlStateManager.rotate(te.rz, 0, 0, 1);
-                }
-                else
-                {
-                    GlStateManager.rotate(te.rz, 0, 0, 1);
-                    GlStateManager.rotate(te.ry, 0, 1, 0);
-                    GlStateManager.rotate(te.rx, 1, 0, 0);
-                }
-
-                if (te.one)
-                {
-                    GlStateManager.scale(te.sx, te.sx, te.sx);
-                }
-                else
-                {
-                    GlStateManager.scale(te.sx, te.sy, te.sz);
-                }
-            }
+            this.transform(te);
 
             MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
             GlStateManager.popMatrix();
@@ -206,6 +181,31 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
     public boolean isGlobalRenderer(TileEntityModel te)
     {
         return te.global;
+    }
+
+    public void transform(TileEntityModel te)
+    {
+        if (te.order == RotationOrder.ZYX)
+        {
+            GlStateManager.rotate(te.rx, 1, 0, 0);
+            GlStateManager.rotate(te.ry, 0, 1, 0);
+            GlStateManager.rotate(te.rz, 0, 0, 1);
+        }
+        else
+        {
+            GlStateManager.rotate(te.rz, 0, 0, 1);
+            GlStateManager.rotate(te.ry, 0, 1, 0);
+            GlStateManager.rotate(te.rx, 1, 0, 0);
+        }
+
+        if (te.one)
+        {
+            GlStateManager.scale(te.sx, te.sx, te.sx);
+        }
+        else
+        {
+            GlStateManager.scale(te.sx, te.sy, te.sz);
+        }
     }
 
     /**

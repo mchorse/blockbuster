@@ -71,13 +71,15 @@ public class GuiBlockbusterPanels
         parent.add(this.morphs);
     }
 
-    public GuiImmersiveEditor showImmersiveEditor(boolean editing, AbstractMorph morph, Consumer<GuiImmersiveMorphMenu> updateCallback)
+    public GuiImmersiveEditor showImmersiveEditor(boolean editing, AbstractMorph morph)
     {
         this.immersiveEditor.show();
         this.immersiveEditor.morphs.setSelected(morph);
-        this.immersiveEditor.morphs.updateCallback = updateCallback;
+        this.immersiveEditor.morphs.updateCallback = null;
         this.immersiveEditor.morphs.target = null;
         this.immersiveEditor.morphs.frameProvider = null;
+        this.immersiveEditor.morphs.beforeRender = null;
+        this.immersiveEditor.morphs.afterRender = null;
 
         if (editing)
         {

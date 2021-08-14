@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_block;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.client.gui.GuiImmersiveEditor;
 import mchorse.blockbuster.client.gui.GuiImmersiveMorphMenu;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
@@ -28,6 +29,7 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -122,7 +124,11 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         {
             if (Blockbuster.immersiveModelBlock.get())
             {
-                ClientProxy.panels.showImmersiveEditor(editing, this.model.morph.get(), this::updateMorphEditor);
+                GuiImmersiveEditor editor = ClientProxy.panels.showImmersiveEditor(editing, this.model.morph.get());
+
+                editor.morphs.updateCallback = this::updateMorphEditor;
+                editor.morphs.beforeRender = this::beforeEditorRender;
+                editor.morphs.afterRender = this::afterEditorRender;
             }
             else
             {
@@ -213,6 +219,18 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         }
 
         menu.target = this.model.entity;
+    }
+
+    private void beforeEditorRender(GuiContext context)
+    {
+        GlStateManager.pushMatrix();
+
+        ClientProxy.modelRenderer.transform(this.model);
+    }
+
+    private void afterEditorRender(GuiContext context)
+    {
+        GlStateManager.popMatrix();
     }
 
     @Override
