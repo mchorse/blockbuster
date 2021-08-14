@@ -49,6 +49,9 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
 
     public Function<Integer, Frame> frameProvider;
 
+    public Consumer<GuiContext> beforeRender;
+    public Consumer<GuiContext> afterRender;
+
     private PreviewMorph preview = new PreviewMorph();
     private AbstractMorph lastMorph;
 
@@ -108,6 +111,8 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
         super.finish();
 
         this.frameProvider = null;
+        this.beforeRender = null;
+        this.afterRender = null;
     }
 
     @Override
@@ -124,6 +129,28 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
         }
 
         super.draw(context);
+    }
+
+    @Override
+    protected void beforeRenderModel(GuiContext context)
+    {
+        super.beforeRenderModel(context);
+
+        if (this.isImmersionMode() && this.beforeRender != null)
+        {
+            this.beforeRender.accept(context);
+        }
+    }
+
+    @Override
+    protected void afterRenderModel(GuiContext context)
+    {
+        super.afterRenderModel(context);
+
+        if (this.isImmersionMode() && this.afterRender != null)
+        {
+            this.afterRender.accept(context);
+        }
     }
 
     public Frame getFrame(int tick)

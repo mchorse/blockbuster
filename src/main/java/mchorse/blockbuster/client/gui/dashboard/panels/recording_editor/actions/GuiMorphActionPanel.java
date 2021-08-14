@@ -126,8 +126,9 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
             {
                 this.cursor = Math.max(0, CameraHandler.getOffset());
 
-                GuiImmersiveEditor editor = ClientProxy.panels.showImmersiveEditor(editing, this.action.morph, this::updateMorphEditor);
+                GuiImmersiveEditor editor = ClientProxy.panels.showImmersiveEditor(editing, this.action.morph);
 
+                editor.morphs.updateCallback = this::updateMorphEditor;
                 editor.morphs.frameProvider = this::getFrame;
                 editor.onClose = this::onImmersiveEditorClose;
 
