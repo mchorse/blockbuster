@@ -10,6 +10,7 @@ import mchorse.blockbuster.api.formats.obj.ShapeKey;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.client.textures.MipmapTexture;
+import mchorse.mclib.client.render.VertexBuilder;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.ReflectionUtils;
 import net.minecraft.client.Minecraft;
@@ -131,7 +132,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                 BufferBuilder renderer = Tessellator.getInstance().getBuffer();
 
                 GlStateManager.glNewList(id, GL11.GL_COMPILE);
-                renderer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL);
+                renderer.begin(GL11.GL_TRIANGLES, VertexBuilder.getFormat(false, true, false, true));
                 float texF = (j + 0.5F) / count;
 
                 for (int i = 0, c = mesh.triangles; i < c; i++)
@@ -160,6 +161,11 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                     else
                     {
                         renderer.pos(x, y, z).tex(u, v).normal(nx, ny, nz).endVertex();
+                    }
+
+                    if (i % 3 == 2)
+                    {
+                        VertexBuilder.calcTangent(renderer, false);
                     }
                 }
 

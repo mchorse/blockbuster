@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.model.parsing;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.mclib.McLib;
+import mchorse.mclib.client.render.VertexBuilder;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.resources.MultiResourceLocation;
 import mchorse.mclib.utils.resources.MultiskinThread;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -368,7 +370,7 @@ public class ModelExtrudedLayer
         Offset off = new Offset(0, 0);
         Offset offmax = new Offset(0, 0);
 
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
+        buffer.begin(GL11.GL_QUADS, VertexBuilder.getFormat(false, true, false, true));
 
         for (int x = 0; x < chunk.w; x++)
         {

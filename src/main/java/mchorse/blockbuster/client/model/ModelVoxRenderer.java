@@ -7,6 +7,7 @@ import mchorse.blockbuster.api.formats.obj.OBJParser;
 import mchorse.blockbuster.api.formats.vox.MeshesVOX;
 import mchorse.blockbuster.api.formats.vox.data.VoxTexture;
 import mchorse.blockbuster.client.render.RenderCustomModel;
+import mchorse.mclib.client.render.VertexBuilder;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
@@ -58,7 +59,7 @@ public class ModelVoxRenderer extends ModelCustomRenderer
                 int id = GLAllocation.generateDisplayLists(1);
 
                 GlStateManager.glNewList(id, GL11.GL_COMPILE);
-                renderer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL);
+                renderer.begin(GL11.GL_TRIANGLES, VertexBuilder.getFormat(false, true, false, true));
 
                 for (int i = 0, c = mesh.triangles; i < c; i++)
                 {
@@ -74,6 +75,11 @@ public class ModelVoxRenderer extends ModelCustomRenderer
                     float nz = mesh.normData[i * 3 + 2];
 
                     renderer.pos(x, y, z).tex(u, v).normal(nx, ny, nz).endVertex();
+
+                    if (i % 3 == 2)
+                    {
+                        VertexBuilder.calcTangent(renderer, false);
+                    }
                 }
 
                 Tessellator.getInstance().draw();
