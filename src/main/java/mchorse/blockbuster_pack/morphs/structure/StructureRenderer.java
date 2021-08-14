@@ -111,16 +111,16 @@ public class StructureRenderer
     public void render(StructureMorph morph)
     {
         GL11.glNormal3f(0, 0.6F, 0);
-        
+
         Biome biome = morph.getBiome();
-        
+
         if (this.buffers.get(biome) == null)
         {
             this.setupFormat();
             this.rebuild(biome);
         }
-        
-        if (this.buffers.get(biome) != null)
+
+        if (this.buffers.get(biome) != null && this.buffers.get(biome).length > 0)
         {
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buffer = tess.getBuffer();
