@@ -2,6 +2,7 @@ package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.textures.GifTexture;
+import mchorse.mclib.client.render.VertexBuilder;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.ReflectionUtils;
@@ -375,14 +376,14 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
             GlStateManager.matrixMode(GL11.GL_MODELVIEW);
         }
 
-        buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+        buffer.begin(GL11.GL_QUADS, VertexBuilder.getFormat(true, true, false, true));
 
         Color color = this.image.color;
 
-        buffer.pos(pos.x, pos.z, 0).tex(uv.x, uv.z).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.y, pos.z, 0).tex(uv.y, uv.z).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.y, pos.w, 0).tex(uv.y, uv.w).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.x, pos.w, 0).tex(uv.x, uv.w).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.x, pos.z, 0).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.y, pos.z, 0).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.y, pos.w, 0).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.x, pos.w, 0).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
 
         tessellator.draw();
 
