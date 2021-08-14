@@ -18,6 +18,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Command /record delete
+ *
+ * This command is responsible for deleting a recording.
+ */
 public class SubCommandRecordDelete extends SubCommandRecordBase
 {
     @Override
