@@ -125,6 +125,24 @@ public class RecordPlayer
         return this.record.getFrame(this.getTick());
     }
 
+    /**
+     * It should be called before world tick
+     */
+    public void playActions()
+    {
+        if (!this.playing || this.isFinished())
+        {
+            return;
+        }
+
+        if (this.record != null)
+        {
+            if (this.mode == Mode.ACTIONS || this.mode == Mode.BOTH) this.applyAction(this.tick, actor, false);
+
+            this.record.resetUnload();
+        }
+    }
+
     public void next()
     {
         this.next(this.actor);
@@ -147,10 +165,7 @@ public class RecordPlayer
 
         if (this.record != null)
         {
-            boolean both = this.mode == Mode.BOTH;
-
-            if (this.mode == Mode.ACTIONS || both) this.applyAction(this.tick, actor, true);
-            if (this.mode == Mode.FRAMES || both) this.applyFrame(this.tick, actor, false);
+            if (this.mode == Mode.FRAMES || this.mode == Mode.BOTH) this.applyFrame(this.tick, actor, false);
 
             this.record.resetUnload();
         }
@@ -162,11 +177,6 @@ public class RecordPlayer
         }
 
         this.tick++;
-    }
-
-    public void applyUnsafeActions()
-    {
-        this.applyAction(this.tick, actor, false);
     }
 
     /**

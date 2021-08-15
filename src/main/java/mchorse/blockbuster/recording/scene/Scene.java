@@ -292,7 +292,7 @@ public class Scene
                     player.checkAndSpawn();
                 }
 
-                player.applyUnsafeActions();
+                player.playActions();
             }
         }
     }
