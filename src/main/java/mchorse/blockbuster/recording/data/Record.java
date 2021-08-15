@@ -316,7 +316,6 @@ public class Record
     public void applyAction(int tick, EntityLivingBase actor)
     {
         this.applyAction(tick, actor, false);
-        this.applyAction(tick, actor, true);
     }
 
     /**
@@ -336,7 +335,7 @@ public class Record
         {
             for (Action action : actions)
             {
-                if (safe != action.isSafe())
+                if (safe && !action.isSafe())
                 {
                     continue;
                 }
