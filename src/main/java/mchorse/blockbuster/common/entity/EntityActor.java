@@ -32,6 +32,9 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -39,6 +42,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -47,6 +51,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -790,6 +795,76 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         public boolean isCreative()
         {
             return false;
+        }
+
+        @Override
+        public void onUpdate()
+        {
+            if (this.actor.isDead)
+            {
+                this.setDead();
+
+                return;
+            }
+
+            this.width = actor.width;
+            this.height = actor.height;
+            this.eyeHeight = actor.getEyeHeight();
+            this.setEntityBoundingBox(actor.getEntityBoundingBox());
+
+            this.posX = actor.posX;
+            this.posY = actor.posY;
+            this.posZ = actor.posZ;
+            this.rotationYaw = actor.rotationYaw;
+            this.rotationPitch = actor.rotationPitch;
+
+            if (!Objects.equals(this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND), actor.getHeldItemMainhand()))
+            {
+                this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, actor.getHeldItemMainhand());
+            }
+
+            if (!Objects.equals(this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND), actor.getHeldItemOffhand()))
+            {
+                this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, actor.getHeldItemOffhand());
+            }
+        }
+
+        @Override
+        public void displayGUIChest(IInventory chestInventory)
+        {
+            if (this.openContainer != this.inventoryContainer)
+            {
+                this.closeScreen();
+            }
+
+            if (chestInventory instanceof IInteractionObject)
+            {
+                this.openContainer = ((IInteractionObject)chestInventory).createContainer(this.inventory, this);
+            }
+            else
+            {
+                this.openContainer = new ContainerChest(this.inventory, chestInventory, this);
+            }
+        }
+
+        @Override
+        public void closeScreen()
+        {
+            this.openContainer.onContainerClosed(this);
+
+            super.closeScreen();
+        }
+
+        @Override
+        public void readFromNBT(NBTTagCompound compound)
+        {
+            this.setDead();
+        }
+
+        @Override
+        public NBTTagCompound writeToNBT(NBTTagCompound compound)
+        {
+            return compound;
         }
     }
 }

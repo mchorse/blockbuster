@@ -20,6 +20,7 @@ import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -342,6 +343,14 @@ public class RecordPlayer
             if (this.actor instanceof EntityActor)
             {
                 this.actor.world.spawnEntity(this.actor);
+
+                EntityPlayer player = ((EntityActor) this.actor).fakePlayer;
+
+                player.posX = this.actor.posX;
+                player.posY = this.actor.posY;
+                player.posZ = this.actor.posZ;
+
+                this.actor.world.loadedEntityList.add(((EntityActor) this.actor).fakePlayer);
             }
             else if (this.actor instanceof EntityPlayer)
             {
