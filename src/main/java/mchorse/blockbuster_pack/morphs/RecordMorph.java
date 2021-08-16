@@ -284,6 +284,30 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
     }
 
     @Override
+    public boolean canMerge(AbstractMorph morph)
+    {
+        if (morph instanceof RecordMorph)
+        {
+            RecordMorph recmorph = (RecordMorph) morph;
+
+            this.mergeBasic(morph);
+
+            this.animation.merge(recmorph.animation);
+
+            //this.animation.progress = recmorph.animation.progress;
+
+            if (!recmorph.record.equals(this.record))
+            {
+                this.copy(recmorph);
+            }
+
+            return true;
+        }
+
+        return super.canMerge(morph);
+    }
+
+    @Override
     public void copy(AbstractMorph from)
     {
         super.copy(from);
