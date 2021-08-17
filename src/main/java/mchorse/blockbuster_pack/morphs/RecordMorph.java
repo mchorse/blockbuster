@@ -292,9 +292,10 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
 
             this.mergeBasic(morph);
 
-            this.animation.merge(recmorph.animation);
-
-            //this.animation.progress = recmorph.animation.progress;
+            if (!recmorph.animation.ignored)
+            {
+                this.animation.merge(recmorph.animation);
+            }
 
             if (!recmorph.record.equals(this.record))
             {
