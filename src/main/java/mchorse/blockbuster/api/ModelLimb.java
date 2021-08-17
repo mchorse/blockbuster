@@ -17,10 +17,10 @@ import net.minecraft.inventory.EntityEquipmentSlot;
  * It contains meta data and data about visuals and game play.
  */
 public class ModelLimb
-{	
-	/* OrientedBoundingBox */
-	public transient List<OrientedBB> obbs = new ArrayList<>();
-	
+{
+    /* OrientedBoundingBox */
+    public transient List<OrientedBB> obbs = new ArrayList<>();
+
     /* Meta data */
     public String name = "";
     public String parent = "";
@@ -30,8 +30,8 @@ public class ModelLimb
     public float sizeOffset = 0;
     public float itemScale = 1;
     public int[] texture = new int[] {0, 0};
-	public float[] anchor = new float[] {0.5F, 0.5F, 0.5F};
-	public float[] color = new float[] {1.0F, 1.0F, 1.0F};
+    public float[] anchor = new float[] {0.5F, 0.5F, 0.5F};
+    public float[] color = new float[] {1.0F, 1.0F, 1.0F};
     public float opacity = 1.0F;
     public boolean mirror;
     public boolean lighting = true;

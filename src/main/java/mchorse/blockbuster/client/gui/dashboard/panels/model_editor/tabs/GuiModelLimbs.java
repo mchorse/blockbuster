@@ -93,7 +93,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.limb.size[2] = values[2].intValue();
             this.panel.rebuildModel();
         });
-        this.size.setLimit(1, 8192, true);
+        this.size.setLimit(0, 8192, true);
         this.sizeOffset = new GuiTrackpadElement(mc, (value) ->
         {
             this.panel.limb.sizeOffset = value.floatValue();
