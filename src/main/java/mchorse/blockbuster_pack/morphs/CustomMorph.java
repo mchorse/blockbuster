@@ -308,6 +308,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         this.model = Blockbuster.proxy.models.models.get(model);
         
         fillObbs(true);
+
+        if (this.customPose != null)
+        {
+            this.customPose.updateLimbs(this.model, false);
+        }
     }
 
     @Override
@@ -387,6 +392,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             this.model = Blockbuster.proxy.models.models.get(this.getKey());
 
             fillObbs(true);
+
+            if (this.customPose != null)
+            {
+                this.customPose.updateLimbs(this.model, false);
+            }
         }
     }
 
@@ -976,29 +986,26 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             this.animation.fromNBT(tag.getCompoundTag("Animation"));
         }
     }
-    
+
     public ModelProperties convertProp(ModelPose pose)
     {
         if (pose instanceof ModelProperties)
         {
             return (ModelProperties) pose;
         }
-        
+
         NBTTagCompound tag = pose.toNBT(new NBTTagCompound());
-        pose = new ModelProperties();
-        pose.fromNBT(tag);
-        if (this.model == null)
+
+        ModelProperties props = new ModelProperties();
+
+        props.fromNBT(tag);
+
+        if (this.model != null)
         {
-            return (ModelProperties) pose;
+            props.updateLimbs(this.model, true);
         }
-        for (Map.Entry<String, ModelTransform> entry : pose.limbs.entrySet())
-        {
-            ModelLimb limb = this.model.limbs.get(entry.getKey());
-            LimbProperties prop = (LimbProperties) entry.getValue();
-            prop.color.set(limb.color[0], limb.color[1], limb.color[2], limb.opacity);
-            prop.glow = limb.lighting ? 0.0f : 1.0f;
-        }
-        return (ModelProperties) pose;
+
+        return props;
     }
 
     /**
@@ -1110,7 +1117,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             return this.pose;
         }
     }
-    
+
     public static class LimbProperties extends ModelTransform
     {
         public boolean fixed = false;
@@ -1255,6 +1262,35 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             }
 
             return b;
+        }
+
+        public void updateLimbs(Model model, boolean override)
+        {
+            if (model == null)
+            {
+                return;
+            }
+
+            for (Map.Entry<String, ModelLimb> entry : model.limbs.entrySet())
+            {
+                ModelLimb limb = entry.getValue();
+                LimbProperties prop = (LimbProperties) this.limbs.get(entry.getKey());
+                boolean newProp = false;
+
+                if (prop == null)
+                {
+                    prop = new LimbProperties();
+                    newProp = true;
+
+                    this.limbs.put(entry.getKey(), prop);
+                }
+
+                if (newProp || override)
+                {
+                    prop.color.set(limb.color[0], limb.color[1], limb.color[2], limb.opacity);
+                    prop.glow = limb.lighting ? 0.0f : 1.0f;
+                }
+            }
         }
 
         @Override
