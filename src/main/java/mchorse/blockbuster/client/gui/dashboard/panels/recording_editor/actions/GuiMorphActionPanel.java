@@ -126,6 +126,8 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
             {
                 this.cursor = Math.max(0, CameraHandler.getOffset());
 
+                CameraHandler.detachOutside();
+
                 GuiImmersiveEditor editor = ClientProxy.panels.showImmersiveEditor(editing, this.action.morph);
 
                 editor.morphs.updateCallback = this::updateMorphEditor;
@@ -303,6 +305,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
         this.panel.records.setVisible(this.showRecordList);
 
         CameraHandler.updatePlayerPosition();
+        CameraHandler.attachOutside();
         CameraHandler.moveRecordPanel(this.panel);
 
         Dispatcher.sendToServer(new PacketSceneGoto(CameraHandler.get(), this.cursor, CameraHandler.actions.get()));
