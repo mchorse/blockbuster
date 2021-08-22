@@ -313,6 +313,7 @@ blockbuster.gui:
             add: 添加形态键...
             add_to: "添加形态键 \"%s\""
             remove: 移除该形态键
+            children: 应用至子肢体
         
         limb:
             glow: 肢体发光
