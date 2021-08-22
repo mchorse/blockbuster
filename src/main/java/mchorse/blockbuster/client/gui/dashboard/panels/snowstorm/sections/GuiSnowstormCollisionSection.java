@@ -139,13 +139,13 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
         });
         this.radius.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.radius"));
         
-        this.expire = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.expire"), (b) ->
+        this.expire = new GuiToggleElement(mc,  IKey.lang("blockbuster.gui.snowstorm.collision.expire"), (b) ->
         {
             this.component.expireOnImpact = b.isToggled();
             this.parent.dirty();
         });
         
-        this.expirationDelay = new GuiTextElement(mc, (value) ->
+        this.expirationDelay = new GuiTextElement(mc, 10000, (value) ->
         {
             this.component.expirationDelay = this.parse(value, this.expirationDelay, this.component.expirationDelay);
             this.parent.dirty();
