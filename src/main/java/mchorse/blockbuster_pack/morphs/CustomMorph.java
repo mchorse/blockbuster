@@ -1123,11 +1123,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         public boolean fixed = false;
         public float glow = 0.0f;
         public Color color = new Color(1f, 1f, 1f, 1f);
-        
+
         @Override
         public boolean isDefault()
         {
-            return super.isDefault() && !fixed && glow > 0.0001f && color.getRGBAColor() != 0xFFFFFFFF;
+            return false;
         }
 
         @Override
@@ -1151,6 +1151,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                 LimbProperties prop = (LimbProperties) obj;
                 return super.equals(obj) && this.fixed == prop.fixed && Math.abs(this.glow - prop.glow) < 0.0001f && this.color.equals(prop.color);
             }
+
             return false;
         }
         
@@ -1312,6 +1313,16 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         @Override
         public void fromNBT(NBTTagCompound tag)
         {
+            if (tag.hasKey("Size", Constants.NBT.TAG_LIST))
+            {
+                NBTTagList list = tag.getTagList("Size", 5);
+
+                if (list.tagCount() >= 3)
+                {
+                    NBTUtils.readFloatList(list, this.size);
+                }
+            }
+
             if (tag.hasKey("Poses", Constants.NBT.TAG_COMPOUND))
             {
                 this.limbs.clear();
@@ -1325,9 +1336,27 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                     trans.fromNBT(poses.getCompoundTag(key));
                     this.limbs.put(key, trans);
                 }
-                tag.removeTag("Poses");
             }
-            super.fromNBT(tag);
+
+            if (tag.hasKey("Shapes"))
+            {
+                NBTTagList shapes = tag.getTagList("Shapes", Constants.NBT.TAG_COMPOUND);
+
+                this.shapes.clear();
+
+                for (int i = 0; i < shapes.tagCount(); i++)
+                {
+                    NBTTagCompound key = shapes.getCompoundTagAt(i);
+
+                    if (key.hasKey("Name") && key.hasKey("Value"))
+                    {
+                        ShapeKey shapeKey = new ShapeKey();
+
+                        shapeKey.fromNBT(key);
+                        this.shapes.add(shapeKey);
+                    }
+                }
+            }
         }
     }
 }
