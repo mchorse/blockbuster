@@ -1,5 +1,8 @@
 package mchorse.blockbuster_pack.client.gui;
 
+import java.util.List;
+import java.util.function.BiConsumer;
+
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
@@ -8,11 +11,11 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPos
 import mchorse.blockbuster.client.gui.utils.GuiShapeKeysEditor;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph.LimbProperties;
-import mchorse.blockbuster_pack.morphs.CustomMorph.ModelProperties;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiContextMenu;
+import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.framework.elements.input.GuiColorElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
@@ -146,13 +149,13 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
 
         options.flex().relative(this).x(1F, -130).y(1F).w(130).anchorY(1F).column(5).vertical().stretch().height(20).padding(10);
         options.add(this.model, this.scale, this.scaleGui);
-        
+
         this.fixed = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.builder.limb.fixed"), (b) ->
         {
             this.currentLimbProp.fixed = this.fixed.isToggled();
         });
         this.fixed.flex().relative(this.model).x(0F).y(0F, -20).w(1F);
-        
+
         this.color = new GuiColorElement(mc, (color) ->
         {
             this.currentLimbProp.color.set(color);
@@ -160,13 +163,25 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.color.flex().relative(this.fixed).x(0F).y(0F, -25).w(1F).h(20);
         this.color.picker.editAlpha();
         this.color.tooltip(IKey.lang("blockbuster.gui.builder.limb.color"));
-        
+
         this.glow = new GuiTrackpadElement(mc, (value) ->
         {
             this.currentLimbProp.glow = value.floatValue();
         }).limit(0, 1).values(0.01, 0.001, 0.1);
         this.glow.flex().relative(this.color).x(0F).y(0F, -30).w(1F);
         this.glow.tooltip(IKey.lang("blockbuster.gui.builder.limb.glow"));
+
+        GuiSimpleContextMenu glowMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
+        GuiSimpleContextMenu colorMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
+        GuiSimpleContextMenu fixateMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
+
+        glowMenu.action(IKey.lang("blockbuster.gui.builder.context.children"), this.applyToChildren((p, c) -> c.glow = p.glow));
+        colorMenu.action(IKey.lang("blockbuster.gui.builder.context.children"), this.applyToChildren((p, c) -> c.color.copy(p.color)));
+        fixateMenu.action(IKey.lang("blockbuster.gui.builder.context.children"), this.applyToChildren((p, c) -> c.fixed = p.fixed));
+
+        this.glow.context(() -> glowMenu);
+        this.color.context(() -> colorMenu);
+        this.fixed.context(() -> fixateMenu);
 
         this.shapeKeys = new GuiShapeKeysEditor(mc, () -> this.morph.model);
         this.shapeKeys.flex().relative(this.poseOnSneak).y(-125).w(1F).h(120);
@@ -196,6 +211,23 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.morph.customPose.copy(pose);
         this.transforms.set(this.transforms.trans, currentPose == null ? null : currentPose.limbs.get(this.list.getCurrentFirst()));
         this.updateShapeKeys();
+    }
+
+    private Runnable applyToChildren(BiConsumer<LimbProperties, LimbProperties> apply)
+    {
+        return () ->
+        {
+            String bone = this.list.getCurrentFirst();
+            LimbProperties anim = (LimbProperties) this.morph.customPose.limbs.get(bone);
+            List<String> children = this.morph.model.getChildren(bone);
+
+            for (String child : children)
+            {
+                LimbProperties childAnim = (LimbProperties) this.morph.customPose.limbs.get(child);
+
+                apply.accept(anim, childAnim);
+            }
+        };
     }
 
     private void updateShapeKeys()

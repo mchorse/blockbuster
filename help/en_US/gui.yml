@@ -306,6 +306,7 @@ blockbuster.gui:
             add: Add a shape key...
             add_to: "Add \"%s\" shape key"
             remove: Remove this shape key
+            children: Apply to children
         
         limb:
             glow: Limb Glow
