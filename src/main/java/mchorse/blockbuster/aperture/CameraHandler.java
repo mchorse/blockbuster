@@ -415,6 +415,38 @@ public class CameraHandler
         ClientProxy.cameraEditor.position.set(Minecraft.getMinecraft().player);
     }
 
+    @SideOnly(Side.CLIENT)
+    public static void attachOutside()
+    {
+        if (isApertureLoaded())
+        {
+            attachCameraOutside();
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Method(modid = Aperture.MOD_ID)
+    private static void attachCameraOutside()
+    {
+        ClientProxy.runner.attachOutside();
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void detachOutside()
+    {
+        if (isApertureLoaded())
+        {
+            detachCameraOutside();
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Method(modid = Aperture.MOD_ID)
+    private static void detachCameraOutside()
+    {
+        ClientProxy.runner.detachOutside();
+    }
+
     /* Event listeners */
 
     @SubscribeEvent
