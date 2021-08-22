@@ -84,6 +84,19 @@ public class ModelCustom extends ModelBiped
         this.textureHeight = model.texture[1];
     }
 
+    public ModelCustomRenderer get(String name)
+    {
+        for (ModelCustomRenderer renderer : this.limbs)
+        {
+            if (renderer.limb.name.equals(name))
+            {
+                return renderer;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {

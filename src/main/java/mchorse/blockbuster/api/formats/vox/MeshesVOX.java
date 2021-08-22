@@ -11,6 +11,7 @@ import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.model.ModelVoxRenderer;
 
 import javax.vecmath.Matrix3f;
+import javax.vecmath.Vector3f;
 
 public class MeshesVOX implements IMeshes
 {
@@ -35,5 +36,53 @@ public class MeshesVOX implements IMeshes
         }
 
         return new ModelVoxRenderer(model, limb, transform, this);
+    }
+
+    @Override
+    public Vector3f getMin()
+    {
+        Vector3f min = new Vector3f(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
+
+        for (int x = 0; x < this.vox.x; x++)
+        {
+            for (int y = 0; y < this.vox.y; y++)
+            {
+                for (int z = 0; z < this.vox.z; z++)
+                {
+                    if (this.vox.has(x, y, z))
+                    {
+                        min.x = Math.min(x, min.x);
+                        min.y = Math.min(y, min.y);
+                        min.z = Math.min(z, min.z);
+                    }
+                }
+            }
+        }
+
+        return min;
+    }
+
+    @Override
+    public Vector3f getMax()
+    {
+        Vector3f max = new Vector3f(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
+
+        for (int x = 0; x < this.vox.x; x++)
+        {
+            for (int y = 0; y < this.vox.y; y++)
+            {
+                for (int z = 0; z < this.vox.z; z++)
+                {
+                    if (this.vox.has(x, y, z))
+                    {
+                        max.x = Math.max(x, max.x);
+                        max.y = Math.max(y, max.y);
+                        max.z = Math.max(z, max.z);
+                    }
+                }
+            }
+        }
+
+        return max;
     }
 }

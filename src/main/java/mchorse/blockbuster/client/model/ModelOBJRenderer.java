@@ -62,6 +62,8 @@ public class ModelOBJRenderer extends ModelCustomRenderer
         super(model, limb, transform);
 
         this.mesh = mesh;
+        this.min = mesh.getMin();
+        this.max = mesh.getMax();
     }
 
     /**

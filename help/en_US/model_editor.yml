@@ -42,7 +42,8 @@ blockbuster.gui.me:
         
         rename: Rename
         parent: Parent
-        
+
+        anchor_modal: "Input desired anchor points (values 0..1 for every axis):"
         new_limb: Type in a name for a new limb...
         last_limb: You can't remove the last limb...
         rename_limb: "Rename current limb by typing in a new name:"
@@ -59,6 +60,10 @@ blockbuster.gui.me:
             right_leg: Right leg
             left_foot: Left shoe
             right_foot: Right shoe
+
+        context:
+            anchor_setup: Setup anchor point...
+            anchor_move: Setup and move to anchor point...
     
     models:
         title: Models
