@@ -2,7 +2,6 @@ package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
-import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
@@ -212,7 +211,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
         @Override
         public void draw(GuiContext context)
         {
-            GifTexture.bindTexture(this.morph.texture);
+            this.mc.renderEngine.bindTexture(this.morph.texture);
             int w = this.morph.getWidth();
             int h = this.morph.getHeight();
             String label = I18n.format("blockbuster.gui.image.dimensions", w, h);

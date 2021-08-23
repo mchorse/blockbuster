@@ -4,6 +4,7 @@ import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.commands.BBCommandBase;
 import mchorse.mclib.utils.ReflectionUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -12,7 +13,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,19 +54,22 @@ public class SubCommandModelClear extends BBCommandBase
 
         if (map != null)
         {
+            List<AbstractTexture> remove = new ArrayList<AbstractTexture>();
+
             Iterator<Map.Entry<ResourceLocation, ITextureObject>> it = map.entrySet().iterator();
 
             while (it.hasNext())
             {
                 Map.Entry<ResourceLocation, ITextureObject> entry = it.next();
                 ResourceLocation key = entry.getKey();
+                ITextureObject texture = entry.getValue();
                 String domain = key.getResourceDomain();
 
                 boolean bbDomain = domain.equals("b.a") || domain.equals("http") || domain.equals("https");
 
-                if (bbDomain && key.getResourcePath().startsWith(prefix))
+                if (bbDomain && key.getResourcePath().startsWith(prefix) && texture instanceof AbstractTexture)
                 {
-                    TextureUtil.deleteTexture(entry.getValue().getGlTextureId());
+                    remove.add((AbstractTexture) texture);
 
                     if (!prefix.isEmpty())
                     {
@@ -71,6 +77,14 @@ public class SubCommandModelClear extends BBCommandBase
                     }
 
                     it.remove();
+                }
+            }
+
+            for (AbstractTexture texture : remove)
+            {
+                if (texture != TextureUtil.MISSING_TEXTURE)
+                {
+                    texture.deleteGlTexture();
                 }
             }
         }

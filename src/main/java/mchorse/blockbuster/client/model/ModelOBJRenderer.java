@@ -8,7 +8,6 @@ import mchorse.blockbuster.api.formats.obj.OBJMaterial;
 import mchorse.blockbuster.api.formats.obj.OBJParser;
 import mchorse.blockbuster.api.formats.obj.ShapeKey;
 import mchorse.blockbuster.client.render.RenderCustomModel;
-import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.client.textures.MipmapTexture;
 import mchorse.mclib.client.render.VertexBuilder;
 import mchorse.mclib.utils.Interpolations;
@@ -260,7 +259,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                     texture = this.materials.get(list.material.name);
                 }
 
-                GifTexture.bindTexture(texture, RenderCustomModel.tick);
+                Minecraft.getMinecraft().renderEngine.bindTexture(texture);
             }
 
             list.render(this);

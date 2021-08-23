@@ -443,7 +443,7 @@ public class BedrockEmitter
 
         if (!listParticle.isEmpty() && (!this.isMorphParticle() || particleMorphComponent.renderTexture))
         {
-            GifTexture.bindTexture(this.scheme.texture);
+            Minecraft.getMinecraft().renderEngine.bindTexture(this.scheme.texture);
 
             GlStateManager.enableBlend();
             GlStateManager.disableCull();
