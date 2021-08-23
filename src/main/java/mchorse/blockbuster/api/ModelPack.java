@@ -15,6 +15,7 @@ import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderOBJ;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderVOX;
 import mchorse.blockbuster.api.resource.IResourceEntry;
 import mchorse.blockbuster.api.resource.StreamEntry;
+import mchorse.blockbuster.utils.mclib.ImageFolder;
 import net.minecraftforge.common.DimensionManager;
 import org.apache.commons.io.IOUtils;
 
@@ -107,7 +108,7 @@ public class ModelPack
     public void setupFolders()
     {
         this.folders.clear();
-        this.addFolder(new File(CommonProxy.configFile, "models"));
+        this.addFolder(new ImageFolder(CommonProxy.configFile, "models"));
 
         if (Blockbuster.modelFolderPath != null && !Blockbuster.modelFolderPath.get().isEmpty())
         {
