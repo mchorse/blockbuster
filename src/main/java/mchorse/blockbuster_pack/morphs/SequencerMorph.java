@@ -915,7 +915,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             this.timer = 0;
             this.loopCount = 0;
             this.lastUpdate = 0;
-            this.updateMorph(0);
         }
     }
 
