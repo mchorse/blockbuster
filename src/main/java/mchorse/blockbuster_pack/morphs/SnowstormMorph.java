@@ -321,9 +321,18 @@ public class SnowstormMorph extends AbstractMorph
 
             this.mergeBasic(morph);
 
-            if (!this.scheme.equals(snow.scheme) && this.emitter != null)
+            this.variables = snow.variables;
+
+            if (this.emitter != null)
             {
-                this.setScheme(snow.scheme);
+                if (!this.scheme.equals(snow.scheme))
+                {
+                    this.setScheme(snow.scheme);
+                }
+                else
+                {
+                    this.emitter.parseVariables(this.variables);
+                }
             }
 
             return true;
