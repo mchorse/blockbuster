@@ -359,10 +359,10 @@ public class GuiModelLimbs extends GuiModelEditorTab
         if (!this.panel.model.limbs.containsKey(text))
         {
             this.panel.model.addLimb(text);
-            this.panel.setLimb(text);
             this.limbs.add(text);
             this.limbs.setCurrent(text);
             this.panel.rebuildModel();
+            this.panel.setLimb(text);
         }
     }
 
@@ -383,10 +383,10 @@ public class GuiModelLimbs extends GuiModelEditorTab
         }
 
         this.panel.model.addLimb(limb);
-        this.panel.setLimb(limb.name);
         this.limbs.add(limb.name);
         this.limbs.setCurrent(limb.name);
         this.panel.rebuildModel();
+        this.panel.setLimb(limb.name);
     }
 
     private void removeLimb()
@@ -408,8 +408,8 @@ public class GuiModelLimbs extends GuiModelEditorTab
             String newLimb = this.panel.model.limbs.keySet().iterator().next();
 
             this.fillData(this.panel.model);
-            this.setLimb(newLimb);
             this.panel.rebuildModel();
+            this.panel.setLimb(newLimb);
         }
     }
 
@@ -509,6 +509,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.vanillaPanel.removeFromParent();
         this.objPanel.removeFromParent();
         this.is3D.setVisible(!isObj);
+
         if (isObj)
         {
             this.lastAnchorX = limb.origin[0];
@@ -523,6 +524,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.lastAnchorZ = limb.anchor[2];
             this.scroll.prepend(this.vanillaPanel);
         }
+
         this.scroll.resize();
     }
 
