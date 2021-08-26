@@ -224,8 +224,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     public void onEntityUpdate()
     {
-        boolean spawn = this.ticksExisted < 2;
-        Record record = this.playback.record;
+        boolean spawn = this.world.isRemote && this.ticksExisted < 2;
+        Record record = this.playback == null ? null : this.playback.record;
 
         spawn &= record != null && record.getFrame(0) != null;
 
