@@ -411,9 +411,9 @@ public class ModelExtrudedLayer
                         }
 
                         buffer.pos(mnx, mmy, mnz).tex(off.x, off.y).normal(0, -1, 0).endVertex();
-                        buffer.pos(mmx, mmy, mnz).tex(offmax.x, off.y).normal(0, -1, 0).endVertex();
-                        buffer.pos(mmx, mmy, mmz).tex(offmax.x, offmax.y).normal(0, -1, 0).endVertex();
                         buffer.pos(mnx, mmy, mmz).tex(off.x, offmax.y).normal(0, -1, 0).endVertex();
+                        buffer.pos(mmx, mmy, mmz).tex(offmax.x, offmax.y).normal(0, -1, 0).endVertex();
+                        buffer.pos(mmx, mmy, mnz).tex(offmax.x, off.y).normal(0, -1, 0).endVertex();
                     }
 
                     if (!chunk.hasBlock(blockX, y - 1, z))
@@ -438,9 +438,9 @@ public class ModelExtrudedLayer
                         }
 
                         buffer.pos(mnx, mmy, mmz).tex(off.x, off.y).normal(0, 0, -1).endVertex();
-                        buffer.pos(mmx, mmy, mmz).tex(offmax.x, off.y).normal(0, 0, -1).endVertex();
-                        buffer.pos(mmx, mny, mmz).tex(offmax.x, offmax.y).normal(0, 0, -1).endVertex();
                         buffer.pos(mnx, mny, mmz).tex(off.x, offmax.y).normal(0, 0, -1).endVertex();
+                        buffer.pos(mmx, mny, mmz).tex(offmax.x, offmax.y).normal(0, 0, -1).endVertex();
+                        buffer.pos(mmx, mmy, mmz).tex(offmax.x, off.y).normal(0, 0, -1).endVertex();
                     }
 
                     if (!chunk.hasBlock(blockX, y, z - 1))
@@ -478,9 +478,9 @@ public class ModelExtrudedLayer
                         }
 
                         buffer.pos(mnx, mmy, mnz).tex(off.x, off.y).normal(-1, 0, 0).endVertex();
-                        buffer.pos(mnx, mmy, mmz).tex(offmax.x, off.y).normal(-1, 0, 0).endVertex();
-                        buffer.pos(mnx, mny, mmz).tex(offmax.x, offmax.y).normal(-1, 0, 0).endVertex();
                         buffer.pos(mnx, mny, mnz).tex(off.x, offmax.y).normal(-1, 0, 0).endVertex();
+                        buffer.pos(mnx, mny, mmz).tex(offmax.x, offmax.y).normal(-1, 0, 0).endVertex();
+                        buffer.pos(mnx, mmy, mmz).tex(offmax.x, off.y).normal(-1, 0, 0).endVertex();
                     }
                 }
             }
