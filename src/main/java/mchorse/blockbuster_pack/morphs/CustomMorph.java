@@ -989,7 +989,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
     public ModelProperties convertProp(ModelPose pose)
     {
-        if (pose instanceof ModelProperties)
+        if (pose == null || pose instanceof ModelProperties)
         {
             return (ModelProperties) pose;
         }
