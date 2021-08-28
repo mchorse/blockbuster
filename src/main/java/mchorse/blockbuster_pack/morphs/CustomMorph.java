@@ -1120,9 +1120,9 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
     public static class LimbProperties extends ModelTransform
     {
-        public boolean fixed = false;
-        public float glow = 0.0f;
-        public Color color = new Color(1f, 1f, 1f, 1f);
+        public float fixed = 0F;
+        public float glow = 0F;
+        public Color color = new Color(1F, 1F, 1F, 1F);
 
         @Override
         public boolean isDefault()
@@ -1134,45 +1134,50 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         public void copy(ModelTransform transform)
         {
             super.copy(transform);
+
             if (transform instanceof LimbProperties)
             {
                 LimbProperties prop = (LimbProperties) transform;
+
                 this.fixed = prop.fixed;
                 this.glow = prop.glow;
                 this.color.copy(prop.color);
             }
         }
-        
+
         @Override
         public boolean equals(Object obj)
         {
             if (obj instanceof LimbProperties)
             {
                 LimbProperties prop = (LimbProperties) obj;
+
                 return super.equals(obj) && this.fixed == prop.fixed && Math.abs(this.glow - prop.glow) < 0.0001f && this.color.equals(prop.color);
             }
 
             return false;
         }
-        
+
         @Override
         public LimbProperties clone()
         {
             LimbProperties b = new LimbProperties();
+
             b.copy(this);
+
             return b;
         }
-        
+
         @Override
         public void fromNBT(NBTTagCompound tag)
         {
             super.fromNBT(tag);
 
-            if (tag.hasKey("F", NBT.TAG_BYTE)) this.fixed = tag.getBoolean("F");
+            if (tag.hasKey("F", NBT.TAG_BYTE)) this.fixed = tag.getBoolean("F") ? 1F : 0F;
             if (tag.hasKey("G", NBT.TAG_FLOAT)) this.glow = tag.getFloat("G");
             if (tag.hasKey("C", NBT.TAG_INT)) this.color.set(tag.getInteger("C"));
         }
-        
+
         @Override
         public NBTTagCompound toNBT()
         {
@@ -1183,27 +1188,29 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                 if (!equalFloatArray(DEFAULT.translate, this.translate)) tag.setTag("P", NBTUtils.writeFloatList(new NBTTagList(), this.translate));
                 if (!equalFloatArray(DEFAULT.scale, this.scale)) tag.setTag("S", NBTUtils.writeFloatList(new NBTTagList(), this.scale));
                 if (!equalFloatArray(DEFAULT.rotate, this.rotate)) tag.setTag("R", NBTUtils.writeFloatList(new NBTTagList(), this.rotate));
-                if (this.fixed) tag.setBoolean("F", this.fixed);
-                if (this.glow > 0.0001f) tag.setFloat("G", this.glow);
+                if (this.fixed != 0F) tag.setBoolean("F", true);
+                if (this.glow > 0.0001F) tag.setFloat("G", this.glow);
                 if (this.color.getRGBAColor() != 0xFFFFFFFF) tag.setInteger("C", this.color.getRGBAColor());
             }
 
             return tag;
         }
-        
+
         @Override
         public void interpolate(ModelTransform a, ModelTransform b, float x, Interpolation interp)
         {
             super.interpolate(a, b, x, interp);
-            
-            boolean fixed = false;
-            float glow = 0.0f;
+
+            float fixed = 0F;
+            float glow = 0F;
             float cr, cg, cb, ca;
-            cr = cg = cb = ca = 1.0f;
-            
+
+            cr = cg = cb = ca = 1F;
+
             if (a instanceof LimbProperties)
             {
                 LimbProperties l = (LimbProperties) a;
+
                 fixed = l.fixed;
                 glow = l.glow;
                 cr = l.color.r;
@@ -1211,11 +1218,12 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                 cb = l.color.b;
                 ca = l.color.a;
             }
-            
+
             if (b instanceof LimbProperties)
             {
                 LimbProperties l = (LimbProperties) b;
-                fixed = l.fixed;
+
+                fixed = interp.interpolate(fixed, l.fixed, x);
                 glow = interp.interpolate(glow, l.glow, x);
                 cr = interp.interpolate(cr, l.color.r, x);
                 cg = interp.interpolate(cg, l.color.g, x);
@@ -1224,14 +1232,14 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             }
             else
             {
-                fixed = false;
-                glow = interp.interpolate(glow, 0.0f, x);
-                cr = interp.interpolate(cr, 1.0f, x);
-                cg = interp.interpolate(cg, 1.0f, x);
-                cb = interp.interpolate(cb, 1.0f, x);
-                ca = interp.interpolate(ca, 1.0f, x);
+                fixed = interp.interpolate(fixed, 0F, x);
+                glow = interp.interpolate(glow, 0F, x);
+                cr = interp.interpolate(cr, 1F, x);
+                cg = interp.interpolate(cg, 1F, x);
+                cb = interp.interpolate(cb, 1F, x);
+                ca = interp.interpolate(ca, 1F, x);
             }
-            
+
             this.fixed = fixed;
             this.glow = glow;
             this.color.set(cr, cg, cb, ca);
@@ -1242,7 +1250,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, Interpolation.LINEAR.interpolate(lastX, 240, this.glow), Interpolation.LINEAR.interpolate(lastY, 240, this.glow));
         }
     }
-    
+
     public static class ModelProperties extends ModelPose
     {
         @Override

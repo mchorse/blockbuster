@@ -263,10 +263,7 @@ public class ModelCustom extends ModelBiped
             float PI = (float) Math.PI;
 
             /* Reseting the angles */
-            if (this.applyLimbPose(limb))
-            {
-                continue;
-            }
+            factor *= this.applyLimbPose(limb);
 
             if (limb.limb.cape && entityIn instanceof EntityLivingBase && this.current != null)
             {
@@ -443,17 +440,18 @@ public class ModelCustom extends ModelBiped
     /**
      * Apply transform from current pose on given limb
      */
-    public boolean applyLimbPose(ModelCustomRenderer limb)
+    public float applyLimbPose(ModelCustomRenderer limb)
     {
         ModelTransform trans = this.pose.limbs.get(limb.limb.name);
 
         limb.applyTransform(trans == null ? ModelTransform.DEFAULT : trans);
-        
+
         if (trans instanceof LimbProperties)
         {
-            return ((LimbProperties) trans).fixed;
+            return 1F - ((LimbProperties) trans).fixed;
         }
-        return false;
+
+        return 1F;
     }
 
     /**
