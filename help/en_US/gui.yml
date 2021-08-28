@@ -339,6 +339,7 @@ blockbuster.gui:
         morphs: Morphs
         random_order: Random order
         truly_random_order: Truly random
+        keep_progress: Keep progress
         ticks: ticks
         add_part_tooltip: Add a morph to the list. If you hold down the Ctrl key, it will be the next morph, otherwise it will be the last one.
         loop: Loop
