@@ -346,6 +346,7 @@ blockbuster.gui:
         morphs: 伪装
         random_order: 随机顺序
         truly_random_order: 完全随机
+        keep_progress: 继承动画进度
         ticks: Ticks
         add_part_tooltip: 添加一个伪装至列表，新伪装通常会被添加至列表末尾。按住 Ctrl 键则会将其添加为所选伪装的下一个伪装
         loop: 循环
