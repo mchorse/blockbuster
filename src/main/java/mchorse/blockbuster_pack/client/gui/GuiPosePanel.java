@@ -152,7 +152,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
 
         this.fixed = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.builder.limb.fixed"), (b) ->
         {
-            this.currentLimbProp.fixed = this.fixed.isToggled();
+            this.currentLimbProp.fixed = this.fixed.isToggled() ? 1F : 0F;
         });
         this.fixed.flex().relative(this.model).x(0F).y(0F, -20).w(1F);
 
@@ -264,7 +264,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.transforms.set(this.currentLimbProp, pose == null ? null : pose.limbs.get(limbName));
         this.glow.setValue(this.currentLimbProp.glow);
         this.color.picker.setColor(this.currentLimbProp.color.getRGBAColor());
-        this.fixed.toggled(this.currentLimbProp.fixed);
+        this.fixed.toggled(this.currentLimbProp.fixed != 0F);
     }
 
     @Override
