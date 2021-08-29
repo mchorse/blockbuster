@@ -60,6 +60,12 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     public int timer;
 
     /**
+     * Timer for renderOnScreen
+     */
+    @SideOnly(Side.CLIENT)
+    public int screenTimer;
+
+    /**
      * Duration of the current  
      */
     public float duration;
@@ -212,22 +218,18 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             return;
         }
 
-        this.updateCycle();
+        this.screenTimer++;
+        this.screenTimer %= 2000;
 
-        AbstractMorph morph = this.currentMorph.get();
+        FoundMorph found = this.getMorphAt(this.screenTimer);
+        AbstractMorph morph = MorphUtils.copy(found.getCurrentMorph());
+        AbstractMorph prevMorph = MorphUtils.copy(found.getPreviousMorph());
+
+        MorphUtils.pause(morph, prevMorph, (int) (this.screenTimer - found.lastDuration));
 
         if (morph != null)
         {
             MorphUtils.renderOnScreen(morph, player, x, y, scale, alpha);
-        }
-
-        if (this.timer > this.duration)
-        {
-            this.current = -1;
-            this.timer = 0;
-            this.duration = 0;
-            this.loopCount = 0;
-            this.isFirstMorph = false;
         }
     }
 

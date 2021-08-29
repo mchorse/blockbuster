@@ -240,6 +240,7 @@ public class SnowstormMorph extends AbstractMorph
         }
 
         RenderingHandler.addEmitter(emitter, target);
+        this.updateClient();
     }
 
     @Override
