@@ -25,6 +25,7 @@ import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.MatrixUtils.Transformation;
 import mchorse.mclib.utils.OpHelper;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import net.minecraft.client.Minecraft;
@@ -67,6 +68,8 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     private GuiSlotElement[] slots = new GuiSlotElement[6];
 
     private Map<BlockPos, TileEntityModel> old = new HashMap<BlockPos, TileEntityModel>();
+
+    private AbstractMorph morph;
 
     /**
      * Try adding a block position, if it doesn't exist in list already 
@@ -129,6 +132,11 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
                 editor.morphs.updateCallback = this::updateMorphEditor;
                 editor.morphs.beforeRender = this::beforeEditorRender;
                 editor.morphs.afterRender = this::afterEditorRender;
+                editor.onClose = this::afterEditorClose;
+
+                /* Avoid update. */
+                this.morph = this.model.morph.get();
+                this.model.morph.setDirect(MorphUtils.copy(this.morph));
             }
             else
             {
@@ -195,7 +203,14 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     {
         if (this.model != null)
         {
-            this.model.morph.setDirect(morph);
+            if (Blockbuster.immersiveModelBlock.get())
+            {
+                this.morph = morph;
+            }
+            else
+            {
+                this.model.morph.setDirect(morph);
+            }
         }
 
         this.pickMorph.setMorph(morph);
@@ -231,6 +246,11 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     private void afterEditorRender(GuiContext context)
     {
         GlStateManager.popMatrix();
+    }
+
+    private void afterEditorClose(GuiImmersiveEditor editor)
+    {
+        this.model.morph.setDirect(this.morph);
     }
 
     @Override

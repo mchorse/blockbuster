@@ -9,6 +9,7 @@ import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.GuiImmersiveEditor;
 import mchorse.blockbuster.client.gui.GuiImmersiveMorphMenu;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.sync.PacketSceneGoto;
 import mchorse.blockbuster.recording.actions.MorphAction;
@@ -25,6 +26,7 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.DummyEntity;
+import mchorse.metamorph.api.MorphAPI;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsList;
@@ -32,6 +34,7 @@ import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsList.OnionSkin;
 import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 
 public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
@@ -214,6 +217,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
             }))
             {
                 entity = actor;
+
                 break;
             }
 
@@ -223,6 +227,15 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
             }
 
             menu.target = entity;
+        }
+
+        if (menu.target instanceof EntityActor)
+        {
+            ((EntityActor) menu.target).morph.setDirect(null);
+        }
+        else if (menu.target instanceof EntityPlayer)
+        {
+            MorphAPI.morph((EntityPlayer) menu.target, null, true);
         }
 
         if (record != null && !record.frames.isEmpty() && this.skin != null && menu.target != null)
