@@ -89,7 +89,7 @@ blockbuster.gui:
 
         id: 回放 ID
         name: 名称标签
-        name_tooltip: 演员的名称标签。你可以通过这一参数，并结合命令（比如 @e[name]=Test）来锁定该演员，或知识单纯让演员显示名称。\n\n你可以使用 [ 作为显示名称的格式化代码。如 [cR[aG[1B[r 会变成 {c}R{a}G{1}B{r}.
+        name_tooltip: 演员的名称标签。你可以通过这一参数，并结合命令（比如 @e[name=Test]）来锁定该演员，或只是单纯让演员显示名称。\n\n你可以使用 [ 作为显示名称的格式化代码。如 [cR[aG[1B[r 会变成 {c}R{a}G{1}B{r}.
         target: 目标
         target_tooltip: 你可以在此指定需要哪个玩家来播放这段回放。\n\n额外的目标选择器可以用来选择玩家的用户名. @r - 随机玩家, @{n}team{r} - 其中 {n}team{r} 是计分板中的队伍名称.
         invincible: 无敌

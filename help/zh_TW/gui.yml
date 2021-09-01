@@ -88,8 +88,8 @@ blockbuster.gui:
         open_audio_folder: 打開包含音軌的文件夾
 
         id: 回放 ID
-        name: 名稱標籤
-        name_tooltip: 演員的名稱標籤。你可以通過這一參數，並結合命令（比如 @e[name]=Test）來鎖定該演員，或知識單純讓演員顯示名稱。\n\n你可以使用 [ 作為顯示名稱的格式化代碼。如 [cR[aG[1B[r 會變成 {c}R{a}G{1}B{r}.
+        name: 名稱標簽
+        name_tooltip: 演員的名稱標簽。你可以通過這一參數，並結合命令（比如 @e[name=Test]）來鎖定該演員，或只是單純讓演員顯示名稱。\n\n你可以使用 [ 作為顯示名稱的格式化代碼。如 [cR[aG[1B[r 會變成 {c}R{a}G{1}B{r}.
         target: 目標
         target_tooltip: 你可以在此指定需要哪個玩家來播放這段回放。\n\n額外的目標選擇器可以用來選擇玩家的用戶名. @r - 隨機玩家, @{n}team{r} - 其中 {n}team{r} 是計分板中的隊伍名稱.
         invincible: 無敵
