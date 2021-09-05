@@ -113,6 +113,8 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
         this.frameProvider = null;
         this.beforeRender = null;
         this.afterRender = null;
+
+        this.pickMorph(getSelected());
     }
 
     @Override
