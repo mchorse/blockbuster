@@ -3,16 +3,16 @@ package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotionCollision;
-import mchorse.blockbuster.client.particles.molang.MolangParser;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
-import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.client.gui.utils.Elements;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.math.Operation;
+import mchorse.mclib.math.molang.MolangParser;
+import mchorse.mclib.math.molang.expressions.MolangExpression;
 import net.minecraft.client.Minecraft;
 
 public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<BedrockComponentMotionCollision>

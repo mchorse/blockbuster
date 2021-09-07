@@ -4,11 +4,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
-import mchorse.blockbuster.client.particles.molang.MolangException;
-import mchorse.blockbuster.client.particles.molang.MolangParser;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangValue;
 import mchorse.mclib.math.Constant;
+import mchorse.mclib.math.molang.MolangException;
+import mchorse.mclib.math.molang.MolangParser;
+import mchorse.mclib.math.molang.expressions.MolangExpression;
+import mchorse.mclib.math.molang.expressions.MolangValue;
 
 public abstract class BedrockComponentLifetime extends BedrockComponentBase implements IComponentEmitterUpdate
 {

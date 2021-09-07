@@ -9,11 +9,11 @@ import mchorse.blockbuster.client.particles.components.appearance.BedrockCompone
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionTinting;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
-import mchorse.blockbuster.client.particles.molang.MolangException;
-import mchorse.blockbuster.client.particles.molang.MolangParser;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.blockbuster.utils.EntityTransformationUtils;
 import mchorse.mclib.math.Operation;
+import mchorse.mclib.math.molang.MolangException;
+import mchorse.mclib.math.molang.MolangParser;
+import mchorse.mclib.math.molang.expressions.MolangExpression;
 import mchorse.mclib.utils.MathUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;

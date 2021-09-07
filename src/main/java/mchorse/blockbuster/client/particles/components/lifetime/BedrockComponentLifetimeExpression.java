@@ -3,12 +3,11 @@ package mchorse.blockbuster.client.particles.components.lifetime;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
-import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
-import mchorse.blockbuster.client.particles.molang.MolangException;
-import mchorse.blockbuster.client.particles.molang.MolangParser;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.math.Operation;
+import mchorse.mclib.math.molang.MolangException;
+import mchorse.mclib.math.molang.MolangParser;
+import mchorse.mclib.math.molang.expressions.MolangExpression;
 
 public class BedrockComponentLifetimeExpression extends BedrockComponentLifetime
 {

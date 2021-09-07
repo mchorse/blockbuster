@@ -3,18 +3,15 @@ package mchorse.blockbuster.client.particles.components.appearance;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.particles.BedrockMaterial;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
-import mchorse.blockbuster.client.particles.molang.MolangException;
-import mchorse.blockbuster.client.particles.molang.MolangParser;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
-import mchorse.blockbuster.client.textures.GifTexture;
+import mchorse.mclib.math.molang.MolangException;
+import mchorse.mclib.math.molang.MolangParser;
+import mchorse.mclib.math.molang.expressions.MolangExpression;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -23,8 +20,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
-
-import java.util.ArrayList;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;

@@ -7,8 +7,8 @@ import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
-import mchorse.blockbuster.client.particles.molang.MolangException;
-import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.mclib.math.molang.MolangException;
+import mchorse.mclib.math.molang.MolangParser;
 import net.minecraft.client.renderer.BufferBuilder;
 
 public class BedrockComponentAppearanceTinting extends BedrockComponentBase implements IComponentParticleRender
