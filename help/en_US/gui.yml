@@ -392,6 +392,11 @@ blockbuster.gui:
             particles_alpha: Alpha
             particles_blend: Blend
 
+        particle_morph:
+            title: Morph
+            enabled: Enabled
+            render_texture: Still render billboard
+
         space:
             title: Particle space
 

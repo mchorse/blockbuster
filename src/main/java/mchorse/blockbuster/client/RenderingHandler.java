@@ -73,6 +73,8 @@ public class RenderingHandler
      */
     private static final List<BedrockEmitter> emitters = new ArrayList<BedrockEmitter>();
 
+    public static ListIterator<BedrockEmitter> emitterIterator = emitters.listIterator();
+
     private static final List<EntityActor> lastRenderedEntities = new ArrayList<EntityActor>();
 
     private GuiRecordingOverlay overlay;
@@ -132,25 +134,6 @@ public class RenderingHandler
     {
         if (!emitters.isEmpty())
         {
-            Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
-            double playerX = camera.prevPosX + (camera.posX - camera.prevPosX) * (double) partialTicks;
-            double playerY = camera.prevPosY + (camera.posY - camera.prevPosY) * (double) partialTicks;
-            double playerZ = camera.prevPosZ + (camera.posZ - camera.prevPosZ) * (double) partialTicks;
-
-            GlStateManager.enableBlend();
-            GlStateManager.enableAlpha();
-            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-            GlStateManager.alphaFunc(516, 0.003921569F);
-
-            BufferBuilder builder = Tessellator.getInstance().getBuffer();
-
-            GlStateManager.disableTexture2D();
-
-            builder.setTranslation(-playerX, -playerY, -playerZ);
-
-            GlStateManager.disableCull();
-            GlStateManager.enableTexture2D();
-
             if (Blockbuster.snowstormDepthSorting.get())
             {
                 emitters.sort((a, b) ->
@@ -171,16 +154,15 @@ public class RenderingHandler
                 });
             }
 
-            for (BedrockEmitter emitter : emitters)
+            while (emitterIterator.hasNext())
             {
+                BedrockEmitter emitter = emitterIterator.next();
+
                 emitter.render(partialTicks);
                 emitter.running = emitter.sanityTicks < 2;
             }
 
-            builder.setTranslation(0, 0, 0);
-
-            GlStateManager.disableBlend();
-            GlStateManager.alphaFunc(516, 0.1F);
+            emitterIterator = emitters.listIterator();
         }
     }
 
@@ -188,7 +170,7 @@ public class RenderingHandler
     {
         if (!emitter.added)
         {
-            emitters.add(emitter);
+            emitterIterator.add(emitter);
 
             emitter.added = true;
             emitter.setTarget(target);
@@ -197,20 +179,20 @@ public class RenderingHandler
 
     public static void updateEmitters()
     {
-        Iterator<BedrockEmitter> it = emitters.iterator();
-
-        while (it.hasNext())
+        while (emitterIterator.hasNext())
         {
-            BedrockEmitter emitter = it.next();
+            BedrockEmitter emitter = emitterIterator.next();
 
             emitter.update();
 
             if (emitter.isFinished())
             {
-                it.remove();
+                emitterIterator.remove();
                 emitter.added = false;
             }
         }
+
+        emitterIterator = emitters.listIterator();
     }
 
     public static void resetEmitters()

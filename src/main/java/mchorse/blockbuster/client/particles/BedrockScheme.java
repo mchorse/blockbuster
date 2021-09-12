@@ -9,6 +9,7 @@ import mchorse.blockbuster.client.particles.components.IComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentEmitterInitialize;
 import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
 import mchorse.blockbuster.client.particles.components.IComponentParticleInitialize;
+import mchorse.blockbuster.client.particles.components.IComponentParticleMorphRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
 import mchorse.blockbuster.client.particles.components.motion.BedrockComponentInitialSpeed;
@@ -48,6 +49,7 @@ public class BedrockScheme
     public List<IComponentParticleInitialize> particleInitializes;
     public List<IComponentParticleUpdate> particleUpdates;
     public List<IComponentParticleRender> particleRender;
+    public List<IComponentParticleMorphRender> particleMorphRender;
 
     private boolean factory;
 
@@ -125,6 +127,7 @@ public class BedrockScheme
         this.particleInitializes = this.getComponents(IComponentParticleInitialize.class);
         this.particleUpdates = this.getComponents(IComponentParticleUpdate.class);
         this.particleRender = this.getComponents(IComponentParticleRender.class);
+        this.particleMorphRender = this.getComponents(IComponentParticleMorphRender.class);
 
         /* Link variables with curves */
         for (Map.Entry<String, BedrockCurve> entry : this.curves.entrySet())

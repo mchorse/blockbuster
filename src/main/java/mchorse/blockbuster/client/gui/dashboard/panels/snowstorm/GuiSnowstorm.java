@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormAppearanceSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormCollisionAppearanceSection;
@@ -12,6 +13,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSno
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormLifetimeSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormLightingSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormMotionSection;
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormParticleMorphSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormRateSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormShapeSection;
@@ -61,6 +63,7 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
     public GuiStringSearchListElement particles;
 
     public List<GuiSnowstormSection> sections = new ArrayList<GuiSnowstormSection>();
+    private GuiSnowstormParticleMorphSection particleMorphSection;
 
     private BedrockLibrary library;
 
@@ -107,6 +110,8 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
         this.particles = new GuiStringSearchListElement(mc, (list) -> this.setScheme(list.get(0)));
         this.particles.flex().relative(this.modal).xy(10, 35).w(1F, -20).h(1F, -45);
 
+        this.particleMorphSection = new GuiSnowstormParticleMorphSection(mc, this);
+
         GuiElement icons = new GuiElement(mc);
         icons.flex().relative(this.modal).x(1F, -10).y(10).h(20).anchorX(1F).row(0).resize().width(20).height(20);
         icons.add(this.add, this.dupe, this.remove, this.folder);
@@ -116,6 +121,7 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
         this.add(this.renderer, new GuiDrawable(this::drawOverlay), this.editor, this.modal, this.open, this.save);
 
         this.addSection(new GuiSnowstormGeneralSection(mc, this));
+        this.addSection(this.particleMorphSection);
         this.addSection(new GuiSnowstormSpaceSection(mc, this));
         this.addSection(new GuiSnowstormInitializationSection(mc, this));
         this.addSection(new GuiSnowstormRateSection(mc, this));
@@ -315,6 +321,8 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
         {
             this.particles.list.setCurrent(current);
         }
+
+        ClientProxy.panels.picker(((GuiSnowstormParticleMorphSection)this.sections.get(1))::setMorph);
     }
 
     @Override

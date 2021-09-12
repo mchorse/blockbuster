@@ -5,8 +5,10 @@ import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.*;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceBillboard;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
+import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentParticleMorph;
 import mchorse.blockbuster.client.particles.components.meta.BedrockComponentInitialization;
 import mchorse.blockbuster.client.textures.GifTexture;
+import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.math.IValue;
 import mchorse.mclib.math.Variable;
 import mchorse.mclib.utils.Interpolations;
@@ -122,6 +124,13 @@ public class BedrockEmitter
     public double getAge(float partialTicks)
     {
         return (this.age + partialTicks) / 20.0;
+    }
+
+    public boolean morphParticle()
+    {
+        BedrockComponentParticleMorph morphComponent = this.scheme.getOrCreate(BedrockComponentParticleMorph.class);
+
+        return morphComponent.enabled;
     }
 
     public void setTarget(EntityLivingBase target)
@@ -421,10 +430,13 @@ public class BedrockEmitter
             return;
         }
 
+        BedrockComponentParticleMorph particleMorphComponent = this.scheme.getOrCreate(BedrockComponentParticleMorph.class);
         float partialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
-        List<IComponentParticleRender> list = this.scheme.getComponents(IComponentParticleRender.class);
 
-        if (!list.isEmpty())
+        List<IComponentParticleRender> listParticle = this.scheme.getComponents(IComponentParticleRender.class);
+        List<IComponentParticleMorphRender> listMorph = this.scheme.getComponents(IComponentParticleMorphRender.class);
+
+        if (!listParticle.isEmpty() && !this.morphParticle())
         {
             GifTexture.bindTexture(this.scheme.texture);
 
@@ -441,13 +453,30 @@ public class BedrockEmitter
             this.setEmitterVariables(partialTicks);
             this.setParticleVariables(this.guiParticle, partialTicks);
 
-            for (IComponentParticleRender render : list)
+            for (IComponentParticleRender render : listParticle)
             {
                 render.renderOnScreen(this.guiParticle, x, y, scale, partialTicks);
             }
 
             GlStateManager.disableBlend();
             GlStateManager.enableCull();
+        }
+        else if (!listMorph.isEmpty() && this.morphParticle())
+        {
+            if (this.guiParticle == null || this.guiParticle.dead)
+            {
+                this.guiParticle = this.createParticle(true);
+            }
+
+            this.rotation.setIdentity();
+            this.guiParticle.update(this);
+            this.setEmitterVariables(partialTicks);
+            this.setParticleVariables(this.guiParticle, partialTicks);
+
+            for (IComponentParticleMorphRender render : listMorph)
+            {
+                render.renderOnScreen(this.guiParticle, x, y, scale, partialTicks);
+            }
         }
     }
 
@@ -463,52 +492,173 @@ public class BedrockEmitter
 
         this.setupCameraProperties(partialTicks);
 
+        BedrockComponentParticleMorph particleMorphComponent = this.scheme.get(BedrockComponentParticleMorph.class);
         List<IComponentParticleRender> renders = this.scheme.particleRender;
+        List<IComponentParticleMorphRender> morphRenders = this.scheme.particleMorphRender;
 
-        for (IComponentParticleRender component : renders)
+        /* particle rendering */
+        if (!this.morphParticle() || particleMorphComponent.renderTexture)
         {
-            component.preRender(this, partialTicks);
-        }
+            this.setupOpenGL(partialTicks);
 
-        if (!this.particles.isEmpty())
-        {
-            if (Blockbuster.snowstormDepthSorting.get())
+            for (IComponentParticleRender component : renders)
             {
-                this.particles.sort((a, b) ->
+                component.preRender(this, partialTicks);
+            }
+
+            if (!this.particles.isEmpty())
+            {
+                this.depthSorting();
+
+                BedrockComponentCollisionAppearance collisionComponent = this.scheme.get(BedrockComponentCollisionAppearance.class);
+
+                this.renderParticles(this.scheme.texture, renders, false, partialTicks);
+
+                /* rendering the collided particles with an extra component */
+                if (collisionComponent != null && collisionComponent.texture != null)
                 {
-                    double ad = a.getDistanceSq(this);
-                    double bd = b.getDistanceSq(this);
-
-                    if (ad < bd)
-                    {
-                        return 1;
-                    }
-                    else if (ad > bd)
-                    {
-                        return -1;
-                    }
-
-                    return 0;
-                });
+                    this.renderParticles(collisionComponent.texture, renders, true, partialTicks);
+                }
             }
 
-            BedrockComponentCollisionAppearance component = this.scheme.get(BedrockComponentCollisionAppearance.class);
-
-            this.renderParticles(this.scheme.texture, false, partialTicks);
-
-            if (component != null && component.texture != null)
+            for (IComponentParticleRender component : renders)
             {
-                this.renderParticles(component.texture, true, partialTicks);
+                component.postRender(this, partialTicks);
             }
+
+            this.endOpenGL();
         }
 
-        for (IComponentParticleRender component : renders)
+        /* Morph rendering */
+        if (this.morphParticle())
         {
-            component.postRender(this, partialTicks);
+            for (IComponentParticleMorphRender component : morphRenders)
+            {
+                component.preRender(this, partialTicks);
+            }
+
+            if (!this.particles.isEmpty())
+            {
+                this.depthSorting();
+
+                this.renderParticles(morphRenders, false, partialTicks);
+
+                /*BedrockComponentCollisionParticleMorph collisionComponent = this.scheme.get(BedrockComponentCollisionParticleMorph.class);
+
+                if (collisionComponent != null && collisionComponent.morph != null)
+                {
+                    this.renderParticles(morphRenders, true, partialTicks);
+                }*/
+            }
+
+            for (IComponentParticleMorphRender component : morphRenders)
+            {
+                component.postRender(this, partialTicks);
+            }
         }
     }
 
-    private void renderParticles(ResourceLocation texture, boolean collided, float partialTicks)
+    private void setupOpenGL(float partialTicks)
+    {
+        if (!GuiModelRenderer.isRendering())
+        {
+            Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
+            double playerX = camera.prevPosX + (camera.posX - camera.prevPosX) * (double) partialTicks;
+            double playerY = camera.prevPosY + (camera.posY - camera.prevPosY) * (double) partialTicks;
+            double playerZ = camera.prevPosZ + (camera.posZ - camera.prevPosZ) * (double) partialTicks;
+
+            GlStateManager.enableBlend();
+            GlStateManager.enableAlpha();
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+            GlStateManager.alphaFunc(516, 0.003921569F);
+
+            BufferBuilder builder = Tessellator.getInstance().getBuffer();
+
+            GlStateManager.disableTexture2D();
+
+            builder.setTranslation(-playerX, -playerY, -playerZ);
+
+            GlStateManager.disableCull();
+            GlStateManager.enableTexture2D();
+        }
+    }
+
+    private void endOpenGL()
+    {
+        if (!GuiModelRenderer.isRendering())
+        {
+            Tessellator.getInstance().getBuffer().setTranslation(0, 0, 0);
+
+            GlStateManager.disableBlend();
+            GlStateManager.alphaFunc(516, 0.1F);
+        }
+    }
+
+
+    private void depthSorting()
+    {
+        if (Blockbuster.snowstormDepthSorting.get())
+        {
+            this.particles.sort((a, b) ->
+            {
+                double ad = a.getDistanceSq(this);
+                double bd = b.getDistanceSq(this);
+
+                if (ad < bd)
+                {
+                    return 1;
+                }
+                else if (ad > bd)
+                {
+                    return -1;
+                }
+
+                return 0;
+            });
+        }
+    }
+
+
+    /**
+     * This method renders the particles using morphs
+     * @param renderComponents
+     * @param collided
+     * @param partialTicks
+     */
+    private void renderParticles(List<? extends IComponentParticleMorphRender> renderComponents, boolean collided, float partialTicks)
+    {
+        BufferBuilder builder = Tessellator.getInstance().getBuffer();
+
+        for (BedrockParticle particle : this.particles)
+        {
+            /*boolean collisionStuff = particle.collisionTexture || particle.collisionTinting;
+
+            if (collisionStuff != collided)
+            {
+                continue;
+            }*/
+
+            this.setEmitterVariables(partialTicks);
+            this.setParticleVariables(particle, partialTicks);
+
+            for (IComponentRenderBase component : renderComponents)
+            {
+                /*if (!(collisionStuff && component.getClass() == BedrockComponentAppearanceBillboard.class))
+                {*/
+                    component.render(this, particle, builder, partialTicks);
+                //}
+            }
+        }
+    }
+
+    /**
+     * This method renders the particles using the default bedrock billboards
+     * @param texture Ressource location of the texture to render
+     * @param renderComponents
+     * @param collided
+     * @param partialTicks
+     */
+    private void renderParticles(ResourceLocation texture, List<? extends IComponentParticleRender> renderComponents, boolean collided, float partialTicks)
     {
         BufferBuilder builder = Tessellator.getInstance().getBuffer();
 
@@ -528,7 +678,7 @@ public class BedrockEmitter
             this.setEmitterVariables(partialTicks);
             this.setParticleVariables(particle, partialTicks);
 
-            for (IComponentParticleRender component : this.scheme.particleRender)
+            for (IComponentRenderBase component : renderComponents)
             {
                 /* if collisionTexture or collisionTinting is true - means that those options are enabled
                  * therefore the old Billboardappearance should not be called

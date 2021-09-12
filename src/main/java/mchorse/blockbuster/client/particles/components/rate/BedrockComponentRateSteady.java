@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.particles.components.rate;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
+import mchorse.blockbuster.client.particles.components.IComponentParticleMorphRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
@@ -13,7 +14,7 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangValue;
 import mchorse.mclib.math.Constant;
 import net.minecraft.client.renderer.BufferBuilder;
 
-public class BedrockComponentRateSteady extends BedrockComponentRate implements IComponentParticleRender
+public class BedrockComponentRateSteady extends BedrockComponentRate implements IComponentParticleRender, IComponentParticleMorphRender
 {
     public static final MolangExpression DEFAULT_PARTICLES = new MolangValue(null, new Constant(50));
 

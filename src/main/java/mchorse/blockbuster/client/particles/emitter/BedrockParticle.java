@@ -1,9 +1,17 @@
 package mchorse.blockbuster.client.particles.emitter;
 
+import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentParticleMorph;
 import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotionCollision;
+import mchorse.mclib.utils.DummyEntity;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.MatrixUtils;
+import mchorse.metamorph.api.Morph;
+import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.vecmath.*;
 import java.util.HashMap;
@@ -15,6 +23,9 @@ public class BedrockParticle
     public float random2 = (float) Math.random();
     public float random3 = (float) Math.random();
     public float random4 = (float) Math.random();
+
+    public Morph morph = new Morph();
+    private DummyEntity dummy;
 
     /* States */
     public int age;
@@ -260,6 +271,15 @@ public class BedrockParticle
             this.position.x += speed0.x / 20F;
             this.position.y += speed0.y / 20F;
             this.position.z += speed0.z / 20F;
+
+            if(!this.morph.isEmpty())
+            {
+                EntityLivingBase dummy = this.getDummy(emitter);
+
+                this.morph.get().update(dummy);
+
+                dummy.ticksExisted += 1;
+            }
         }
 
         if (this.lifetime >= 0 &&
@@ -306,5 +326,28 @@ public class BedrockParticle
         this.offset.scale(0);
     }
 
+    @SideOnly(Side.CLIENT)
+    public EntityLivingBase getDummy(BedrockEmitter emitter)
+    {
+        if (this.dummy == null)
+        {
+            this.dummy = new DummyEntity(Minecraft.getMinecraft().world);
+        }
 
+        Vector3d pos = this.getGlobalPosition(emitter);
+
+        this.dummy.setPosition(pos.x, pos.y, pos.z);
+        this.dummy.prevPosX = this.dummy.posX;
+        this.dummy.prevPosY = this.dummy.posY;
+        this.dummy.prevPosZ = this.dummy.posZ;
+        this.dummy.lastTickPosX = this.dummy.posX;
+        this.dummy.lastTickPosY = this.dummy.posY;
+        this.dummy.lastTickPosZ = this.dummy.posZ;
+        this.dummy.rotationYaw = this.dummy.prevRotationYaw = 0;
+        this.dummy.rotationPitch = this.dummy.prevRotationPitch = 0;
+        this.dummy.rotationYawHead = this.dummy.prevRotationYawHead = 0;
+        this.dummy.renderYawOffset = this.dummy.prevRenderYawOffset = 0;
+
+        return this.dummy;
+    }
 }
