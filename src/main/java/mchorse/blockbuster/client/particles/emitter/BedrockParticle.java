@@ -1,11 +1,15 @@
 package mchorse.blockbuster.client.particles.emitter;
 
+import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
+import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionTinting;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentParticleMorph;
 import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotionCollision;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.utils.DummyEntity;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.metamorph.api.Morph;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -15,6 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.vecmath.*;
 import java.util.HashMap;
+import java.util.Map;
 
 public class BedrockParticle
 {
@@ -56,8 +61,7 @@ public class BedrockParticle
      */
     public Vector3f collisionTime = new Vector3f(-2f, -2f,-2f);
     public HashMap<Entity, Vector3f> entityCollisionTime = new HashMap<>();
-    public boolean collisionTexture;
-    public boolean collisionTinting;
+    public boolean collided;
     public int bounces;
 
     /**
@@ -102,6 +106,52 @@ public class BedrockParticle
         this.speed.set((float) Math.random() - 0.5F, (float) Math.random() - 0.5F, (float) Math.random() - 0.5F);
         this.speed.normalize();
         this.matrix.setIdentity();
+    }
+
+    public boolean isCollisionTexture(BedrockEmitter emitter)
+    {
+        return MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionAppearance.class).enabled) && this.collided;
+    }
+
+    public boolean isCollisionTinting(BedrockEmitter emitter)
+    {
+        return MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionTinting.class).enabled) && this.collided;
+    }
+
+    /**
+     * Copy this particle to the given particle (it does not copy fields that are initialized by components)
+     * @param to destiny to copy values to
+     * @return copied particle
+     */
+    public BedrockParticle softCopy(BedrockParticle to)
+    {
+        to.age = this.age;
+        to.expireAge = this.expireAge;
+        to.expirationDelay = this.expirationDelay;
+        to.realisticCollisionDrag = this.realisticCollisionDrag;
+        to.collisionTime = (Vector3f) this.collisionTime.clone();
+        to.entityCollisionTime = new HashMap<>();
+
+        for(Map.Entry<Entity, Vector3f> entry : this.entityCollisionTime.entrySet())
+        {
+            to.entityCollisionTime.put(entry.getKey(), (Vector3f) entry.getValue().clone());
+        }
+
+        to.bounces = this.bounces;
+        to.firstCollision = this.firstCollision;
+        to.offset = (Vector3d) this.offset.clone();
+        to.position = (Vector3d) this.position.clone();
+        to.initialPosition = (Vector3d) this.initialPosition.clone();
+        to.prevPosition = (Vector3d) this.prevPosition.clone();
+        to.matrix = (Matrix3f) this.matrix.clone();
+        to.matrixSet = this.matrixSet;
+        to.speed = (Vector3f) this.speed.clone();
+        to.acceleration = (Vector3f) this.acceleration.clone();
+        to.accelerationFactor = (Vector3f) this.accelerationFactor.clone();
+        to.dragFactor = this.dragFactor;
+        to.global = (Vector3d) this.global.clone();
+
+        return to;
     }
 
     public double getDistanceSq(BedrockEmitter emitter)
@@ -272,7 +322,7 @@ public class BedrockParticle
             this.position.y += speed0.y / 20F;
             this.position.z += speed0.z / 20F;
 
-            if(!this.morph.isEmpty())
+            if (!this.morph.isEmpty())
             {
                 EntityLivingBase dummy = this.getDummy(emitter);
 

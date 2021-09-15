@@ -9,7 +9,6 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsMenu;
 import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import net.minecraft.client.Minecraft;
 
@@ -17,7 +16,6 @@ public class GuiSnowstormParticleMorphSection extends GuiSnowstormComponentSecti
 {
     public GuiToggleElement enabled;
     public GuiToggleElement renderTexture;
-    public GuiCreativeMorphsMenu morphs;
     public GuiNestedEdit pickMorph;
 
     public GuiSnowstormParticleMorphSection(Minecraft mc, GuiSnowstorm parent)
@@ -37,8 +35,6 @@ public class GuiSnowstormParticleMorphSection extends GuiSnowstormComponentSecti
 
             this.parent.dirty();
         });
-
-        this.morphs = new GuiCreativeMorphsMenu(mc, this::setMorph);
 
         this.pickMorph = new GuiNestedEdit(mc, (editing) ->
         {

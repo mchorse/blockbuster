@@ -111,9 +111,9 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentAppeara
     {
         boolean tmpLit = false;
 
-        if (!particle.collisionTexture)
+        if (!particle.isCollisionTexture(emitter))
         {
-            if (particle.collisionTinting)
+            if (particle.isCollisionTinting(emitter))
             {
                 tmpLit = emitter.lit;
                 emitter.lit = this.lit;
@@ -123,7 +123,7 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentAppeara
 
             return; //when texture and tinting is false - this render method should not be used
         }
-        else if (!particle.collisionTinting)
+        else if (!particle.isCollisionTinting(emitter))
         {
             //tinting false doesn't necessarily mean that lit was not passed - emitter.lit should be used
             tmpLit = this.lit;
@@ -214,7 +214,7 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentAppeara
         builder.pos(this.vertices[2].x, this.vertices[2].y, this.vertices[2].z).tex(u2, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
         builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(u1, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
 
-        if (!particle.collisionTinting)
+        if (!particle.isCollisionTinting(emitter))
         {
             this.lit = tmpLit;
         }

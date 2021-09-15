@@ -594,7 +594,7 @@ blockbuster.gui:
             appearance:
                 title: Texture on colllision
             lighting:
-                title: Lighting on collision
+                title: Color and lighting on collision
 
     record_morph:
         random_skip: Random Skip

@@ -5,8 +5,10 @@ import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.*;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceBillboard;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
+import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionTinting;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentParticleMorph;
 import mchorse.blockbuster.client.particles.components.meta.BedrockComponentInitialization;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.math.IValue;
@@ -126,7 +128,7 @@ public class BedrockEmitter
         return (this.age + partialTicks) / 20.0;
     }
 
-    public boolean morphParticle()
+    public boolean isMorphParticle()
     {
         BedrockComponentParticleMorph morphComponent = this.scheme.getOrCreate(BedrockComponentParticleMorph.class);
 
@@ -402,6 +404,7 @@ public class BedrockEmitter
             Vector3f vec = new Vector3f(particle.position);
 
             particle.matrix.transform(vec);
+
             particle.position.x = vec.x;
             particle.position.y = vec.y;
             particle.position.z = vec.z;
@@ -436,7 +439,7 @@ public class BedrockEmitter
         List<IComponentParticleRender> listParticle = this.scheme.getComponents(IComponentParticleRender.class);
         List<IComponentParticleMorphRender> listMorph = this.scheme.getComponents(IComponentParticleMorphRender.class);
 
-        if (!listParticle.isEmpty() && !this.morphParticle())
+        if (!listParticle.isEmpty() && !this.isMorphParticle())
         {
             GifTexture.bindTexture(this.scheme.texture);
 
@@ -461,7 +464,7 @@ public class BedrockEmitter
             GlStateManager.disableBlend();
             GlStateManager.enableCull();
         }
-        else if (!listMorph.isEmpty() && this.morphParticle())
+        else if (!listMorph.isEmpty() && this.isMorphParticle())
         {
             if (this.guiParticle == null || this.guiParticle.dead)
             {
@@ -497,7 +500,7 @@ public class BedrockEmitter
         List<IComponentParticleMorphRender> morphRenders = this.scheme.particleMorphRender;
 
         /* particle rendering */
-        if (!this.morphParticle() || particleMorphComponent.renderTexture)
+        if (!this.isMorphParticle() || particleMorphComponent.renderTexture)
         {
             this.setupOpenGL(partialTicks);
 
@@ -530,7 +533,7 @@ public class BedrockEmitter
         }
 
         /* Morph rendering */
-        if (this.morphParticle())
+        if (this.isMorphParticle())
         {
             for (IComponentParticleMorphRender component : morphRenders)
             {
@@ -570,7 +573,7 @@ public class BedrockEmitter
             GlStateManager.enableBlend();
             GlStateManager.enableAlpha();
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-            GlStateManager.alphaFunc(516, 0.003921569F);
+            GlStateManager.alphaFunc(GL11.GL_GREATER, 0F);
 
             BufferBuilder builder = Tessellator.getInstance().getBuffer();
 
@@ -666,9 +669,12 @@ public class BedrockEmitter
 
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
 
+        BedrockComponentCollisionAppearance collisionAppearanceComponent = this.scheme.get(BedrockComponentCollisionAppearance.class);
+        BedrockComponentCollisionTinting collisionTintingComponent = this.scheme.get(BedrockComponentCollisionTinting.class);
+
         for (BedrockParticle particle : this.particles)
         {
-            boolean collisionStuff = particle.collisionTexture || particle.collisionTinting;
+            boolean collisionStuff = particle.isCollisionTexture(this) || particle.isCollisionTinting(this);
 
             if (collisionStuff != collided)
             {

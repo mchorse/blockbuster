@@ -66,7 +66,10 @@ public class BedrockComponentCollisionTinting extends BedrockComponentBase imple
     @Override
     public void render(BedrockEmitter emitter, BedrockParticle particle, BufferBuilder builder, float partialTicks)
     {
-        if (particle.collisionTinting) this.renderOnScreen(particle, 0, 0, 0, 0);
+        if (particle.isCollisionTinting(emitter))
+        {
+            this.renderOnScreen(particle, 0, 0, 0, 0);
+        }
     }
 
     @Override

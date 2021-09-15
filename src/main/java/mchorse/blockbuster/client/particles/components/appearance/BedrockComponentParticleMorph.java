@@ -112,9 +112,9 @@ public class BedrockComponentParticleMorph extends BedrockComponentBase implemen
             z -= Interpolations.lerp(camera.prevPosZ, camera.posZ, partialTicks);
         }
 
-        int light = emitter.getBrightnessForRender(partialTicks, x, y, z);
-        int brightnessX = light >> 16 & 65535;
-        int brightnessY = light & 65535;
+        int combinedBrightness  = dummy.getBrightnessForRender();
+        int brightnessX = combinedBrightness % 65536;
+        int brightnessY = combinedBrightness / 65536;
 
         GlStateManager.color(1, 1, 1, 1);
         RenderHelper.enableStandardItemLighting();
@@ -196,11 +196,11 @@ public class BedrockComponentParticleMorph extends BedrockComponentBase implemen
 
     @Override
     public void preRender(BedrockEmitter emitter, float partialTicks)
-    { }
+    {}
 
     @Override
     public void postRender(BedrockEmitter emitter, float partialTicks)
-    { }
+    {}
 
     @Override
     public int getSortingIndex()

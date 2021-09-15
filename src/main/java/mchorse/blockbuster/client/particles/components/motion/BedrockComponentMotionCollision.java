@@ -15,6 +15,7 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.blockbuster.utils.EntityTransformationUtils;
 import mchorse.mclib.math.Operation;
 import mchorse.mclib.utils.MathUtils;
+import mchorse.metamorph.api.MorphUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -402,17 +403,8 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
     public void collision(BedrockParticle particle, BedrockEmitter emitter, Vector3d prev)
     {
-        if (MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionTinting.class).enabled))
-        {
-            particle.collisionTinting = true;
-            particle.firstCollision = particle.age;
-        }
-
-        if (MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionAppearance.class).enabled))
-        {
-            particle.collisionTexture = true;
-            particle.firstCollision = particle.age;
-        }
+        particle.collided = true;
+        particle.firstCollision = particle.age;
 
         if (this.expireOnImpact)
         {
@@ -508,19 +500,19 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
             /* random bounciness */
             if (this.randomBounciness != 0 /* && Math.round(particle.speed.x) != 0 */)
             {
-                particle.speed = randomBounciness(particle.speed, component, this.randomBounciness);
+                particle.speed = this.randomBounciness(particle.speed, component, this.randomBounciness);
             }
 
             /* split particles */
             if (this.splitParticleCount != 0)
             {
-                splitParticle(particle, emitter, component, now, prev);
+                this.splitParticle(particle, emitter, component, now, prev);
             }
 
             /* damping */
             if (damp != 0)
             {
-                particle.speed = damping(particle.speed);
+                particle.speed = this.damping(particle.speed);
             }
         }
 
@@ -616,45 +608,37 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 
     public void splitParticle(BedrockParticle particle, BedrockEmitter emitter, EnumFacing.Axis component, Vector3d now, Vector3d prev)
     {
+        float speed = getComponent(particle.speed, component);
+
+        if (!(Math.abs(speed) > Math.abs(this.splitParticleSpeedThreshold)))
+        {
+            return;
+        }
+
         for (int i = 0; i < this.splitParticleCount; i++)
         {
             BedrockParticle splitParticle = emitter.createParticle(false);
-            splitParticle.initialPosition.set(particle.initialPosition);
-            splitParticle.collisionTime.set(particle.collisionTime);
+
+            particle.softCopy(splitParticle);
+
             splitParticle.position.set(now);
             splitParticle.prevPosition.set(prev);
+            splitParticle.morph.setDirect(MorphUtils.copy(particle.morph.get()));
 
-            splitParticle.acceleration.set(particle.acceleration);
-            splitParticle.accelerationFactor.set(particle.accelerationFactor);
-            splitParticle.drag = particle.drag;
-            splitParticle.dragFactor = particle.dragFactor;
-            splitParticle.collisionTexture = particle.collisionTexture;
-            splitParticle.collisionTinting = particle.collisionTinting;
-            splitParticle.expirationDelay = particle.expirationDelay;
-            splitParticle.expireAge = particle.expireAge;
-            splitParticle.firstCollision = particle.firstCollision;
-            splitParticle.realisticCollisionDrag = particle.realisticCollisionDrag;
+            splitParticle.bounces = 1;
 
-            splitParticle.age = particle.age;
-
-            float speed = getComponent(particle.speed, component);
             double splitPosition = getComponent(splitParticle.position, component);
-
-            if (!(Math.abs(speed) > Math.abs(this.splitParticleSpeedThreshold)))
-            {
-                return;
-            }
 
             setComponent(splitParticle.collisionTime, component, particle.age);
             setComponent(splitParticle.position, component, splitPosition/* + ((orig < offset) ? this.radius : -this.radius)*/);
 
-            Vector3f randomSpeed = randomBounciness(particle.speed, component, (this.randomBounciness != 0) ? this.randomBounciness : 10);
+            Vector3f randomSpeed = this.randomBounciness(particle.speed, component, (this.randomBounciness != 0) ? this.randomBounciness : 10);
             randomSpeed.scale(1.0f / this.splitParticleCount);
             splitParticle.speed.set(randomSpeed);
 
             if (this.damp != 0)
             {
-                splitParticle.speed = damping(splitParticle.speed);
+                splitParticle.speed = this.damping(splitParticle.speed);
             }
 
             emitter.splitParticles.add(splitParticle);
