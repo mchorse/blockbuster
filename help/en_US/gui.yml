@@ -606,6 +606,9 @@ blockbuster.gui:
             title: Type
         hidden: Hide pointer
 
+        aperture_tracker:
+            combine_tracking: Combine the tracking data of two trackers with the same name. Use it when you have trackers with the same name appearing in different morphs but not simultaneously.
+
     texture:
         title: Texture manager
         subtitle: This GUI allows you to view and manage textures loaded by Minecraft during runtime

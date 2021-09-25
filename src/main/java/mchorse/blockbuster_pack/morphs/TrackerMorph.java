@@ -6,6 +6,7 @@ import javax.vecmath.Matrix4f;
 
 import com.google.common.base.Objects;
 
+import mchorse.blockbuster_pack.trackers.ApertureTracker;
 import mchorse.blockbuster_pack.trackers.BaseTracker;
 import mchorse.blockbuster_pack.trackers.TrackerRegistry;
 import mchorse.mclib.client.Draw;
@@ -160,6 +161,19 @@ public class TrackerMorph extends AbstractMorph
 
             this.hidden = morph.hidden;
         }
+    }
+
+    @Override
+    public boolean canMerge(AbstractMorph morph)
+    {
+        if (morph instanceof TrackerMorph)
+        {
+            this.mergeBasic(morph);
+
+            return this.tracker.canMerge(morph);
+        }
+
+        return super.canMerge(morph);
     }
 
     @Override

@@ -3,6 +3,7 @@ package mchorse.blockbuster_pack.trackers;
 import java.util.Objects;
 
 import mchorse.mclib.network.INBTSerializable;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -56,6 +57,8 @@ public abstract class BaseTracker implements INBTSerializable
 
         return super.equals(obj);
     }
+
+    public abstract boolean canMerge(AbstractMorph morph);
 
     @Override
     public void fromNBT(NBTTagCompound tag)

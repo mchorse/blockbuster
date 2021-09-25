@@ -30,6 +30,8 @@ import mchorse.blockbuster.recording.scene.SceneManager;
 import mchorse.blockbuster.utils.mclib.BlockbusterResourceTransformer;
 import mchorse.blockbuster_pack.BlockbusterFactory;
 import mchorse.blockbuster_pack.MetamorphHandler;
+import mchorse.blockbuster_pack.trackers.ApertureTracker;
+import mchorse.blockbuster_pack.trackers.TrackerRegistry;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.MorphManager;
 import net.minecraft.block.Block;
@@ -161,6 +163,9 @@ public class CommonProxy
 
         MorphManager.INSTANCE.factories.add(this.factory);
         RLUtils.register(new BlockbusterResourceTransformer());
+
+        /* Trackers */
+        TrackerRegistry.registerTracker("aperture", ApertureTracker.class);
     }
 
     /**
