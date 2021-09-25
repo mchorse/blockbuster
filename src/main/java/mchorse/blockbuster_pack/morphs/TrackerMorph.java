@@ -31,7 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TrackerMorph extends AbstractMorph
 {
-    public BaseTracker tracker = null;
+    public BaseTracker tracker = new ApertureTracker();
 
     public boolean hidden = false;
 
