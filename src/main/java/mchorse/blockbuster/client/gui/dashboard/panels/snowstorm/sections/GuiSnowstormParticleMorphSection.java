@@ -49,6 +49,8 @@ public class GuiSnowstormParticleMorphSection extends GuiSnowstormComponentSecti
     public void setMorph(AbstractMorph morph)
     {
         this.component.morph.set(morph);
+
+        this.pickMorph.setMorph(morph);
     }
 
     @Override
@@ -85,5 +87,6 @@ public class GuiSnowstormParticleMorphSection extends GuiSnowstormComponentSecti
     {
         this.enabled.toggled(this.component.enabled);
         this.renderTexture.toggled(this.component.renderTexture);
+        this.pickMorph.setMorph(this.component.morph.get());
     }
 }

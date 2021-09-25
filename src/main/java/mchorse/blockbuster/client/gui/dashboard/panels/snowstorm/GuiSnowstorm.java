@@ -322,7 +322,7 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
             this.particles.list.setCurrent(current);
         }
 
-        ClientProxy.panels.picker(((GuiSnowstormParticleMorphSection)this.sections.get(1))::setMorph);
+        ClientProxy.panels.picker(this.particleMorphSection::setMorph);
     }
 
     @Override
