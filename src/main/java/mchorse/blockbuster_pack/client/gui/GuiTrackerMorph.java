@@ -80,7 +80,7 @@ public class GuiTrackerMorph extends GuiAbstractMorph<TrackerMorph>
                 this.type.addLabel(IKey.lang("blockbuster.gui.tracker_morph.type." + tracker));
             }
 
-            this.type.addLabel(IKey.EMPTY);
+            //this.type.addLabel(IKey.EMPTY);
 
             this.hidden = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.tracker_morph.hidden"), element ->
             {

@@ -165,7 +165,7 @@ public class CommonProxy
         RLUtils.register(new BlockbusterResourceTransformer());
 
         /* Trackers */
-        TrackerRegistry.registerTracker("aperture", ApertureTracker.class);
+        TrackerRegistry.registerTracker("aperture_tracker", ApertureTracker.class);
     }
 
     /**

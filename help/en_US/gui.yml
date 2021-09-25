@@ -604,10 +604,12 @@ blockbuster.gui:
             title: Name
         type:
             title: Type
+            aperture_tracker: Aperture Morph tracker
         hidden: Hide pointer
 
         aperture_tracker:
-            combine_tracking: Combine the tracking data of two trackers with the same name. Use it when you have trackers with the same name appearing in different morphs but not simultaneously.
+            combine_tracking: Combine different trackers
+            combine_tracking_tooltip: Combine the tracking data of multiple trackers with the same name. Use it when you have trackers with the same name appearing in different morphs but not simultaneously.
 
     texture:
         title: Texture manager
