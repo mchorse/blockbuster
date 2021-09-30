@@ -170,6 +170,8 @@ public class TrackerMorph extends AbstractMorph
         {
             this.mergeBasic(morph);
 
+            this.hidden = ((TrackerMorph) morph).hidden;
+
             return this.tracker.canMerge(morph);
         }
 
@@ -227,7 +229,7 @@ public class TrackerMorph extends AbstractMorph
 
         if (tag.hasKey("Hidden", NBT.TAG_BYTE))
         {
-            this.hidden = tag.getBoolean("hidden");
+            this.hidden = tag.getBoolean("Hidden");
         }
     }
 
@@ -247,7 +249,7 @@ public class TrackerMorph extends AbstractMorph
 
         if (this.hidden)
         {
-            tag.setBoolean("hidden", this.hidden);
+            tag.setBoolean("Hidden", this.hidden);
         }
     }
 

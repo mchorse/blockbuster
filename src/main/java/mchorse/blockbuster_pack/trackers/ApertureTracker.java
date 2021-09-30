@@ -18,7 +18,7 @@ public class ApertureTracker extends BaseTracker
     @Override
     public void track(EntityLivingBase target, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        if(!ReflectionUtils.isOptifineShadowPass())
+        if(!ReflectionUtils.isOptifineShadowPass() && !this.name.equals(""))
         {
             if (MinemaIntegration.isRecording() && this.trackingPacket == null)
             {
@@ -50,6 +50,8 @@ public class ApertureTracker extends BaseTracker
     {
         TrackerMorph trackerMorph = (TrackerMorph) morph;
 
+        this.combineTracking = ((ApertureTracker) trackerMorph.tracker).combineTracking;
+
         return trackerMorph.tracker.name.equals(this.name);
     }
 
@@ -73,7 +75,7 @@ public class ApertureTracker extends BaseTracker
     {
         super.fromNBT(tag);
 
-        this.combineTracking = tag.getBoolean("combine_tracking");
+        this.combineTracking = tag.getBoolean("CombineTracking");
     }
 
     @Override
@@ -81,7 +83,7 @@ public class ApertureTracker extends BaseTracker
     {
         super.toNBT(tag);
 
-        tag.setBoolean("combine_tracking", this.combineTracking);
+        tag.setBoolean("CombineTracking", this.combineTracking);
 
         return tag;
     }
