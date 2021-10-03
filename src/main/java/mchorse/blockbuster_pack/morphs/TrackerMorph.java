@@ -172,7 +172,10 @@ public class TrackerMorph extends AbstractMorph
 
             this.hidden = ((TrackerMorph) morph).hidden;
 
-            return this.tracker.canMerge(morph);
+            if (this.tracker != null)
+            {
+                return this.tracker.canMerge(morph);
+            }
         }
 
         return super.canMerge(morph);
