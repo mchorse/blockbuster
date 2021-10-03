@@ -273,7 +273,7 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
         {
             GuiPromptModal modal = new GuiPromptModal(this.mc, IKey.lang("blockbuster.gui.texture.replace_modal"), this::replace);
 
-            modal.text.field.setMaxStringLength(2000);
+            modal.text.field.setLength(2000);
             modal.setValue(this.rl.toString());
             modal.flex().relative(this.area).set(10, 50, 0, 0).w(1, -30 - 128).h(1, -60);
 
