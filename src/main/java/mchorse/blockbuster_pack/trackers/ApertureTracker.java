@@ -50,9 +50,14 @@ public class ApertureTracker extends BaseTracker
     {
         TrackerMorph trackerMorph = (TrackerMorph) morph;
 
-        this.combineTracking = ((ApertureTracker) trackerMorph.tracker).combineTracking;
+        if (trackerMorph.tracker != null)
+        {
+            this.combineTracking = ((ApertureTracker) trackerMorph.tracker).combineTracking;
 
-        return trackerMorph.tracker.name.equals(this.name);
+            return trackerMorph.tracker.name.equals(this.name);
+        }
+
+        return false;
     }
 
     @Override
