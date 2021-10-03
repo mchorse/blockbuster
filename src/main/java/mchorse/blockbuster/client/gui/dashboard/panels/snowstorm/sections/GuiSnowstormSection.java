@@ -59,7 +59,7 @@ public abstract class GuiSnowstormSection extends GuiElement
         {
             MolangExpression expression = this.scheme.parser.parseExpression(string);
 
-            element.field.setColor(0xffffff);
+            element.field.setTextColor(0xffffff);
             this.parent.dirty();
 
             return expression;
@@ -67,14 +67,14 @@ public abstract class GuiSnowstormSection extends GuiElement
         catch (Exception e)
         {}
 
-        element.field.setColor(0xff2244);
+        element.field.setTextColor(0xff2244);
 
         return old;
     }
 
     public void set(GuiTextElement element, MolangExpression expression)
     {
-        element.field.setColor(0xffffff);
+        element.field.setTextColor(0xffffff);
         element.setText(expression.toString());
     }
 
