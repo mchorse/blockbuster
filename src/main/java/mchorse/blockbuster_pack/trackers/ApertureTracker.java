@@ -27,7 +27,9 @@ public class ApertureTracker extends BaseTracker
                 if (GuiMinemaPanel.trackingExporter.addTracker(packet))
                 {
                     this.trackingPacket = packet;
-                    this.name = packet.getName();
+
+                    //dont rename - when actors are present it can result in canMerge not being called before render
+                    //this.name = packet.getName();
                 }
             }
             else if (!MinemaIntegration.isRecording() && this.trackingPacket != null)
@@ -58,6 +60,19 @@ public class ApertureTracker extends BaseTracker
         }
 
         return false;
+    }
+
+    @Override
+    public void copy(BaseTracker tracker)
+    {
+        if (tracker != null && tracker instanceof ApertureTracker)
+        {
+            ApertureTracker trackerAperture = (ApertureTracker) tracker;
+
+            this.combineTracking = trackerAperture.combineTracking;
+        }
+
+        super.copy(tracker);
     }
 
     @Override
