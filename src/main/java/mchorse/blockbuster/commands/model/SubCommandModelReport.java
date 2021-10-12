@@ -83,7 +83,7 @@ public class SubCommandModelReport extends BBCommandBase
 
             if (!isModel && (obj || name.equals("model.json") || vox))
             {
-                IModelLazyLoader loader = Blockbuster.proxy.pack.models.get(prefix.substring(1));
+                IModelLazyLoader loader = Blockbuster.proxy.pack.models.get(prefix);
 
                 if (loader instanceof ModelLazyLoaderOBJ && obj)
                 {
@@ -104,7 +104,7 @@ public class SubCommandModelReport extends BBCommandBase
 
             if (name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".gif"))
             {
-                ResourceLocation location = RLUtils.create("b.a:" + prefix.substring(1) + "/" + name);
+                ResourceLocation location = RLUtils.create("b.a:" + (prefix.isEmpty() ? "" : prefix + "/") + name);
                 ITextureObject texture = Minecraft.getMinecraft().renderEngine.getTexture(location);
 
                 if (texture == TextureUtil.MISSING_TEXTURE)
@@ -133,7 +133,7 @@ public class SubCommandModelReport extends BBCommandBase
             output.append(indent);
             output.append(file.getName());
             output.append("/\n");
-            this.processRecursively(output, root, file, prefix + "/" + file.getName(), indent + "    ", isModel);
+            this.processRecursively(output, root, file, prefix.isEmpty() ? file.getName() : prefix + "/" + file.getName(), indent + "    ", isModel);
         }
     }
 }
