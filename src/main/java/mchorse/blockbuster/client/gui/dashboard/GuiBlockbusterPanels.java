@@ -58,6 +58,8 @@ public class GuiBlockbusterPanels
             return;
         }
 
+        parent.add(this.morphs);
+
         this.morphs.reload();
         this.morphs.flex().reset().relative(parent).wh(1F, 1F);
         this.morphs.resize();
@@ -67,8 +69,6 @@ public class GuiBlockbusterPanels
         {
             this.morphs.enterEditMorph();
         }
-
-        parent.add(this.morphs);
     }
 
     public GuiImmersiveEditor showImmersiveEditor(boolean editing, AbstractMorph morph)

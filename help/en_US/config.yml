@@ -103,6 +103,7 @@ blockbuster.config:
 
     immersive_editor:
         title: Immersive editor
+        tooltip: Options for immersive editor
 
         model_block: Model block
         record_editor: Record editor
