@@ -8,6 +8,7 @@ import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MatrixUtils;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -154,7 +155,7 @@ public class SnowstormMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase target, double x, double y, double z, float yaw, float partialTicks)
     {
-        if (GuiModelRenderer.isRendering())
+        if (GuiModelRenderer.isRendering() || MorphUtils.isRenderingOnScreen)
         {
             return;
         }

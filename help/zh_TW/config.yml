@@ -100,6 +100,7 @@ blockbuster.config:
 
     immersive_editor:
         title: 沉浸式編輯器
+        tooltip: 沉浸式編輯器開關
 
         model_block: 模型方塊
         record_editor: 回放編輯器
