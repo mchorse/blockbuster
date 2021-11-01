@@ -15,7 +15,7 @@ blockbuster:
             clean: "{r}This command cleans given {7}<property>{r} in {7}<filename>{r} player recording from {7}[from]{r} tick to {7}[to]{r} (not including {7}[to]{r}) tick to the value specified either in {7}[value]{r} argument (it accepts relative values) or the value at frame {7}[from]{r} or the first frame."
             create: "{r}This command creates a player recording named {7}<filename>{r} with {7}<duration>{r} frames. {7}[x]{r}, {7}[y]{r}, {7}[z]{r}, {7}[yaw]{r}, and {7}[pitch]{r} can be optionally specified to override current sender's position and rotation (relative {7}~{r} values are supported)."
             cut: "{r}This command removes all actions in player recording {7}<filename>{r} before {7}<before>{r} and after {7}<after>{r} (pre and post delays shouldn't be taken into account giving {7}<from>{r} and {7}<to>{r} arguments)."
-            dupe: "{r}This command duplicates given {7}<filename>{r} player recording to a new player recording file with given {7}<new_filename>{r}."
+            dupe: "{r}This command duplicates given {7}<filename>{r} player recording to a new player recording file with given {7}<new_filename>{r}. {7}[overwrite]{r} is {7}false{r} by default, specify {7}true{r} if you want to overwrite an existing recording"
             erase: "{r}This command removes {7}<count>{r} actions in player recording {7}<filename>{r} starting at tick {7}<from>{r}."
             fade: "{r}This command fades out {7}<filename>{r} player recording to the first frame using linear interpolation that fades {7}<fade_out>{r} ticks."
             fill: "{r}This command inserts {7}<count>{f} frames at {7}[tick]{f} in {7}<filename>{r} player recording. If {7}[tick]{r} is not provided, it would use the length of given player recording."
@@ -35,9 +35,11 @@ blockbuster:
                     {7}factor{r} - how far into the processing the expression between {7}from{r} and {7}to{r} is (0..1), the formula for it is basically {7}(tick - from) / (to - from){r}
 
             prolong: "{r}This command allows to specify a pre and post delay for given {7}<filename>{r} player recording."
-            remove: "{r}Removes all actions on {7}<tick>{r} in player recording by {7}<filename>{r}. If you'll specify {7}[index]{r}, command will remove only one action in {7}<tick>{r} at {7}[index]{r}."
+            remove: "{r}Removes all actions on {7}<tick>{r} in player recording by {7}<filename>{r}. If you'll specify {7}[index]{r}, command will remove only one action in {7}<tick>{r} at {7}[index]{r}. {7}[index]{r} of -1 deletes all actions in {7}<tick>{r}. If you specify {7}[force]{r} as true, you'll skip confirmation process."
             remove_modal: "Are you sure you want to remove the actions at the given tick?"
-            delete: "{r}Deletes the recording file by {7}<filename>{r}."
+            remove_all: "{r}Removes all actions in player recording by {7}<filename>{r}"
+            remove_all_modal: "Are you sure you want to remove all actions in the recording \"%s\"?"
+            delete: "{r}Deletes the recording file by {7}<filename>{r}. If you specify {7}[force]{r} as true, you'll skip confirmation process."
             delete_modal: "Are you sure you want to delete the \"%s\" recording file?"
             remove_body_yaw: "{r}Removes body yaw properties from given player recording."
             rename: "{r}This command renames given {7}<filename>{r} player recording to a new name {7}<new_filename>{r}. It also renames past versions of the {7}<filename>{r} player recording, if there are any."

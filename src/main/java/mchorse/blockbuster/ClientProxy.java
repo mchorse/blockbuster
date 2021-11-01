@@ -26,9 +26,12 @@ import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.recording.capturing.FrameHandler;
 import mchorse.blockbuster.utils.mclib.BlockbusterJarTree;
 import mchorse.blockbuster.utils.mclib.BlockbusterTree;
+import mchorse.blockbuster_pack.client.gui.trackers.GuiApertureTracker;
 import mchorse.blockbuster_pack.client.render.RenderCustomActor;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.blockbuster_pack.morphs.structure.StructureRenderer;
+import mchorse.blockbuster_pack.trackers.ApertureTracker;
+import mchorse.blockbuster_pack.trackers.TrackerRegistry;
 import mchorse.mclib.McLib;
 import mchorse.mclib.utils.files.FileTree;
 import mchorse.mclib.utils.files.GlobalTree;
@@ -228,6 +231,10 @@ public class ClientProxy extends CommonProxy
                 StructureMorph.reloadStructures();
             }
         });
+
+        /* Tracker editors */
+        TrackerRegistry.CLIENT = new HashMap<>();
+        TrackerRegistry.CLIENT.put(ApertureTracker.class, new GuiApertureTracker(mc));
     }
 
     protected void registerItemModel(Block block, String path)

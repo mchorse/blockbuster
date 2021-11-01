@@ -38,8 +38,8 @@ import mchorse.blockbuster.client.particles.components.shape.BedrockComponentSha
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapeEntityAABB;
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapePoint;
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapeSphere;
-import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.mclib.math.Operation;
+import mchorse.mclib.math.molang.MolangException;
 import mchorse.mclib.utils.resources.RLUtils;
 
 import java.lang.reflect.Type;

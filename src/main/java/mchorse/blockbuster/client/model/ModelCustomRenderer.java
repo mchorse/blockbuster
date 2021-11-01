@@ -1,30 +1,12 @@
 package mchorse.blockbuster.client.model;
 
-import javax.vecmath.Matrix3d;
-import javax.vecmath.Matrix3f;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4d;
-import javax.vecmath.Vector4f;
-
-import mchorse.mclib.utils.Color;
-import mchorse.mclib.utils.ColorUtils;
-import mchorse.mclib.utils.MatrixUtils;
-import mchorse.metamorph.bodypart.BodyPart;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
-
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.OrientedBB;
 import mchorse.mclib.utils.MatrixUtils;
-import net.minecraft.client.model.ModelBase;
+import mchorse.metamorph.bodypart.BodyPart;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
@@ -34,6 +16,10 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+
+import javax.vecmath.Matrix3f;
+import javax.vecmath.Vector3f;
 
 /**
  * Custom model renderer class
@@ -70,6 +56,9 @@ public class ModelCustomRenderer extends ModelRenderer
     /* Stencil magic */
     public int stencilIndex = -1;
     public boolean stencilRendering = false;
+
+    public Vector3f min;
+    public Vector3f max;
 
     public ModelCustomRenderer(ModelCustom model, int texOffX, int texOffY)
     {

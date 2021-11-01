@@ -13,7 +13,7 @@ public class GuiTwoElement extends GuiElement
     public GuiTrackpadElement b;
     public Double[] array;
 
-    public GuiTwoElement(Minecraft mc, Consumer<Double[]> a)
+    public GuiTwoElement(Minecraft mc, Consumer<Double[]> callback)
     {
         super(mc);
 
@@ -21,12 +21,20 @@ public class GuiTwoElement extends GuiElement
         this.a = new GuiTrackpadElement(mc, (value) ->
         {
             this.array[0] = value;
-            a.accept(this.array);
+
+            if (callback != null)
+            {
+                callback.accept(this.array);
+            }
         });
         this.b = new GuiTrackpadElement(mc, (value) ->
         {
             this.array[1] = value;
-            a.accept(this.array);
+
+            if (callback != null)
+            {
+                callback.accept(this.array);
+            }
         });
 
         this.flex().h(20).row(5);
@@ -36,11 +44,13 @@ public class GuiTwoElement extends GuiElement
     public void setLimit(int min, int max)
     {
         this.a.limit(min, max);
+        this.b.limit(min, max);
     }
 
     public void setLimit(int min, int max, boolean integer)
     {
         this.a.limit(min, max, integer);
+        this.b.limit(min, max, integer);
     }
 
     public void setValues(double a, double b)

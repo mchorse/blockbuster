@@ -26,6 +26,7 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
+import mchorse.mclib.client.gui.framework.elements.modals.GuiPopUpModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
@@ -162,7 +163,8 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.id = new GuiTextElement(mc, 120, (str) ->
         {
             this.replay.id = str;
-            this.updateLabel();
+
+            this.updateLabel(true);
         }).filename();
         this.name = new GuiTextElement(mc, 80, (str) -> this.replay.name = str);
         this.name.tooltip(IKey.lang("blockbuster.gui.director.name_tooltip"), Direction.RIGHT);
@@ -438,7 +440,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.pickMorph.setMorph(this.replay.morph);
 
         this.selector.setCurrent(this.replay);
-        this.updateLabel();
+        this.updateLabel(false);
     }
 
     /**
@@ -510,11 +512,41 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.pickMorph.setMorph(morph);
     }
 
-    private void updateLabel()
+    /**
+     * update the labels
+     * @param gui true when this is called by a callback from a GuiElement
+     */
+    private void updateLabel(boolean gui)
     {
         boolean error = this.replay != null && this.replay.id.isEmpty();
 
         this.recordingId.color(error ? 0xff3355 : 0xcccccc);
+
+        if (this.replay != null && !this.replay.id.isEmpty() && gui)
+        {
+            boolean isDuplicate = false;
+
+            for (Replay element : this.scenes.parent.getLocation().getScene().replays)
+            {
+                if (element.id.equals(this.replay.id) && this.replay != element)
+                {
+                    isDuplicate = true;
+
+                    break;
+                }
+            }
+
+            if (isDuplicate)
+            {
+                GuiModal.addModal(this, () ->
+                {
+                    GuiPopUpModal modal = new GuiPopUpModal(this.mc, IKey.lang("blockbuster.gui.director.rename_replay_dupe_modal"));
+                    modal.flex().relative(this.parent).wh(220, 50);
+
+                    return modal;
+                });
+            }
+        }
     }
 
     /**

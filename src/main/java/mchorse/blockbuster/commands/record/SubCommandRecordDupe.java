@@ -5,6 +5,7 @@ import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Record;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -32,7 +33,7 @@ public class SubCommandRecordDupe extends SubCommandRecordBase
     @Override
     public String getSyntax()
     {
-        return "{l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}";
+        return "{l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename> [overwrite]{r}";
     }
 
     @Override
@@ -44,7 +45,9 @@ public class SubCommandRecordDupe extends SubCommandRecordBase
     @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        if (RecordUtils.isReplayExists(args[1]))
+        boolean overwrite = (args.length>2) ? CommandBase.parseBoolean(args[2]) : false;
+
+        if (RecordUtils.isReplayExists(args[1]) && !overwrite)
         {
             throw new CommandException("record.already_exists", args[1]);
         }

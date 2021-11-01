@@ -198,6 +198,7 @@ public class RenderingHandler
     public static void resetEmitters()
     {
         emitters.clear();
+        emitterIterator = emitters.listIterator();
     }
 
     /**

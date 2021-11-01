@@ -603,6 +603,14 @@ blockbuster.gui:
 
     structure_morph:
         lighting: 使用外部光照
+    
+    tracker_morph:
+        name: 追踪器
+        label:
+            title: 名称
+        type:
+            title: 类型
+        hidden: 隐藏追踪器标志
 
     texture:
         title: 材质管理器

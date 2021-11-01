@@ -46,7 +46,7 @@ public class SubCommandRecordRemove extends SubCommandRecordBase
     @Override
     public String getSyntax()
     {
-        return "{l}{6}/{r}record {8}remove{r} {7}<filename> <tick> [index]{r}";
+        return "{l}{6}/{r}record {8}remove{r} {7}<filename> <tick> [index] [force]{r}";
     }
 
     @Override
@@ -77,7 +77,10 @@ public class SubCommandRecordRemove extends SubCommandRecordBase
     {
         EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 
-        if (args.length > 2)
+        boolean force = (args.length>3) ? CommandBase.parseBoolean(args[3]) : false;
+
+        //index of -1 means to remove all actions
+        if (args.length > 2 && CommandBase.parseInt(args[2]) != -1)
         {
             int index = CommandBase.parseInt(args[2]);
             List<Action> actions = record.actions.get(tick);
@@ -87,12 +90,12 @@ public class SubCommandRecordRemove extends SubCommandRecordBase
                 throw new CommandException("record.already_empty", args[1], args[0]);
             }
 
-            if (index < 0 && index >= actions.size())
+            if (index < -1 || index >= actions.size())
             {
                 throw new CommandException("record.index_out_range", index, actions.size() - 1);
             }
 
-            dispatchConfirm(player, (value) ->
+            dispatchConfirm(player, force, (value) ->
             {
                 if (value)
                 {
@@ -110,7 +113,7 @@ public class SubCommandRecordRemove extends SubCommandRecordBase
         }
         else
         {
-            dispatchConfirm(player, (value) ->
+            dispatchConfirm(player, force, (value) ->
             {
                 if (value)
                 {
@@ -123,11 +126,18 @@ public class SubCommandRecordRemove extends SubCommandRecordBase
         record.dirty = true;
     }
 
-    private void dispatchConfirm(EntityPlayerMP player, Consumer<Boolean> callback)
+    private void dispatchConfirm(EntityPlayerMP player, boolean force, Consumer<Boolean> callback)
     {
-        Dispatcher.sendTo(new PacketConfirm(ClientHandlerConfirm.GUI.MCSCREEN, IKey.lang("blockbuster.commands.record.remove_modal"),(value) ->
+        if (force)
         {
-            callback.accept(value);
-        }), player);
+            callback.accept(force);
+        }
+        else
+        {
+            Dispatcher.sendTo(new PacketConfirm(ClientHandlerConfirm.GUI.MCSCREEN, IKey.lang("blockbuster.commands.record.remove_modal"),(value) ->
+            {
+                callback.accept(value);
+            }), player);
+        }
     }
 }

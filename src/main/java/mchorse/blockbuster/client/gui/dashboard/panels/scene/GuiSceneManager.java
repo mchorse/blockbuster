@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.scene;
 
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.PacketRequestScenes;
 import mchorse.blockbuster.network.common.scene.PacketSceneManage;
@@ -9,6 +10,7 @@ import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.blockbuster.recording.scene.SceneManager;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiConfirmModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
@@ -16,11 +18,13 @@ import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.config.values.ValueBoolean;
 import mchorse.mclib.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -99,6 +103,9 @@ public class GuiSceneManager extends GuiElement
 
         GuiModal.addFullModal(this, () ->
         {
+
+            GuiToggleElement dupeRecordings = new GuiToggleElement(this.mc, IKey.lang("blockbuster.gui.scenes.dupe_recordings"), null);
+
             GuiPromptModal modal = new GuiPromptModal(this.mc, IKey.lang("blockbuster.gui.scenes.dupe_modal"), (name) ->
             {
                 if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
@@ -108,7 +115,14 @@ public class GuiSceneManager extends GuiElement
                 scene.copy(this.parent.getLocation().getScene());
                 scene.setId(name);
                 scene.setupIds();
-                scene.renamePrefix(scene.getId(), (id) -> id + "_copy");
+                scene.renamePrefix(this.parent.getLocation().getScene().getId(), scene.getId(), (id) -> id + "_copy");
+
+                //copy recordings
+                if (dupeRecordings.isToggled())
+                {
+                    Dispatcher.sendToServer(new PacketSceneManage(this.parent.getLocation().getScene().getId(), name, PacketSceneManage.DUPE));
+                }
+
                 this.sceneList.add(name);
                 this.sceneList.sort();
                 this.sceneList.setCurrent(name);
@@ -116,6 +130,10 @@ public class GuiSceneManager extends GuiElement
                 this.parent.setScene(new SceneLocation(scene));
                 this.parent.close();
             });
+
+            dupeRecordings.tooltip(IKey.lang("blockbuster.gui.scenes.dupe_recordings_tooltip"));
+            dupeRecordings.flex().relative(modal.bar).y(-50).x(10).w(1F, -20);
+            modal.add(dupeRecordings);
 
             return modal.filename().setValue(this.parent.getLocation().getFilename());
         });

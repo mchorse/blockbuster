@@ -6,12 +6,12 @@ import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentEmitterInitialize;
 import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
-import mchorse.blockbuster.client.particles.molang.MolangException;
-import mchorse.blockbuster.client.particles.molang.MolangParser;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangAssignment;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangMultiStatement;
 import mchorse.mclib.math.IValue;
+import mchorse.mclib.math.molang.MolangException;
+import mchorse.mclib.math.molang.MolangParser;
+import mchorse.mclib.math.molang.expressions.MolangAssignment;
+import mchorse.mclib.math.molang.expressions.MolangExpression;
+import mchorse.mclib.math.molang.expressions.MolangMultiStatement;
 
 import java.util.Map;
 

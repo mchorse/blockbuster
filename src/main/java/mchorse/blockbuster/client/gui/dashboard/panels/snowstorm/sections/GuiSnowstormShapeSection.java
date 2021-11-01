@@ -9,7 +9,6 @@ import mchorse.blockbuster.client.particles.components.shape.BedrockComponentSha
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapePoint;
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapeSphere;
 import mchorse.blockbuster.client.particles.components.shape.ShapeDirection;
-import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -17,6 +16,7 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.math.molang.MolangParser;
 import net.minecraft.client.Minecraft;
 
 public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockComponentShapeBase>

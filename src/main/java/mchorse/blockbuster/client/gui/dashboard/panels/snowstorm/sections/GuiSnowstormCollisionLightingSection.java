@@ -2,14 +2,9 @@ package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockScheme;
-import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceLighting;
-import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceTinting;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionTinting;
 import mchorse.blockbuster.client.particles.components.appearance.Tint;
-import mchorse.blockbuster.client.particles.molang.MolangParser;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangValue;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -19,6 +14,9 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.math.Constant;
+import mchorse.mclib.math.molang.MolangParser;
+import mchorse.mclib.math.molang.expressions.MolangExpression;
+import mchorse.mclib.math.molang.expressions.MolangValue;
 import mchorse.mclib.utils.Color;
 import net.minecraft.client.Minecraft;
 

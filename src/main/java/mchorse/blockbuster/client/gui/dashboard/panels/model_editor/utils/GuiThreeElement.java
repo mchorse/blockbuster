@@ -10,15 +10,19 @@ public class GuiThreeElement extends GuiTwoElement
 {
     public GuiTrackpadElement c;
 
-    public GuiThreeElement(Minecraft mc, Consumer<Double[]> a)
+    public GuiThreeElement(Minecraft mc, Consumer<Double[]> callback)
     {
-        super(mc, a);
+        super(mc, callback);
 
         this.array = new Double[] {0D, 0D, 0D};
         this.c = new GuiTrackpadElement(mc, (value) ->
         {
             this.array[2] = value;
-            a.accept(this.array);
+
+            if (callback != null)
+            {
+                callback.accept(this.array);
+            }
         });
         this.add(this.c);
     }

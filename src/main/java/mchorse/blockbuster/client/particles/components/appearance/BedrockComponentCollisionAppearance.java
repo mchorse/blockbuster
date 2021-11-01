@@ -1,36 +1,25 @@
 package mchorse.blockbuster.client.particles.components.appearance;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import io.netty.handler.codec.json.JsonObjectDecoder;
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.particles.BedrockMaterial;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
-import mchorse.blockbuster.client.particles.molang.MolangException;
-import mchorse.blockbuster.client.particles.molang.MolangParser;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
-import mchorse.blockbuster.client.textures.GifTexture;
+import mchorse.mclib.math.molang.MolangException;
+import mchorse.mclib.math.molang.MolangParser;
+import mchorse.mclib.math.molang.expressions.MolangExpression;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
@@ -243,10 +232,14 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentAppeara
 
             if (this.stretchFPS)
             {
-                float lifetime = (particle.lifetime <= 0) ? 0 : (particle.age + partialTicks) / (particle.lifetime-particle.firstCollision);
+                float lifetime = (particle.lifetime <= 0) ? 0 : (particle.age + partialTicks) / (particle.lifetime - particle.firstIntersection);
+
                 //for collided particles with expiration - stretch differently since lifetime changed
-                //note to myself - it could be that the molang expression of the delay expiration is updated every tick and therefore changes constantly for one particle - this is bad
-                if (particle.expireAge!=0) lifetime = (particle.lifetime <= 0) ? 0 : (particle.age + partialTicks) / (particle.expirationDelay);
+                if (particle.getExpireAge() != -1)
+                {
+                    lifetime = (particle.lifetime <= 0) ? 0 : (particle.age + partialTicks) / (particle.getExpirationDelay());
+                }
+
                 index = (int) (lifetime * max);
             }
 

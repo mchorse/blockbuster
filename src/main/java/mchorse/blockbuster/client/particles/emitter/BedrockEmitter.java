@@ -8,11 +8,12 @@ import mchorse.blockbuster.client.particles.components.appearance.BedrockCompone
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionTinting;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentParticleMorph;
 import mchorse.blockbuster.client.particles.components.meta.BedrockComponentInitialization;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.math.IValue;
 import mchorse.mclib.math.Variable;
+import mchorse.mclib.math.molang.MolangParser;
+import mchorse.mclib.math.molang.expressions.MolangExpression;
 import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -513,14 +514,16 @@ public class BedrockEmitter
             {
                 this.depthSorting();
 
-                BedrockComponentCollisionAppearance collisionComponent = this.scheme.get(BedrockComponentCollisionAppearance.class);
+                BedrockComponentCollisionAppearance collisionAppearance = this.scheme.get(BedrockComponentCollisionAppearance.class);
+                BedrockComponentCollisionTinting collisionTinting = this.scheme.get(BedrockComponentCollisionTinting.class);
+                boolean collisionRendering = MolangExpression.isOne(collisionAppearance.enabled) || MolangExpression.isOne(collisionTinting.enabled);
 
                 this.renderParticles(this.scheme.texture, renders, false, partialTicks);
 
                 /* rendering the collided particles with an extra component */
-                if (collisionComponent != null && collisionComponent.texture != null)
+                if (collisionAppearance != null && collisionAppearance.texture != null)
                 {
-                    this.renderParticles(collisionComponent.texture, renders, true, partialTicks);
+                    this.renderParticles(collisionAppearance.texture, renders, true, partialTicks);
                 }
             }
 
@@ -559,6 +562,81 @@ public class BedrockEmitter
                 component.postRender(this, partialTicks);
             }
         }
+    }
+
+    /**
+     * This method renders the particles using morphs
+     * @param renderComponents
+     * @param collided
+     * @param partialTicks
+     */
+    private void renderParticles(List<? extends IComponentParticleMorphRender> renderComponents, boolean collided, float partialTicks)
+    {
+        BufferBuilder builder = Tessellator.getInstance().getBuffer();
+
+        for (BedrockParticle particle : this.particles)
+        {
+            /*boolean collisionStuff = particle.collisionTexture || particle.collisionTinting;
+
+            if (collisionStuff != collided)
+            {
+                continue;
+            }*/
+
+            this.setEmitterVariables(partialTicks);
+            this.setParticleVariables(particle, partialTicks);
+
+            for (IComponentRenderBase component : renderComponents)
+            {
+                /*if (!(collisionStuff && component.getClass() == BedrockComponentAppearanceBillboard.class))
+                {*/
+                component.render(this, particle, builder, partialTicks);
+                //}
+            }
+        }
+    }
+
+    /**
+     * This method renders the particles using the default bedrock billboards
+     * @param texture Ressource location of the texture to render
+     * @param renderComponents
+     * @param collided
+     * @param partialTicks
+     */
+    private void renderParticles(ResourceLocation texture, List<? extends IComponentParticleRender> renderComponents, boolean collided, float partialTicks)
+    {
+        BufferBuilder builder = Tessellator.getInstance().getBuffer();
+
+        GifTexture.bindTexture(texture, this.age, partialTicks);
+
+        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
+
+        for (BedrockParticle particle : this.particles)
+        {
+            boolean collisionStuff = particle.isCollisionTexture(this) || particle.isCollisionTinting(this);
+
+            if (collisionStuff != collided)
+            {
+                continue;
+            }
+
+            this.setEmitterVariables(partialTicks);
+            this.setParticleVariables(particle, partialTicks);
+
+            for (IComponentRenderBase component : renderComponents)
+            {
+                /* if collisionTexture or collisionTinting is true - means that those options are enabled
+                 * therefore the old Billboardappearance should not be called
+                 * because collisionAppearance.class is rendering
+                 */
+                if (!(collisionStuff && component.getClass() == BedrockComponentAppearanceBillboard.class))
+                {
+                    component.render(this, particle, builder, partialTicks);
+                }
+            }
+        }
+
+        Tessellator.getInstance().draw();
     }
 
     private void setupOpenGL(float partialTicks)
@@ -619,85 +697,6 @@ public class BedrockEmitter
                 return 0;
             });
         }
-    }
-
-
-    /**
-     * This method renders the particles using morphs
-     * @param renderComponents
-     * @param collided
-     * @param partialTicks
-     */
-    private void renderParticles(List<? extends IComponentParticleMorphRender> renderComponents, boolean collided, float partialTicks)
-    {
-        BufferBuilder builder = Tessellator.getInstance().getBuffer();
-
-        for (BedrockParticle particle : this.particles)
-        {
-            /*boolean collisionStuff = particle.collisionTexture || particle.collisionTinting;
-
-            if (collisionStuff != collided)
-            {
-                continue;
-            }*/
-
-            this.setEmitterVariables(partialTicks);
-            this.setParticleVariables(particle, partialTicks);
-
-            for (IComponentRenderBase component : renderComponents)
-            {
-                /*if (!(collisionStuff && component.getClass() == BedrockComponentAppearanceBillboard.class))
-                {*/
-                    component.render(this, particle, builder, partialTicks);
-                //}
-            }
-        }
-    }
-
-    /**
-     * This method renders the particles using the default bedrock billboards
-     * @param texture Ressource location of the texture to render
-     * @param renderComponents
-     * @param collided
-     * @param partialTicks
-     */
-    private void renderParticles(ResourceLocation texture, List<? extends IComponentParticleRender> renderComponents, boolean collided, float partialTicks)
-    {
-        BufferBuilder builder = Tessellator.getInstance().getBuffer();
-
-        GifTexture.bindTexture(texture, this.age, partialTicks);
-
-        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
-
-        BedrockComponentCollisionAppearance collisionAppearanceComponent = this.scheme.get(BedrockComponentCollisionAppearance.class);
-        BedrockComponentCollisionTinting collisionTintingComponent = this.scheme.get(BedrockComponentCollisionTinting.class);
-
-        for (BedrockParticle particle : this.particles)
-        {
-            boolean collisionStuff = particle.isCollisionTexture(this) || particle.isCollisionTinting(this);
-
-            if (collisionStuff != collided)
-            {
-                continue;
-            }
-
-            this.setEmitterVariables(partialTicks);
-            this.setParticleVariables(particle, partialTicks);
-
-            for (IComponentRenderBase component : renderComponents)
-            {
-                /* if collisionTexture or collisionTinting is true - means that those options are enabled
-                 * therefore the old Billboardappearance should not be called
-                 * because collisionAppearance.class is rendering
-                 */
-                if (!(collisionStuff && component.getClass() == BedrockComponentAppearanceBillboard.class))
-                {
-                    component.render(this, particle, builder, partialTicks);
-                }
-            }
-        }
-
-        Tessellator.getInstance().draw();
     }
 
     public void setupCameraProperties(float partialTicks)

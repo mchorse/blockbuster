@@ -2,15 +2,10 @@ package mchorse.blockbuster.client.particles.emitter;
 
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionTinting;
-import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentParticleMorph;
-import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotionCollision;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
+import mchorse.mclib.math.molang.expressions.MolangExpression;
 import mchorse.mclib.utils.DummyEntity;
-import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.metamorph.api.Morph;
-import mchorse.metamorph.api.MorphUtils;
-import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,10 +30,6 @@ public class BedrockParticle
     /* States */
     public int age;
     public int lifetime;
-    /* Age when the particle should expire */
-    public int expireAge;
-    /* Used to determine lifetime when expirationDelay is on */
-    public int expirationDelay;
     public boolean dead;
     public boolean relativePosition;
     public boolean relativeRotation;
@@ -51,6 +42,11 @@ public class BedrockParticle
     public float angularVelocity;
     public boolean gravity;
     public boolean manual;
+
+    /* Age when the particle should expire */
+    private int expireAge = -1;
+    /* Used to determine lifetime when expirationDelay is on */
+    private int expirationDelay = -1;
     
     /**
      * This is used to estimate whether an object is only bouncing or lying on a surface
@@ -67,7 +63,8 @@ public class BedrockParticle
     /**
      * For collision Appearance needed for animation
      */
-    public int firstCollision = -1;
+    public int firstIntersection = -1;
+    public boolean intersected;
     
     /* Rotation */
     public float rotation;
@@ -110,12 +107,22 @@ public class BedrockParticle
 
     public boolean isCollisionTexture(BedrockEmitter emitter)
     {
-        return MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionAppearance.class).enabled) && this.collided;
+        return MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionAppearance.class).enabled) && this.intersected;
     }
 
     public boolean isCollisionTinting(BedrockEmitter emitter)
     {
-        return MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionTinting.class).enabled) && this.collided;
+        return MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionTinting.class).enabled) && this.intersected;
+    }
+
+    public int getExpireAge()
+    {
+        return this.expireAge;
+    }
+
+    public int getExpirationDelay()
+    {
+        return this.expirationDelay;
     }
 
     /**
@@ -138,7 +145,7 @@ public class BedrockParticle
         }
 
         to.bounces = this.bounces;
-        to.firstCollision = this.firstCollision;
+        to.firstIntersection = this.firstIntersection;
         to.offset = (Vector3d) this.offset.clone();
         to.position = (Vector3d) this.position.clone();
         to.initialPosition = (Vector3d) this.initialPosition.clone();
@@ -333,12 +340,26 @@ public class BedrockParticle
         }
 
         if (this.lifetime >= 0 &&
-            (this.age >= this.lifetime || (this.age>=this.expireAge && this.expireAge!=0)) )
+            (this.age >= this.lifetime || (this.age >= this.expireAge && this.expireAge != -1)) )
         {
             this.dead = true;
         }
 
         this.age ++;
+    }
+
+    /**
+     * Sets the expirationDelay and expireAge - the smallest expire age wins. Negative expiration delays always overwrite/win.
+     */
+    public void setExpirationDelay(double delay)
+    {
+        int expirationDelay = (int) delay;
+
+        if (this.age + expirationDelay < this.expireAge || this.expireAge == -1)
+        {
+            this.expirationDelay = Math.abs(expirationDelay);
+            this.expireAge = this.age + this.expirationDelay;
+        }
     }
 
     public void setupMatrix(BedrockEmitter emitter)

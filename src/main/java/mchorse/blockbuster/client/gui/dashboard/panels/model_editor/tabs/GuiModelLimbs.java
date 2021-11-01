@@ -7,12 +7,14 @@ import mchorse.blockbuster.api.ModelLimb.Holding;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTextureCanvas;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
+import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.framework.elements.input.GuiColorElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
@@ -24,7 +26,10 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Color;
+import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.Minecraft;
+
+import javax.vecmath.Vector3f;
 
 public class GuiModelLimbs extends GuiModelEditorTab
 {
@@ -93,7 +98,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.limb.size[2] = values[2].intValue();
             this.panel.rebuildModel();
         });
-        this.size.setLimit(1, 8192, true);
+        this.size.setLimit(0, 8192, true);
         this.sizeOffset = new GuiTrackpadElement(mc, (value) ->
         {
             this.panel.limb.sizeOffset = value.floatValue();
@@ -122,6 +127,19 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.limb.origin[1] = values[1].floatValue();
             this.panel.limb.origin[2] = values[2].floatValue();
             this.panel.rebuildModel();
+        });
+        this.origin.context(() ->
+        {
+            ModelCustomRenderer renderer = this.panel.renderModel.get(this.panel.limb.name);
+
+            if (renderer != null && renderer.min != null && renderer.max != null)
+            {
+                return new GuiSimpleContextMenu(this.mc)
+                    .action(Icons.FULLSCREEN, IKey.lang("blockbuster.gui.me.limbs.context.anchor_setup"), () -> this.setupAnchorPoint(renderer, false))
+                    .action(Icons.DOWNLOAD, IKey.lang("blockbuster.gui.me.limbs.context.anchor_setup"), () -> this.setupAnchorPoint(renderer, true));
+            }
+
+            return null;
         });
         this.slot = new GuiCirculateElement(mc, (b) ->
         {
@@ -281,11 +299,39 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.add(sidebar, this.limbs, this.scroll, this.textureEditor);
     }
 
+    private void setupAnchorPoint(ModelCustomRenderer renderer, boolean move)
+    {
+        GuiAnchorModal modal = new GuiAnchorModal(this.mc, IKey.lang("blockbuster.gui.me.limbs.anchor_modal"), (anchor) -> this.doSetupAnchorPoint(renderer, anchor, move));
+
+        this.panel.modelRenderer.anchorPreview = modal;
+        GuiModal.addFullModal(this, () -> modal);
+    }
+
+    private void doSetupAnchorPoint(ModelCustomRenderer renderer, Vector3f anchor, boolean move)
+    {
+        renderer.limb.origin[0] = Interpolations.lerp(renderer.min.x, renderer.max.x, anchor.x);
+        renderer.limb.origin[1] = Interpolations.lerp(renderer.min.y, renderer.max.y, anchor.y);
+        renderer.limb.origin[2] = Interpolations.lerp(renderer.min.z, renderer.max.z, anchor.z);
+
+        if (move)
+        {
+            float[] translate = this.panel.pose.limbs.get(renderer.limb.name).translate;
+
+            translate[0] = -renderer.limb.origin[0] * 16;
+            translate[1] = renderer.limb.origin[1] * 16;
+            translate[2] = -renderer.limb.origin[2] * 16;
+        }
+
+        this.panel.modelRenderer.anchorPreview = null;
+        this.panel.setLimb(renderer.limb.name);
+        this.panel.rebuildModel();
+    }
+
     private void addLimb()
     {
         GuiModal.addFullModal(this, () ->
         {
-            GuiPromptModal modal = new GuiPromptModal(mc, IKey.lang("blockbuster.gui.me.limbs.new_limb"), this::addLimb);
+            GuiPromptModal modal = new GuiPromptModal(this.mc, IKey.lang("blockbuster.gui.me.limbs.new_limb"), this::addLimb);
 
             return modal.setValue(this.panel.limb.name);
         });

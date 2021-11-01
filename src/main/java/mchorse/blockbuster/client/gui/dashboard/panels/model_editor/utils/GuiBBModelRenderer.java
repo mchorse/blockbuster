@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils;
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.formats.obj.ShapeKey;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiAnchorModal;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
@@ -11,6 +12,7 @@ import mchorse.mclib.client.Draw;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.utils.DummyEntity;
+import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -44,6 +46,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     public ResourceLocation texture;
     public ModelCustom model;
     public ModelLimb limb;
+    public GuiAnchorModal anchorPreview;
 
     private ModelPose pose;
     private List<ShapeKey> shapes;
@@ -182,17 +185,14 @@ public class GuiBBModelRenderer extends GuiModelRenderer
 
         if (this.limb != null)
         {
-            for (ModelCustomRenderer limb : model.limbs)
+            ModelCustomRenderer targetLimb = this.model.get(this.limb.name);
+
+            if (targetLimb != null)
             {
-                if (limb.limb.name.equals(this.limb.name))
-                {
-                    limb.postRender(1F / 16F);
-
-                    break;
-                }
+                targetLimb.postRender(1F / 16F);
+                this.renderLimbHighlight(this.limb);
+                this.renderAnchorPreview(targetLimb);
             }
-
-            this.renderLimbHighlight(this.limb);
         }
 
         GlStateManager.enableLighting();
@@ -311,6 +311,39 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         GlStateManager.enableCull();
         GlStateManager.disableBlend();
         GlStateManager.depthMask(true);
+    }
+
+    protected void renderAnchorPreview(ModelCustomRenderer renderer)
+    {
+        if (this.anchorPreview != null && renderer.min != null && renderer.max != null)
+        {
+            float ax = (float) this.anchorPreview.vector.a.value;
+            float ay = (float) this.anchorPreview.vector.b.value;
+            float az = (float) this.anchorPreview.vector.c.value;
+
+            float dx = renderer.max.x - renderer.min.x;
+            float dy = renderer.max.y - renderer.min.y;
+            float dz = renderer.max.z - renderer.min.z;
+
+            float x = renderer.min.x + Interpolations.lerp(0, dx, ax) - this.limb.origin[0];
+            float y = renderer.min.y + Interpolations.lerp(0, dy, ay) - this.limb.origin[1];
+            float z = renderer.min.z + Interpolations.lerp(0, dz, az) - this.limb.origin[2];
+
+            GlStateManager.disableLighting();
+            GlStateManager.disableTexture2D();
+            GlStateManager.disableDepth();
+
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(-x, -y, z);
+
+            Draw.point(0, 0, 0);
+
+            GlStateManager.popMatrix();
+
+            GlStateManager.enableDepth();
+            GlStateManager.enableTexture2D();
+            GlStateManager.enableLighting();
+        }
     }
 
     public void setPose(ModelPose pose)
