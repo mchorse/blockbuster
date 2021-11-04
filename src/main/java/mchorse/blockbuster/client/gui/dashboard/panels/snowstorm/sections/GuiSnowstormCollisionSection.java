@@ -46,7 +46,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 
         this.condition = new GuiTextElement(mc, 10000, (str) ->
         {
-            this.component.enabled = this.parse(str, this.condition, this.component.enabled);
+            this.component.enabled = str.isEmpty() ? MolangParser.ONE : this.parse(str, this.condition, this.component.enabled);
             this.parent.dirty();
         });
         this.condition.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.condition_tooltip"));

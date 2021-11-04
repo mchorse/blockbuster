@@ -138,9 +138,7 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentAppeara
         int lightX = light >> 16 & 65535;
         int lightY = light & 65535;
 
-        this.calculateVertices(emitter, particle);
-
-        this.calculateFacing(emitter, px, py, pz);
+        this.calculateFacing(emitter, particle, px, py, pz);
 
         this.rotation.rotZ(angle / 180 * (float) Math.PI);
         this.transform.mul(this.rotation);

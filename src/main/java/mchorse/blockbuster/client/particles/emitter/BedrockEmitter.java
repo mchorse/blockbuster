@@ -440,7 +440,7 @@ public class BedrockEmitter
         List<IComponentParticleRender> listParticle = this.scheme.getComponents(IComponentParticleRender.class);
         List<IComponentParticleMorphRender> listMorph = this.scheme.getComponents(IComponentParticleMorphRender.class);
 
-        if (!listParticle.isEmpty() && !this.isMorphParticle())
+        if (!listParticle.isEmpty() && (!this.isMorphParticle() || particleMorphComponent.renderTexture))
         {
             GifTexture.bindTexture(this.scheme.texture);
 
@@ -465,7 +465,8 @@ public class BedrockEmitter
             GlStateManager.disableBlend();
             GlStateManager.enableCull();
         }
-        else if (!listMorph.isEmpty() && this.isMorphParticle())
+
+        if (!listMorph.isEmpty() && this.isMorphParticle())
         {
             if (this.guiParticle == null || this.guiParticle.dead)
             {

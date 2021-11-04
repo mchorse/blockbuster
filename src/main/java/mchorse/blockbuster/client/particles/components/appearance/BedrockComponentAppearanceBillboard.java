@@ -279,9 +279,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
         int lightX = light >> 16 & 65535;
         int lightY = light & 65535;
 
-        this.calculateVertices(emitter, particle);
-
-        this.calculateFacing(emitter, px, py, pz);
+        this.calculateFacing(emitter, particle, px, py, pz);
 
         this.rotation.rotZ(angle / 180 * (float) Math.PI);
         this.transform.mul(this.rotation);
@@ -303,7 +301,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
         builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(u1, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
     }
 
-    protected void calculateFacing(BedrockEmitter emitter, double px, double py, double pz)
+    protected void calculateFacing(BedrockEmitter emitter, BedrockParticle particle, double px, double py, double pz)
     {
         /* Calculate yaw and pitch based on the facing mode */
         float entityYaw = emitter.cYaw;
@@ -337,6 +335,8 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             entityYaw = 180 - (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
             entityPitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI))) + 180;
         }
+
+        this.calculateVertices(emitter, particle);
 
         if (this.facing == CameraFacing.ROTATE_XYZ || this.facing == CameraFacing.LOOKAT_XYZ)
         {

@@ -409,11 +409,13 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
     {
         if (this.expireOnImpact)
         {
-            if (this.expirationDelay.get() != 0 && !particle.collided)
+            double expirationDelay = this.expirationDelay.get();
+
+            if (expirationDelay != 0 && !particle.collided)
             {
-                particle.setExpirationDelay(this.expirationDelay.get());
+                particle.setExpirationDelay(expirationDelay);
             }
-            else if (this.expirationDelay.get() == 0)
+            else if (expirationDelay == 0 && !particle.collided)
             {
                 particle.dead = true;
 

@@ -121,7 +121,7 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
         this.add(this.renderer, new GuiDrawable(this::drawOverlay), this.editor, this.modal, this.open, this.save);
 
         this.addSection(new GuiSnowstormGeneralSection(mc, this));
-        //this.addSection(this.particleMorphSection);
+        this.addSection(this.particleMorphSection);
         this.addSection(new GuiSnowstormSpaceSection(mc, this));
         this.addSection(new GuiSnowstormInitializationSection(mc, this));
         this.addSection(new GuiSnowstormRateSection(mc, this));
