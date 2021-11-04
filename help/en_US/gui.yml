@@ -532,6 +532,9 @@ blockbuster.gui:
                 lookat_y: Look at Y
                 rotate_xyz: Rotate XYZ
                 rotate_y: Rotate Y
+                emitter_xy: Emitter XY-Plane
+                emitter_xz: Emitter XZ-Plane
+                emitter_yz: Emitter YZ-Plane
             
             size: Billboard size
             width: Width

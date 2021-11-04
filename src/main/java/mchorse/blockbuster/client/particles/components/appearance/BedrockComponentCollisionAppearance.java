@@ -8,6 +8,7 @@ import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
+import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.math.molang.MolangException;
 import mchorse.mclib.math.molang.MolangParser;
 import mchorse.mclib.math.molang.expressions.MolangExpression;
@@ -132,39 +133,6 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentAppeara
         py = pos.y;
         pz = pos.z;
 
-        /* Calculate yaw and pitch based on the facing mode */
-        float entityYaw = emitter.cYaw;
-        float entityPitch = emitter.cPitch;
-        double entityX = emitter.cX;
-        double entityY = emitter.cY;
-        double entityZ = emitter.cZ;
-        boolean lookAt = this.facing == CameraFacing.LOOKAT_XYZ || this.facing == CameraFacing.LOOKAT_Y;
-
-        /* Flip width when frontal perspective mode */
-        if (emitter.perspective == 2)
-        {
-            this.w = -this.w;
-        }
-        /* In GUI renderer */
-        else if (emitter.perspective == 100 && !lookAt)
-        {
-            entityYaw = 180 - entityYaw;
-
-            this.w = -this.w;
-            this.h = -this.h;
-        }
-
-        if (lookAt)
-        {
-            double dX = entityX - px;
-            double dY = entityY - py;
-            double dZ = entityZ - pz;
-            double horizontalDistance = MathHelper.sqrt(dX * dX + dZ * dZ);
-
-            entityYaw = 180 - (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
-            entityPitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI))) + 180;
-        }
-
         /* Calculate the geometry for billboards using cool matrix math */
         int light = this.lit ? 15728880 : emitter.getBrightnessForRender(partialTicks, px, py, pz);
         int lightX = light >> 16 & 65535;
@@ -172,17 +140,7 @@ public class BedrockComponentCollisionAppearance extends BedrockComponentAppeara
 
         this.calculateVertices(emitter, particle);
 
-        if (this.facing == CameraFacing.ROTATE_XYZ || this.facing == CameraFacing.LOOKAT_XYZ)
-        {
-            this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
-            this.transform.mul(this.rotation);
-            this.rotation.rotX(entityPitch / 180 * (float) Math.PI);
-            this.transform.mul(this.rotation);
-        }
-        else if (this.facing == CameraFacing.ROTATE_Y || this.facing == CameraFacing.LOOKAT_Y) {
-            this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
-            this.transform.mul(this.rotation);
-        }
+        this.calculateFacing(emitter, px, py, pz);
 
         this.rotation.rotZ(angle / 180 * (float) Math.PI);
         this.transform.mul(this.rotation);

@@ -7,6 +7,7 @@ import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
+import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.math.molang.MolangException;
 import mchorse.mclib.math.molang.MolangParser;
 import mchorse.mclib.math.molang.expressions.MolangExpression;
@@ -273,6 +274,37 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
         py = pos.y;
         pz = pos.z;
 
+        /* Calculate the geometry for billboards using cool matrix math */
+        int light = emitter.getBrightnessForRender(partialTicks, px, py, pz);
+        int lightX = light >> 16 & 65535;
+        int lightY = light & 65535;
+
+        this.calculateVertices(emitter, particle);
+
+        this.calculateFacing(emitter, px, py, pz);
+
+        this.rotation.rotZ(angle / 180 * (float) Math.PI);
+        this.transform.mul(this.rotation);
+        this.transform.setTranslation(new Vector3f((float) px, (float) py, (float) pz));
+
+        for (Vector4f vertex : this.vertices)
+        {
+            this.transform.transform(vertex);
+        }
+
+        float u1 = this.u1 / (float) this.textureWidth;
+        float u2 = this.u2 / (float) this.textureWidth;
+        float v1 = this.v1 / (float) this.textureHeight;
+        float v2 = this.v2 / (float) this.textureHeight;
+
+        builder.pos(this.vertices[0].x, this.vertices[0].y, this.vertices[0].z).tex(u1, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+        builder.pos(this.vertices[1].x, this.vertices[1].y, this.vertices[1].z).tex(u2, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+        builder.pos(this.vertices[2].x, this.vertices[2].y, this.vertices[2].z).tex(u2, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+        builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(u1, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+    }
+
+    protected void calculateFacing(BedrockEmitter emitter, double px, double py, double pz)
+    {
         /* Calculate yaw and pitch based on the facing mode */
         float entityYaw = emitter.cYaw;
         float entityPitch = emitter.cPitch;
@@ -306,13 +338,6 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             entityPitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI))) + 180;
         }
 
-        /* Calculate the geometry for billboards using cool matrix math */
-        int light = emitter.getBrightnessForRender(partialTicks, px, py, pz);
-        int lightX = light >> 16 & 65535;
-        int lightY = light & 65535;
-
-        this.calculateVertices(emitter, particle);
-
         if (this.facing == CameraFacing.ROTATE_XYZ || this.facing == CameraFacing.LOOKAT_XYZ)
         {
             this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
@@ -324,25 +349,49 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
             this.transform.mul(this.rotation);
         }
-
-        this.rotation.rotZ(angle / 180 * (float) Math.PI);
-        this.transform.mul(this.rotation);
-        this.transform.setTranslation(new Vector3f((float) px, (float) py, (float) pz));
-
-        for (Vector4f vertex : this.vertices)
+        else if (this.facing == CameraFacing.EMITTER_YZ)
         {
-            this.transform.transform(vertex);
+            if (!GuiModelRenderer.isRendering())
+            {
+                this.rotation.rotZ((float) Math.toRadians(180));
+                this.transform.mul(this.rotation);
+                this.rotation.rotY((float) Math.toRadians(90));
+                this.transform.mul(this.rotation);
+            }
+            else
+            {
+                this.rotation.rotY((float) Math.toRadians(-90));
+                this.transform.mul(this.rotation);
+            }
         }
-
-        float u1 = this.u1 / (float) this.textureWidth;
-        float u2 = this.u2 / (float) this.textureWidth;
-        float v1 = this.v1 / (float) this.textureHeight;
-        float v2 = this.v2 / (float) this.textureHeight;
-
-        builder.pos(this.vertices[0].x, this.vertices[0].y, this.vertices[0].z).tex(u1, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-        builder.pos(this.vertices[1].x, this.vertices[1].y, this.vertices[1].z).tex(u2, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-        builder.pos(this.vertices[2].x, this.vertices[2].y, this.vertices[2].z).tex(u2, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-        builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(u1, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+        else if (this.facing == CameraFacing.EMITTER_XZ)
+        {
+            if (!GuiModelRenderer.isRendering())
+            {
+                this.rotation.rotX((float) Math.toRadians(90));
+                this.transform.mul(this.rotation);
+            }
+            else
+            {
+                this.rotation.rotZ((float) Math.toRadians(180));
+                this.transform.mul(this.rotation);
+                this.rotation.rotX((float) Math.toRadians(-90));
+                this.transform.mul(this.rotation);
+            }
+        }
+        else if (this.facing == CameraFacing.EMITTER_XY)
+        {
+            if (!GuiModelRenderer.isRendering())
+            {
+                this.rotation.rotX((float) Math.toRadians(180));
+                this.transform.mul(this.rotation);
+            }
+            else
+            {
+                this.rotation.rotY((float) Math.toRadians(180));
+                this.transform.mul(this.rotation);
+            }
+        }
     }
 
     protected void calculateVertices(BedrockEmitter emitter, BedrockParticle particle)

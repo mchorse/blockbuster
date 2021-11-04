@@ -576,22 +576,12 @@ public class BedrockEmitter
 
         for (BedrockParticle particle : this.particles)
         {
-            /*boolean collisionStuff = particle.collisionTexture || particle.collisionTinting;
-
-            if (collisionStuff != collided)
-            {
-                continue;
-            }*/
-
             this.setEmitterVariables(partialTicks);
             this.setParticleVariables(particle, partialTicks);
 
             for (IComponentRenderBase component : renderComponents)
             {
-                /*if (!(collisionStuff && component.getClass() == BedrockComponentAppearanceBillboard.class))
-                {*/
                 component.render(this, particle, builder, partialTicks);
-                //}
             }
         }
     }

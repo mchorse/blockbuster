@@ -18,7 +18,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<BedrockComponentAppearanceBillboard>
 {
-    public static final CameraFacing[] SORTED_FACING_MODES = {CameraFacing.DIRECTION_X, CameraFacing.DIRECTION_Y, CameraFacing.DIRECTION_Z, CameraFacing.LOOKAT_XYZ, CameraFacing.LOOKAT_Y, CameraFacing.ROTATE_XYZ, CameraFacing.ROTATE_Y};
+    public static final CameraFacing[] SORTED_FACING_MODES = {CameraFacing.DIRECTION_X, CameraFacing.DIRECTION_Y, CameraFacing.DIRECTION_Z, CameraFacing.LOOKAT_XYZ, CameraFacing.LOOKAT_Y, CameraFacing.ROTATE_XYZ, CameraFacing.ROTATE_Y, CameraFacing.EMITTER_XY, CameraFacing.EMITTER_XZ, CameraFacing.EMITTER_YZ};
 
     public GuiCirculateElement mode;
     public GuiLabel modeLabel;
@@ -66,6 +66,9 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
         this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.lookat_y"));
         this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.rotate_xyz"));
         this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.rotate_y"));
+        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.emitter_xy"));
+        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.emitter_xz"));
+        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.emitter_yz"));
         this.facingModeLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.label"), 20).anchor(0, 0.5F);
         
         this.sizeW = new GuiTextElement(mc, 10000, (str) -> this.component.sizeW = this.parse(str, this.sizeW, this.component.sizeW));
