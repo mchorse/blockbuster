@@ -189,13 +189,13 @@ public class Frame
         {
             if (this.isMounted)
             {
-                mount.rotationYaw += MathHelper.wrapDegrees(this.mountYaw - mount.rotationYaw);
+                mount.rotationYaw = this.mountYaw;
                 mount.rotationPitch = this.mountPitch;
             }
 
-            actor.rotationYaw += MathHelper.wrapDegrees(this.yaw - actor.rotationYaw);
+            actor.rotationYaw = this.yaw;
             actor.rotationPitch = this.pitch;
-            actor.rotationYawHead += MathHelper.wrapDegrees(this.yawHead - actor.rotationYawHead);
+            actor.rotationYawHead = this.yawHead;
         }
 
         /* Motion and fall distance */

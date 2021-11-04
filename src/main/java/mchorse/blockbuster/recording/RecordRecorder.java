@@ -10,6 +10,7 @@ import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Record recorder class
@@ -58,6 +59,11 @@ public class RecordRecorder
     private Frame first;
 
     /**
+     * The offset of yaw between before and after {{@link net.minecraft.util.math.MathHelper.wrapDegrees(double)}
+     */
+    private float yawOffset;
+
+    /**
      * Player tracker, this dude is responsible for tracking inventory slots,
      * swing progress and elytra flying updates
      */
@@ -70,6 +76,8 @@ public class RecordRecorder
         this.teleportBack = teleportBack;
         this.first = new Frame();
         this.first.fromPlayer(player);
+
+        this.yawOffset = this.first.yaw - MathHelper.wrapDegrees(this.first.yaw);
 
         if (mode == Mode.ACTIONS || mode == Mode.BOTH)
         {
@@ -89,6 +97,11 @@ public class RecordRecorder
             Frame frame = new Frame();
 
             frame.fromPlayer(player);
+            frame.yaw -= this.yawOffset;
+            frame.yawHead -= this.yawOffset;
+            frame.bodyYaw -= this.yawOffset;
+            frame.mountYaw -= this.yawOffset;
+
             this.record.frames.add(frame);
         }
 
