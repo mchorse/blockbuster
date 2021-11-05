@@ -19,7 +19,6 @@ import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.ColorUtils;
-import mchorse.mclib.utils.Interpolation;
 import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -31,7 +30,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -72,8 +70,8 @@ public class RenderingHandler
      * Bedrock particle emitters
      */
     private static final List<BedrockEmitter> emitters = new ArrayList<BedrockEmitter>();
-
-    public static ListIterator<BedrockEmitter> emitterIterator = emitters.listIterator();
+    private static final List<BedrockEmitter> emittersAdd = new ArrayList<BedrockEmitter>();
+    private static boolean emitterIsIterating;
 
     private static final List<EntityActor> lastRenderedEntities = new ArrayList<EntityActor>();
 
@@ -154,15 +152,17 @@ public class RenderingHandler
                 });
             }
 
-            while (emitterIterator.hasNext())
-            {
-                BedrockEmitter emitter = emitterIterator.next();
+            emitterIsIterating = true;
 
+            for(BedrockEmitter emitter : emitters)
+            {
                 emitter.render(partialTicks);
                 emitter.running = emitter.sanityTicks < 2;
             }
 
-            emitterIterator = emitters.listIterator();
+            addEmitters();
+
+            emitterIsIterating = false;
         }
     }
 
@@ -170,35 +170,60 @@ public class RenderingHandler
     {
         if (!emitter.added)
         {
-            emitterIterator.add(emitter);
+            if (emitterIsIterating)
+            {
+                emittersAdd.add(emitter);
+            }
+            else
+            {
+                emitters.add(emitter);
+            }
 
             emitter.added = true;
             emitter.setTarget(target);
         }
     }
 
+    private static void addEmitters()
+    {
+        if (!emittersAdd.isEmpty())
+        {
+            emitters.addAll(emittersAdd);
+            emittersAdd.clear();
+        }
+    }
+
     public static void updateEmitters()
     {
-        while (emitterIterator.hasNext())
-        {
-            BedrockEmitter emitter = emitterIterator.next();
+        List<BedrockEmitter> emittersRemove = new ArrayList<>();
 
+        emitterIsIterating = true;
+
+        for(BedrockEmitter emitter : emitters)
+        {
             emitter.update();
 
             if (emitter.isFinished())
             {
-                emitterIterator.remove();
+                emittersRemove.add(emitter);
+
                 emitter.added = false;
             }
         }
 
-        emitterIterator = emitters.listIterator();
+        if (!emittersRemove.isEmpty())
+        {
+            emitters.removeAll(emittersRemove);
+        }
+
+        addEmitters();
+
+        emitterIsIterating = false;
     }
 
     public static void resetEmitters()
     {
         emitters.clear();
-        emitterIterator = emitters.listIterator();
     }
 
     /**
