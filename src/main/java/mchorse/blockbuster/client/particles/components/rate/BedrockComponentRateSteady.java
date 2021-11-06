@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.particles.components.rate;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
+import mchorse.blockbuster.client.particles.components.IComponentParticleMorphRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
@@ -13,11 +14,13 @@ import mchorse.mclib.math.molang.expressions.MolangExpression;
 import mchorse.mclib.math.molang.expressions.MolangValue;
 import net.minecraft.client.renderer.BufferBuilder;
 
-public class BedrockComponentRateSteady extends BedrockComponentRate implements IComponentParticleRender
+public class BedrockComponentRateSteady extends BedrockComponentRate implements IComponentParticleRender, IComponentParticleMorphRender
 {
     public static final MolangExpression DEFAULT_PARTICLES = new MolangValue(null, new Constant(50));
 
     public MolangExpression spawnRate = MolangParser.ONE;
+
+    private boolean spawned;
 
     public BedrockComponentRateSteady()
     {
@@ -62,7 +65,7 @@ public class BedrockComponentRateSteady extends BedrockComponentRate implements 
     @Override
     public void postRender(BedrockEmitter emitter, float partialTicks)
     {
-        if (emitter.playing)
+        if (emitter.playing && !this.spawned)
         {
             double particles = emitter.getAge(partialTicks) * this.spawnRate.get();
             double diff = particles - emitter.spawnedParticles;
@@ -87,7 +90,13 @@ public class BedrockComponentRateSteady extends BedrockComponentRate implements 
                 }
 
                 emitter.spawnedParticles += track;
+
+                this.spawned = true;
             }
+        }
+        else if (this.spawned) //only execute rate once
+        {
+            spawned = false;
         }
     }
 

@@ -111,6 +111,9 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
         this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.lookat_y"));
         this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.rotate_xyz"));
         this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.rotate_y"));
+        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.emitter_xy"));
+        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.emitter_xz"));
+        this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.emitter_yz"));
         this.facingModeLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.label"), 20).anchor(0, 0.5F);
         
         this.sizeW = new GuiTextElement(mc, 10000, (str) -> this.component.sizeW = this.parse(str, this.sizeW, this.component.sizeW));

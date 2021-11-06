@@ -395,6 +395,11 @@ blockbuster.gui:
             particles_alpha: Alpha
             particles_blend: Blend
 
+        particle_morph:
+            title: Morph
+            enabled: Enabled
+            render_texture: Still render billboard
+
         space:
             title: Particle space
 
@@ -527,6 +532,9 @@ blockbuster.gui:
                 lookat_y: Look at Y
                 rotate_xyz: Rotate XYZ
                 rotate_y: Rotate Y
+                emitter_xy: Emitter XY-Plane
+                emitter_xz: Emitter XZ-Plane
+                emitter_yz: Emitter YZ-Plane
             
             size: Billboard size
             width: Width
@@ -554,6 +562,10 @@ blockbuster.gui:
 
             solid: Solid
             expression: Expression
+            gradient: Gradient
+
+            interpolant_tooltip: Color Gradient Interpolant
+            range_tooltip: Color Gradient Range
 
             red: Red
             green: Green
@@ -564,6 +576,7 @@ blockbuster.gui:
             title: Collision
 
             enabled: Enabled
+            condition_tooltip: Enables collision when true / non-zero or unset
             realistic_collision: Realistic collision
             preserve_energy: Preserve energy
             preserve_energy_tooltip: Preserve energy option allows to preserve velocity of particles after collision
@@ -592,7 +605,7 @@ blockbuster.gui:
             appearance:
                 title: Texture on colllision
             lighting:
-                title: Lighting on collision
+                title: Color and lighting on collision
 
     record_morph:
         random_skip: Random Skip
