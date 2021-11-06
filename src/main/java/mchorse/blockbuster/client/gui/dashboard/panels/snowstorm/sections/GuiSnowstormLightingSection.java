@@ -256,12 +256,12 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
         {
             this.fields.add(this.color);
         }
-        else if(this.mode.getValue() == 1)
+        else if (this.mode.getValue() == 1)
         {
             this.fields.add(this.first);
             this.fields.add(this.second);
         }
-        else if(this.mode.getValue() == 2)
+        else if (this.mode.getValue() == 2)
         {
             this.fields.add(this.gradientElements);
         }

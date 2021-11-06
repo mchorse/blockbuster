@@ -120,7 +120,7 @@ public abstract class Tint
             }
         }
 
-        float range = colorStops.get(colorStops.size()-1).stop;
+        float range = colorStops.get(colorStops.size() - 1).stop;
         DecimalFormat floatPrecision = new DecimalFormat("#.######");
 
         floatPrecision.setRoundingMode(RoundingMode.HALF_EVEN);
