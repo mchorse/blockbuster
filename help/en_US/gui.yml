@@ -562,6 +562,10 @@ blockbuster.gui:
 
             solid: Solid
             expression: Expression
+            gradient: Gradient
+
+            interpolant_tooltip: Color Gradient Interpolant
+            range_tooltip: Color Gradient Range
 
             red: Red
             green: Green

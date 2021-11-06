@@ -10,6 +10,7 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiColorElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -28,12 +29,18 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
     public GuiTextElement g;
     public GuiTextElement b;
     public GuiTextElement a;
+    public GuiTextElement interpolant;
+    public GuiTrackpadElement range;
     public GuiToggleElement lighting;
 
+    public GuiElement gradientElements;
     public GuiElement first;
     public GuiElement second;
 
-    private BedrockComponentAppearanceTinting component;
+    /** Solid, Expression, Gradient */
+    protected final Tint[] tints = {new Tint.Solid(), new Tint.Solid(), new Tint.Gradient()};
+
+    protected BedrockComponentAppearanceTinting component;
 
     public GuiSnowstormLightingSection(Minecraft mc, GuiSnowstorm parent)
     {
@@ -41,11 +48,13 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 
         this.mode = new GuiCirculateElement(mc, (b) ->
         {
-            this.fillData();
+            this.component.color = this.tints[b.getValue()];
+            this.updateElements();
             this.parent.dirty();
         });
         this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.lighting.solid"));
         this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.lighting.expression"));
+        this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.lighting.gradient"));
 
         this.color = new GuiColorElement(mc, (color) ->
         {
@@ -97,6 +106,29 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 
         GuiLabel label = Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"), 20).anchor(0, 0.5F);
 
+        this.interpolant = new GuiTextElement(mc, 10000, (str) ->
+        {
+            Tint.Gradient gradient = this.getGradient();
+            gradient.interpolant = this.parse(str, this.interpolant, gradient.interpolant);
+
+            this.parent.dirty();
+        });
+        this.interpolant.tooltip(IKey.lang("blockbuster.gui.snowstorm.lighting.interpolant_tooltip"));
+
+        this.range = new GuiTrackpadElement(mc, (value) ->
+        {
+            Tint.Gradient gradient = this.getGradient();
+            gradient.range = value.floatValue();
+
+            this.parent.dirty();
+        });
+        this.range.tooltip(IKey.lang("blockbuster.gui.snowstorm.lighting.range_tooltip"));
+
+        this.gradientElements = new GuiElement(mc);
+        this.gradientElements.flex().column(4).stretch().vertical().height(4);
+
+        this.gradientElements.add(this.interpolant, this.range);
+
         this.first = Elements.row(mc, 5, 0, 20, this.r, this.g);
         this.second = Elements.row(mc, 5, 0, 20, this.b, this.a);
 
@@ -104,7 +136,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
         this.fields.add(Elements.row(mc, 5, 0, 20, label, this.mode));
     }
 
-    private MolangExpression set(MolangExpression expression, float value)
+    protected MolangExpression set(MolangExpression expression, float value)
     {
         if (expression == MolangParser.ZERO || expression == MolangParser.ONE)
         {
@@ -140,9 +172,14 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
         return "blockbuster.gui.snowstorm.lighting.title";
     }
 
-    private Tint.Solid getSolid()
+    protected Tint.Solid getSolid()
     {
         return (Tint.Solid) this.component.color;
+    }
+
+    protected Tint.Gradient getGradient()
+    {
+        return (Tint.Gradient) this.component.color;
     }
 
     @Override
@@ -163,30 +200,53 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
     {
         super.setScheme(scheme);
 
-        this.component = scheme.getOrCreate(BedrockComponentAppearanceTinting.class);
+        this.component = scheme.getOrCreateExact(BedrockComponentAppearanceTinting.class);
+
         this.lighting.toggled(scheme.get(BedrockComponentAppearanceLighting.class) != null);
 
+        this.fillData();
+    }
+
+    protected void fillData()
+    {
         if (this.component.color instanceof Tint.Solid)
         {
             Tint.Solid solid = this.getSolid();
 
             if (solid.isConstant())
             {
+                this.tints[0] = solid;
+
+                this.color.picker.color.set((float) solid.r.get(), (float) solid.g.get(), (float) solid.b.get(), (float) solid.a.get());
                 this.mode.setValue(0);
             }
             else
             {
+                this.tints[1] = solid;
+
+                this.set(this.r, solid.r);
+                this.set(this.g, solid.g);
+                this.set(this.b, solid.b);
+                this.set(this.a, solid.a);
                 this.mode.setValue(1);
             }
-
-            this.fillData();
         }
+        else if (this.component.color instanceof Tint.Gradient)
+        {
+            Tint.Gradient gradient = this.getGradient();
+            this.tints[2] = gradient;
+
+            this.set(this.interpolant, gradient.interpolant);
+            this.range.setValue(gradient.range);
+            this.mode.setValue(2);
+        }
+
+        this.updateElements();
     }
 
-    public void fillData()
+    public void updateElements()
     {
-        Tint.Solid solid = this.getSolid();
-
+        this.gradientElements.removeFromParent();
         this.color.removeFromParent();
         this.color.picker.removeFromParent();
         this.first.removeFromParent();
@@ -194,19 +254,16 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 
         if (this.mode.getValue() == 0)
         {
-            this.color.picker.color.set((float) solid.r.get(), (float) solid.g.get(), (float) solid.b.get(), (float) solid.a.get());
-
             this.fields.add(this.color);
         }
-        else
+        else if(this.mode.getValue() == 1)
         {
-            this.set(this.r, solid.r);
-            this.set(this.g, solid.g);
-            this.set(this.b, solid.b);
-            this.set(this.a, solid.a);
-
             this.fields.add(this.first);
             this.fields.add(this.second);
+        }
+        else if(this.mode.getValue() == 2)
+        {
+            this.fields.add(this.gradientElements);
         }
 
         this.resizeParent();

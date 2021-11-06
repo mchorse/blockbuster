@@ -163,7 +163,7 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
     @Override
     protected BedrockComponentAppearanceBillboard getComponent(BedrockScheme scheme)
     {
-        return scheme.getOrCreate(BedrockComponentAppearanceBillboard.class);
+        return scheme.getOrCreateExact(BedrockComponentAppearanceBillboard.class);
     }
 
     @Override

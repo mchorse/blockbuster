@@ -12,10 +12,12 @@ import mchorse.mclib.math.molang.MolangParser;
 import mchorse.mclib.math.molang.expressions.MolangExpression;
 import net.minecraft.client.renderer.BufferBuilder;
 
-public class BedrockComponentCollisionTinting extends BedrockComponentBase implements IComponentParticleRender
+import java.util.Map;
+import java.util.Set;
+
+public class BedrockComponentCollisionTinting extends BedrockComponentAppearanceTinting implements IComponentParticleRender
 {
     public MolangExpression enabled = MolangParser.ZERO;
-    public Tint color = new Tint.Solid(MolangParser.ONE, MolangParser.ONE, MolangParser.ONE, MolangParser.ONE);
 
     @Override
     public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
@@ -23,20 +25,8 @@ public class BedrockComponentCollisionTinting extends BedrockComponentBase imple
         if (!elem.isJsonObject()) return super.fromJson(elem, parser);
 
         JsonObject element = elem.getAsJsonObject();
-        if (element.has("enabled")) this.enabled = parser.parseJson(element.get("enabled"));
-        if (element.has("color"))
-        {
-            JsonElement color = element.get("color");
 
-            if (color.isJsonArray() || color.isJsonPrimitive())
-            {
-                this.color = Tint.parseColor(color, parser);
-            }
-            else if (color.isJsonObject())
-            {
-                this.color = Tint.parseGradient(color.getAsJsonObject(), parser);
-            }
-        }
+        if (element.has("enabled")) this.enabled = parser.parseJson(element.get("enabled"));
 
         return super.fromJson(element, parser);
     }
@@ -45,23 +35,20 @@ public class BedrockComponentCollisionTinting extends BedrockComponentBase imple
     public JsonElement toJson()
     {
         JsonObject object = new JsonObject();
-        JsonElement element = this.color.toJson();
         
         object.add("enabled", this.enabled.toJson());
-        
-        if (!BedrockSchemeJsonAdapter.isEmpty(element))
+
+        /* add the default stuff from super */
+        JsonObject superJson = (JsonObject) super.toJson();
+        Set<Map.Entry<String, JsonElement>> entries = superJson.entrySet();
+
+        for(Map.Entry<String, JsonElement> entry : entries)
         {
-            object.add("color", element);
+            object.add(entry.getKey(), entry.getValue());
         }
 
         return object;
     }
-
-    /* Interface implementations */
-
-    @Override
-    public void preRender(BedrockEmitter emitter, float partialTicks)
-    {}
 
     @Override
     public void render(BedrockEmitter emitter, BedrockParticle particle, BufferBuilder builder, float partialTicks)
@@ -71,23 +58,6 @@ public class BedrockComponentCollisionTinting extends BedrockComponentBase imple
             this.renderOnScreen(particle, 0, 0, 0, 0);
         }
     }
-
-    @Override
-    public void renderOnScreen(BedrockParticle particle, int x, int y, float scale, float partialTicks)
-    {
-        if (this.color != null)
-        {
-            this.color.compute(particle);
-        }
-        else
-        {
-            particle.r = particle.g = particle.b = particle.a = 1;
-        }
-    }
-
-    @Override
-    public void postRender(BedrockEmitter emitter, float partialTicks)
-    {}
 
     @Override
     public int getSortingIndex()

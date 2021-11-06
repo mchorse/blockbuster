@@ -169,6 +169,19 @@ public class BedrockScheme
         return null;
     }
 
+    public <T extends BedrockComponentBase> T getExact(Class<T> clazz)
+    {
+        for (BedrockComponentBase component : this.components)
+        {
+            if (clazz.equals(component.getClass()))
+            {
+                return (T) component;
+            }
+        }
+
+        return null;
+    }
+
     public <T extends BedrockComponentBase> T add(Class<T> clazz)
     {
         T result = null;
@@ -186,14 +199,50 @@ public class BedrockScheme
         return result;
     }
 
+    /**
+     * This method gets the component using isAssignableFrom() method. It can also get sub-classes
+     * @param clazz target class
+     * @param <T>
+     * @return the component object
+     */
     public <T extends BedrockComponentBase> T getOrCreate(Class<T> clazz)
     {
         return this.getOrCreate(clazz, clazz);
     }
 
+    /**
+     * This method gets the component by its exact class and no sub-classes.
+     * @param clazz target class
+     * @param <T>
+     * @return the component object
+     */
+    public <T extends BedrockComponentBase> T getOrCreateExact(Class<T> clazz)
+    {
+        return this.getOrCreateExact(clazz, clazz);
+    }
+
+    /**
+     * This method gets the component using isAssignableFrom() method. It can also get sub-classes. If clazz hasn't been found it will add the subclass parameter.
+     * @param clazz target class
+     * @param clazz alternative class too add in case target class doesnt exist
+     * @param <T>
+     * @return the component object
+     */
     public <T extends BedrockComponentBase> T getOrCreate(Class<T> clazz, Class subclass)
     {
         T result = this.get(clazz);
+
+        if (result == null)
+        {
+            result = (T) this.add(subclass);
+        }
+
+        return result;
+    }
+
+    public <T extends BedrockComponentBase> T getOrCreateExact(Class<T> clazz, Class subclass)
+    {
+        T result = this.getExact(clazz);
 
         if (result == null)
         {

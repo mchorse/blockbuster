@@ -7,6 +7,7 @@ import com.google.gson.JsonPrimitive;
 import mchorse.blockbuster.client.particles.BedrockSchemeJsonAdapter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import mchorse.mclib.math.Constant;
+import mchorse.mclib.math.functions.rounding.Round;
 import mchorse.mclib.math.molang.MolangException;
 import mchorse.mclib.math.molang.MolangParser;
 import mchorse.mclib.math.molang.expressions.MolangExpression;
@@ -15,6 +16,8 @@ import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MathUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -117,12 +120,23 @@ public abstract class Tint
             }
         }
 
+        float range = colorStops.get(colorStops.size()-1).stop;
+        DecimalFormat floatPrecision = new DecimalFormat("#.######");
+
+        floatPrecision.setRoundingMode(RoundingMode.HALF_EVEN);
+
+        for (Gradient.ColorStop stop : colorStops)
+        {
+            stop.stop /= range;
+            stop.stop = Float.valueOf(floatPrecision.format(stop.stop)); //prevent float precision mistakes when dividing
+        }
+
         if (color.has("interpolant"))
         {
             expression = parser.parseJson(color.get("interpolant"));
         }
 
-        return new Tint.Gradient(colorStops, expression, equal);
+        return new Tint.Gradient(colorStops, range, expression, equal);
     }
 
     public abstract void compute(BedrockParticle particle);
@@ -145,6 +159,14 @@ public abstract class Tint
             this.g = g;
             this.b = b;
             this.a = a;
+        }
+
+        public Solid()
+        {
+            this.r = MolangParser.ONE;
+            this.g = MolangParser.ONE;
+            this.b = MolangParser.ONE;
+            this.a = MolangParser.ONE;
         }
 
         public boolean isConstant()
@@ -218,13 +240,24 @@ public abstract class Tint
     {
         public List<ColorStop> stops;
         public MolangExpression interpolant;
+        public float range = 1;
         public boolean equal;
 
-        public Gradient(List<ColorStop> stops, MolangExpression interpolant, boolean equal)
+        public Gradient(List<ColorStop> stops, float range, MolangExpression interpolant, boolean equal)
         {
             this.stops = stops;
+            this.range = range;
             this.interpolant = interpolant;
             this.equal = equal;
+        }
+
+        public Gradient()
+        {
+            this.stops = new ArrayList<>();
+            this.stops.add(new ColorStop(0, new Tint.Solid(MolangParser.ONE, MolangParser.ONE, MolangParser.ONE, MolangParser.ONE)));
+            this.stops.add(new ColorStop(1, new Tint.Solid(MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO)));
+            this.interpolant = MolangParser.ZERO;
+            this.equal = false;
         }
 
         @Override
@@ -251,7 +284,7 @@ public abstract class Tint
 
             ColorStop prev = this.stops.get(0);
 
-            if (factor < prev.stop)
+            if (factor < prev.getStop(this.range))
             {
                 prev.color.compute(particle);
 
@@ -262,10 +295,10 @@ public abstract class Tint
             {
                 ColorStop stop = this.stops.get(i);
 
-                if (stop.stop > factor)
+                if (stop.getStop(this.range) > factor)
                 {
                     prev.color.compute(particle);
-                    stop.color.lerp(particle, (float) (factor - prev.stop) / (stop.stop - prev.stop));
+                    stop.color.lerp(particle, (float) (factor - prev.getStop(this.range)) / (stop.getStop(this.range) - prev.getStop(this.range)));
 
                     return;
                 }
@@ -299,7 +332,7 @@ public abstract class Tint
 
                 for (ColorStop stop : this.stops)
                 {
-                    gradient.add(String.valueOf(stop.stop), stop.color.toHexJson());
+                    gradient.add(String.valueOf(stop.getStop(this.range)), stop.color.toHexJson());
                 }
 
                 color = gradient;
@@ -327,6 +360,11 @@ public abstract class Tint
             {
                 this.stop = stop;
                 this.color = color;
+            }
+
+            public float getStop(float range)
+            {
+                return this.stop * range;
             }
         }
     }
