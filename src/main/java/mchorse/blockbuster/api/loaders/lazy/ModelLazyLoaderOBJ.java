@@ -198,7 +198,7 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
             {
                 try
                 {
-                    OBJParser shapeParser = new OBJParser(shape.getStream(), null);
+                    OBJParser shapeParser = new OBJParser(shape.getStream(), model.providesMtl ? this.mtl.getStream() : null);
 
                     shapeParser.read();
                     this.mergeParsers(shape.getName(), meshes, shapeParser);
