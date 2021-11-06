@@ -323,7 +323,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
             {
                 BufferBuilder builder = Tessellator.getInstance().getBuffer();
 
-                builder.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL);
+                builder.begin(GL11.GL_TRIANGLES, VertexBuilder.getFormat(false, true, false, true));
                 // float texF = (j + 0.5F) / count;
 
                 for (int i = 0, c = this.mesh.triangles; i < c; i++)
@@ -431,6 +431,11 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                     else
                     {
                         builder.pos(x, y, z).tex(u, v).normal(nx, ny, nz).endVertex();
+                    }
+
+                    if (i % 3 == 2)
+                    {
+                        VertexBuilder.calcTangent(builder, false);
                     }
                 }
 

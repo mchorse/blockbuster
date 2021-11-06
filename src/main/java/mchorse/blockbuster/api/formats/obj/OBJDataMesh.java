@@ -1,6 +1,6 @@
 package mchorse.blockbuster.api.formats.obj;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,5 +12,5 @@ import java.util.Map;
 public class OBJDataMesh
 {
     public String name;
-    public Map<OBJMaterial, List<OBJFace>> groups = new HashMap<OBJMaterial, List<OBJFace>>();
+    public Map<OBJMaterial, List<OBJFace>> groups = new LinkedHashMap<OBJMaterial, List<OBJFace>>();
 }
