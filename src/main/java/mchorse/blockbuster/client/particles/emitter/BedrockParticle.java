@@ -1,12 +1,20 @@
 package mchorse.blockbuster.client.particles.emitter;
 
-import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotionCollision;
-import mchorse.mclib.utils.MathUtils;
+import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionAppearance;
+import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionTinting;
+import mchorse.mclib.math.molang.expressions.MolangExpression;
+import mchorse.mclib.utils.DummyEntity;
 import mchorse.mclib.utils.MatrixUtils;
+import mchorse.metamorph.api.Morph;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.vecmath.*;
 import java.util.HashMap;
+import java.util.Map;
 
 public class BedrockParticle
 {
@@ -16,13 +24,12 @@ public class BedrockParticle
     public float random3 = (float) Math.random();
     public float random4 = (float) Math.random();
 
+    public Morph morph = new Morph();
+    private DummyEntity dummy;
+
     /* States */
     public int age;
     public int lifetime;
-    /* Age when the particle should expire */
-    public int expireAge;
-    /* Used to determine lifetime when expirationDelay is on */
-    public int expirationDelay;
     public boolean dead;
     public boolean relativePosition;
     public boolean relativeRotation;
@@ -35,6 +42,11 @@ public class BedrockParticle
     public float angularVelocity;
     public boolean gravity;
     public boolean manual;
+
+    /* Age when the particle should expire */
+    private int expireAge = -1;
+    /* Used to determine lifetime when expirationDelay is on */
+    private int expirationDelay = -1;
     
     /**
      * This is used to estimate whether an object is only bouncing or lying on a surface
@@ -45,14 +57,14 @@ public class BedrockParticle
      */
     public Vector3f collisionTime = new Vector3f(-2f, -2f,-2f);
     public HashMap<Entity, Vector3f> entityCollisionTime = new HashMap<>();
-    public boolean collisionTexture;
-    public boolean collisionTinting;
+    public boolean collided;
     public int bounces;
 
     /**
      * For collision Appearance needed for animation
      */
-    public int firstCollision = -1;
+    public int firstIntersection = -1;
+    public boolean intersected;
     
     /* Rotation */
     public float rotation;
@@ -91,6 +103,62 @@ public class BedrockParticle
         this.speed.set((float) Math.random() - 0.5F, (float) Math.random() - 0.5F, (float) Math.random() - 0.5F);
         this.speed.normalize();
         this.matrix.setIdentity();
+    }
+
+    public boolean isCollisionTexture(BedrockEmitter emitter)
+    {
+        return MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionAppearance.class).enabled) && this.intersected;
+    }
+
+    public boolean isCollisionTinting(BedrockEmitter emitter)
+    {
+        return MolangExpression.isOne(emitter.scheme.getOrCreate(BedrockComponentCollisionTinting.class).enabled) && this.intersected;
+    }
+
+    public int getExpireAge()
+    {
+        return this.expireAge;
+    }
+
+    public int getExpirationDelay()
+    {
+        return this.expirationDelay;
+    }
+
+    /**
+     * Copy this particle to the given particle (it does not copy fields that are initialized by components)
+     * @param to destiny to copy values to
+     * @return copied particle
+     */
+    public BedrockParticle softCopy(BedrockParticle to)
+    {
+        to.age = this.age;
+        to.expireAge = this.expireAge;
+        to.expirationDelay = this.expirationDelay;
+        to.realisticCollisionDrag = this.realisticCollisionDrag;
+        to.collisionTime = (Vector3f) this.collisionTime.clone();
+        to.entityCollisionTime = new HashMap<>();
+
+        for(Map.Entry<Entity, Vector3f> entry : this.entityCollisionTime.entrySet())
+        {
+            to.entityCollisionTime.put(entry.getKey(), (Vector3f) entry.getValue().clone());
+        }
+
+        to.bounces = this.bounces;
+        to.firstIntersection = this.firstIntersection;
+        to.offset = (Vector3d) this.offset.clone();
+        to.position = (Vector3d) this.position.clone();
+        to.initialPosition = (Vector3d) this.initialPosition.clone();
+        to.prevPosition = (Vector3d) this.prevPosition.clone();
+        to.matrix = (Matrix3f) this.matrix.clone();
+        to.matrixSet = this.matrixSet;
+        to.speed = (Vector3f) this.speed.clone();
+        to.acceleration = (Vector3f) this.acceleration.clone();
+        to.accelerationFactor = (Vector3f) this.accelerationFactor.clone();
+        to.dragFactor = this.dragFactor;
+        to.global = (Vector3d) this.global.clone();
+
+        return to;
     }
 
     public double getDistanceSq(BedrockEmitter emitter)
@@ -260,15 +328,38 @@ public class BedrockParticle
             this.position.x += speed0.x / 20F;
             this.position.y += speed0.y / 20F;
             this.position.z += speed0.z / 20F;
+
+            if (!this.morph.isEmpty())
+            {
+                EntityLivingBase dummy = this.getDummy(emitter);
+
+                this.morph.get().update(dummy);
+
+                dummy.ticksExisted += 1;
+            }
         }
 
         if (this.lifetime >= 0 &&
-            (this.age >= this.lifetime || (this.age>=this.expireAge && this.expireAge!=0)) )
+            (this.age >= this.lifetime || (this.age >= this.expireAge && this.expireAge != -1)) )
         {
             this.dead = true;
         }
 
         this.age ++;
+    }
+
+    /**
+     * Sets the expirationDelay and expireAge - the smallest expire age wins. Negative expiration delays always overwrite/win.
+     */
+    public void setExpirationDelay(double delay)
+    {
+        int expirationDelay = (int) delay;
+
+        if (this.age + expirationDelay < this.expireAge || this.expireAge == -1)
+        {
+            this.expirationDelay = Math.abs(expirationDelay);
+            this.expireAge = this.age + this.expirationDelay;
+        }
     }
 
     public void setupMatrix(BedrockEmitter emitter)
@@ -306,5 +397,28 @@ public class BedrockParticle
         this.offset.scale(0);
     }
 
+    @SideOnly(Side.CLIENT)
+    public EntityLivingBase getDummy(BedrockEmitter emitter)
+    {
+        if (this.dummy == null)
+        {
+            this.dummy = new DummyEntity(Minecraft.getMinecraft().world);
+        }
 
+        Vector3d pos = this.getGlobalPosition(emitter);
+
+        this.dummy.setPosition(pos.x, pos.y, pos.z);
+        this.dummy.prevPosX = this.dummy.posX;
+        this.dummy.prevPosY = this.dummy.posY;
+        this.dummy.prevPosZ = this.dummy.posZ;
+        this.dummy.lastTickPosX = this.dummy.posX;
+        this.dummy.lastTickPosY = this.dummy.posY;
+        this.dummy.lastTickPosZ = this.dummy.posZ;
+        this.dummy.rotationYaw = this.dummy.prevRotationYaw = 0;
+        this.dummy.rotationPitch = this.dummy.prevRotationPitch = 0;
+        this.dummy.rotationYawHead = this.dummy.prevRotationYawHead = 0;
+        this.dummy.renderYawOffset = this.dummy.prevRenderYawOffset = 0;
+
+        return this.dummy;
+    }
 }

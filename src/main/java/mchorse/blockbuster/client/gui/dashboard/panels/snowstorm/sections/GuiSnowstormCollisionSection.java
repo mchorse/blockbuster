@@ -17,7 +17,7 @@ import net.minecraft.client.Minecraft;
 
 public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<BedrockComponentMotionCollision>
 {
-    public GuiToggleElement enabled;
+    public GuiTextElement condition;
     public GuiToggleElement realisticCollision;
     public GuiToggleElement entityCollision;
     public GuiToggleElement momentum;
@@ -44,7 +44,12 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
     {
         super(mc, parent);
 
-        this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.enabled"), (b) -> this.parent.dirty());
+        this.condition = new GuiTextElement(mc, 10000, (str) ->
+        {
+            this.component.enabled = str.isEmpty() ? MolangParser.ONE : this.parse(str, this.condition, this.component.enabled);
+            this.parent.dirty();
+        });
+        this.condition.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.condition_tooltip"));
         
         this.realisticCollision = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.realistic_collision"), (b) ->
         {
@@ -130,7 +135,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
             this.parent.dirty();
         });
         this.splitParticle.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.split_particle.count"));
-        this.splitParticle.limit(0, 99);
+        this.splitParticle.limit(0, 99).integer();
         
         this.radius = new GuiTrackpadElement(mc, (value) ->
         {
@@ -155,7 +160,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
         this.controlToggleElements = new GuiElement(mc);
         this.controlToggleElements.flex().column(4).stretch().vertical().height(4);
         
-        this.controlToggleElements.add(this.enabled, this.realisticCollision, this.entityCollision);
+        this.controlToggleElements.add(this.condition, this.realisticCollision, this.entityCollision);
         
         this.randomBouncinessRow = new GuiElement(mc);
         this.randomBouncinessRow.flex().column(2).stretch().vertical().height(2);
@@ -176,7 +181,6 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
     @Override
     public void beforeSave(BedrockScheme scheme)
     {
-        this.component.enabled = this.enabled.isToggled() ? MolangParser.ONE : MolangParser.ZERO;
         this.component.preserveEnergy = this.preserveEnergy.isToggled();
     }
 
@@ -191,7 +195,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
     @Override
     protected void fillData()
     {
-        this.enabled.toggled(MolangExpression.isOne(this.component.enabled));
+        this.set(this.condition, this.component.enabled);
         this.realisticCollision.toggled(this.component.realisticCollision);
         this.entityCollision.toggled(this.component.entityCollision);
         this.momentum.toggled(this.component.momentum);

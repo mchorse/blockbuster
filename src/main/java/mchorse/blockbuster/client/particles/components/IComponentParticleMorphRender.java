@@ -4,6 +4,5 @@ import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import net.minecraft.client.renderer.BufferBuilder;
 
-public interface IComponentParticleRender extends IComponentRenderBase
-{
-}
+public interface IComponentParticleMorphRender extends IComponentRenderBase
+{ }

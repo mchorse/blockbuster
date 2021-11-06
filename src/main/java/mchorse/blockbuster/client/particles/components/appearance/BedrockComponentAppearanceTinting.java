@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 
 public class BedrockComponentAppearanceTinting extends BedrockComponentBase implements IComponentParticleRender
 {
-    public Tint color = new Tint.Solid(MolangParser.ONE, MolangParser.ONE, MolangParser.ONE, MolangParser.ONE);
+    public Tint color = new Tint.Solid();
 
     @Override
     public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
