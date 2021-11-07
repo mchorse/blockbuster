@@ -103,7 +103,7 @@ public abstract class Tint
                 colorStops.add(new Tint.Gradient.ColorStop(Float.parseFloat(entry.getKey()), stopColor));
             }
 
-            Collections.sort(colorStops, (a, b) -> a.stop > b.stop ? 1 : -1);
+            colorStops.sort((a, b) -> Float.compare(a.stop, b.stop));
             equal = false;
         }
         else if (gradient.isJsonArray())
@@ -258,6 +258,11 @@ public abstract class Tint
             this.stops.add(new ColorStop(1, new Tint.Solid(MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO)));
             this.interpolant = MolangParser.ZERO;
             this.equal = false;
+        }
+
+        public void sort()
+        {
+            this.stops.sort((a, b) -> Float.compare(a.stop, b.stop));
         }
 
         @Override

@@ -564,13 +564,17 @@ blockbuster.gui:
             expression: Expression
             gradient: Gradient
 
-            interpolant_tooltip: Color Gradient Interpolant
-            range_tooltip: Color Gradient Range
+            interpolant_tooltip: Color gradient interpolant
+            range_tooltip: Color gradient range
 
             red: Red
             green: Green
             blue: Blue
             alpha: Alpha
+
+            context:
+                add_stop: Add a gradient color
+                remove_stop: Remove a gradient color
 
         collision:
             title: Collision

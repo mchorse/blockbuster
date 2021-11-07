@@ -46,6 +46,16 @@ public abstract class GuiSnowstormSection extends GuiElement
         }
     }
 
+    protected void resizeParent()
+    {
+        this.getParent().resize();
+    }
+
+    public void dirty()
+    {
+        this.parent.dirty();
+    }
+
     public abstract String getTitle();
 
     public MolangExpression parse(String string, GuiTextElement element, MolangExpression old)
@@ -116,10 +126,5 @@ public abstract class GuiSnowstormSection extends GuiElement
         }
 
         return false;
-    }
-
-    protected void resizeParent()
-    {
-        this.getParent().resize();
     }
 }

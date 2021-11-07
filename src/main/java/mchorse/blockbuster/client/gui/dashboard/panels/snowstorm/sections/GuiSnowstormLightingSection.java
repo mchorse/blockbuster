@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.utils.GuiGradientEditor;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceLighting;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceTinting;
@@ -32,6 +33,8 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
     public GuiTextElement interpolant;
     public GuiTrackpadElement range;
     public GuiToggleElement lighting;
+    public GuiGradientEditor gradientEditor;
+    public GuiColorElement gradientColor;
 
     public GuiElement gradientElements;
     public GuiElement first;
@@ -123,6 +126,9 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
             this.parent.dirty();
         });
         this.range.tooltip(IKey.lang("blockbuster.gui.snowstorm.lighting.range_tooltip"));
+        this.gradientColor = new GuiColorElement(mc, this::setGradientColor);
+        this.gradientColor.picker.editAlpha();
+        this.gradientEditor = new GuiGradientEditor(mc, this, this.gradientColor);
 
         this.gradientElements = new GuiElement(mc);
         this.gradientElements.flex().column(4).stretch().vertical().height(4);
@@ -134,6 +140,11 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 
         this.fields.add(this.lighting);
         this.fields.add(Elements.row(mc, 5, 0, 20, label, this.mode));
+    }
+
+    private void setGradientColor(int color)
+    {
+        this.gradientEditor.setColor(color);
     }
 
     protected MolangExpression set(MolangExpression expression, float value)
@@ -238,6 +249,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 
             this.set(this.interpolant, gradient.interpolant);
             this.range.setValue(gradient.range);
+            this.gradientEditor.setGradient((Tint.Gradient) this.component.color);
             this.mode.setValue(2);
         }
 
@@ -246,6 +258,8 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 
     public void updateElements()
     {
+        this.gradientColor.removeFromParent();
+        this.gradientEditor.removeFromParent();
         this.gradientElements.removeFromParent();
         this.color.removeFromParent();
         this.color.picker.removeFromParent();
@@ -263,6 +277,8 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
         }
         else if (this.mode.getValue() == 2)
         {
+            this.fields.add(this.gradientEditor);
+            this.fields.add(this.gradientColor);
             this.fields.add(this.gradientElements);
         }
 
