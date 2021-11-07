@@ -380,10 +380,11 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
 
         Color color = this.image.color;
 
+        /* By default the pos is (0.5, -0.5, -0.5, 0.5)  */
         buffer.pos(pos.x, pos.z, 0).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.y, pos.z, 0).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.y, pos.w, 0).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
         buffer.pos(pos.x, pos.w, 0).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.y, pos.w, 0).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.y, pos.z, 0).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
 
         tessellator.draw();
 
