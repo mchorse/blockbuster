@@ -344,10 +344,12 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         pos.set(-(finalUv.x - 0.5) * ratioY, -(finalUv.y - 0.5) * ratioY, (finalUv.z - 0.5) * ratioX, (finalUv.w - 0.5) * ratioX);
         pos.scale(scale);
 
+        boolean isCulling = GL11.glIsEnabled(GL11.GL_CULL_FACE);
+
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
-        GlStateManager.disableCull();
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
+        GlStateManager.enableCull();
 
         if (this.keying)
         {
@@ -381,10 +383,18 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         Color color = this.image.color;
 
         /* By default the pos is (0.5, -0.5, -0.5, 0.5)  */
-        buffer.pos(pos.x, pos.z, 0).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.x, pos.w, 0).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.y, pos.w, 0).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.y, pos.z, 0).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
+
+        /* Frontface */
+        buffer.pos(pos.x, pos.z, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.x, pos.w, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.y, pos.w, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.y, pos.z, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
+
+        /* Backface */
+        buffer.pos(pos.x, pos.z, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.y, pos.z, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.y, pos.w, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.x, pos.w, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
 
         tessellator.draw();
 
@@ -401,9 +411,13 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         }
 
+        if (!isCulling)
+        {
+            GlStateManager.disableCull();
+        }
+
         GlStateManager.disableBlend();
         GlStateManager.disableAlpha();
-        GlStateManager.enableCull();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
     }
 
