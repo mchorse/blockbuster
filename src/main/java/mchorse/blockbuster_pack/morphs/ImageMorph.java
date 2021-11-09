@@ -349,7 +349,15 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
-        GlStateManager.enableCull();
+
+        if (ReflectionUtils.isOptifineShadowPass())
+        {
+            GlStateManager.disableCull();
+        }
+        else
+        {
+            GlStateManager.enableCull();
+        }
 
         if (this.keying)
         {
@@ -391,10 +399,10 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         buffer.pos(pos.y, pos.z, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
 
         /* Backface */
-        buffer.pos(pos.x, pos.z, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.y, pos.z, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.y, pos.w, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.x, pos.w, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.x, pos.z, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.z).normal(0.0F, 0.0F, -1.0F).endVertex();
+        buffer.pos(pos.y, pos.z, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.z).normal(0.0F, 0.0F, -1.0F).endVertex();
+        buffer.pos(pos.y, pos.w, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.w).normal(0.0F, 0.0F, -1.0F).endVertex();
+        buffer.pos(pos.x, pos.w, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.w).normal(0.0F, 0.0F, -1.0F).endVertex();
 
         tessellator.draw();
 
@@ -411,7 +419,11 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         }
 
-        if (!isCulling)
+        if (isCulling)
+        {
+            GlStateManager.enableCull();
+        }
+        else
         {
             GlStateManager.disableCull();
         }
