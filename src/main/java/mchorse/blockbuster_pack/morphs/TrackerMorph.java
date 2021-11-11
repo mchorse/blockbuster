@@ -116,7 +116,12 @@ public class TrackerMorph extends AbstractMorph
             GlStateManager.disableLighting();
             renderPointer();
             GlStateManager.enableLighting();
-            renderLabel();
+
+            /* dont render labels in gui - it clutters the screen */
+            if (!this.hidden)
+            {
+                renderLabel();
+            }
         }
 
         if (this.tracker != null)

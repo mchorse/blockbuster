@@ -68,6 +68,7 @@ public class GuiSnowstormCollisionLightingSection extends GuiSnowstormLightingSe
         this.lighting.toggled(!this.appearanceComponent.lit);
         this.enabled.toggled(MolangExpression.isOne(this.getComponent().enabled));
 
+        this.setTintsCache();
         this.fillData();
     }
 }

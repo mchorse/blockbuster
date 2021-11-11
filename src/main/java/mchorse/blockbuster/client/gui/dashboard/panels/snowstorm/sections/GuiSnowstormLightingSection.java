@@ -41,7 +41,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
     public GuiElement second;
 
     /** Solid, Expression, Gradient */
-    protected final Tint[] tints = {new Tint.Solid(), new Tint.Solid(), new Tint.Gradient()};
+    protected final Tint[] tints = new Tint[3];
 
     protected BedrockComponentAppearanceTinting component;
 
@@ -52,6 +52,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
         this.mode = new GuiCirculateElement(mc, (b) ->
         {
             this.component.color = this.tints[b.getValue()];
+
             this.updateElements();
             this.parent.dirty();
         });
@@ -120,8 +121,9 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 
         this.range = new GuiTrackpadElement(mc, (value) ->
         {
+            double threshold = 0.0000000001;
             Tint.Gradient gradient = this.getGradient();
-            gradient.range = value.floatValue();
+            gradient.range = (value.floatValue() >= -threshold && value.floatValue() <= threshold) ? 1 : value.floatValue();
 
             this.parent.dirty();
         });
@@ -133,7 +135,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
         this.gradientElements = new GuiElement(mc);
         this.gradientElements.flex().column(4).stretch().vertical().height(4);
 
-        this.gradientElements.add(this.interpolant, this.range);
+        this.gradientElements.add(this.gradientEditor, this.gradientColor, this.interpolant, this.range);
 
         this.first = Elements.row(mc, 5, 0, 20, this.r, this.g);
         this.second = Elements.row(mc, 5, 0, 20, this.b, this.a);
@@ -142,7 +144,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
         this.fields.add(Elements.row(mc, 5, 0, 20, label, this.mode));
     }
 
-    private void setGradientColor(int color)
+    protected void setGradientColor(int color)
     {
         this.gradientEditor.setColor(color);
     }
@@ -215,7 +217,15 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 
         this.lighting.toggled(scheme.get(BedrockComponentAppearanceLighting.class) != null);
 
+        this.setTintsCache();
         this.fillData();
+    }
+
+    protected void setTintsCache()
+    {
+        this.tints[0] = new Tint.Solid();
+        this.tints[1] = new Tint.Solid();
+        this.tints[2] = new Tint.Gradient();
     }
 
     protected void fillData()
@@ -249,7 +259,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 
             this.set(this.interpolant, gradient.interpolant);
             this.range.setValue(gradient.range);
-            this.gradientEditor.setGradient((Tint.Gradient) this.component.color);
+            this.gradientEditor.setGradient(gradient);
             this.mode.setValue(2);
         }
 
@@ -258,8 +268,6 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 
     public void updateElements()
     {
-        this.gradientColor.removeFromParent();
-        this.gradientEditor.removeFromParent();
         this.gradientElements.removeFromParent();
         this.color.removeFromParent();
         this.color.picker.removeFromParent();
@@ -268,17 +276,31 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 
         if (this.mode.getValue() == 0)
         {
+            Tint.Solid solid = this.getSolid();
+
+            this.color.picker.color.set((float) solid.r.get(), (float) solid.g.get(), (float) solid.b.get(), (float) solid.a.get());
+
             this.fields.add(this.color);
         }
         else if (this.mode.getValue() == 1)
         {
+            Tint.Solid solid = this.getSolid();
+
+            this.set(this.r, solid.r);
+            this.set(this.g, solid.g);
+            this.set(this.b, solid.b);
+            this.set(this.a, solid.a);
+
             this.fields.add(this.first);
             this.fields.add(this.second);
         }
         else if (this.mode.getValue() == 2)
         {
-            this.fields.add(this.gradientEditor);
-            this.fields.add(this.gradientColor);
+            Tint.Gradient gradient = this.getGradient();
+
+            this.set(this.interpolant, gradient.interpolant);
+            this.range.setValue(gradient.range);
+            this.gradientEditor.setGradient(gradient);
             this.fields.add(this.gradientElements);
         }
 
