@@ -56,7 +56,7 @@ public class GuiGradientEditor extends GuiElement
 
     private Area fillBound(Tint.Gradient.ColorStop stop)
     {
-        int x = this.a.x(stop.stop / this.gradient.range);
+        int x = this.a.x(stop.stop);
 
         this.b.set(x - 3, this.a.ey() - 7, 6, 10);
 
@@ -109,7 +109,7 @@ public class GuiGradientEditor extends GuiElement
 
     private void addColorStop(int mouseX)
     {
-        float x = (mouseX - this.area.x) / (float) this.area.w * this.gradient.range;
+        float x = (mouseX - this.area.x) / (float) this.area.w;
 
         Tint.Solid color = new Tint.Solid();
         Tint.Gradient.ColorStop stop = new Tint.Gradient.ColorStop(x, color);
@@ -127,13 +127,16 @@ public class GuiGradientEditor extends GuiElement
 
     private void removeColorStop()
     {
-        int index = this.gradient.stops.indexOf(this.current);
+        if (this.gradient.stops.size() > 2)
+        {
+            int index = this.gradient.stops.indexOf(this.current);
 
-        this.gradient.stops.remove(index);
+            this.gradient.stops.remove(index);
 
-        index = MathUtils.clamp(index, 0, this.gradient.stops.size() - 1);
+            index = MathUtils.clamp(index, 0, this.gradient.stops.size() - 1);
 
-        this.fillStop(this.gradient.stops.get(index));
+            this.fillStop(this.gradient.stops.get(index));
+        }
     }
 
     @Override
@@ -197,9 +200,9 @@ public class GuiGradientEditor extends GuiElement
         }
         else if (this.dragging == 1)
         {
-            float x = (context.mouseX - this.area.x) / (float) this.area.w * this.gradient.range;
+            float x = (context.mouseX - this.area.x) / (float) this.area.w;
 
-            this.current.stop = MathUtils.clamp(x, 0, this.gradient.range);
+            this.current.stop = MathUtils.clamp(x, 0, 1);
             this.gradient.sort();
         }
 
@@ -214,7 +217,7 @@ public class GuiGradientEditor extends GuiElement
 
         if (first.stop > 0)
         {
-            int x1 = this.a.x(first.stop / this.gradient.range);
+            int x1 = this.a.x(first.stop);
             int rgba1 = this.fillColor(first.color).getRGBAColor();
 
             Gui.drawRect(this.a.x, this.a.y, x1, this.a.ey(), rgba1);
@@ -225,8 +228,8 @@ public class GuiGradientEditor extends GuiElement
             Tint.Gradient.ColorStop stop = this.gradient.stops.get(i);
             Tint.Gradient.ColorStop next = i + 1 < size ? this.gradient.stops.get(i + 1) : stop;
 
-            int x1 = this.a.x(stop.stop / this.gradient.range);
-            int x2 = this.a.x((next == stop ? this.gradient.range : next.stop) / this.gradient.range);
+            int x1 = this.a.x(stop.stop);
+            int x2 = this.a.x((next == stop ? 1 : next.stop));
 
             int rgba1 = this.fillColor(stop.color).getRGBAColor();
             int rgba2 = this.fillColor(next.color).getRGBAColor();
@@ -239,7 +242,7 @@ public class GuiGradientEditor extends GuiElement
             Tint.Gradient.ColorStop stop = this.gradient.stops.get(i);
             Area area = this.fillBound(stop);
 
-            int x = this.a.x(stop.stop / this.gradient.range);
+            int x = this.a.x(stop.stop);
 
             Gui.drawRect(area.x, area.y, area.ex(), area.ey(), this.current == stop ? 0xffffffff : 0xff000000);
             Gui.drawRect(area.x + 1, area.y + 1, area.ex() - 1, area.ey() - 1, this.fillColor(stop.color).getRGBAColor());
