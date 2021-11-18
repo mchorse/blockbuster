@@ -33,6 +33,7 @@ public class GunProps
 {
     /* Gun properties */
     public AbstractMorph defaultMorph;
+    public AbstractMorph hands;
     public AbstractMorph firingMorph;
     public String fireCommand;
     public int delay;
@@ -42,7 +43,7 @@ public class GunProps
     public boolean launch;
     public boolean useTarget;
     public ItemStack ammoStack = ItemStack.EMPTY;
-
+    public float zoom;
     /* Projectile properties */
     public AbstractMorph projectileMorph;
     public String tickCommand;
@@ -253,7 +254,7 @@ public class GunProps
         this.launch = false;
         this.useTarget = false;
         this.ammoStack = ItemStack.EMPTY;
-
+        this.zoom = 0;
         /* Projectile properties */
         this.projectileMorph = null;
         this.tickCommand = "";
@@ -303,6 +304,8 @@ public class GunProps
         this.firingMorph = this.create(tag, "Fire");
         if (tag.hasKey("FireCommand")) this.fireCommand = tag.getString("FireCommand");
         if (tag.hasKey("Delay")) this.delay = tag.getInteger("Delay");
+
+
         if (tag.hasKey("Projectiles")) this.projectiles = tag.getInteger("Projectiles");
         if (tag.hasKey("Scatter"))
         {
@@ -341,6 +344,7 @@ public class GunProps
         if (tag.hasKey("HX")) this.hitboxX = tag.getFloat("HX");
         if (tag.hasKey("HY")) this.hitboxY = tag.getFloat("HY");
         if (tag.hasKey("Speed")) this.speed = tag.getFloat("Speed");
+        if (tag.hasKey("Zoom")) this.zoom = tag.getFloat("Zoom");
         if (tag.hasKey("Friction")) this.friction = tag.getFloat("Friction");
         if (tag.hasKey("Gravity")) this.gravity = tag.getFloat("Gravity");
         if (tag.hasKey("FadeIn")) this.fadeIn = tag.getInteger("FadeIn");
@@ -394,6 +398,7 @@ public class GunProps
         if (this.firingMorph != null) tag.setTag("Fire", this.to(this.firingMorph));
         if (!this.fireCommand.isEmpty()) tag.setString("FireCommand", this.fireCommand);
         if (this.delay != 0) tag.setInteger("Delay", this.delay);
+
         if (this.projectiles != 1) tag.setInteger("Projectiles", this.projectiles);
         if (this.scatterX != 0F || this.scatterY != 0F)
         {
@@ -419,6 +424,7 @@ public class GunProps
         if (this.random) tag.setBoolean("Random", this.random);
         if (this.hitboxX != 0.25F) tag.setFloat("HX", this.hitboxX);
         if (this.hitboxY != 0.25F) tag.setFloat("HY", this.hitboxY);
+        if (this.zoom != 0) tag.setFloat("Zoom", this.zoom);
         if (this.speed != 1.0F) tag.setFloat("Speed", this.speed);
         if (this.friction != 0.99F) tag.setFloat("Friction", this.friction);
         if (this.gravity != 0.03F) tag.setFloat("Gravity", this.gravity);
