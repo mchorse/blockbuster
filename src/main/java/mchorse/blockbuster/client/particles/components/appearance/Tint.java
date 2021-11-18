@@ -254,8 +254,8 @@ public abstract class Tint
         public Gradient()
         {
             this.stops = new ArrayList<>();
-            this.stops.add(new ColorStop(0, new Tint.Solid(MolangParser.ONE, MolangParser.ONE, MolangParser.ONE, MolangParser.ONE)));
-            this.stops.add(new ColorStop(1, new Tint.Solid(MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO)));
+            this.stops.add(new ColorStop(0, new Tint.Solid(new MolangValue(null, new Constant(1F)), new MolangValue(null, new Constant(1F)), new MolangValue(null, new Constant(1F)), new MolangValue(null, new Constant(1F)))));
+            this.stops.add(new ColorStop(1, new Tint.Solid(new MolangValue(null, new Constant(0F)), new MolangValue(null, new Constant(0F)), new MolangValue(null, new Constant(0F)), new MolangValue(null, new Constant(1F)))));
             this.interpolant = MolangParser.ZERO;
             this.equal = false;
         }
