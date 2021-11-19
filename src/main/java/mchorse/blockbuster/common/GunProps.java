@@ -86,6 +86,7 @@ public class GunProps
 
     private int shoot = 0;
     private Morph current = new Morph();
+    private Morph current_hands = new Morph();
     private boolean renderLock;
 
     public EntityLivingBase entity;
@@ -103,6 +104,10 @@ public class GunProps
     public void setCurrent(AbstractMorph morph)
     {
         this.current.setDirect(morph);
+    }
+
+    public void setHands(AbstractMorph morph){
+        this.current_hands.setDirect(morph);
     }
 
     public void shot()
@@ -160,10 +165,14 @@ public class GunProps
             this.entity.ticksExisted++;
 
             AbstractMorph morph = this.current.get();
-
+            AbstractMorph morph1 = this.current_hands.get();
             if (morph != null)
             {
                 morph.update(this.entity);
+            }
+            if (morph1 != null)
+            {
+                morph1.update(this.entity);
             }
         }
 
@@ -172,6 +181,7 @@ public class GunProps
             if (this.shoot == 0)
             {
                 this.current.set(MorphUtils.copy(this.defaultMorph));
+
             }
 
             this.shoot--;
@@ -195,6 +205,7 @@ public class GunProps
 
         EntityLivingBase entity = this.useTarget ? target : this.entity;
         AbstractMorph morph = this.current.get();
+        AbstractMorph morph1 = this.current_hands.get();
 
         if (morph != null && entity != null)
         {
@@ -221,7 +232,31 @@ public class GunProps
             entity.rotationYawHead = rotationYawHead;
             entity.prevRotationYawHead = prevRotationYawHead;
         }
+        if (morph1 != null && entity != null)
+        {
+            float rotationYaw = entity.renderYawOffset;
+            float prevRotationYaw = entity.prevRenderYawOffset;
+            float rotationYawHead = entity.rotationYawHead;
+            float prevRotationYawHead = entity.prevRotationYawHead;
 
+            entity.rotationYawHead -= entity.renderYawOffset;
+            entity.prevRotationYawHead -= entity.prevRenderYawOffset;
+            entity.renderYawOffset = entity.prevRenderYawOffset = 0.0F;
+
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0.5F, 0, 0.5F);
+            this.gunTransform.transform();
+
+            this.setupEntity();
+            MorphUtils.render(morph1, entity, 0, 0, 0, 0, partialTicks);
+
+            GL11.glPopMatrix();
+
+            entity.renderYawOffset = rotationYaw;
+            entity.prevRenderYawOffset = prevRotationYaw;
+            entity.rotationYawHead = rotationYawHead;
+            entity.prevRotationYawHead = prevRotationYawHead;
+        }
         this.renderLock = false;
     }
 
@@ -246,6 +281,7 @@ public class GunProps
     {
         /* Gun properties */
         this.defaultMorph = null;
+        this.hands = null;
         this.firingMorph = null;
         this.fireCommand = "";
         this.delay = 0;
@@ -301,6 +337,7 @@ public class GunProps
 
         /* Gun properties */
         this.defaultMorph = this.create(tag, "Morph");
+        this.hands = this.create(tag, "Hands");
         this.firingMorph = this.create(tag, "Fire");
         if (tag.hasKey("FireCommand")) this.fireCommand = tag.getString("FireCommand");
         if (tag.hasKey("Delay")) this.delay = tag.getInteger("Delay");
@@ -376,6 +413,7 @@ public class GunProps
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
             this.current.set(MorphUtils.copy(this.defaultMorph));
+            this.current_hands.set(MorphUtils.copy(this.hands));
         }
     }
 
@@ -395,6 +433,7 @@ public class GunProps
 
         /* Gun properties */
         if (this.defaultMorph != null) tag.setTag("Morph", this.to(this.defaultMorph));
+        if (this.hands != null) tag.setTag("Hands", this.to(this.hands));
         if (this.firingMorph != null) tag.setTag("Fire", this.to(this.firingMorph));
         if (!this.fireCommand.isEmpty()) tag.setString("FireCommand", this.fireCommand);
         if (this.delay != 0) tag.setInteger("Delay", this.delay);

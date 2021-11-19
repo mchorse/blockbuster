@@ -54,7 +54,6 @@ public class GuiGun extends GuiBase
 
     /* Morphs configuration */
     public GuiCreativeMorphsMenu morphs;
-
     /* Gun options */
     public GuiTrackpadElement zoom;
     public GuiElement gunOptions;
@@ -149,7 +148,7 @@ public class GuiGun extends GuiBase
         Area area = this.gunOptions.area;
 
         this.pickDefault = new GuiNestedEdit(mc, (editing) -> this.openMorphs(1, editing));
-        this.pickHands = new GuiNestedEdit(mc, (editing) -> this.openMorphs(1, editing));
+        this.pickHands = new GuiNestedEdit(mc, (editing) -> this.openMorphs(5, editing));
         this.pickFiring = new GuiNestedEdit(mc, false, (editing) -> this.openMorphs(2, editing));
         this.fireCommand = new GuiTextElement(mc, 10000, (value) -> this.props.fireCommand = value);
         this.delay = new GuiTrackpadElement(mc, (value) -> this.props.delay = value.intValue());
@@ -179,6 +178,7 @@ public class GuiGun extends GuiBase
         this.zoom.flex().relative(scatterBar.resizer()).set(0, -150, 100, 20).x(1F, 10);
         this.projectiles.flex().relative(scatterBar.resizer()).set(0, 0, 100, 20).x(1F, 10);
         this.pickDefault.flex().relative(this.delay.resizer()).w(1F).y(-5 - firingOffset);
+        this.pickHands.flex().relative(this.delay.resizer()).w(1F).y(-140 - firingOffset);
         this.pickFiring.flex().relative(this.projectiles.resizer()).w(1F).y(-5 - firingOffset);
         this.ammoStack.flex().relative(this.pickFiring.resizer()).x(1F, 5).y(-2);
 
@@ -189,7 +189,7 @@ public class GuiGun extends GuiBase
         this.useTarget.flex().h(20);
         launchBar.add(this.launch, this.useTarget);
 
-        this.gunOptions.add(scatterBar, launchBar, this.delay, this.zoom, this.projectiles, this.pickDefault, this.pickFiring, this.fireCommand, this.ammoStack);
+        this.gunOptions.add(scatterBar, launchBar, this.delay, this.zoom, this.projectiles, this.pickDefault, this.pickHands,this.pickFiring, this.fireCommand, this.ammoStack);
 
         /* Projectile options */
         area = this.projectileOptions.area;
@@ -325,7 +325,7 @@ public class GuiGun extends GuiBase
 
         /* Gun properties */
         this.pickDefault.setMorph(this.props.defaultMorph);
-
+        this.pickHands.setMorph(this.props.hands);
         this.pickFiring.setMorph(this.props.firingMorph);
         this.fireCommand.setText(this.props.fireCommand);
         this.delay.setValue(this.props.delay);
@@ -428,7 +428,9 @@ public class GuiGun extends GuiBase
         {
             morph = this.props.impactMorph;
         }
-
+        else if (i==5){
+            morph = this.props.hands;
+        }
 
 
         if (this.morphs.hasParent())
@@ -479,6 +481,10 @@ public class GuiGun extends GuiBase
         {
             this.props.impactMorph = morph;
             this.pickImpact.setMorph(morph);
+        }else if(this.index ==5){
+            this.props.hands = morph;
+            this.props.setHands(MorphUtils.copy(morph));
+            this.pickHands.setMorph(morph);
         }
     }
 
@@ -508,7 +514,10 @@ public class GuiGun extends GuiBase
             {
                 this.props.defaultMorph.renderOnScreen(player, this.pickDefault.area.mx(), this.pickDefault.area.y - 20, w * 0.5F, 1);
             }
-
+            if (this.props.hands != null)
+            {
+                this.props.hands.renderOnScreen(player, this.pickHands.area.mx(), this.pickHands.area.y - 20, w * 0.5F, 1);
+            }
             if (this.props.firingMorph != null)
             {
                 this.props.firingMorph.renderOnScreen(player, this.pickFiring.area.mx(), this.pickFiring.area.y - 20, w * 0.5F, 1);
@@ -518,7 +527,7 @@ public class GuiGun extends GuiBase
 
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.default_morph"), this.pickDefault.area.mx(), this.pickFiring.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.fire_morph"), this.pickFiring.area.mx(), this.pickFiring.area.y - 12, 0xffffff);
-
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.hand_morph"), this.pickHands.area.mx(), this.pickHands.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.delay"), this.delay.area.mx(), this.delay.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.scatter"), this.scatterX.area.ex() + 3, this.scatterX.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.projectiles"), this.projectiles.area.mx(), this.projectiles.area.y - 12, 0xffffff);
