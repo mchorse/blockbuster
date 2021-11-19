@@ -22,7 +22,7 @@ import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.blockbuster.events.PlayerRender;
+import mchorse.blockbuster.events.GunZoomRender;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.recording.capturing.ActionHandler;
@@ -36,7 +36,6 @@ import mchorse.blockbuster_pack.trackers.TrackerRegistry;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.MorphManager;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -185,7 +184,7 @@ public class CommonProxy
         MinecraftForge.EVENT_BUS.register(new ActionHandler());
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
         MinecraftForge.EVENT_BUS.register(new MetamorphHandler());
-        MinecraftForge.EVENT_BUS.register(new PlayerRender());
+        MinecraftForge.EVENT_BUS.register(new GunZoomRender());
     }
 
     /**
