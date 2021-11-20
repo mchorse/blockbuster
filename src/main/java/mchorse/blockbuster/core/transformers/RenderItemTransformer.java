@@ -2,24 +2,25 @@ package mchorse.blockbuster.core.transformers;
 
 import mchorse.blockbuster.utils.mclib.coremod.ClassMethodTransformer;
 import mchorse.blockbuster.utils.mclib.coremod.CoreClassTransformer;
+import mchorse.mclib.utils.coremod.ClassTransformer;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
+import org.objectweb.asm.tree.*;
 
 import java.util.Iterator;
 
-public class RenderItemTransformer extends ClassMethodTransformer
+public class RenderItemTransformer extends ClassTransformer
 {
-    public RenderItemTransformer()
-    {
-        this.setMcp("renderItem", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;Z)V");
-        this.setNotch("a", "(Laip;Lvp;Lbwc$b;Z)V");
-    }
 
     @Override
+    public void process(String s, ClassNode classNode) {
+        for (MethodNode method : classNode.methods) {
+            String methodName = this.checkName(method, "a", "(Laip;Lvp;Lbwc$b;Z)V", "renderItem", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;Z)V");
+            if (methodName != null) {
+                this.processMethod(methodName,method);
+            }
+        }
+    }
+
     public void processMethod(String methodName, MethodNode method)
     {
         String entity = CoreClassTransformer.obfuscated ? "Lvp;" : "Lnet/minecraft/entity/EntityLivingBase;";

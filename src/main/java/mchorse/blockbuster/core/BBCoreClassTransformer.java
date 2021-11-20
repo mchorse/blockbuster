@@ -58,7 +58,6 @@ public class BBCoreClassTransformer extends CoreClassTransformer
         else if (checkName(name, "bzw", "net.minecraft.client.renderer.RenderItem"))
         {
             System.out.println("BBCoreMod: Transforming RenderItem class (" + name + ")");
-
             return this.renderItem.transform(name, basicClass);
         }
 

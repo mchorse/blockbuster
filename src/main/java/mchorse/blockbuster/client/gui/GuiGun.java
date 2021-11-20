@@ -9,12 +9,12 @@ import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.mclib.client.gui.framework.GuiBase;
-import mchorse.mclib.client.gui.framework.elements.GuiElement;
-import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
-import mchorse.mclib.client.gui.framework.elements.GuiPanelBase;
+import mchorse.mclib.client.gui.framework.elements.*;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiSlotElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
@@ -39,6 +39,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -55,10 +56,9 @@ public class GuiGun extends GuiBase
     /* Morphs configuration */
     public GuiCreativeMorphsMenu morphs;
     /* Gun options */
-    public GuiTrackpadElement zoom;
+
     public GuiElement gunOptions;
     public GuiNestedEdit pickDefault;
-    public GuiNestedEdit pickHands;
     public GuiNestedEdit pickFiring;
     public GuiTextElement fireCommand;
     public GuiTrackpadElement delay;
@@ -68,7 +68,6 @@ public class GuiGun extends GuiBase
     public GuiToggleElement launch;
     public GuiToggleElement useTarget;
     public GuiSlotElement ammoStack;
-
     /* Projectile options */
     public GuiElement projectileOptions;
     public GuiNestedEdit pickProjectile;
@@ -86,7 +85,12 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement gravity;
     public GuiTrackpadElement fadeIn;
     public GuiTrackpadElement fadeOut;
-
+    /*
+    Overlay options
+    */
+    public GuiElement aimOptions;
+    public GuiTrackpadElement zoom;
+    public GuiNestedEdit pickHands;
     /* Impact options */
     public GuiElement impactOptions;
     public GuiNestedEdit pickImpact;
@@ -132,6 +136,7 @@ public class GuiGun extends GuiBase
         /* Initialization of GUI elements */
         this.gunOptions = new GuiElement(mc);
         this.projectileOptions = new GuiElement(mc);
+        this.aimOptions = new GuiElement(mc);
         this.transformOptions = new GuiElement(mc);
         this.impactOptions = new GuiElement(mc);
 
@@ -139,6 +144,7 @@ public class GuiGun extends GuiBase
         this.panel.setPanel(this.gunOptions);
         this.panel.registerPanel(this.gunOptions, IKey.lang("blockbuster.gui.gun.fire_props"), Icons.GEAR);
         this.panel.registerPanel(this.projectileOptions, IKey.lang("blockbuster.gui.gun.projectile_props"), BBIcons.BULLET);
+        this.panel.registerPanel(this.aimOptions, IKey.lang("blockbuster.gui.gun.aimOptions"), Icons.CURSOR);
         this.panel.registerPanel(this.impactOptions, IKey.lang("blockbuster.gui.gun.impact_props"), Icons.DOWNLOAD);
         this.panel.registerPanel(this.transformOptions, IKey.lang("blockbuster.gui.gun.transforms"), Icons.POSE);
 
@@ -165,7 +171,6 @@ public class GuiGun extends GuiBase
         this.useTarget = new GuiToggleElement(mc, IKey.lang("metamorph.gui.body_parts.use_target"), false, (b) -> this.props.useTarget = b.isToggled());
         this.ammoStack = new GuiSlotElement(mc, 0, this::pickItem);
         this.ammoStack.tooltip(IKey.lang("blockbuster.gui.gun.ammo_stack"));
-
         int firingOffset = 40;
 
         GuiElement scatterBar = new GuiElement(mc);
@@ -175,7 +180,9 @@ public class GuiGun extends GuiBase
 
         this.fireCommand.flex().relative(area).set(10, 0, 0, 20).w(1, -20).y(1F, -30);
         this.delay.flex().relative(scatterBar.resizer()).set(0, 0, 100, 20).x(-10).anchorX(1F);
-        this.zoom.flex().relative(scatterBar.resizer()).set(0, -150, 100, 20).x(1F, 10);
+
+
+
         this.projectiles.flex().relative(scatterBar.resizer()).set(0, 0, 100, 20).x(1F, 10);
         this.pickDefault.flex().relative(this.delay.resizer()).w(1F).y(-5 - firingOffset);
         this.pickHands.flex().relative(this.delay.resizer()).w(1F).y(-140 - firingOffset);
@@ -189,7 +196,7 @@ public class GuiGun extends GuiBase
         this.useTarget.flex().h(20);
         launchBar.add(this.launch, this.useTarget);
 
-        this.gunOptions.add(scatterBar, launchBar, this.delay, this.zoom, this.projectiles, this.pickDefault, this.pickHands,this.pickFiring, this.fireCommand, this.ammoStack);
+        this.gunOptions.add(scatterBar, launchBar, this.delay, this.projectiles, this.pickDefault, this.pickFiring, this.fireCommand, this.ammoStack);
 
         /* Projectile options */
         area = this.projectileOptions.area;
@@ -237,6 +244,14 @@ public class GuiGun extends GuiBase
         projectileFields.add(Elements.label(IKey.lang("blockbuster.gui.gun.sequencer")).background().marginTop(12), this.sequencer, this.random);
         this.projectileOptions.add(this.pickProjectile, this.tickCommand, projectileFields);
 
+        /* AIM Options */
+        area = this.aimOptions.area;
+        GuiElement zoomParam = new GuiElement(mc);
+        zoomParam.flex().relative(area).set(0, 0, 0, 20).x(0.5F).y(1, -75).w(0.5F, -60).anchorX(0.5F).row(5);
+        zoomParam.add(this.scatterX, this.scatterY);
+
+        this.zoom.flex().relative(scatterBar.resizer()).set(0, 0, 100, 20).x(-10).anchorX(1F);
+        aimOptions.add(this.zoom,this.pickHands);
         /* Impact options */
         area = this.impactOptions.area;
 
@@ -381,6 +396,8 @@ public class GuiGun extends GuiBase
         this.root.keys().register(IKey.lang("blockbuster.gui.gun.keys.cycle"), Keyboard.KEY_TAB, this::cycle);
     }
 
+
+
     private void pickItem(ItemStack stack)
     {
         this.props.ammoStack = stack;
@@ -514,10 +531,6 @@ public class GuiGun extends GuiBase
             {
                 this.props.defaultMorph.renderOnScreen(player, this.pickDefault.area.mx(), this.pickDefault.area.y - 20, w * 0.5F, 1);
             }
-            if (this.props.hands != null)
-            {
-                this.props.hands.renderOnScreen(player, this.pickHands.area.mx(), this.pickHands.area.y - 20, w * 0.5F, 1);
-            }
             if (this.props.firingMorph != null)
             {
                 this.props.firingMorph.renderOnScreen(player, this.pickFiring.area.mx(), this.pickFiring.area.y - 20, w * 0.5F, 1);
@@ -527,11 +540,9 @@ public class GuiGun extends GuiBase
 
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.default_morph"), this.pickDefault.area.mx(), this.pickFiring.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.fire_morph"), this.pickFiring.area.mx(), this.pickFiring.area.y - 12, 0xffffff);
-            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.hand_morph"), this.pickHands.area.mx(), this.pickHands.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.delay"), this.delay.area.mx(), this.delay.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.scatter"), this.scatterX.area.ex() + 3, this.scatterX.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.projectiles"), this.projectiles.area.mx(), this.projectiles.area.y - 12, 0xffffff);
-            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.zoom"), this.zoom.area.mx(), this.zoom.area.y - 12, 0xffffff);
 
             this.fontRenderer.drawStringWithShadow(I18n.format("blockbuster.gui.gun.fire_command"), this.fireCommand.area.x, this.fireCommand.area.y - 12, 0xffffff);
         }
@@ -545,6 +556,14 @@ public class GuiGun extends GuiBase
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.projectile_morph"), this.pickProjectile.area.mx(), this.pickProjectile.area.y - 12, 0xffffff);
 
             this.fontRenderer.drawStringWithShadow(I18n.format("blockbuster.gui.gun.tick_command"), this.tickCommand.area.x, this.tickCommand.area.y - 12, 0xffffff);
+        }else if (this.panel.view.delegate == this.aimOptions){
+            if (this.props.hands != null)
+            {
+                this.props.hands.renderOnScreen(player, this.pickHands.area.mx(), this.pickHands.area.y - 20, w * 0.5F, 1);
+            }
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.zoom"), this.zoom.area.mx(), this.zoom.area.y - 12, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.hand_morph"), this.pickHands.area.mx(), this.pickHands.area.y - 12, 0xffffff);
+
         }
         else if (this.panel.view.delegate == this.impactOptions)
         {
@@ -641,6 +660,7 @@ public class GuiGun extends GuiBase
             super(mc);
 
             this.parentScreen = parentScreen;
+
         }
 
         @Override

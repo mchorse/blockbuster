@@ -22,7 +22,7 @@ import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.blockbuster.events.GunZoomRender;
+import mchorse.blockbuster.client.render.GunZoomRender;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.recording.capturing.ActionHandler;

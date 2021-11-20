@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 
 public class ItemGun extends Item
 {
+
     public ItemGun()
     {
         this.setMaxStackSize(1);
