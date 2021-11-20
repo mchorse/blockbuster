@@ -1,8 +1,10 @@
 package mchorse.blockbuster.common;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
+import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -14,6 +16,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -44,6 +47,8 @@ public class GunProps
     public boolean useTarget;
     public ItemStack ammoStack = ItemStack.EMPTY;
     public float zoom;
+    /*Zoom Overlay */
+    public ResourceLocation overlay;
     /* Projectile properties */
     public AbstractMorph projectileMorph;
     public String tickCommand;
@@ -291,6 +296,7 @@ public class GunProps
         this.useTarget = false;
         this.ammoStack = ItemStack.EMPTY;
         this.zoom = 0;
+        this.overlay = null;
         /* Projectile properties */
         this.projectileMorph = null;
         this.tickCommand = "";
@@ -386,7 +392,7 @@ public class GunProps
         if (tag.hasKey("Gravity")) this.gravity = tag.getFloat("Gravity");
         if (tag.hasKey("FadeIn")) this.fadeIn = tag.getInteger("FadeIn");
         if (tag.hasKey("FadeOut")) this.fadeOut = tag.getInteger("FadeOut");
-
+        if (tag.hasKey("Overlay")) this.overlay = RLUtils.create(tag.getTag("Overlay"));
         /* Impact properties */
         this.impactMorph = this.create(tag, "Impact");
         if (tag.hasKey("ImpactCommand")) this.impactCommand = tag.getString("ImpactCommand");
@@ -464,6 +470,7 @@ public class GunProps
         if (this.hitboxX != 0.25F) tag.setFloat("HX", this.hitboxX);
         if (this.hitboxY != 0.25F) tag.setFloat("HY", this.hitboxY);
         if (this.zoom != 0) tag.setFloat("Zoom", this.zoom);
+        if (this.overlay != null) tag.setTag("Texture", RLUtils.writeNbt(this.overlay));
         if (this.speed != 1.0F) tag.setFloat("Speed", this.speed);
         if (this.friction != 0.99F) tag.setFloat("Friction", this.friction);
         if (this.gravity != 0.03F) tag.setFloat("Gravity", this.gravity);
