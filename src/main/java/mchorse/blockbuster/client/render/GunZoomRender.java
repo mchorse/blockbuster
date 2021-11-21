@@ -2,12 +2,14 @@ package mchorse.blockbuster.client.render;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.KeyboardHandler;
+import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.mclib.events.RenderOverlayEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -78,6 +80,7 @@ public class GunZoomRender {
         }
     }
 
+
     @SideOnly(Side.CLIENT)
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void fovUpdateEvent(FOVUpdateEvent event){
@@ -128,10 +131,6 @@ public class GunZoomRender {
                         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                         GlStateManager.popMatrix();
                     }
-
-
-
-
                 }
             }
 

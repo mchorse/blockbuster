@@ -296,9 +296,9 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         if (morph != null)
         {
             this.props.createEntity(this.world);
-            this.props.entity.posX = this.posX;
-            this.props.entity.posY = this.posY;
-            this.props.entity.posZ = this.posZ;
+            this.props.target.posX = this.posX;
+            this.props.target.posY = this.posY;
+            this.props.target.posZ = this.posZ;
             morph.update(this.props.getEntity(this));
         }
 

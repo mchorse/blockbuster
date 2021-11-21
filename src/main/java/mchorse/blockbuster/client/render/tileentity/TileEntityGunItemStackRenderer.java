@@ -3,13 +3,23 @@ package mchorse.blockbuster.client.render.tileentity;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.utils.NBTUtils;
+import mchorse.mclib.math.functions.limit.Min;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.model.BakedItemModel;
+import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -66,8 +76,15 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
 
         if (model != null)
         {
+
             model.timer = 20;
+            ItemStack baseItem = Minecraft.getMinecraft().player.getHeldItemMainhand();
+            if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && baseItem.equals(stack)){
+                IBakedModel bake= Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(stack,Minecraft.getMinecraft().world, Minecraft.getMinecraft().player);
+                model.props.renderHands(RenderingHandler.getLastItemHolder(), partialTicks);
+            }
             model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
+
             this.reset();
         }
     }

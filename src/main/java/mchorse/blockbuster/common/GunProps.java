@@ -1,6 +1,5 @@
 package mchorse.blockbuster.common;
 
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
@@ -10,7 +9,9 @@ import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -94,7 +95,7 @@ public class GunProps
     private Morph current_hands = new Morph();
     private boolean renderLock;
 
-    public EntityLivingBase entity;
+    public EntityLivingBase target;
 
     public GunProps()
     {
@@ -134,50 +135,50 @@ public class GunProps
 
     public void createEntity(World world)
     {
-        if (this.entity != null)
+        if (this.target != null)
         {
             return;
         }
 
-        this.entity = new EntityActor(world);
-        this.entity.onGround = true;
-        this.entity.rotationYaw = this.entity.prevRotationYaw = 0;
-        this.entity.rotationYawHead = this.entity.prevRotationYawHead = 0;
-        this.entity.rotationPitch = this.entity.prevRotationPitch = 0;
+        this.target = new EntityActor(world);
+        this.target.onGround = true;
+        this.target.rotationYaw = this.target.prevRotationYaw = 0;
+        this.target.rotationYawHead = this.target.prevRotationYawHead = 0;
+        this.target.rotationPitch = this.target.prevRotationPitch = 0;
     }
 
     public EntityLivingBase getEntity(EntityGunProjectile entity)
     {
-        if (this.entity != null)
+        if (this.target != null)
         {
-            this.entity.prevPosX = entity.prevPosX;
-            this.entity.prevPosY = entity.prevPosY;
-            this.entity.prevPosZ = entity.prevPosZ;
+            this.target.prevPosX = entity.prevPosX;
+            this.target.prevPosY = entity.prevPosY;
+            this.target.prevPosZ = entity.prevPosZ;
 
-            this.entity.posX = entity.posX;
-            this.entity.posY = entity.posY;
-            this.entity.posZ = entity.posZ;
+            this.target.posX = entity.posX;
+            this.target.posY = entity.posY;
+            this.target.posZ = entity.posZ;
         }
 
-        return this.entity;
+        return this.target;
     }
 
     @SideOnly(Side.CLIENT)
     public void update()
     {
-        if (this.entity != null)
+        if (this.target != null)
         {
-            this.entity.ticksExisted++;
+            this.target.ticksExisted++;
 
             AbstractMorph morph = this.current.get();
             AbstractMorph morph1 = this.current_hands.get();
             if (morph != null)
             {
-                morph.update(this.entity);
+                morph.update(this.target);
             }
             if (morph1 != null)
             {
-                morph1.update(this.entity);
+                morph1.update(this.target);
             }
         }
 
@@ -203,14 +204,13 @@ public class GunProps
 
         this.renderLock = true;
 
-        if (this.entity == null)
+        if (this.target == null)
         {
             this.createEntity();
         }
 
-        EntityLivingBase entity = this.useTarget ? target : this.entity;
+        EntityLivingBase entity = this.useTarget ? target : this.target;
         AbstractMorph morph = this.current.get();
-        AbstractMorph morph1 = this.current_hands.get();
 
         if (morph != null && entity != null)
         {
@@ -237,7 +237,27 @@ public class GunProps
             entity.rotationYawHead = rotationYawHead;
             entity.prevRotationYawHead = prevRotationYawHead;
         }
-        if (morph1 != null && entity != null)
+        this.renderLock = false;
+    }
+    @SideOnly(Side.CLIENT)
+    public void renderHands(EntityLivingBase target, float partialTicks)
+    {
+        if (this.renderLock)
+        {
+            return;
+        }
+
+        this.renderLock = true;
+
+        if (this.target == null)
+        {
+            this.createEntity();
+        }
+
+        EntityLivingBase entity = this.useTarget ? target : this.target;
+        AbstractMorph morph = this.current_hands.get();
+
+        if (morph != null && entity != null)
         {
             float rotationYaw = entity.renderYawOffset;
             float prevRotationYaw = entity.prevRenderYawOffset;
@@ -253,7 +273,7 @@ public class GunProps
             this.gunTransform.transform();
 
             this.setupEntity();
-            MorphUtils.render(morph1, entity, 0, 0, 0, 0, partialTicks);
+            MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
 
             GL11.glPopMatrix();
 
@@ -265,18 +285,19 @@ public class GunProps
         this.renderLock = false;
     }
 
+
     @SideOnly(Side.CLIENT)
     private void setupEntity()
     {
         /* Reset entity's values, just in case some weird shit is going 
          * to happen in morph's update code*/
-        this.entity.setPositionAndRotation(0, 0, 0, 0, 0);
-        this.entity.setLocationAndAngles(0, 0, 0, 0, 0);
-        this.entity.rotationYawHead = this.entity.prevRotationYawHead = 0;
-        this.entity.rotationYaw = this.entity.prevRotationYaw = 0;
-        this.entity.rotationPitch = this.entity.prevRotationPitch = 0;
-        this.entity.renderYawOffset = this.entity.prevRenderYawOffset = 0;
-        this.entity.setVelocity(0, 0, 0);
+        this.target.setPositionAndRotation(0, 0, 0, 0, 0);
+        this.target.setLocationAndAngles(0, 0, 0, 0, 0);
+        this.target.rotationYawHead = this.target.prevRotationYawHead = 0;
+        this.target.rotationYaw = this.target.prevRotationYaw = 0;
+        this.target.rotationPitch = this.target.prevRotationPitch = 0;
+        this.target.renderYawOffset = this.target.prevRenderYawOffset = 0;
+        this.target.setVelocity(0, 0, 0);
     }
 
     /**
