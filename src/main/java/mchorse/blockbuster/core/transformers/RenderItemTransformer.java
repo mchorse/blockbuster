@@ -18,6 +18,11 @@ public class RenderItemTransformer extends ClassTransformer
             if (methodName != null) {
                 this.processMethod(methodName,method);
             }
+          /*  methodName = this.checkName(method, "a", "(Laip;Lcfy;)V", "renderItem", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/renderer/block/model/IBakedModel;)V");
+            if (methodName != null) {
+                this.processItemRender(methodName,method);
+            }
+*/
         }
     }
 
@@ -58,5 +63,9 @@ public class RenderItemTransformer extends ClassTransformer
 
             System.out.println("BBCoreMod: successfully patched renderItem!");
         }
+    }
+
+    public void processItemRender(String methodName, MethodNode method){
+
     }
 }
