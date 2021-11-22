@@ -497,7 +497,7 @@ public class BedrockEmitter
 
         this.setupCameraProperties(partialTicks);
 
-        BedrockComponentParticleMorph particleMorphComponent = this.scheme.get(BedrockComponentParticleMorph.class);
+        BedrockComponentParticleMorph particleMorphComponent = this.scheme.getOrCreate(BedrockComponentParticleMorph.class);
         List<IComponentParticleRender> renders = this.scheme.particleRender;
         List<IComponentParticleMorphRender> morphRenders = this.scheme.particleMorphRender;
 
@@ -515,8 +515,8 @@ public class BedrockEmitter
             {
                 this.depthSorting();
 
-                BedrockComponentCollisionAppearance collisionAppearance = this.scheme.get(BedrockComponentCollisionAppearance.class);
-                BedrockComponentCollisionTinting collisionTinting = this.scheme.get(BedrockComponentCollisionTinting.class);
+                BedrockComponentCollisionAppearance collisionAppearance = this.scheme.getOrCreate(BedrockComponentCollisionAppearance.class);
+                BedrockComponentCollisionTinting collisionTinting = this.scheme.getOrCreate(BedrockComponentCollisionTinting.class);
                 boolean collisionRendering = MolangExpression.isOne(collisionAppearance.enabled) || MolangExpression.isOne(collisionTinting.enabled);
 
                 this.renderParticles(this.scheme.texture, renders, false, partialTicks);
@@ -550,7 +550,7 @@ public class BedrockEmitter
 
                 this.renderParticles(morphRenders, false, partialTicks);
 
-                /*BedrockComponentCollisionParticleMorph collisionComponent = this.scheme.get(BedrockComponentCollisionParticleMorph.class);
+                /*BedrockComponentCollisionParticleMorph collisionComponent = this.scheme.getOrCreate(BedrockComponentCollisionParticleMorph.class);
 
                 if (collisionComponent != null && collisionComponent.morph != null)
                 {
