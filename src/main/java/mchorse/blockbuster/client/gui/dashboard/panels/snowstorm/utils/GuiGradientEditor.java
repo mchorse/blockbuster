@@ -77,6 +77,8 @@ public class GuiGradientEditor extends GuiElement
         ((MolangValue) this.current.color.g).value.set(this.c.g);
         ((MolangValue) this.current.color.b).value.set(this.c.b);
         ((MolangValue) this.current.color.a).value.set(this.c.a);
+
+        this.section.dirty();
     }
 
     public void setGradient(Tint.Gradient gradient)
@@ -122,6 +124,8 @@ public class GuiGradientEditor extends GuiElement
         this.gradient.stops.add(stop);
         this.gradient.sort();
 
+        this.section.dirty();
+
         this.fillStop(stop);
     }
 
@@ -134,6 +138,8 @@ public class GuiGradientEditor extends GuiElement
             this.gradient.stops.remove(index);
 
             index = MathUtils.clamp(index, 0, this.gradient.stops.size() - 1);
+
+            this.section.dirty();
 
             this.fillStop(this.gradient.stops.get(index));
         }
