@@ -98,45 +98,5 @@ public class GunZoomRender {
 
     }
 
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public void renderOverlayEvent(RenderGameOverlayEvent event){
-        if (event.getType().equals(RenderGameOverlayEvent.ElementType.HELMET)){
-            EntityPlayer player =  Minecraft.getMinecraft().player;
-            ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
-            Minecraft mc = Minecraft.getMinecraft();
-            ScaledResolution resolution = event.getResolution();
-            if (heldItem!= null && heldItem.getItem().equals(Blockbuster.gunItem)) {
-                GunProps props = NBTUtils.getGunProps(heldItem);
-                if (props != null) {
-                    if (props.overlay!=null && KeyboardHandler.zoom.isKeyDown() ){
-                        GlStateManager.pushMatrix();
-                        GlStateManager.disableDepth();
-                        GlStateManager.depthMask(false);
-                        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-                        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                        GlStateManager.disableAlpha();
-                        mc.getTextureManager().bindTexture(props.overlay);
-                        Tessellator tessellator = Tessellator.getInstance();
-                        BufferBuilder bufferbuilder = tessellator.getBuffer();
-                        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-                        bufferbuilder.pos(0.0D, (double)resolution.getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
-                        bufferbuilder.pos((double)resolution.getScaledWidth(), (double)resolution.getScaledHeight(), -90.0D).tex(1.0D, 1.0D).endVertex();
-                        bufferbuilder.pos((double)resolution.getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
-                        bufferbuilder.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
-                        tessellator.draw();
-                        GlStateManager.depthMask(true);
-                        GlStateManager.enableDepth();
-                        GlStateManager.enableAlpha();
-                        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                        GlStateManager.popMatrix();
-                    }
-                }
-            }
-
-
-
-        }
-    }
 
 }
