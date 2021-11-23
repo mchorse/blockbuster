@@ -23,6 +23,7 @@ import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -76,6 +77,11 @@ public class RenderingHandler
     private static final List<EntityActor> lastRenderedEntities = new ArrayList<EntityActor>();
 
     private GuiRecordingOverlay overlay;
+
+    /**
+     *    ItemRender
+     */
+    public static ItemCameraTransforms.TransformType itemTransformType;
 
     /**
      * Register GIF 
@@ -281,6 +287,12 @@ public class RenderingHandler
         {
             lastItemHolder = entity;
         }
+    }
+    /**
+     * Called by ASMR
+     */
+    public static void setTSRTTransform(ItemCameraTransforms.TransformType type){
+        itemTransformType = type;
     }
 
     /**

@@ -38,6 +38,7 @@ public class GunProps
     /* Gun properties */
     public AbstractMorph defaultMorph;
     public AbstractMorph hands;
+    public AbstractMorph morph_overlay;
     public AbstractMorph firingMorph;
     public String fireCommand;
     public int delay;
@@ -48,8 +49,6 @@ public class GunProps
     public boolean useTarget;
     public ItemStack ammoStack = ItemStack.EMPTY;
     public float zoom;
-    /*Zoom Overlay */
-    public ResourceLocation overlay;
     /* Projectile properties */
     public AbstractMorph projectileMorph;
     public String tickCommand;
@@ -66,7 +65,7 @@ public class GunProps
     public float gravity;
     public int fadeIn;
     public int fadeOut;
-
+    public boolean enableOverlay;
     /* Impact properties */
     public AbstractMorph impactMorph;
     public String impactCommand;
@@ -93,6 +92,7 @@ public class GunProps
     private int shoot = 0;
     private Morph current = new Morph();
     private Morph current_hands = new Morph();
+    private Morph current_overlay = new Morph();
     private boolean renderLock;
 
     public EntityLivingBase target;
@@ -111,7 +111,10 @@ public class GunProps
     {
         this.current.setDirect(morph);
     }
-
+    public void setCurrentOverlay(AbstractMorph morph)
+    {
+        this.current_overlay.setDirect(morph);
+    }
     public void setHands(AbstractMorph morph){
         this.current_hands.setDirect(morph);
     }
@@ -171,14 +174,9 @@ public class GunProps
             this.target.ticksExisted++;
 
             AbstractMorph morph = this.current.get();
-            AbstractMorph morph1 = this.current_hands.get();
             if (morph != null)
             {
                 morph.update(this.target);
-            }
-            if (morph1 != null)
-            {
-                morph1.update(this.target);
             }
         }
 
@@ -193,7 +191,50 @@ public class GunProps
             this.shoot--;
         }
     }
+    @SideOnly(Side.CLIENT)
+    public void renderOverlay(EntityLivingBase lastItemHolder, float partialTicks) {
+        if (this.renderLock)
+        {
+            return;
+        }
 
+        this.renderLock = true;
+
+        if (this.target == null)
+        {
+            this.createEntity();
+        }
+
+        EntityLivingBase entity = this.useTarget ? target : this.target;
+        AbstractMorph morph = this.current_overlay.get();
+
+        if (morph != null && entity != null)
+        {
+            float rotationYaw = entity.renderYawOffset;
+            float prevRotationYaw = entity.prevRenderYawOffset;
+            float rotationYawHead = entity.rotationYawHead;
+            float prevRotationYawHead = entity.prevRotationYawHead;
+
+            entity.rotationYawHead -= entity.renderYawOffset;
+            entity.prevRotationYawHead -= entity.prevRenderYawOffset;
+            entity.renderYawOffset = entity.prevRenderYawOffset = 0.0F;
+
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0.5F, 0, 0.5F);
+            this.gunTransform.transform();
+
+            this.setupEntity();
+            MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
+
+            GL11.glPopMatrix();
+
+            entity.renderYawOffset = rotationYaw;
+            entity.prevRenderYawOffset = prevRotationYaw;
+            entity.rotationYawHead = rotationYawHead;
+            entity.prevRotationYawHead = prevRotationYawHead;
+        }
+        this.renderLock = false;
+    }
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase target, float partialTicks)
     {
@@ -259,6 +300,7 @@ public class GunProps
 
         if (morph != null && entity != null)
         {
+
             float rotationYaw = entity.renderYawOffset;
             float prevRotationYaw = entity.prevRenderYawOffset;
             float rotationYawHead = entity.rotationYawHead;
@@ -308,6 +350,7 @@ public class GunProps
         /* Gun properties */
         this.defaultMorph = null;
         this.hands = null;
+        this.morph_overlay = null;
         this.firingMorph = null;
         this.fireCommand = "";
         this.delay = 0;
@@ -317,13 +360,13 @@ public class GunProps
         this.useTarget = false;
         this.ammoStack = ItemStack.EMPTY;
         this.zoom = 0;
-        this.overlay = null;
         /* Projectile properties */
         this.projectileMorph = null;
         this.tickCommand = "";
         this.ticking = 0;
         this.lifeSpan = 200;
         this.yaw = true;
+        this.enableOverlay = false;
         this.pitch = true;
         this.sequencer = false;
         this.random = false;
@@ -365,6 +408,7 @@ public class GunProps
         /* Gun properties */
         this.defaultMorph = this.create(tag, "Morph");
         this.hands = this.create(tag, "Hands");
+        this.morph_overlay = this.create(tag, "OverlayMorph");
         this.firingMorph = this.create(tag, "Fire");
         if (tag.hasKey("FireCommand")) this.fireCommand = tag.getString("FireCommand");
         if (tag.hasKey("Delay")) this.delay = tag.getInteger("Delay");
@@ -402,6 +446,7 @@ public class GunProps
         if (tag.hasKey("Ticking")) this.ticking = tag.getInteger("Ticking");
         if (tag.hasKey("LifeSpan")) this.lifeSpan = tag.getInteger("LifeSpan");
         if (tag.hasKey("Yaw")) this.yaw = tag.getBoolean("Yaw");
+        if (tag.hasKey("EnableOverlay")) this.enableOverlay = tag.getBoolean("EnableOverlay");
         if (tag.hasKey("Pitch")) this.pitch = tag.getBoolean("Pitch");
         if (tag.hasKey("Sequencer")) this.sequencer = tag.getBoolean("Sequencer");
         if (tag.hasKey("Random")) this.random = tag.getBoolean("Random");
@@ -413,7 +458,6 @@ public class GunProps
         if (tag.hasKey("Gravity")) this.gravity = tag.getFloat("Gravity");
         if (tag.hasKey("FadeIn")) this.fadeIn = tag.getInteger("FadeIn");
         if (tag.hasKey("FadeOut")) this.fadeOut = tag.getInteger("FadeOut");
-        if (tag.hasKey("Overlay")) this.overlay = RLUtils.create(tag.getTag("Overlay"));
         /* Impact properties */
         this.impactMorph = this.create(tag, "Impact");
         if (tag.hasKey("ImpactCommand")) this.impactCommand = tag.getString("ImpactCommand");
@@ -441,6 +485,7 @@ public class GunProps
         {
             this.current.set(MorphUtils.copy(this.defaultMorph));
             this.current_hands.set(MorphUtils.copy(this.hands));
+            this.current_overlay.set(MorphUtils.copy(this.morph_overlay));
         }
     }
 
@@ -461,6 +506,7 @@ public class GunProps
         /* Gun properties */
         if (this.defaultMorph != null) tag.setTag("Morph", this.to(this.defaultMorph));
         if (this.hands != null) tag.setTag("Hands", this.to(this.hands));
+        if (this.morph_overlay != null) tag.setTag("OverlayMorph", this.to(this.morph_overlay));
         if (this.firingMorph != null) tag.setTag("Fire", this.to(this.firingMorph));
         if (!this.fireCommand.isEmpty()) tag.setString("FireCommand", this.fireCommand);
         if (this.delay != 0) tag.setInteger("Delay", this.delay);
@@ -485,13 +531,13 @@ public class GunProps
         if (this.ticking != 0) tag.setInteger("Ticking", this.ticking);
         if (this.lifeSpan != 200) tag.setInteger("LifeSpan", this.lifeSpan);
         if (!this.yaw) tag.setBoolean("Yaw", this.yaw);
+        if (this.enableOverlay) tag.setBoolean("EnableOverlay", this.enableOverlay);
         if (!this.pitch) tag.setBoolean("Pitch", this.pitch);
         if (this.sequencer) tag.setBoolean("Sequencer", this.sequencer);
         if (this.random) tag.setBoolean("Random", this.random);
         if (this.hitboxX != 0.25F) tag.setFloat("HX", this.hitboxX);
         if (this.hitboxY != 0.25F) tag.setFloat("HY", this.hitboxY);
         if (this.zoom != 0) tag.setFloat("Zoom", this.zoom);
-        if (this.overlay != null) tag.setTag("Texture", RLUtils.writeNbt(this.overlay));
         if (this.speed != 1.0F) tag.setFloat("Speed", this.speed);
         if (this.friction != 0.99F) tag.setFloat("Friction", this.friction);
         if (this.gravity != 0.03F) tag.setFloat("Gravity", this.gravity);
@@ -531,4 +577,6 @@ public class GunProps
 
         return tag;
     }
+
+
 }

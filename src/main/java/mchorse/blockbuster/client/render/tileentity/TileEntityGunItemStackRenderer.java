@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.render.tileentity;
 
+import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.utils.NBTUtils;
@@ -20,6 +21,9 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.BakedItemModel;
 import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.event.entity.item.ItemTossEvent;
+import net.minecraftforge.event.entity.player.PlayerDropsEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,6 +42,7 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
     /**
      * A cache of model TEs
      */
+
     public static final Map<ItemStack, GunEntry> models = new HashMap<ItemStack, GunEntry>();
 
     @Override
@@ -80,8 +85,12 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
             model.timer = 20;
             ItemStack baseItem = Minecraft.getMinecraft().player.getHeldItemMainhand();
             if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && baseItem.equals(stack)){
-                IBakedModel bake= Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(stack,Minecraft.getMinecraft().world, Minecraft.getMinecraft().player);
-                model.props.renderHands(RenderingHandler.getLastItemHolder(), partialTicks);
+                if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI){
+                    model.props.renderHands(RenderingHandler.getLastItemHolder(), partialTicks);
+                    if (model.props.enableOverlay && KeyboardHandler.zoom.isKeyDown()){
+                        model.props.renderOverlay(RenderingHandler.getLastItemHolder(), partialTicks);
+                    }
+                }
             }
             model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
 
@@ -101,6 +110,7 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
 
     public static class GunEntry
     {
+
         public int timer = 20;
         public GunProps props;
 
