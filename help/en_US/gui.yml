@@ -309,6 +309,7 @@ blockbuster.gui:
             children: Apply to children
         
         limb:
+            absolute_brighness: Absolute Brightness
             glow: Limb Glow
             color: Limb Color
             fixed: Fixate movement

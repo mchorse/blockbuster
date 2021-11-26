@@ -316,6 +316,7 @@ blockbuster.gui:
             children: 应用至子肢体
         
         limb:
+            absolute_brighness: 绝对亮度
             glow: 肢体发光
             color: 肢体颜色
             fixed: 固定动作

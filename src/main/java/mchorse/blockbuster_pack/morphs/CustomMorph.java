@@ -1124,6 +1124,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         public float glow = 0F;
         public Color color = new Color(1F, 1F, 1F, 1F);
 
+        public boolean absoluteBrightness = false;
+
         @Override
         public boolean isDefault()
         {
@@ -1142,6 +1144,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                 this.fixed = prop.fixed;
                 this.glow = prop.glow;
                 this.color.copy(prop.color);
+
+                this.absoluteBrightness = prop.absoluteBrightness;
             }
         }
 
@@ -1152,7 +1156,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             {
                 LimbProperties prop = (LimbProperties) obj;
 
-                return super.equals(obj) && this.fixed == prop.fixed && Math.abs(this.glow - prop.glow) < 0.0001f && this.color.equals(prop.color);
+                return super.equals(obj) &&
+                        this.fixed == prop.fixed &&
+                        Math.abs(this.glow - prop.glow) < 0.0001f &&
+                        this.color.equals(prop.color) &&
+                        this.absoluteBrightness == prop.absoluteBrightness;
             }
 
             return false;
@@ -1176,6 +1184,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             if (tag.hasKey("F", NBT.TAG_BYTE)) this.fixed = tag.getBoolean("F") ? 1F : 0F;
             if (tag.hasKey("G", NBT.TAG_FLOAT)) this.glow = tag.getFloat("G");
             if (tag.hasKey("C", NBT.TAG_INT)) this.color.set(tag.getInteger("C"));
+            if (tag.hasKey("AB", NBT.TAG_BYTE)) this.absoluteBrightness = tag.getBoolean("AB");
         }
 
         @Override
@@ -1191,6 +1200,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                 if (this.fixed != 0F) tag.setBoolean("F", true);
                 if (this.glow > 0.0001F) tag.setFloat("G", this.glow);
                 if (this.color.getRGBAColor() != 0xFFFFFFFF) tag.setInteger("C", this.color.getRGBAColor());
+                if (this.absoluteBrightness) tag.setBoolean("AB", this.absoluteBrightness);
             }
 
             return tag;
@@ -1229,6 +1239,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                 cg = interp.interpolate(cg, l.color.g, x);
                 cb = interp.interpolate(cb, l.color.b, x);
                 ca = interp.interpolate(ca, l.color.a, x);
+
+                this.absoluteBrightness = l.absoluteBrightness;
             }
             else
             {
@@ -1238,6 +1250,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
                 cg = interp.interpolate(cg, 1F, x);
                 cb = interp.interpolate(cb, 1F, x);
                 ca = interp.interpolate(ca, 1F, x);
+
+                this.absoluteBrightness = false;
             }
 
             this.fixed = fixed;
@@ -1247,7 +1261,12 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
         public void applyGlow(float lastX, float lastY)
         {
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, Interpolation.LINEAR.interpolate(lastX, 240, this.glow), Interpolation.LINEAR.interpolate(lastY, 240, this.glow));
+            if (this.absoluteBrightness)
+            {
+                lastX = 0F;
+            }
+
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, Interpolation.LINEAR.interpolate(lastX, 240, this.glow), lastY);
         }
     }
 
