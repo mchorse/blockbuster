@@ -129,12 +129,12 @@ public class ModelCustomRenderer extends ModelRenderer
 
         lastBrightnessX = OpenGlHelper.lastBrightnessX;
         lastBrightnessY = OpenGlHelper.lastBrightnessY;
-        
+
         if (!this.limb.lighting)
         {
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, lastBrightnessY);
         }
-        
+
         if (this.trasnform instanceof LimbProperties)
         {
             LimbProperties limb = (LimbProperties) this.trasnform;

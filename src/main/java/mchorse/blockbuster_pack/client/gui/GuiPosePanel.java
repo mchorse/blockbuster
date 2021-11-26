@@ -38,6 +38,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
     public GuiButtonElement reset;
     public GuiButtonElement create;
     public GuiStringListElement list;
+    public GuiToggleElement absoluteBrightness;
     public GuiTrackpadElement glow;
     public GuiColorElement color;
     public GuiToggleElement fixed;
@@ -171,14 +172,23 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.glow.flex().relative(this.color).x(0F).y(0F, -30).w(1F);
         this.glow.tooltip(IKey.lang("blockbuster.gui.builder.limb.glow"));
 
+        this.absoluteBrightness = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.builder.limb.absolute_brighness"), (b) ->
+        {
+            this.currentLimbProp.absoluteBrightness = this.absoluteBrightness.isToggled();
+        });
+        this.absoluteBrightness.flex().relative(this.glow).x(0F).y(0F, -30).w(1F);
+
+        GuiSimpleContextMenu abMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
         GuiSimpleContextMenu glowMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
         GuiSimpleContextMenu colorMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
         GuiSimpleContextMenu fixateMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
 
+        abMenu.action(IKey.lang("blockbuster.gui.builder.context.children"), this.applyToChildren((p, c) -> c.absoluteBrightness = p.absoluteBrightness));
         glowMenu.action(IKey.lang("blockbuster.gui.builder.context.children"), this.applyToChildren((p, c) -> c.glow = p.glow));
         colorMenu.action(IKey.lang("blockbuster.gui.builder.context.children"), this.applyToChildren((p, c) -> c.color.copy(p.color)));
         fixateMenu.action(IKey.lang("blockbuster.gui.builder.context.children"), this.applyToChildren((p, c) -> c.fixed = p.fixed));
 
+        this.absoluteBrightness.context(() -> abMenu);
         this.glow.context(() -> glowMenu);
         this.color.context(() -> colorMenu);
         this.fixed.context(() -> fixateMenu);
@@ -186,7 +196,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.shapeKeys = new GuiShapeKeysEditor(mc, () -> this.morph.model);
         this.shapeKeys.flex().relative(this.poseOnSneak).y(-125).w(1F).h(120);
 
-        this.add(this.reset, this.create, this.poseOnSneak, this.shapeKeys, this.list, this.animation, options, this.fixed, this.color, this.glow, this.transforms, this.models, this.animation.interpolations);
+        this.add(this.reset, this.create, this.poseOnSneak, this.shapeKeys, this.list, this.animation, options, this.fixed, this.absoluteBrightness, this.color, this.glow, this.transforms, this.models, this.animation.interpolations);
     }
 
     private GuiContextMenu limbContextMenu()
