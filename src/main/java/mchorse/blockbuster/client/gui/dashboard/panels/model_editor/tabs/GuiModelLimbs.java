@@ -58,12 +58,15 @@ public class GuiModelLimbs extends GuiModelEditorTab
     private GuiTextureCanvas textureEditor;
 
     /* Second category */
-    private GuiColorElement color;
     private GuiToggleElement mirror;
     private GuiToggleElement lighting;
     private GuiToggleElement shading;
     private GuiToggleElement smooth;
     private GuiToggleElement is3D;
+
+    private GuiElement colors;
+    private GuiColorElement color;
+    private GuiColorElement specular;
 
     private GuiCirculateElement holding;
     private GuiCirculateElement slot;
@@ -184,6 +187,16 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.dirty();
         });
         this.color.picker.editAlpha();
+        this.color.tooltip(IKey.lang("blockbuster.gui.me.limbs.color"));
+        this.specular = new GuiColorElement(mc, (eh) ->
+        {
+            Color color = this.specular.picker.color;
+
+            this.panel.limb.specular = color.getRGBAColor();
+            this.panel.dirty();
+        });
+        this.specular.picker.editAlpha();
+        this.color.tooltip(IKey.lang("blockbuster.gui.me.limbs.specular"));
         this.mirror = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.mirror"), false, (b) ->
         {
             this.panel.limb.mirror = b.isToggled();
@@ -288,6 +301,11 @@ public class GuiModelLimbs extends GuiModelEditorTab
         appearance.add(this.lighting, this.shading);
         appearance.add(this.smooth, this.is3D);
 
+        this.colors = new GuiElement(mc);
+
+        this.colors.flex().grid(5).items(1).resizes(true);
+        this.colors.add(this.color);
+
         GuiElement animation = new GuiElement(mc);
 
         animation.flex().grid(5).items(2).resizes(true);
@@ -299,7 +317,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         animation.add(this.cape);
 
         this.scroll.add(Elements.row(mc, 5, this.slot, this.holding));
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.appearance")).background().marginTop(12), appearance, this.color);
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.appearance")).background().marginTop(12), appearance, this.colors);
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.animation")).background().marginTop(12), animation);
 
         /* Buttons */
@@ -504,8 +522,9 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.wing.toggled(limb.wing);
         this.roll.toggled(limb.roll);
         this.cape.toggled(limb.cape);
-        
+
         boolean isObj = this.getLimbClass(limb) != ModelCustomRenderer.class;
+        boolean isVOX = this.getLimbClass(limb) == ModelVoxRenderer.class;
         this.vanillaPanel.removeFromParent();
         this.objPanel.removeFromParent();
         this.is3D.setVisible(!isObj);
@@ -523,6 +542,22 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.lastAnchorY = limb.anchor[1];
             this.lastAnchorZ = limb.anchor[2];
             this.scroll.prepend(this.vanillaPanel);
+        }
+
+        if (isVOX)
+        {
+            if (!this.specular.hasParent())
+            {
+                this.colors.flex().grid(5).items(2).resizes(true);
+                this.colors.add(this.specular);
+            }
+
+            this.specular.picker.setColor(limb.specular);
+        }
+        else
+        {
+            this.specular.removeFromParent();
+            this.colors.flex().grid(5).items(1).resizes(true);
         }
 
         this.scroll.resize();

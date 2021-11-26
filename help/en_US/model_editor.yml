@@ -17,6 +17,7 @@ blockbuster.gui.me:
         
         color: Color
         opacity: Opacity
+        specular: Specular color (used for shaders)
         mirror: Mirror
         lighting: Lighting
         shading: Shading
