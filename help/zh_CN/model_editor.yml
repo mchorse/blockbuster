@@ -17,6 +17,7 @@ blockbuster.gui.me:
 
         color: 颜色
         opacity: 不透明度
+        specular: 高光颜色（光影）
         mirror: 镜像
         lighting: 发光
         shading: 阴影

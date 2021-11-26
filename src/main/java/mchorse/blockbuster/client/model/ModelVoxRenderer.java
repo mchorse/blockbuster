@@ -8,11 +8,13 @@ import mchorse.blockbuster.api.formats.vox.MeshesVOX;
 import mchorse.blockbuster.api.formats.vox.data.VoxTexture;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.mclib.client.render.VertexBuilder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -23,6 +25,8 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class ModelVoxRenderer extends ModelCustomRenderer
 {
+    public static final ResourceLocation VOXTEX = new ResourceLocation("blockbuster", "textures/dynamic_vox");
+
     /**
      * Mesh containing the data about the model
      */
@@ -88,7 +92,8 @@ public class ModelVoxRenderer extends ModelCustomRenderer
                 this.displayList = id;
             }
 
-            this.texture = new VoxTexture(this.mesh.document.palette);
+            this.texture = new VoxTexture(this.mesh.document.palette, this.limb.specular);
+
             this.compiled = true;
             this.mesh = null;
         }
@@ -107,7 +112,10 @@ public class ModelVoxRenderer extends ModelCustomRenderer
     {
         if (this.texture != null)
         {
-            GlStateManager.bindTexture(this.texture.getTexture());
+            TextureManager mgr = Minecraft.getMinecraft().getTextureManager();
+
+            mgr.loadTexture(VOXTEX, this.texture);
+            mgr.bindTexture(VOXTEX);
             GL11.glCallList(this.displayList);
             RenderCustomModel.bindLastTexture();
         }
@@ -120,7 +128,7 @@ public class ModelVoxRenderer extends ModelCustomRenderer
 
         if (this.texture != null)
         {
-            this.texture.deleteTexture();
+            this.texture.deleteGlTexture();
             this.texture = null;
         }
     }

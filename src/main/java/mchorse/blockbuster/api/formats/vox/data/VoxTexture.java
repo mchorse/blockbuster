@@ -1,70 +1,38 @@
 package mchorse.blockbuster.api.formats.vox.data;
 
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.opengl.GL11;
+import java.util.Arrays;
 
-import java.nio.ByteBuffer;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 
-public class VoxTexture
+public class VoxTexture extends DynamicTexture
 {
-    /**
-     * OpenGL texture ID
-     */
-    private int texture = -1;
-
     private int[] palette;
+    private int specular;
 
-    public VoxTexture(int[] palette)
+    public VoxTexture(int[] palette, int specular)
     {
+        super(Math.max(palette.length, 1), 1);
+
         this.palette = palette;
+        this.specular = specular;
+
+        this.updatePalette();
     }
 
-    /**
-     * Get OpenGL texture of this document's palette
-     */
-    public int getTexture()
+    public void updatePalette()
     {
-        int count = this.palette.length;
+        int[] tex = this.getTextureData();
 
-        if (count > 0 && this.texture == -1)
+        for (int i = 0; i < this.palette.length; i++)
         {
-            ByteBuffer buffer = GLAllocation.createDirectByteBuffer(count * 4);
-            this.texture = GL11.glGenTextures();
-
-            for (int color : this.palette)
-            {
-                int r = color >> 16 & 255;
-                int g = color >> 8 & 255;
-                int b = color & 255;
-                int a = color >> 24 & 255;
-
-                buffer.put((byte) r);
-                buffer.put((byte) g);
-                buffer.put((byte) b);
-                buffer.put((byte) a);
-            }
-
-            buffer.flip();
-
-            /* For some reason, if there is no glTexParameter calls
-             * the texture becomes pure white */
-            GlStateManager.bindTexture(texture);
-            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-
-            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, count, 1, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+            tex[i] = this.palette[i];
         }
 
-        return this.texture;
-    }
-
-    public void deleteTexture()
-    {
-        if (this.texture != -1)
+        if (tex.length == 3 * this.palette.length)
         {
-            GlStateManager.deleteTexture(this.texture);
-            this.texture = -1;
+            Arrays.fill(tex, 2 * this.palette.length, tex.length, specular);
         }
+
+        this.updateDynamicTexture();
     }
 }
