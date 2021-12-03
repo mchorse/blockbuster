@@ -196,7 +196,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.shapeKeys = new GuiShapeKeysEditor(mc, () -> this.morph.model);
         this.shapeKeys.flex().relative(this.poseOnSneak).y(-125).w(1F).h(120);
 
-        this.add(this.reset, this.create, this.poseOnSneak, this.shapeKeys, this.list, this.animation, options, this.fixed, this.absoluteBrightness, this.color, this.glow, this.transforms, this.models, this.animation.interpolations);
+        this.add(this.reset, this.create, this.poseOnSneak, this.shapeKeys, this.list, this.animation, options, this.fixed, this.color, this.glow, this.absoluteBrightness, this.transforms, this.models, this.animation.interpolations);
     }
 
     private GuiContextMenu limbContextMenu()
@@ -272,6 +272,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.list.setCurrent(limbName);
         this.currentLimbProp = (LimbProperties) this.morph.customPose.limbs.get(limbName);
         this.transforms.set(this.currentLimbProp, pose == null ? null : pose.limbs.get(limbName));
+        this.absoluteBrightness.toggled(this.currentLimbProp.absoluteBrightness);
         this.glow.setValue(this.currentLimbProp.glow);
         this.color.picker.setColor(this.currentLimbProp.color.getRGBAColor());
         this.fixed.toggled(this.currentLimbProp.fixed != 0F);
@@ -313,6 +314,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.transforms.setVisible(this.morph.customPose != null);
         this.list.flex().relative(this.morph.customPose == null ? this.create : this.reset);
         this.list.resize();
+        this.absoluteBrightness.setVisible(this.morph.customPose != null);
         this.glow.setVisible(this.morph.customPose != null);
         this.color.setVisible(this.morph.customPose != null);
         this.fixed.setVisible(this.morph.customPose != null);
