@@ -39,7 +39,7 @@ Blockbuster mod provides a ton of features to improve your videos:
 
 This is change logs playlist. Almost every update (for exception of patches with bug fixes and minor features) comes with a change log video which showcases new features, and briefly shows how to use them.
 
-<a href="https://youtu.be/vO1tAgNsCUo?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/vO1tAgNsCUo/0.jpg"></a> 
+<a href="https://youtu.be/faeKqT5FYyA?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/faeKqT5FYyA/0.jpg"></a> 
 
 Here is also an up-to-date tutorial series which should teach you the basics of the mod (check more videos [on the same channel](https://www.youtube.com/c/McHorsesmods/videos) for more tutorials about Blockbuster mod).
 

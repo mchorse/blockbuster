@@ -1,3 +1,29 @@
+## Version 2.3.3
+
+This update was made by Chryfi, which features dozen or so QoL tweaks. Exceptions are mentioned at the respective items.
+
+**Compatible** with McLib `2.3.6`, Metamorph `1.2.11` and Aperture `1.7`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+<a href="https://youtu.be/faeKqT5FYyA"><img src="https://img.youtube.com/vi/faeKqT5FYyA/0.jpg"></a> 
+
+* Added ApertureTracker (to TrackerMorph as type)
+* Added TrackerMorph (by NyaNLI)
+* Added gradient GUI to snowstorm (by McHorse)
+* Added emitter plane facing modes to Snowstorm (compatible with snowstorm.app)
+* Added copy recordings content option for scene duping
+* Added `/record delete <filename> [force]` command
+* Added `/record remove_all <filename> [force]` command to remove all actions
+* Added confirmation screen for commands `/record delete`, `/record remove`, `/record remove_all`
+* Added `[force]` arguments to the commands `/record delete`, `/record remove`, `/record remove_all`
+* Added `[overwrite]` argument to `/record dupe to` overwrite existing recording files
+* Added ability to remove all actions at one tick (index = -1) for command `/record remove`
+* Added a popup message for replay renaming when the name is given in the same scene (it is only a notification, you don’t need to act)
+* Added Oriented Bounding Box API for later usage...
+* Changed Snowstorm collision enabled option into a MoLang condition (compatible with snowstorm.app)
+* Fixed record renaming bugs with scene duping -> rename prefix now allows for names in the indexes as long as the name begins with the scene name and indexes are separated by “_”. Example: “scene1_cut2_protagonist_1” - “scene_1_cut2” is the scene name, protagonist and 1 are the indexes
+* Fixed `record` morph resetting the recording when nested into an animated pose as a body part
+* Fixed Snowstorm GUI expiration delay field's max length
+
 ## Version 2.3.1
 
 This patch update fixes a couple of bugs.
