@@ -1,4 +1,4 @@
-**ATTENTION**: This mod is **no longer being developed**, and it's maintained (bugs and crash fixes) until August/September of 2021. If you wish to continue the mod, feel free to check out the [source code](https://github.com/mchorse/blockbuster).  
+**ATTENTION**: This mod is **no longer being developed nor maintained by McHorse**. If you wish to continue the mod, feel free to check out the [source code](https://github.com/mchorse/blockbuster).  
 
 ![Blockbuster](https://i.imgur.com/fkRVMIw.png)
 
