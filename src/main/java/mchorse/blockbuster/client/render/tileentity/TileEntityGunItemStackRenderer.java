@@ -86,13 +86,20 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
             ItemStack baseItem = Minecraft.getMinecraft().player.getHeldItemMainhand();
             if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && baseItem.equals(stack)){
                 if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI){
+                    if (!KeyboardHandler.zoom.isKeyDown()){
                     model.props.renderHands(RenderingHandler.getLastItemHolder(), partialTicks);
+                    }
                     if (model.props.enableOverlay && KeyboardHandler.zoom.isKeyDown()){
                         model.props.renderOverlay(RenderingHandler.getLastItemHolder(), partialTicks);
                     }
                 }
             }
+            if (!KeyboardHandler.zoom.isKeyDown()&& RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI){
             model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
+            }
+            if (RenderingHandler.itemTransformType == ItemCameraTransforms.TransformType.GUI){
+                model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
+            }
 
             this.reset();
         }

@@ -181,9 +181,10 @@ public class ActionRegistry
         register("break_animation", 17, BreakBlockAnimation.class);
         register("use_item", 18, ItemUseAction.class);
         register("use_item_block", 19, ItemUseBlockAction.class);
+        register("use_gun", 20, ShootGunAction.class);
 
         /* Set next ID to max */
-        NEXT_ID = 20;
+        NEXT_ID = 21;
 
         register("interact_entity", InteractEntityAction.class);
     }
