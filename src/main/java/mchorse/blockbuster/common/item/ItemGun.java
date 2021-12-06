@@ -1,11 +1,14 @@
 package mchorse.blockbuster.common.item;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.entity.EntityActor.EntityFakePlayer;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.guns.PacketGunShot;
+import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.actions.ShootGunAction;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.metamorph.api.MorphUtils;
@@ -24,6 +27,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class ItemGun extends Item
 {
 
@@ -35,21 +40,10 @@ public class ItemGun extends Item
         this.setCreativeTab(Blockbuster.blockbusterTab);
     }
 
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
-    {
-        ItemStack stack = player.getHeldItem(hand);
 
-        return new ActionResult<ItemStack>(this.shootIt(stack, player, world), stack);
-    }
 
-    @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-    {
-        ItemStack stack = player.getHeldItem(hand);
 
-        return this.shootIt(stack, player, world);
-    }
+
 
     public EnumActionResult shootIt(ItemStack stack, EntityPlayer player, World world)
     {
@@ -57,12 +51,25 @@ public class ItemGun extends Item
 
         if (world.isRemote)
         {
+            player.rotationPitch -= props.recoilXMin;
+            player.prevRotationPitch -= props.recoilXMin;
+            player.rotationYaw -= props.recoilYMin;
+            player.prevRotationYaw -= props.recoilYMin;
+
+            player.cameraPitch -= props.recoilXMin;
+            player.prevCameraPitch -= props.recoilXMin;
+            player.cameraYaw -= props.recoilYMin;
+            player.prevCameraYaw -= props.recoilYMin;
+
+
+
+           // player.cameraPitch +=10;
             if (props != null && props.launch)
             {
                 float pitch = player.rotationPitch + (float) ((Math.random() - 0.5) * props.scatterY);
                 float yaw = player.rotationYaw + (float) ((Math.random() - 0.5) * props.scatterX);
-
                 this.setThrowableHeading(player, pitch, yaw, 0, props.speed);
+
             }
 
             return EnumActionResult.PASS;
@@ -131,6 +138,12 @@ public class ItemGun extends Item
                 if (props.projectiles > 0)
                 {
                     world.spawnEntity(projectile);
+                    if (!world.isRemote) {
+                        List<Action> events = CommonProxy.manager.getActions(player);
+                        if (events != null) {
+                            events.add(new ShootGunAction());
+                        }
+                    }
                 }
 
                 last = projectile;
@@ -151,6 +164,8 @@ public class ItemGun extends Item
         }
 
         Dispatcher.sendToTracked(entity, new PacketGunShot(id));
+
+
 
         return true;
     }

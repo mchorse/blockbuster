@@ -42,6 +42,7 @@ public class GunProps
     public AbstractMorph firingMorph;
     public String fireCommand;
     public int delay;
+    public int ammoInMagazine;
     public int projectiles;
     public float scatterX;
     public float scatterY;
@@ -49,6 +50,11 @@ public class GunProps
     public boolean useTarget;
     public ItemStack ammoStack = ItemStack.EMPTY;
     public float zoom;
+    public float recoilXMin;
+    public float recoilXMax;
+    public float recoilYMin;
+    public float recoilYMax;
+    public boolean recoilSimple;
     /* Projectile properties */
     public AbstractMorph projectileMorph;
     public String tickCommand;
@@ -360,6 +366,12 @@ public class GunProps
         this.useTarget = false;
         this.ammoStack = ItemStack.EMPTY;
         this.zoom = 0;
+        this.recoilXMin = 0;
+        this.recoilSimple = true;
+        this.recoilXMax = 0;
+        this.recoilYMin = 0;
+        this.recoilYMax = 0;
+        this.ammoInMagazine = 0;
         /* Projectile properties */
         this.projectileMorph = null;
         this.tickCommand = "";
@@ -454,6 +466,12 @@ public class GunProps
         if (tag.hasKey("HY")) this.hitboxY = tag.getFloat("HY");
         if (tag.hasKey("Speed")) this.speed = tag.getFloat("Speed");
         if (tag.hasKey("Zoom")) this.zoom = tag.getFloat("Zoom");
+        if (tag.hasKey("recoilXMin")) this.recoilXMin = tag.getFloat("recoilXMin");
+        if (tag.hasKey("recoilSimple")) this.recoilSimple = tag.getBoolean("recoilSimple");
+        if (tag.hasKey("recoilXMax")) this.recoilXMax = tag.getFloat("recoilXMax");
+        if (tag.hasKey("recoilYMin")) this.recoilYMin = tag.getFloat("recoilYMin");
+        if (tag.hasKey("recoilYMax")) this.recoilYMax = tag.getFloat("recoilYMax");
+
         if (tag.hasKey("Friction")) this.friction = tag.getFloat("Friction");
         if (tag.hasKey("Gravity")) this.gravity = tag.getFloat("Gravity");
         if (tag.hasKey("FadeIn")) this.fadeIn = tag.getInteger("FadeIn");
@@ -538,6 +556,11 @@ public class GunProps
         if (this.hitboxX != 0.25F) tag.setFloat("HX", this.hitboxX);
         if (this.hitboxY != 0.25F) tag.setFloat("HY", this.hitboxY);
         if (this.zoom != 0) tag.setFloat("Zoom", this.zoom);
+        if (this.recoilXMin != 0) tag.setFloat("recoilXMin", this.recoilXMin);
+        if (!this.recoilSimple) tag.setBoolean("recoilSimple", this.recoilSimple);
+        if (this.recoilXMax != 0) tag.setFloat("recoilXMax", this.recoilXMax);
+        if (this.recoilYMin != 0) tag.setFloat("recoilYMin", this.recoilYMin);
+        if (this.recoilYMax != 0) tag.setFloat("recoilYMax", this.recoilYMax);
         if (this.speed != 1.0F) tag.setFloat("Speed", this.speed);
         if (this.friction != 0.99F) tag.setFloat("Friction", this.friction);
         if (this.gravity != 0.03F) tag.setFloat("Gravity", this.gravity);

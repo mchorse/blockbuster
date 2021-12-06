@@ -14,6 +14,7 @@ import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -416,7 +417,14 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
                 if (this.props.damage > 0)
                 {
-                    result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, null), this.props.damage);
+                    if (result.entityHit instanceof EntityLiving){
+                        result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, null), 0);
+                        EntityLiving living = (EntityLiving) result.entityHit;
+                        living.setHealth(living.getHealth()-this.props.damage);
+                    }else {
+                        result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, null), this.props.damage);
+                    }
+
                 }
 
                 if (this.props.knockbackHorizontal != 0 && result.entityHit instanceof EntityLivingBase)
@@ -504,6 +512,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         {
             this.morph.fromNBT(NBTUtils.readInfiniteTag(additionalData));
         }
+
 
         this.initMX = additionalData.readDouble();
         this.initMY = additionalData.readDouble();
