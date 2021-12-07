@@ -548,6 +548,7 @@ public class BedrockEmitter
 
             if (!this.particles.isEmpty())
             {
+                //only depth sort either in particle rendering or morph rendering
                 if (!particleRendering)
                 {
                     this.depthSorting();
@@ -569,6 +570,7 @@ public class BedrockEmitter
                 {
                     if (!particleRendering)
                     {
+                        //only spawn particles either in particles or in morph rendering
                         component.postRender(this, partialTicks);
                     }
                 }
