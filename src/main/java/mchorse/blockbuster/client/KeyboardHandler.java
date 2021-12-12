@@ -77,22 +77,7 @@ public class KeyboardHandler
         Minecraft.getMinecraft().addScheduledTask(StructureMorph::cleanUp);
     }
 
-    /**
-     * Handle keys
-     */
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onPlayerTick(TickEvent.WorldTickEvent event){
-        if (event.phase.equals(TickEvent.Phase.START)) {
-            Minecraft mc = Minecraft.getMinecraft();
-            if (gun_shoot.isKeyDown()) {
-                ItemStack stack = mc.player.getHeldItemMainhand();
-                if (stack.getItem() instanceof ItemGun) {
-                    Dispatcher.sendToServer(new PacketGunInteract(stack));
-                }
 
-            }
-        }
-    }
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent event)
     {

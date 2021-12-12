@@ -5,6 +5,8 @@ import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.item.ItemGun;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.guns.PacketGunInteract;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.mclib.events.RenderOverlayEvent;
 import net.minecraft.client.Minecraft;
@@ -12,6 +14,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -32,6 +35,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import static mchorse.blockbuster.client.KeyboardHandler.gun_shoot;
+
 /**
  * \* User: Evanechecssss
  * \* https://bio.link/evanechecssss
@@ -40,7 +45,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * \
  */
 @SideOnly(Side.CLIENT)
-public class GunZoomRender {
+public class GunMiscRender {
 
     public static float ZOOM_TIME;
     private boolean hasChangedSensitivity = false;

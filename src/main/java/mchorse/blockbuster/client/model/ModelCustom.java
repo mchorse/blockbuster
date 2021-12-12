@@ -9,8 +9,12 @@ import mchorse.blockbuster.api.ModelLimb.Holding;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.api.formats.obj.ShapeKey;
+import mchorse.blockbuster.client.KeyboardHandler;
+import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.OrientedBB;
+import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
@@ -188,6 +192,21 @@ public class ModelCustom extends ModelBiped
                 {
                     right = ModelBiped.ArmPose.BOW_AND_ARROW;
                 }
+            }
+            if (rightItem.getItem() instanceof ItemGun){
+               GunProps props = NBTUtils.getGunProps(rightItem);
+
+                if (props.hand_bow_always){
+                    right = ModelBiped.ArmPose.BOW_AND_ARROW;
+                }else {
+                    if (props.hand_bow){
+                        if (KeyboardHandler.gun_shoot.isKeyDown()){
+                            right = ModelBiped.ArmPose.BOW_AND_ARROW;
+                        }
+                    }
+                }
+
+
             }
         }
 

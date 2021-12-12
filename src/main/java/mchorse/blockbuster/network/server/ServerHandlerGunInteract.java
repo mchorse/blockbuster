@@ -1,6 +1,7 @@
 package mchorse.blockbuster.network.server;
 
 import mchorse.blockbuster.CommonProxy;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.blockbuster.network.common.guns.PacketGunInteract;
@@ -8,7 +9,13 @@ import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.ItemUseAction;
 import mchorse.blockbuster.recording.actions.ShootGunAction;
 import mchorse.mclib.network.ServerMessageHandler;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 
 import java.util.List;
 
@@ -23,8 +30,11 @@ public class ServerHandlerGunInteract extends ServerMessageHandler<PacketGunInte
     @Override
     public void run(EntityPlayerMP entityPlayerMP, PacketGunInteract packetGunInteract) {
         if (!entityPlayerMP.world.isRemote){
-        ItemGun gun = (ItemGun) packetGunInteract.itemStack.getItem();
-        gun.shootIt(packetGunInteract.itemStack,entityPlayerMP,entityPlayerMP.world);
+            ItemGun gun = (ItemGun) packetGunInteract.itemStack.getItem();
+            Entity entity = entityPlayerMP.world.getEntityByID(packetGunInteract.id);
+            if (entity instanceof EntityPlayer){
+                gun.shootIt(packetGunInteract.itemStack,(EntityPlayer) entity,entityPlayerMP.world);
+            }
         }
 
     }

@@ -18,6 +18,7 @@ public class BBCoreClassTransformer extends CoreClassTransformer
     private WorldTransformer world = new WorldTransformer();
     private RenderGlobalTransformer render = new RenderGlobalTransformer();
     private EntityRendererTransformer entityRenderer = new EntityRendererTransformer();
+    private RenderPlayerTransformer playerTransformer = new RenderPlayerTransformer();
     private RenderItemTransformer renderItem = new RenderItemTransformer();
     private EntityTransformer entity = new EntityTransformer();
     private EntityTransformationUtilsTransformer entityTransformationUtils = new EntityTransformationUtilsTransformer();
@@ -30,6 +31,10 @@ public class BBCoreClassTransformer extends CoreClassTransformer
             System.out.println("BBCoreMod: Transforming World class (" + name + ")");
 
             return this.world.transform(name, basicClass);
+        }else if (checkName(name, "cct", "net.minecraft.client.renderer.entity.RenderPlayer")){
+
+            System.out.println("BBCoreMod: Transforming RenderPlayer class (" + name + ")");
+            return this.playerTransformer.transform(name,basicClass);
         }
         else if (checkName(name, "buy", "net.minecraft.client.renderer.RenderGlobal"))
         {
