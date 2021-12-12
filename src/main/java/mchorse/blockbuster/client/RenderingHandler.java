@@ -10,25 +10,34 @@ import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
+import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.OrientedBB;
+import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordRecorder;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -130,7 +139,34 @@ public class RenderingHandler
      */
     public static void renderLitParticles(float partialTicks)
     {}
+    /**
+     * Render BB gun Hands
+     *
+     */
+    public static void changePlayerHand(AbstractClientPlayer player, ModelPlayer modelPlayer){
+        ItemStack itemstack = player.getHeldItemMainhand();
+        ModelBiped.ArmPose modelbiped$armpose = ModelBiped.ArmPose.EMPTY;
+        if (!itemstack.isEmpty()) {
+            if (itemstack.getItem() instanceof ItemGun){
+            GunProps props = NBTUtils.getGunProps(itemstack);
+            if (props.hand_bow_always){
+                modelbiped$armpose = ModelBiped.ArmPose.BOW_AND_ARROW;
+            }else {
+                if (props.hand_bow){
+                    if (KeyboardHandler.gun_shoot.isKeyDown()){
+                        modelbiped$armpose = ModelBiped.ArmPose.BOW_AND_ARROW;
+                    }
+                }
+            }
+            }
+        }
 
+        if (player.getPrimaryHand() == EnumHandSide.RIGHT) {
+            modelPlayer.rightArmPose = modelbiped$armpose;
+        } else {
+            modelPlayer.leftArmPose = modelbiped$armpose;
+        }
+    }
     /**
      * Render particle emitters (called by ASM)
      */

@@ -9,6 +9,7 @@ import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
+import mchorse.blockbuster.client.render.GunMiscRender;
 import mchorse.blockbuster.client.render.RenderActor;
 import mchorse.blockbuster.client.render.RenderGunProjectile;
 import mchorse.blockbuster.client.render.tileentity.TileEntityDirectorRenderer;
@@ -213,7 +214,7 @@ public class ClientProxy extends CommonProxy
         MinecraftForge.EVENT_BUS.register(new FrameHandler());
         MinecraftForge.EVENT_BUS.register(keys = new KeyboardHandler());
         MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
-
+        MinecraftForge.EVENT_BUS.register(new GunMiscRender());
         McLib.EVENT_BUS.register(panels = new GuiBlockbusterPanels());
 
         CameraHandler.register();

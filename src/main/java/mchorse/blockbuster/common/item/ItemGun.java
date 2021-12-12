@@ -6,17 +6,21 @@ import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.entity.EntityActor.EntityFakePlayer;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.guns.PacketGunInteract;
 import mchorse.blockbuster.network.common.guns.PacketGunShot;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.ShootGunAction;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
+import mchorse.mclib.utils.Interpolation;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -26,6 +30,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -41,29 +47,17 @@ public class ItemGun extends Item
     }
 
 
+    @SideOnly(Side.CLIENT)
+    public EnumActionResult clientShoot(ItemStack stack, EntityPlayer player, World world){
 
-
-
-
-    public EnumActionResult shootIt(ItemStack stack, EntityPlayer player, World world)
-    {
         GunProps props = NBTUtils.getGunProps(stack);
-
         if (world.isRemote)
         {
-            player.rotationPitch -= props.recoilXMin;
-            player.prevRotationPitch -= props.recoilXMin;
-            player.rotationYaw -= props.recoilYMin;
-            player.prevRotationYaw -= props.recoilYMin;
 
-            player.cameraPitch -= props.recoilXMin;
-            player.prevCameraPitch -= props.recoilXMin;
-            player.cameraYaw -= props.recoilYMin;
-            player.prevCameraYaw -= props.recoilYMin;
+            player.rotationPitch +=  Interpolation.SINE_IN.interpolate(player.prevRotationPitch,player.prevRotationPitch+props.recoilXMin,1F) -player.prevRotationPitch ;
+            player.rotationPitch +=  Interpolation.SINE_IN.interpolate(player.prevRotationPitch,player.prevRotationPitch+props.recoilXMin,1F) -player.prevRotationPitch ;
+          //  player.prevRotationPitch += props.recoilXMin;
 
-
-
-           // player.cameraPitch +=10;
             if (props != null && props.launch)
             {
                 float pitch = player.rotationPitch + (float) ((Math.random() - 0.5) * props.scatterY);
@@ -72,9 +66,14 @@ public class ItemGun extends Item
 
             }
 
-            return EnumActionResult.PASS;
         }
+        return EnumActionResult.PASS;
+    }
 
+
+    public EnumActionResult shootIt(ItemStack stack, EntityPlayer player, World world)
+    {
+        GunProps props = NBTUtils.getGunProps(stack);
         return this.shoot(stack, props, player, world) ? EnumActionResult.PASS : EnumActionResult.FAIL;
     }
 
@@ -113,6 +112,7 @@ public class ItemGun extends Item
 
             EntityGunProjectile last = null;
 
+
             for (int i = 0; i < Math.max(props.projectiles, 1); i++)
             {
                 AbstractMorph morph = props.projectileMorph;
@@ -138,12 +138,7 @@ public class ItemGun extends Item
                 if (props.projectiles > 0)
                 {
                     world.spawnEntity(projectile);
-                    if (!world.isRemote) {
-                        List<Action> events = CommonProxy.manager.getActions(player);
-                        if (events != null) {
-                            events.add(new ShootGunAction());
-                        }
-                    }
+
                 }
 
                 last = projectile;
@@ -164,8 +159,14 @@ public class ItemGun extends Item
         }
 
         Dispatcher.sendToTracked(entity, new PacketGunShot(id));
+        if (!world.isRemote) {
+            Dispatcher.sendTo(new PacketGunInteract(stack,player.getEntityId()), (EntityPlayerMP) player);
+            List<Action> events = CommonProxy.manager.getActions(player);
+            if (events != null) {
+                events.add(new ShootGunAction());
 
-
+            }
+        }
 
         return true;
     }

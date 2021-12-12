@@ -22,7 +22,7 @@ import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.blockbuster.client.render.GunZoomRender;
+import mchorse.blockbuster.events.GunShootHandler;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.recording.capturing.ActionHandler;
@@ -182,9 +182,9 @@ public class CommonProxy
         /* Event handlers */
         MinecraftForge.EVENT_BUS.register(this.models);
         MinecraftForge.EVENT_BUS.register(new ActionHandler());
+        MinecraftForge.EVENT_BUS.register(new GunShootHandler());
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
         MinecraftForge.EVENT_BUS.register(new MetamorphHandler());
-        MinecraftForge.EVENT_BUS.register(new GunZoomRender());
     }
 
     /**

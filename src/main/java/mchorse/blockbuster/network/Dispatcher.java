@@ -4,11 +4,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.network.client.*;
 import mchorse.blockbuster.network.client.audio.ClientHandlerAudio;
-import mchorse.blockbuster.network.client.guns.ClientHandlerGunInfo;
-import mchorse.blockbuster.network.client.guns.ClientHandlerGunProjectile;
-import mchorse.blockbuster.network.client.guns.ClientHandlerGunProjectileVanish;
-import mchorse.blockbuster.network.client.guns.ClientHandlerGunShot;
-import mchorse.blockbuster.network.client.guns.ClientHandlerGunStuck;
+import mchorse.blockbuster.network.client.guns.*;
 import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayback;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayerRecording;
@@ -149,6 +145,7 @@ public class Dispatcher
             register(PacketGunShot.class, ClientHandlerGunShot.class, Side.CLIENT);
             register(PacketGunProjectile.class, ClientHandlerGunProjectile.class, Side.CLIENT);
             register(PacketGunInteract.class, ServerHandlerGunInteract.class, Side.SERVER);
+            register(PacketGunInteract.class, ClientHandlerGunInteract.class, Side.CLIENT);
             register(PacketGunProjectileVanish.class, ClientHandlerGunProjectileVanish.class, Side.CLIENT);
             register(PacketGunStuck.class, ClientHandlerGunStuck.class, Side.CLIENT);
 

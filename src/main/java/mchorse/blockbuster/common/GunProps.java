@@ -50,10 +50,14 @@ public class GunProps
     public boolean useTarget;
     public ItemStack ammoStack = ItemStack.EMPTY;
     public float zoom;
+    public boolean hideHandOnZoom;
+    public boolean hand_bow;
+    public boolean hand_bow_always;
     public float recoilXMin;
     public float recoilXMax;
     public float recoilYMin;
     public float recoilYMax;
+
     public boolean recoilSimple;
     /* Projectile properties */
     public AbstractMorph projectileMorph;
@@ -379,6 +383,9 @@ public class GunProps
         this.lifeSpan = 200;
         this.yaw = true;
         this.enableOverlay = false;
+        this.hideHandOnZoom = false;
+        this.hand_bow = false;
+        this.hand_bow_always = false;
         this.pitch = true;
         this.sequencer = false;
         this.random = false;
@@ -459,6 +466,12 @@ public class GunProps
         if (tag.hasKey("LifeSpan")) this.lifeSpan = tag.getInteger("LifeSpan");
         if (tag.hasKey("Yaw")) this.yaw = tag.getBoolean("Yaw");
         if (tag.hasKey("EnableOverlay")) this.enableOverlay = tag.getBoolean("EnableOverlay");
+        if (tag.hasKey("hideHandOnZoom")) this.hideHandOnZoom = tag.getBoolean("hideHandOnZoom");
+
+        if (tag.hasKey("hand_bow")) this.hand_bow = tag.getBoolean("hand_bow");
+        if (tag.hasKey("hand_bow_always")) this.hand_bow_always = tag.getBoolean("hand_bow_always");
+
+
         if (tag.hasKey("Pitch")) this.pitch = tag.getBoolean("Pitch");
         if (tag.hasKey("Sequencer")) this.sequencer = tag.getBoolean("Sequencer");
         if (tag.hasKey("Random")) this.random = tag.getBoolean("Random");
@@ -550,6 +563,12 @@ public class GunProps
         if (this.lifeSpan != 200) tag.setInteger("LifeSpan", this.lifeSpan);
         if (!this.yaw) tag.setBoolean("Yaw", this.yaw);
         if (this.enableOverlay) tag.setBoolean("EnableOverlay", this.enableOverlay);
+        if (this.hideHandOnZoom) tag.setBoolean("hideHandOnZoom", this.hideHandOnZoom);
+
+        if (this.hand_bow_always) tag.setBoolean("hand_bow_always", this.hand_bow_always);
+        if (this.hand_bow) tag.setBoolean("hand_bow", this.hand_bow);
+
+
         if (!this.pitch) tag.setBoolean("Pitch", this.pitch);
         if (this.sequencer) tag.setBoolean("Sequencer", this.sequencer);
         if (this.random) tag.setBoolean("Random", this.random);

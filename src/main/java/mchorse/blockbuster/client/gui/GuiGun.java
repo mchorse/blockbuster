@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui;
 
+import mchorse.aperture.client.gui.utils.GuiInterpolationTypeList;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.common.GunProps;
@@ -16,6 +17,7 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
+import mchorse.mclib.client.gui.framework.elements.list.GuiInterpolationList;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
@@ -101,6 +103,9 @@ public class GuiGun extends GuiBase
     public GuiNestedEdit pickHands;
     public GuiNestedEdit pickMorphOverlay;
     public GuiToggleElement enableOverlay;
+    public GuiToggleElement hideHandOnZoom;
+    public GuiToggleElement hand_bow;
+    public GuiToggleElement hand_bow_always;
     /* Impact options */
     public GuiElement impactOptions;
     public GuiNestedEdit pickImpact;
@@ -120,7 +125,6 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement penetration;
     public GuiToggleElement ignoreBlocks;
     public GuiToggleElement ignoreEntities;
-
     /* Transforms */
     public GuiElement transformOptions;
     public GuiPoseTransformations gun;
@@ -253,7 +257,13 @@ public class GuiGun extends GuiBase
         this.projectileOptions.add(this.pickProjectile, this.tickCommand, projectileFields);
 
         /* AIM Options */
+        area = this.aimOptions.area;
+
+
         this.enableOverlay = new GuiToggleElement(mc, IKey.str(""), false, (b) -> this.props.enableOverlay = b.isToggled());
+        this.hideHandOnZoom = new GuiToggleElement(mc, IKey.str(""), false, (b) -> this.props.hideHandOnZoom = b.isToggled());
+        this.hand_bow = new GuiToggleElement(mc, IKey.str(""), false, (b) -> this.props.hand_bow = b.isToggled());
+        this.hand_bow_always = new GuiToggleElement(mc, IKey.str(""), false, (b) -> this.props.hand_bow_always = b.isToggled());
         this.pickHands = new GuiNestedEdit(mc, (editing) -> this.openMorphs(5, editing));
         this.pickMorphOverlay = new GuiNestedEdit(mc, (editing) -> this.openMorphs(6, editing));
         this.zoom = new GuiTrackpadElement(mc, (value) -> this.props.zoom = value.floatValue());
@@ -263,8 +273,7 @@ public class GuiGun extends GuiBase
         this.recoilYMin = new GuiTrackpadElement(mc, (value) -> this.props.recoilYMin = value.floatValue());
         this.recoilYMax = new GuiTrackpadElement(mc, (value) -> this.props.recoilYMax = value.floatValue());
         this.ammoInMagazine = new GuiTrackpadElement(mc,(value)->this.props.ammoInMagazine = value.intValue());
-        this.zoom.limit(-200,200,false);
-
+        this.zoom.limit(Float.MIN_VALUE,Float.MAX_VALUE,false);
         this.recoilXMin.limit(-200,200,false);
         this.recoilXMax.limit(-200,200,false);
         this.recoilYMin.limit(-200,200,false);
@@ -272,29 +281,32 @@ public class GuiGun extends GuiBase
 
         this.ammoInMagazine.limit(0);
 
-        area = this.aimOptions.area;
         GuiElement zoomParam = new GuiElement(mc);
-        zoomParam.flex().relative(area).set(0, 0, 0, 20).x(0.5F).y(1, -75).w(0.5F, -60).anchorX(0.5F).row(5);
-        this.zoom.flex().relative(zoomParam.resizer()).set(0, 0, 100, 20).x(-130).anchorX(1F);
+        zoomParam.flex().relative(area).set(0, 0, 0, 20).x(0.5F).y(1, -75).w(0.5F, -60).anchorX(0.5F).row(5).padding(10);
+        this.zoom.flex().relative(zoomParam.resizer()).set(0, 0, 100, 20).x(-95).anchorX(1F);
         this.pickHands.flex().relative(this.zoom.resizer()).w(1F).y(-140);
         this.pickMorphOverlay.flex().relative(this.pickHands.resizer()).w(1F).y(-100).x(0);
-
+        this.hideHandOnZoom.flex().relative(this.pickHands.resizer()).w(1F).y(-115).x(50);
         this.enableOverlay.flex().relative(this.pickHands.resizer()).w(1F).y(-95).x(50);
         GuiLabel enableOverlayLable =  Elements.label(IKey.lang("blockbuster.gui.gun.enableOverlayZoom"));
         GuiElement recoilTab = new GuiElement(mc);
         enableOverlayLable.flex().relative(this.pickHands.resizer()).w(1F).y(-95).x(160);
-
         recoilTab.flex().relative(area).set(0, 0, 0, 20).x(0.5F).y(1, -75).w(0.5F, -60);
         this.recoilXMax.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(-190).y(-50).anchorX(1F);
         this.recoilYMax.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(-190).y(0).anchorX(1F);
         this.recoilXMin.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(-70).y(-50).anchorX(1F);
         this.recoilYMin.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(-70).y(0).anchorX(1F);
         this.recoilSimple.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(-260).y(-80).anchorX(1F);
-        aimOptions.add(this.zoom,this.pickHands, this.pickMorphOverlay, zoomParam,this.enableOverlay,recoilTab,enableOverlayLable,this.recoilXMax,
+        GuiElement handRender = new GuiElement(mc);
+        handRender.flex().relative(area).set(0, 0, 0, 20).x(0.5F).y(1, -75).w(0.5F, -60);
+        this.hand_bow.flex().relative(handRender.resizer()).set(0, 0, 100, 20).x(-360).y(-100).anchorX(1F);
+        this.hand_bow_always.flex().relative(handRender.resizer()).set(0, 0, 100, 20).x(-360).y(-40).anchorX(1F);
+
+        aimOptions.add(this.zoom,this.pickHands, this.pickMorphOverlay,handRender, zoomParam,this.enableOverlay,this.hideHandOnZoom,recoilTab,enableOverlayLable,this.recoilXMax,
         this.recoilYMax,
         this.recoilXMin,
         this.recoilYMin,
-        this.recoilSimple);
+        this.recoilSimple,hand_bow,hand_bow_always);
 
         /* Impact options */
         area = this.impactOptions.area;
@@ -420,6 +432,9 @@ public class GuiGun extends GuiBase
         this.fadeIn.setValue(this.props.fadeIn);
         this.fadeOut.setValue(this.props.fadeOut);
         this.enableOverlay.toggled(this.props.enableOverlay);
+        this.hideHandOnZoom.toggled(this.props.hideHandOnZoom);
+        this.hand_bow.toggled(this.props.hand_bow);
+        this.hand_bow_always.toggled(this.props.hand_bow_always);
         /* Impact properties */
         this.pickImpact.setMorph(this.props.impactMorph);
         this.impactCommand.setText(this.props.impactCommand);

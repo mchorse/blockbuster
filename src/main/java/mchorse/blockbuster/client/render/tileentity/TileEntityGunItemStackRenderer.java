@@ -94,8 +94,10 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
                     }
                 }
             }
-            if (!KeyboardHandler.zoom.isKeyDown()&& RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI){
-            model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
+            if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI){
+                if (!(KeyboardHandler.zoom.isKeyDown() && model.props.hideHandOnZoom)){
+                    model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
+                }
             }
             if (RenderingHandler.itemTransformType == ItemCameraTransforms.TransformType.GUI){
                 model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
