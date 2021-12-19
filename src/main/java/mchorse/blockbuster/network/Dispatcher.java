@@ -145,6 +145,7 @@ public class Dispatcher
             register(PacketGunShot.class, ClientHandlerGunShot.class, Side.CLIENT);
             register(PacketGunProjectile.class, ClientHandlerGunProjectile.class, Side.CLIENT);
             register(PacketGunInteract.class, ServerHandlerGunInteract.class, Side.SERVER);
+            register(PacketGunReloading.class, ServerHandlerGunReloading.class, Side.SERVER);
             register(PacketGunInteract.class, ClientHandlerGunInteract.class, Side.CLIENT);
             register(PacketGunProjectileVanish.class, ClientHandlerGunProjectileVanish.class, Side.CLIENT);
             register(PacketGunStuck.class, ClientHandlerGunStuck.class, Side.CLIENT);

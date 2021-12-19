@@ -72,6 +72,7 @@ public class GuiGun extends GuiBase
     public GuiToggleElement launch;
     public GuiToggleElement useTarget;
     public GuiSlotElement ammoStack;
+
     /* Projectile options */
     public GuiElement projectileOptions;
     public GuiNestedEdit pickProjectile;
@@ -96,6 +97,8 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement zoom;
     public GuiTrackpadElement recoilXMin;
     public GuiTrackpadElement recoilXMax;
+    public GuiTrackpadElement inputAmmo;
+    public GuiTrackpadElement inputReloadingTime;
     public GuiTrackpadElement recoilYMin;
     public GuiTrackpadElement recoilYMax;
     public GuiToggleElement recoilSimple;
@@ -103,9 +106,11 @@ public class GuiGun extends GuiBase
     public GuiNestedEdit pickHands;
     public GuiNestedEdit pickMorphOverlay;
     public GuiToggleElement enableOverlay;
+    public GuiToggleElement acceptPressed;
     public GuiToggleElement hideHandOnZoom;
     public GuiToggleElement hand_bow;
     public GuiToggleElement hand_bow_always;
+    public GuiTrackpadElement inputTimeBetweenShoot;
     /* Impact options */
     public GuiElement impactOptions;
     public GuiNestedEdit pickImpact;
@@ -261,6 +266,7 @@ public class GuiGun extends GuiBase
 
 
         this.enableOverlay = new GuiToggleElement(mc, IKey.str(""), false, (b) -> this.props.enableOverlay = b.isToggled());
+        this.acceptPressed = new GuiToggleElement(mc, IKey.str(""),false,(b)->this.props.acceptPressed=b.isToggled());
         this.hideHandOnZoom = new GuiToggleElement(mc, IKey.str(""), false, (b) -> this.props.hideHandOnZoom = b.isToggled());
         this.hand_bow = new GuiToggleElement(mc, IKey.str(""), false, (b) -> this.props.hand_bow = b.isToggled());
         this.hand_bow_always = new GuiToggleElement(mc, IKey.str(""), false, (b) -> this.props.hand_bow_always = b.isToggled());
@@ -270,12 +276,20 @@ public class GuiGun extends GuiBase
         this.recoilXMin = new GuiTrackpadElement(mc, (value) -> this.props.recoilXMin = value.floatValue());
         this.recoilSimple = new GuiToggleElement(mc, IKey.lang("blockhuster.gui.dun.recoil_simple"),false,(b)->this.props.recoilSimple = b.isToggled());
         this.recoilXMax = new GuiTrackpadElement(mc, (value) -> this.props.recoilXMax = value.floatValue());
+        this.inputAmmo = new GuiTrackpadElement(mc,(value)->this.props.inputAmmo = value.intValue());
+        this.inputReloadingTime = new GuiTrackpadElement(mc, (value)->this.props.inputReloadingTime = value.intValue());
+
+
+        this.inputTimeBetweenShoot = new GuiTrackpadElement(mc, (value)->this.props.inputTimeBetweenShoot = value.intValue());
         this.recoilYMin = new GuiTrackpadElement(mc, (value) -> this.props.recoilYMin = value.floatValue());
         this.recoilYMax = new GuiTrackpadElement(mc, (value) -> this.props.recoilYMax = value.floatValue());
         this.ammoInMagazine = new GuiTrackpadElement(mc,(value)->this.props.ammoInMagazine = value.intValue());
         this.zoom.limit(Float.MIN_VALUE,Float.MAX_VALUE,false);
         this.recoilXMin.limit(-200,200,false);
         this.recoilXMax.limit(-200,200,false);
+        this.inputTimeBetweenShoot.limit(0, Integer.MAX_VALUE);
+        this.inputAmmo.limit(1,Integer.MAX_VALUE);
+        this.inputReloadingTime.limit(0);
         this.recoilYMin.limit(-200,200,false);
         this.recoilYMax.limit(-200,200,false);
 
@@ -288,11 +302,15 @@ public class GuiGun extends GuiBase
         this.pickMorphOverlay.flex().relative(this.pickHands.resizer()).w(1F).y(-100).x(0);
         this.hideHandOnZoom.flex().relative(this.pickHands.resizer()).w(1F).y(-115).x(50);
         this.enableOverlay.flex().relative(this.pickHands.resizer()).w(1F).y(-95).x(50);
+        this.acceptPressed.flex().relative(this.zoom.resizer()).w(100);
         GuiLabel enableOverlayLable =  Elements.label(IKey.lang("blockbuster.gui.gun.enableOverlayZoom"));
         GuiElement recoilTab = new GuiElement(mc);
         enableOverlayLable.flex().relative(this.pickHands.resizer()).w(1F).y(-95).x(160);
         recoilTab.flex().relative(area).set(0, 0, 0, 20).x(0.5F).y(1, -75).w(0.5F, -60);
+        this.inputReloadingTime.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(-250).y(-50).anchorX(1F);
         this.recoilXMax.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(-190).y(-50).anchorX(1F);
+        this.inputTimeBetweenShoot.flex().relative(area).set(0,0,0,20).x(100F).y(1,-75);
+        this.inputAmmo.flex().relative(zoomParam.resizer()).set(0, 0, 100, 20).x(-190).y(-50).anchorX(1F);
         this.recoilYMax.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(-190).y(0).anchorX(1F);
         this.recoilXMin.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(-70).y(-50).anchorX(1F);
         this.recoilYMin.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(-70).y(0).anchorX(1F);
@@ -302,11 +320,12 @@ public class GuiGun extends GuiBase
         this.hand_bow.flex().relative(handRender.resizer()).set(0, 0, 100, 20).x(-360).y(-100).anchorX(1F);
         this.hand_bow_always.flex().relative(handRender.resizer()).set(0, 0, 100, 20).x(-360).y(-40).anchorX(1F);
 
-        aimOptions.add(this.zoom,this.pickHands, this.pickMorphOverlay,handRender, zoomParam,this.enableOverlay,this.hideHandOnZoom,recoilTab,enableOverlayLable,this.recoilXMax,
+        aimOptions.add(this.zoom,this.pickHands, this.pickMorphOverlay,handRender, zoomParam,this.enableOverlay,this.inputTimeBetweenShoot,this.hideHandOnZoom,recoilTab,enableOverlayLable,this.recoilXMax,
         this.recoilYMax,
         this.recoilXMin,
         this.recoilYMin,
-        this.recoilSimple,hand_bow,hand_bow_always);
+        this.inputAmmo,inputReloadingTime,
+        this.recoilSimple,hand_bow,hand_bow_always,acceptPressed);
 
         /* Impact options */
         area = this.impactOptions.area;
@@ -406,7 +425,10 @@ public class GuiGun extends GuiBase
         this.recoilXMin.setValue(this.props.recoilXMin);
         this.recoilXMax.setValue(this.props.recoilXMax);
         this.recoilYMin.setValue(this.props.recoilYMin);
+        this.inputAmmo.setValue(this.props.inputAmmo);
+        this.inputReloadingTime.setValue(this.props.inputReloadingTime);
         this.recoilYMax.setValue(this.props.recoilYMax);
+        this.inputTimeBetweenShoot.setValue(this.props.inputTimeBetweenShoot);
         this.recoilSimple.toggled(this.props.recoilSimple);
         this.ammoInMagazine.setValue(this.props.ammoInMagazine);
         this.scatterX.setValue(this.props.scatterX);
@@ -435,6 +457,7 @@ public class GuiGun extends GuiBase
         this.hideHandOnZoom.toggled(this.props.hideHandOnZoom);
         this.hand_bow.toggled(this.props.hand_bow);
         this.hand_bow_always.toggled(this.props.hand_bow_always);
+        this.acceptPressed.toggled(this.props.acceptPressed);
         /* Impact properties */
         this.pickImpact.setMorph(this.props.impactMorph);
         this.impactCommand.setText(this.props.impactCommand);

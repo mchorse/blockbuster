@@ -117,6 +117,7 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
         mc.getTextureMapBlocks().setBlurMipmap(false, false);
     }
 
+
     public static class GunEntry
     {
 

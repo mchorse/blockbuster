@@ -1,11 +1,13 @@
 package mchorse.blockbuster.common.item;
 
+import com.google.common.collect.ImmutableMap;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.entity.EntityActor.EntityFakePlayer;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.blockbuster.network.common.guns.PacketGunInteract;
 import mchorse.blockbuster.network.common.guns.PacketGunShot;
 import mchorse.blockbuster.recording.actions.Action;
@@ -18,11 +20,13 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -30,6 +34,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.animation.ITimeValue;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -46,9 +51,48 @@ public class ItemGun extends Item
         this.setCreativeTab(Blockbuster.blockbusterTab);
     }
 
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack p_shouldCauseReequipAnimation_1_, ItemStack p_shouldCauseReequipAnimation_2_, boolean p_shouldCauseReequipAnimation_3_) {
+        return false;
+    }
+    // what animation to use when the player holds the "use" button
+
+    @Override
+    public EnumAction getItemUseAction(ItemStack p_getItemUseAction_1_) {
+        return EnumAction.NONE;
+    }
+
+    @Override
+    public int getMaxItemUseDuration(ItemStack p_getMaxItemUseDuration_1_) {
+        return  0;
+    }
+
+    @Override
+    public void onUpdate(ItemStack stack, World world, Entity entity, int p_onUpdate_4_, boolean p_onUpdate_5_) {
+            GunProps props = NBTUtils.getGunProps(stack);
+            if (props == null) {
+                return;
+            }
+            if (props.getGUNState() == GunState.RELOADING) {
+                props.reloadTick = props.reloadTick - 1;
+                if (props.reloadTick <= 0) {
+                    props.reloadTick = 0;
+                    props.setGUNState(GunState.READY_TO_SHOOT);
+                    props.innerAmmo = props.inputAmmo;
+                }
+                Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(),entity.getEntityId()));
+
+            }
+            if (entity instanceof EntityPlayer){
+                EntityPlayer player = (EntityPlayer) entity;
+            }
+
+        super.onUpdate(stack,world,entity,p_onUpdate_4_,p_onUpdate_5_);
+    }
 
     @SideOnly(Side.CLIENT)
-    public EnumActionResult clientShoot(ItemStack stack, EntityPlayer player, World world){
+    public EnumActionResult clientShoot(ItemStack stack, EntityPlayer player, World world)
+    {
 
         GunProps props = NBTUtils.getGunProps(stack);
         if (world.isRemote)
@@ -100,15 +144,13 @@ public class ItemGun extends Item
         /* Or otherwise launch bullets */
         else
         {
-            if (!player.capabilities.isCreativeMode && !props.ammoStack.isEmpty())
-            {
-                ItemStack ammo = props.ammoStack;
 
-                if (!this.consumeAmmoStack(player, ammo))
-                {
-                    return false;
-                }
+            if (!this.consumeInnerAmmo(props,player))
+            {
+                return false;
             }
+
+
 
             EntityGunProjectile last = null;
 
@@ -159,11 +201,16 @@ public class ItemGun extends Item
         }
 
         Dispatcher.sendToTracked(entity, new PacketGunShot(id));
+        if (props.innerAmmo <=0){
+            props.setGUNState(GunState.NEED_TO_BE_RELOAD);
+        }
+
+        Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(),((EntityPlayerMP)  player).getEntityId()));
         if (!world.isRemote) {
             Dispatcher.sendTo(new PacketGunInteract(stack,player.getEntityId()), (EntityPlayerMP) player);
             List<Action> events = CommonProxy.manager.getActions(player);
             if (events != null) {
-                events.add(new ShootGunAction());
+                events.add(new ShootGunAction(stack.copy()));
 
             }
         }
@@ -171,7 +218,16 @@ public class ItemGun extends Item
         return true;
     }
 
-    private boolean consumeAmmoStack(EntityPlayer player, ItemStack ammo)
+    private boolean consumeInnerAmmo(GunProps props, EntityPlayer player){
+      int ammo =  props.innerAmmo;
+      if (ammo<=0){
+          return false;
+      }
+      props.innerAmmo = props.innerAmmo-1;
+      Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(),player.getEntityId()));
+      return true;
+    }
+    public boolean consumeAmmoStack(EntityPlayer player, ItemStack ammo)
     {
         int total = 0;
 
@@ -218,5 +274,11 @@ public class ItemGun extends Item
         entity.motionX = x;
         entity.motionY = y;
         entity.motionZ = z;
+    }
+
+
+    public enum GunState{
+        READY_TO_SHOOT, RELOADING, NEED_TO_BE_RELOAD, UNDEF
+
     }
 }

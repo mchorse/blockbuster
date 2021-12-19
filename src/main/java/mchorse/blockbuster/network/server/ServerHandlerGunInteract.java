@@ -1,6 +1,7 @@
 package mchorse.blockbuster.network.server;
 
 import mchorse.blockbuster.CommonProxy;
+import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;
@@ -8,6 +9,7 @@ import mchorse.blockbuster.network.common.guns.PacketGunInteract;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.ItemUseAction;
 import mchorse.blockbuster.recording.actions.ShootGunAction;
+import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -32,8 +34,18 @@ public class ServerHandlerGunInteract extends ServerMessageHandler<PacketGunInte
         if (!entityPlayerMP.world.isRemote){
             ItemGun gun = (ItemGun) packetGunInteract.itemStack.getItem();
             Entity entity = entityPlayerMP.world.getEntityByID(packetGunInteract.id);
+            GunProps props = NBTUtils.getGunProps(packetGunInteract.itemStack);
+            if (props==null){return;}
             if (entity instanceof EntityPlayer){
-                gun.shootIt(packetGunInteract.itemStack,(EntityPlayer) entity,entityPlayerMP.world);
+                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT) {
+                    gun.shootIt(packetGunInteract.itemStack, (EntityPlayer) entity, entityPlayerMP.world);
+                }
+            }
+            if (entity instanceof EntityActor){
+                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT) {
+                    gun.shootIt(packetGunInteract.itemStack, ((EntityActor) entity).fakePlayer, entityPlayerMP.world);
+                }
+
             }
         }
 
