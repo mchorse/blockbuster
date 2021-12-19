@@ -37,12 +37,12 @@ public class ServerHandlerGunInteract extends ServerMessageHandler<PacketGunInte
             GunProps props = NBTUtils.getGunProps(packetGunInteract.itemStack);
             if (props==null){return;}
             if (entity instanceof EntityPlayer){
-                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT) {
+                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT && props.timeBetweenShoot == 0) {
                     gun.shootIt(packetGunInteract.itemStack, (EntityPlayer) entity, entityPlayerMP.world);
                 }
             }
             if (entity instanceof EntityActor){
-                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT) {
+                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT && props.timeBetweenShoot == 0) {
                     gun.shootIt(packetGunInteract.itemStack, ((EntityActor) entity).fakePlayer, entityPlayerMP.world);
                 }
 

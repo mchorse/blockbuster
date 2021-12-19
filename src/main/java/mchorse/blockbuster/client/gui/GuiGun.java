@@ -295,6 +295,12 @@ public class GuiGun extends GuiBase
 
         this.ammoInMagazine.limit(0);
 
+
+
+
+
+
+
         GuiElement zoomParam = new GuiElement(mc);
         zoomParam.flex().relative(area).set(0, 0, 0, 20).x(0.5F).y(1, -75).w(0.5F, -60).anchorX(0.5F).row(5).padding(10);
         this.zoom.flex().relative(zoomParam.resizer()).set(0, 0, 100, 20).x(-95).anchorX(1F);
@@ -309,7 +315,7 @@ public class GuiGun extends GuiBase
         recoilTab.flex().relative(area).set(0, 0, 0, 20).x(0.5F).y(1, -75).w(0.5F, -60);
         this.inputReloadingTime.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(-250).y(-50).anchorX(1F);
         this.recoilXMax.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(-190).y(-50).anchorX(1F);
-        this.inputTimeBetweenShoot.flex().relative(area).set(0,0,0,20).x(100F).y(1,-75);
+        this.inputTimeBetweenShoot.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(100).y(-50).anchorX(1F);
         this.inputAmmo.flex().relative(zoomParam.resizer()).set(0, 0, 100, 20).x(-190).y(-50).anchorX(1F);
         this.recoilYMax.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(-190).y(0).anchorX(1F);
         this.recoilXMin.flex().relative(recoilTab.resizer()).set(0, 0, 100, 20).x(-70).y(-50).anchorX(1F);
