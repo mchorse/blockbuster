@@ -3,6 +3,9 @@ package mchorse.blockbuster.common;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
+import mchorse.blockbuster.common.item.ItemGun;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
@@ -44,6 +47,7 @@ public class GunProps
     public int delay;
     public int ammoInMagazine;
     public int projectiles;
+    public int reloadTick;
     public float scatterX;
     public float scatterY;
     public boolean launch;
@@ -51,13 +55,18 @@ public class GunProps
     public ItemStack ammoStack = ItemStack.EMPTY;
     public float zoom;
     public boolean hideHandOnZoom;
+    public int inputReloadingTime;
+    public int timeBetweenShoot;
+    public int inputTimeBetweenShoot;
+    public int innerAmmo;
+    public int inputAmmo;
     public boolean hand_bow;
     public boolean hand_bow_always;
     public float recoilXMin;
     public float recoilXMax;
     public float recoilYMin;
     public float recoilYMax;
-
+    public boolean acceptPressed;
     public boolean recoilSimple;
     /* Projectile properties */
     public AbstractMorph projectileMorph;
@@ -85,6 +94,7 @@ public class GunProps
     public boolean bounce;
     public boolean sticks;
     public int hits;
+    public int state;
     public float damage;
     public float knockbackHorizontal;
     public float knockbackVertical;
@@ -365,6 +375,12 @@ public class GunProps
         this.fireCommand = "";
         this.delay = 0;
         this.projectiles = 1;
+        this.innerAmmo=1;
+        this.inputReloadingTime = 0;
+        this.timeBetweenShoot = 0;
+        this.inputTimeBetweenShoot=0;
+        this.inputAmmo = 1;
+        this.reloadTick=0;
         this.scatterX = this.scatterY = 0F;
         this.launch = false;
         this.useTarget = false;
@@ -385,6 +401,7 @@ public class GunProps
         this.enableOverlay = false;
         this.hideHandOnZoom = false;
         this.hand_bow = false;
+        this.acceptPressed = true;
         this.hand_bow_always = false;
         this.pitch = true;
         this.sequencer = false;
@@ -405,6 +422,7 @@ public class GunProps
         this.bounce = false;
         this.sticks = false;
         this.hits = 1;
+        this.state = 0;
         this.damage = 0F;
         this.knockbackHorizontal = 0F;
         this.knockbackVertical = 0F;
@@ -434,6 +452,10 @@ public class GunProps
 
 
         if (tag.hasKey("Projectiles")) this.projectiles = tag.getInteger("Projectiles");
+        if (tag.hasKey("reloadTick")) this.reloadTick = tag.getInteger("reloadTick");
+
+
+
         if (tag.hasKey("Scatter"))
         {
             NBTBase scatter = tag.getTag("Scatter");
@@ -463,10 +485,21 @@ public class GunProps
         this.projectileMorph = this.create(tag, "Projectile");
         if (tag.hasKey("TickCommand")) this.tickCommand = tag.getString("TickCommand");
         if (tag.hasKey("Ticking")) this.ticking = tag.getInteger("Ticking");
+        if (tag.hasKey("innerAmmo")) this.innerAmmo = tag.getInteger("innerAmmo");
+        if (tag.hasKey("inputReloadingTime")) this.inputReloadingTime = tag.getInteger("inputReloadingTime");
+        if (tag.hasKey("timeBetweenShoot")) this.timeBetweenShoot = tag.getInteger("timeBetweenShoot");
+        if (tag.hasKey("inputTimeBetweenShoot")) this.inputTimeBetweenShoot = tag.getInteger("inputTimeBetweenShoot");
+
+
+
+        if (tag.hasKey("inputAmmo")) this.inputAmmo = tag.getInteger("inputAmmo");
+
         if (tag.hasKey("LifeSpan")) this.lifeSpan = tag.getInteger("LifeSpan");
         if (tag.hasKey("Yaw")) this.yaw = tag.getBoolean("Yaw");
         if (tag.hasKey("EnableOverlay")) this.enableOverlay = tag.getBoolean("EnableOverlay");
         if (tag.hasKey("hideHandOnZoom")) this.hideHandOnZoom = tag.getBoolean("hideHandOnZoom");
+        if (tag.hasKey("acceptPressed")) this.acceptPressed = tag.getBoolean("acceptPressed");
+
 
         if (tag.hasKey("hand_bow")) this.hand_bow = tag.getBoolean("hand_bow");
         if (tag.hasKey("hand_bow_always")) this.hand_bow_always = tag.getBoolean("hand_bow_always");
@@ -498,6 +531,9 @@ public class GunProps
         if (tag.hasKey("Bounce")) this.bounce = tag.getBoolean("Bounce");
         if (tag.hasKey("Stick")) this.sticks = tag.getBoolean("Stick");
         if (tag.hasKey("Hits")) this.hits = tag.getInteger("Hits");
+        if (tag.hasKey("state")) this.state = tag.getInteger("state");
+
+
         if (tag.hasKey("Damage")) this.damage = tag.getFloat("Damage");
         if (tag.hasKey("KnockbackH")) this.knockbackHorizontal = tag.getFloat("KnockbackH");
         if (tag.hasKey("KnockbackV")) this.knockbackVertical = tag.getFloat("KnockbackV");
@@ -543,6 +579,8 @@ public class GunProps
         if (this.delay != 0) tag.setInteger("Delay", this.delay);
 
         if (this.projectiles != 1) tag.setInteger("Projectiles", this.projectiles);
+        if (this.reloadTick !=0) tag.setInteger("reloadTick",this.reloadTick);
+
         if (this.scatterX != 0F || this.scatterY != 0F)
         {
             NBTTagList scatter = new NBTTagList();
@@ -560,10 +598,21 @@ public class GunProps
         if (this.projectileMorph != null) tag.setTag("Projectile", this.to(this.projectileMorph));
         if (!this.tickCommand.isEmpty()) tag.setString("TickCommand", this.tickCommand);
         if (this.ticking != 0) tag.setInteger("Ticking", this.ticking);
+        if (this.inputAmmo != 1) tag.setInteger("inputAmmo", this.inputAmmo);
+        if (this.innerAmmo != 1) tag.setInteger("innerAmmo", this.innerAmmo);
+
+        if (this.inputReloadingTime != 0) tag.setInteger("inputReloadingTime", this.inputReloadingTime);
+        if (this.timeBetweenShoot != 0) tag.setInteger("timeBetweenShoot", this.timeBetweenShoot);
+        if (this.inputTimeBetweenShoot != 0) tag.setInteger("inputTimeBetweenShoot", this.inputTimeBetweenShoot);
+
+
+
         if (this.lifeSpan != 200) tag.setInteger("LifeSpan", this.lifeSpan);
         if (!this.yaw) tag.setBoolean("Yaw", this.yaw);
         if (this.enableOverlay) tag.setBoolean("EnableOverlay", this.enableOverlay);
         if (this.hideHandOnZoom) tag.setBoolean("hideHandOnZoom", this.hideHandOnZoom);
+        if (!this.hideHandOnZoom) tag.setBoolean("acceptPressed", this.acceptPressed);
+
 
         if (this.hand_bow_always) tag.setBoolean("hand_bow_always", this.hand_bow_always);
         if (this.hand_bow) tag.setBoolean("hand_bow", this.hand_bow);
@@ -595,6 +644,9 @@ public class GunProps
         if (this.bounce) tag.setBoolean("Bounce", this.bounce);
         if (this.sticks) tag.setBoolean("Stick", this.sticks);
         if (this.hits != 1) tag.setInteger("Hits", this.hits);
+        tag.setInteger("state", this.state);
+
+
         if (this.damage != 0) tag.setFloat("Damage", this.damage);
         if (this.knockbackHorizontal != 0F) tag.setFloat("KnockbackH", this.knockbackHorizontal);
         if (this.knockbackVertical != 0F) tag.setFloat("KnockbackV", this.knockbackVertical);
@@ -620,5 +672,36 @@ public class GunProps
         return tag;
     }
 
+    public void setGUNState(ItemGun.GunState state){
+        switch (state){
+            case UNDEF:
+                this.state = -1;
+                return;
+            case RELOADING:
+                this.state = 2;
+                return;
+            case NEED_TO_BE_RELOAD:
+                this.state = 1;
+                return;
+            case READY_TO_SHOOT:
+                this.state = 0;
+                return;
+            default:
+                this.state = -1;
+        }
+    }
+
+    public ItemGun.GunState getGUNState(){
+     switch (this.state){
+         case 0:
+             return ItemGun.GunState.READY_TO_SHOOT;
+         case 1:
+             return ItemGun.GunState.NEED_TO_BE_RELOAD;
+         case 2:
+             return ItemGun.GunState.RELOADING;
+         default:
+             return ItemGun.GunState.UNDEF;
+     }
+    }
 
 }

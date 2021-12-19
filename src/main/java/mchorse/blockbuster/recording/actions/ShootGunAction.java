@@ -13,7 +13,9 @@ import mchorse.blockbuster.utils.NBTUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * \* User: Evanechecssss
@@ -21,7 +23,9 @@ import net.minecraft.nbt.NBTTagCompound;
  * \
  */
 public class ShootGunAction extends Action{
-    public ShootGunAction() {
+    ItemStack itemStack;
+    public ShootGunAction(ItemStack itemStack) {
+        this.itemStack = itemStack;
     }
 
     @Override
@@ -31,12 +35,13 @@ public class ShootGunAction extends Action{
         EntityPlayer player = actor instanceof EntityPlayer ? (EntityPlayer) actor : ((EntityActor) actor).fakePlayer;
         if (frame == null) return;
         if (player!=null){
-            ItemGun gun = (ItemGun) player.getHeldItemMainhand().getItem();
-            GunProps props = NBTUtils.getGunProps(player.getHeldItemMainhand());
+            ItemGun gun = (ItemGun) itemStack.getItem();
+            GunProps props = NBTUtils.getGunProps(itemStack);
             if (props!=null){
-            gun.shootIt(player.getHeldItemMainhand(), player,player.world);
+         //   gun.shootIt(itemStack, player,player.world);
             //Client Staff
-                Dispatcher.sendTo(new PacketGunInteract(player.getHeldItemMainhand(),player.getEntityId()), (EntityPlayerMP) player);
+          //      Dispatcher.sendTo(new PacketGunInteract(player.getHeldItemMainhand(),player.getEntityId()), (EntityPlayerMP) player);
+                Dispatcher.sendToServer(new PacketGunInteract(itemStack,actor.getEntityId()));
             }else {Blockbuster.LOGGER.error("Null gun props");}
         }
 
@@ -45,21 +50,14 @@ public class ShootGunAction extends Action{
     @Override
     public void fromBuf(ByteBuf buf) {
         super.fromBuf(buf);
-
+this.itemStack = ByteBufUtils.readItemStack(buf);
     }
 
     @Override
     public void toBuf(ByteBuf buf) {
         super.toBuf(buf);
+        ByteBufUtils.writeItemStack(buf,itemStack);
     }
 
-    @Override
-    public void fromNBT(NBTTagCompound tag) {
-        super.fromNBT(tag);
-    }
 
-    @Override
-    public void toNBT(NBTTagCompound tag) {
-        super.toNBT(tag);
-    }
 }
