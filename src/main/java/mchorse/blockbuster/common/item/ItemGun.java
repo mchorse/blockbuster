@@ -83,6 +83,13 @@ public class ItemGun extends Item
                 Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(),entity.getEntityId()));
 
             }
+            if (props.timeBetweenShoot!=0) {
+                props.timeBetweenShoot = props.timeBetweenShoot - 1;
+                if (props.timeBetweenShoot < 0) {
+                    props.timeBetweenShoot = 0;
+                }
+                Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entity.getEntityId()));
+            }
             if (entity instanceof EntityPlayer){
                 EntityPlayer player = (EntityPlayer) entity;
             }
@@ -204,7 +211,9 @@ public class ItemGun extends Item
         if (props.innerAmmo <=0){
             props.setGUNState(GunState.NEED_TO_BE_RELOAD);
         }
-
+        if (props.timeBetweenShoot <=0){
+            props.timeBetweenShoot = props.inputTimeBetweenShoot;
+        }
         Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(),((EntityPlayerMP)  player).getEntityId()));
         if (!world.isRemote) {
             Dispatcher.sendTo(new PacketGunInteract(stack,player.getEntityId()), (EntityPlayerMP) player);
