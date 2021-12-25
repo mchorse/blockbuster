@@ -85,8 +85,10 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
             model.timer = 20;
             ItemStack baseItem = Minecraft.getMinecraft().player.getHeldItemMainhand();
             if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && baseItem.equals(stack)){
-                if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI){
-                    if (!KeyboardHandler.zoom.isKeyDown()){
+                if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI
+                        && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND
+                        && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND){
+                    if (!(KeyboardHandler.zoom.isKeyDown()  && model.props.hideHandOnZoom)){
                     model.props.renderHands(RenderingHandler.getLastItemHolder(), partialTicks);
                     }
                     if (model.props.enableOverlay && KeyboardHandler.zoom.isKeyDown()){
@@ -100,7 +102,11 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
                 }
             }
             if (RenderingHandler.itemTransformType == ItemCameraTransforms.TransformType.GUI){
-                model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
+                if (model.props.enableCustomGuiMorph && model.props.guiMorph!=null){
+                    model.props.renderGUIMorph(RenderingHandler.getLastItemHolder(), partialTicks);
+                }else {
+                    model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
+                }
             }
 
             this.reset();

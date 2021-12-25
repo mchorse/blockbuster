@@ -41,11 +41,12 @@ public class GunProps
     /* Gun properties */
     public AbstractMorph defaultMorph;
     public AbstractMorph hands;
+    public AbstractMorph guiMorph;
     public AbstractMorph morph_overlay;
     public AbstractMorph firingMorph;
     public String fireCommand;
     public int delay;
-    public int ammoInMagazine;
+    public boolean enableCustomGuiMorph;
     public int projectiles;
     public int reloadTick;
     public float scatterX;
@@ -112,6 +113,7 @@ public class GunProps
     private int shoot = 0;
     private Morph current = new Morph();
     private Morph current_hands = new Morph();
+    private Morph current_guiMorph = new Morph();
     private Morph current_overlay = new Morph();
     private boolean renderLock;
 
@@ -138,7 +140,9 @@ public class GunProps
     public void setHands(AbstractMorph morph){
         this.current_hands.setDirect(morph);
     }
-
+    public void setGuiMorph(AbstractMorph morph){
+        this.current_guiMorph.setDirect(morph);
+    }
     public void shot()
     {
         if (this.delay <= 0)
@@ -301,6 +305,29 @@ public class GunProps
         this.renderLock = false;
     }
     @SideOnly(Side.CLIENT)
+    public void renderGUIMorph(EntityLivingBase target, float partialTicks){
+        if (this.renderLock)
+        {
+            return;
+        }
+        this.renderLock = true;
+        if (this.target == null)
+        {
+            this.createEntity();
+        }
+        EntityLivingBase entity = this.useTarget ? target : this.target;
+        AbstractMorph morph = this.current_guiMorph.get();
+        if (morph != null && entity != null)
+        {
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0.5F, 0, 0.5F);
+            this.setupEntity();
+            MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
+            GL11.glPopMatrix();
+        }
+        this.renderLock = false;
+    }
+    @SideOnly(Side.CLIENT)
     public void renderHands(EntityLivingBase target, float partialTicks)
     {
         if (this.renderLock)
@@ -370,6 +397,7 @@ public class GunProps
         /* Gun properties */
         this.defaultMorph = null;
         this.hands = null;
+        this.guiMorph = null;
         this.morph_overlay = null;
         this.firingMorph = null;
         this.fireCommand = "";
@@ -383,6 +411,7 @@ public class GunProps
         this.reloadTick=0;
         this.scatterX = this.scatterY = 0F;
         this.launch = false;
+        this.enableCustomGuiMorph = false;
         this.useTarget = false;
         this.ammoStack = ItemStack.EMPTY;
         this.zoom = 0;
@@ -391,7 +420,6 @@ public class GunProps
         this.recoilXMax = 0;
         this.recoilYMin = 0;
         this.recoilYMax = 0;
-        this.ammoInMagazine = 0;
         /* Projectile properties */
         this.projectileMorph = null;
         this.tickCommand = "";
@@ -445,6 +473,7 @@ public class GunProps
         /* Gun properties */
         this.defaultMorph = this.create(tag, "Morph");
         this.hands = this.create(tag, "Hands");
+        this.guiMorph = this.create(tag,"GUIMorph");
         this.morph_overlay = this.create(tag, "OverlayMorph");
         this.firingMorph = this.create(tag, "Fire");
         if (tag.hasKey("FireCommand")) this.fireCommand = tag.getString("FireCommand");
@@ -478,6 +507,7 @@ public class GunProps
         }
         if (tag.hasKey("ScatterY")) this.scatterY = tag.getFloat("ScatterY");
         if (tag.hasKey("Launch")) this.launch = tag.getBoolean("Launch");
+        if (tag.hasKey("enableCustomGuiMorph")) this.enableCustomGuiMorph = tag.getBoolean("enableCustomGuiMorph");
         if (tag.hasKey("Target")) this.useTarget = tag.getBoolean("Target");
         if (tag.hasKey("AmmoStack")) this.ammoStack = new ItemStack(tag.getCompoundTag("AmmoStack"));
 
@@ -553,6 +583,7 @@ public class GunProps
             this.current.set(MorphUtils.copy(this.defaultMorph));
             this.current_hands.set(MorphUtils.copy(this.hands));
             this.current_overlay.set(MorphUtils.copy(this.morph_overlay));
+            this.current_guiMorph.set(MorphUtils.copy(this.guiMorph));
         }
     }
 
@@ -573,6 +604,7 @@ public class GunProps
         /* Gun properties */
         if (this.defaultMorph != null) tag.setTag("Morph", this.to(this.defaultMorph));
         if (this.hands != null) tag.setTag("Hands", this.to(this.hands));
+        if (this.guiMorph !=null) tag.setTag("GUIMorph", this.to(this.guiMorph));
         if (this.morph_overlay != null) tag.setTag("OverlayMorph", this.to(this.morph_overlay));
         if (this.firingMorph != null) tag.setTag("Fire", this.to(this.firingMorph));
         if (!this.fireCommand.isEmpty()) tag.setString("FireCommand", this.fireCommand);
@@ -591,6 +623,7 @@ public class GunProps
             tag.setTag("Scatter", scatter);
         }
         if (this.launch) tag.setBoolean("Launch", this.launch);
+        if (this.enableCustomGuiMorph) tag.setBoolean("enableCustomGuiMorph",this.enableCustomGuiMorph);
         if (this.useTarget) tag.setBoolean("Target", this.useTarget);
         if (!this.ammoStack.isEmpty()) tag.setTag("AmmoStack", this.ammoStack.writeToNBT(new NBTTagCompound()));
 
