@@ -103,6 +103,7 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement recoilYMax;
     public GuiToggleElement recoilSimple;
     public GuiToggleElement enableCustomGuiMorph;
+    public GuiToggleElement needToBeReloaded;
     public GuiNestedEdit pickHands;
     public GuiNestedEdit pickGuiMorph;
     public GuiNestedEdit pickMorphOverlay;
@@ -270,6 +271,7 @@ public class GuiGun extends GuiBase
         this.hideHandOnZoom = new GuiToggleElement(mc, IKey.str(""), false, (b) -> this.props.hideHandOnZoom = b.isToggled());
         this.hand_bow = new GuiToggleElement(mc, IKey.str(""), false, (b) -> this.props.hand_bow = b.isToggled());
         this.enableCustomGuiMorph = new GuiToggleElement(mc,IKey.str(""),false,(b) -> this.props.enableCustomGuiMorph = b.isToggled());
+        this.needToBeReloaded = new GuiToggleElement(mc, IKey.str(""),false, (b) -> this.props.needToBeReloaded = b.isToggled());
         this.hand_bow_always = new GuiToggleElement(mc, IKey.str(""), false, (b) -> this.props.hand_bow_always = b.isToggled());
         this.pickHands = new GuiNestedEdit(mc, (editing) -> this.openMorphs(5, editing));
         pickGuiMorph= new GuiNestedEdit(mc, (editing) -> this.openMorphs(7, editing));
@@ -302,16 +304,12 @@ public class GuiGun extends GuiBase
 
         this.pickGuiMorph.flex().relative(area).w(100).x(0.07F, -50).y(0.5F, 0);
         this.pickMorphOverlay.flex().relative(area).w(100).x(0.07F, -50).y(0.2F, 0);
-        this.hideHandOnZoom.flex().relative(pickMorphOverlay).w(100).y(-25).x(1,40);
-        this.enableOverlay.flex().relative(pickMorphOverlay).w(100).y(-75).x(1,40);
+        this.hideHandOnZoom.flex().relative(pickMorphOverlay).w(100).y(-25).x(1,-60);
+        this.enableOverlay.flex().relative(pickMorphOverlay).w(100).y(-75).x(1,-60);
         this.zoom.flex().relative(pickMorphOverlay).set(0, 0, 100, 20).y(0).x(1,20);
-        this.enableCustomGuiMorph.flex().relative(area).w(100).x(0.1F, -50).y(0.2F, 0);
-
-
-
-        this.aimOptions.add(enableCustomGuiMorph,pickHands,pickGuiMorph,pickMorphOverlay,hideHandOnZoom,enableOverlay,zoom);
-
-
+        this.enableCustomGuiMorph.flex().relative(pickHands).w(100).y(0);
+        this.needToBeReloaded.flex().relative(pickHands).w(100).y(20);
+        this.aimOptions.add(enableCustomGuiMorph,pickHands,pickGuiMorph,pickMorphOverlay,hideHandOnZoom,enableOverlay,zoom,needToBeReloaded);
 
         /**
         GuiElement zoomParam = new GuiElement(mc);
@@ -478,6 +476,7 @@ public class GuiGun extends GuiBase
         this.hideHandOnZoom.toggled(this.props.hideHandOnZoom);
         this.hand_bow.toggled(this.props.hand_bow);
         this.enableCustomGuiMorph.toggled(this.props.enableCustomGuiMorph);
+        this.needToBeReloaded.toggled(this.props.needToBeReloaded);
         this.hand_bow_always.toggled(this.props.hand_bow_always);
         this.acceptPressed.toggled(this.props.acceptPressed);
         /* Impact properties */
@@ -696,13 +695,13 @@ public class GuiGun extends GuiBase
                 this.props.guiMorph.renderOnScreen(player, this.pickGuiMorph.area.mx(), this.pickGuiMorph.area.y-5, w /5F, 1);
             }
 
-            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.pickHands"), this.pickHands.area.mx(), this.pickHands.area.y - 12, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.pick_hands"), this.pickHands.area.mx(), this.pickHands.area.y - 12, 0xffffff);
 
-            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.enableOverlay"), this.enableOverlay.area.mx()+100, this.enableOverlay.area.y+3, 0xffffff);
-            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.hideHandOnZoom"), this.hideHandOnZoom.area.mx()+100, this.hideHandOnZoom.area.y+3, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.enable_overlay"), this.enableOverlay.area.mx()+100, this.enableOverlay.area.y+3, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.hide_zoom"), this.hideHandOnZoom.area.mx()+100, this.hideHandOnZoom.area.y+3, 0xffffff);
 
-            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.pickMorphOverlay"), this.pickMorphOverlay.area.mx(), this.pickMorphOverlay.area.y - 12, 0xffffff);
-            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.pickGuiMorph"), this.pickGuiMorph.area.mx(), this.pickGuiMorph.area.y - 12, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.pick_overlay"), this.pickMorphOverlay.area.mx(), this.pickMorphOverlay.area.y - 12, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.pick_gui"), this.pickGuiMorph.area.mx(), this.pickGuiMorph.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.zoom"), this.zoom.area.mx(), this.zoom.area.y - 12, 0xffffff);
         }
         else if (this.panel.view.delegate == this.impactOptions)

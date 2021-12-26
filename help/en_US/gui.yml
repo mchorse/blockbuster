@@ -680,6 +680,13 @@ blockbuster.gui:
         fade_in: Fade in
         fade_out: Fade out
 
+        pick_hands: Pick hands
+        enable_overlay: Enable zoom overlay
+        hide_zoom: Hide gun on zoom
+        pick_overlay: Pick zoom overlay
+        pick_gui: Pick gui morph
+        zoom: Change zoom value
+
         impact_morph: Impact morph
         impact_delay: Impact delay
         impact_command: Command on impact
