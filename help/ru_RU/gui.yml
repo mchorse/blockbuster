@@ -592,7 +592,7 @@ blockbuster.gui:
         projectiles: Снаряды
         scatter: Разброс
         launch: Запустить игрока
-        
+
         projectile_morph: Морф снаряда
         tick_command: Команда при тике
         ticking: Частота тиков
@@ -608,7 +608,14 @@ blockbuster.gui:
         gravity: Гравитация
         fade_in: Переход (Старт)
         fade_out: Переход (Конец)
-        
+
+        pick_hands: Pick hands
+        enable_overlay: Enable zoom overlay
+        hide_zoom: Hide gun on zoom
+        pick_overlay: Pick zoom overlay
+        pick_gui: Pick gui morph
+        zoom: Change zoom value
+
         impact_morph: Морф воздействия
         impact_delay: Задержка воздействия
         impact_command: Команда при воздействии

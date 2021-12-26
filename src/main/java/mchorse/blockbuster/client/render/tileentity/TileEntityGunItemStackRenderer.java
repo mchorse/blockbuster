@@ -83,18 +83,16 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
         {
 
             model.timer = 20;
-            ItemStack baseItem = Minecraft.getMinecraft().player.getHeldItemMainhand();
-            if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && baseItem.equals(stack)){
-                if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI
+            if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI
                         && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND
-                        && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND){
+                        && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND
+                        && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIXED){
                     if (!(KeyboardHandler.zoom.isKeyDown()  && model.props.hideHandOnZoom)){
                     model.props.renderHands(RenderingHandler.getLastItemHolder(), partialTicks);
                     }
                     if (model.props.enableOverlay && KeyboardHandler.zoom.isKeyDown()){
                         model.props.renderOverlay(RenderingHandler.getLastItemHolder(), partialTicks);
                     }
-                }
             }
             if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI){
                 if (!(KeyboardHandler.zoom.isKeyDown() && model.props.hideHandOnZoom)){
@@ -108,6 +106,7 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
                     model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
             }
+
 
             this.reset();
         }

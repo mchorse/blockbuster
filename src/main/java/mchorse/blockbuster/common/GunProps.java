@@ -47,6 +47,7 @@ public class GunProps
     public String fireCommand;
     public int delay;
     public boolean enableCustomGuiMorph;
+    public boolean needToBeReloaded;
     public int projectiles;
     public int reloadTick;
     public float scatterX;
@@ -508,6 +509,9 @@ public class GunProps
         if (tag.hasKey("ScatterY")) this.scatterY = tag.getFloat("ScatterY");
         if (tag.hasKey("Launch")) this.launch = tag.getBoolean("Launch");
         if (tag.hasKey("enableCustomGuiMorph")) this.enableCustomGuiMorph = tag.getBoolean("enableCustomGuiMorph");
+        if (tag.hasKey("needToBeReloaded")) this.needToBeReloaded = tag.getBoolean("needToBeReloaded");
+
+
         if (tag.hasKey("Target")) this.useTarget = tag.getBoolean("Target");
         if (tag.hasKey("AmmoStack")) this.ammoStack = new ItemStack(tag.getCompoundTag("AmmoStack"));
 
@@ -624,6 +628,9 @@ public class GunProps
         }
         if (this.launch) tag.setBoolean("Launch", this.launch);
         if (this.enableCustomGuiMorph) tag.setBoolean("enableCustomGuiMorph",this.enableCustomGuiMorph);
+        if (this.needToBeReloaded) tag.setBoolean("enableCustomGuiMorph",this.needToBeReloaded);
+
+
         if (this.useTarget) tag.setBoolean("Target", this.useTarget);
         if (!this.ammoStack.isEmpty()) tag.setTag("AmmoStack", this.ammoStack.writeToNBT(new NBTTagCompound()));
 

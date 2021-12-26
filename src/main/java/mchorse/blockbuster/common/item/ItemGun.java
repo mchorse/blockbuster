@@ -208,7 +208,7 @@ public class ItemGun extends Item
         }
 
         Dispatcher.sendToTracked(entity, new PacketGunShot(id));
-        if (props.innerAmmo <=0){
+        if (props.innerAmmo <=0 ){
             props.setGUNState(GunState.NEED_TO_BE_RELOAD);
         }
         if (props.timeBetweenShoot <=0){
@@ -232,7 +232,9 @@ public class ItemGun extends Item
       if (ammo<=0){
           return false;
       }
-      props.innerAmmo = props.innerAmmo-1;
+      if (props.needToBeReloaded) {
+          props.innerAmmo = props.innerAmmo - 1;
+      }
       Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(),player.getEntityId()));
       return true;
     }
