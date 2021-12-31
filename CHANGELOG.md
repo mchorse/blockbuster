@@ -1,3 +1,12 @@
+## Version 2.3.4
+
+This quick hotfix patch was made by Chryfi, which fixes an issue with Snowstorm particle emitter morphs.
+
+**Compatible** with McLib `2.3.6`, Metamorph `1.2.11` and Aperture `1.7`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+* Added `Ctrl + E` keybind in Blockbuster custom model morph editor to pick currently selected material (by McHorse)
+* Fixed `snowstorm` morph's particle emitters not emitting correctly
+
 ## Version 2.3.3
 
 This update was made by Chryfi, which features dozen or so QoL tweaks. Exceptions are mentioned at the respective items.
@@ -189,8 +198,8 @@ This huge update features lots of new cool features like first person player pla
 * Added **use target** option to BB gun, to be able to use particle morph inside of BB gun's default and firing morphs (suggested by Centryfuga)
 * Added **save texture** (suggested by edgyhumanzombieninja) and **copy path** buttons to texture manager panel
 * Added `/modelblock` command which allows to edit model blocks (suggested by Crazy)
-    * `/modelblock morph <x> <y> <z> [morph_nbt]` changes morph of the model block at XYZ
-    * `/modelblock property <x> <y> <z> <property:enabled> <value>` changes a property of the model block at XYZ
+	* `/modelblock morph <x> <y> <z> [morph_nbt]` changes morph of the model block at XYZ
+	* `/modelblock property <x> <y> <z> <property:enabled> <value>` changes a property of the model block at XYZ
 * Added **Cached structure rendering** mod option
 * Added animation preview into sequencer's morph editor (suggested by MaiZhi)
 * Added a feature to set colorful name tags for actors (suggested by Mopolo)
@@ -281,15 +290,15 @@ This update is focused on simplifying some aspects of recording actors, and edit
 * Added `/record calculate_body_yaw` subcommand that allows to calculate the `body_yaw` property for old player recordings
 * Added **Set duration** option to sequencer morph, which allows to overwrite the duration of the animated morph with sequence's duration (suggested by Chunk7)
 * Added options to **Recording** category:
-    * Added **Playback body yaw** option to Actor category which allows to disable recorded playback of body's horizontal rotation (it's enabled by default)
-    * Added **Better preview** option to toggle **better preview** (it's enabled by default)
+	* Added **Playback body yaw** option to Actor category which allows to disable recorded playback of body's horizontal rotation (it's enabled by default)
+	* Added **Better preview** option to toggle **better preview** (it's enabled by default)
 * Added **Snowstorm** option category with one option to enabled particle depth sorting
 * Added **Audio** option category with new options:
-    * Audio bars visible — whether preview waveform audio bars should be visible
-    * Waveform density — how many pixels per second for waveform
-    * Audio bar width — how wide is a single audio bar (in `0..1` percentage)
-    * Audio bar height — how high is a single audio bar (in pixels)
-    * Show audio bar's filename — whether filename of a played audio should be shown
+	* Audio bars visible — whether preview waveform audio bars should be visible
+	* Waveform density — how many pixels per second for waveform
+	* Audio bar width — how wide is a single audio bar (in `0..1` percentage)
+	* Audio bar height — how high is a single audio bar (in pixels)
+	* Show audio bar's filename — whether filename of a played audio should be shown
 * Added **Reset on playback** option to **Model block** category which allows resetting model blocks upon playback of the scene (suggested by Herr Bergmann)
 * Added a simpler skin loading mechanism that allows to drop any Minecraft player skins into `minecraft/config/blockbuster/skins/`, and they will be transferred into correct folder, depending on the format of the skin (`1:1` skins, like `64x64`, will go to `fred/skins`, while `2:1` skins, like `64x32`, will to go `steve/skins`, HD skins supported as well, inspired by Chunk7's suggestion)
 * Added animated and sequencer morph indicators to display to morph action block in the player recording editor
@@ -357,11 +366,11 @@ This huge update adds a couple of awesome major feature, but mostly focuses on G
 <a href="https://youtu.be/JghXifbHi-k"><img src="https://img.youtube.com/vi/JghXifbHi-k/0.jpg"></a> 
 
 * Added `snowstorm` morph which allows to create custom particle effects based on Bedrock particle JSON specification (sponsored feature by Spark Squared)
-    * Added particle effect editor in dashboard GUI
+	* Added particle effect editor in dashboard GUI
 * Added `/scene <play|toggle|stop|loop> <name> [flag]` command to work with scenes
 * Added new config options:
-    * Added utility blocks option which adds barrier, structure and command blocks to Blockbuster creative tabs when it's enabled
-    * Added disable riding option which disables riding on actors, by default actors are ridable (suggested by Stealth)
+	* Added utility blocks option which adds barrier, structure and command blocks to Blockbuster creative tabs when it's enabled
+	* Added disable riding option which disables riding on actors, by default actors are ridable (suggested by Stealth)
 * Added new camera editor to scene (or director block) synchronization by using "Edit camera" button in scene/director block GUI
 * Added `interact_entity` action to player recording system (suggested by Lucatim)
 * Added "Vanish delay" BB gun option
@@ -376,29 +385,29 @@ This huge update adds a couple of awesome major feature, but mostly focuses on G
 * Changed layout of items in Blockbuster's creative tab
 * Changed playback of GIF textures based on entity's tick counter (suggested by Jetpack Rescue)
 * Improved GUI screens:
-    * Added previews to `sequencer` morph editor GUI (suggested by Jetpack Rescue)
-    * Added previews of held gun item and projectile transformations in BB gun GUI
-    * Added keybinds to camera editor to toggle visibility of player recording timeline (Ctrl + E) and player recording list (Ctrl + L)
-    * Added copy, paste and cut (suggested by Lucatim) buttons to player recording editor GUI
-    * Added Ctrl + M keybind to player recording editor GUI to add morph action
-    * Added replay sorting to scenes/director block GUI (suggested by Lucatim)
-    * Added alt + mouse wheel to horizontally zoom in/out and shift + mouse wheel to vertically scroll
-    * Changed layout of model block panel GUI
-    * Changed layout of BB gun GUI
-    * Changed layout of `particle` morph GUI
-    * Changed layout of `blockbuster.*` custom model morph GUI
-    * Changed layout of `image` morph GUI
-    * Changed layout of actor configuration item GUI
-    * Changed "Pick morph" buttons everywhere to "Pick | Edit" for faster morph access
-    * Fixed model blocks not being selected in quick access list menu
+	* Added previews to `sequencer` morph editor GUI (suggested by Jetpack Rescue)
+	* Added previews of held gun item and projectile transformations in BB gun GUI
+	* Added keybinds to camera editor to toggle visibility of player recording timeline (Ctrl + E) and player recording list (Ctrl + L)
+	* Added copy, paste and cut (suggested by Lucatim) buttons to player recording editor GUI
+	* Added Ctrl + M keybind to player recording editor GUI to add morph action
+	* Added replay sorting to scenes/director block GUI (suggested by Lucatim)
+	* Added alt + mouse wheel to horizontally zoom in/out and shift + mouse wheel to vertically scroll
+	* Changed layout of model block panel GUI
+	* Changed layout of BB gun GUI
+	* Changed layout of `particle` morph GUI
+	* Changed layout of `blockbuster.*` custom model morph GUI
+	* Changed layout of `image` morph GUI
+	* Changed layout of actor configuration item GUI
+	* Changed "Pick morph" buttons everywhere to "Pick | Edit" for faster morph access
+	* Fixed model blocks not being selected in quick access list menu
 * Improved `image` morph:
-    * Added color filtering property (including opacity)
-    * Added animations (similar to animated poses)
-    * Added resize crop option (which enables fitting the cropped region into 1 block space)
-    * Added UV coordinate shift options
-    * Added UV rotation option
-    * Added pose (translate, scale and rotate)
-    * Removed scale option (backward compatible though)
+	* Added color filtering property (including opacity)
+	* Added animations (similar to animated poses)
+	* Added resize crop option (which enables fitting the cropped region into 1 block space)
+	* Added UV coordinate shift options
+	* Added UV rotation option
+	* Added pose (translate, scale and rotate)
+	* Removed scale option (backward compatible though)
 * Improved drastically model loading and reloading
 * Fixed crash with image morphs on the server side (reported by ItsKylos)
 * Fixed `/director` command working only in overworld dimension (reported by AceGaming)
@@ -1219,7 +1228,7 @@ how many times you want.
   imported/exported and played
 * Added camera fixtures. Camera fixture is the definition of how camera should 
   behave. Following fixtures were added:
-    * Idle fixture – static camera shot 
+  	* Idle fixture – static camera shot 
     * Path fixture – linear-interpolated camera path way
     * Follow fixture – camera follows given entity from specified angle 
       (specified angle is determined when the fixture is being added) 
@@ -1230,10 +1239,10 @@ how many times you want.
 * Added `camera` command which allows players to manage profiles and fixtures
 * Added camera profile rendering
 * Added camera key bindings for:
-    * Removing last fixture
-    * Adding idle, look or follow fixture to current camera profile
-    * Toggle camera profile rendering
-    * Start or stop camera profile
+	* Removing last fixture
+	* Adding idle, look or follow fixture to current camera profile
+	* Toggle camera profile rendering
+	* Start or stop camera profile
 * Added lava and water support to place block action
 * Added playback button GUI and lores
 * Fixed actor's rotation when he is spawned with `/action play` command
