@@ -263,7 +263,10 @@ public class ModelCustom extends ModelBiped
             float PI = (float) Math.PI;
 
             /* Reseting the angles */
-            factor *= this.applyLimbPose(limb);
+            float anim = this.applyLimbPose(limb);
+            float rotateX = limb.rotateAngleX;
+            float rotateY = limb.rotateAngleY;
+            float rotateZ = limb.rotateAngleZ;
 
             if (limb.limb.cape && entityIn instanceof EntityLivingBase && this.current != null)
             {
@@ -434,6 +437,10 @@ public class ModelCustom extends ModelBiped
             {
                 limb.rotateAngleZ += -EntityUtils.getRoll(entityIn, ageInTicks % 1) / 180F * PI;
             }
+
+            limb.rotateAngleX = (limb.rotateAngleX - rotateX) * anim + rotateX;
+            limb.rotateAngleY = (limb.rotateAngleY - rotateY) * anim + rotateY;
+            limb.rotateAngleZ = (limb.rotateAngleZ - rotateZ) * anim + rotateZ;
         }
     }
 
