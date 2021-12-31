@@ -441,6 +441,10 @@ public class BedrockEmitter
         List<IComponentParticleRender> listParticle = this.scheme.getComponents(IComponentParticleRender.class);
         List<IComponentParticleMorphRender> listMorph = this.scheme.getComponents(IComponentParticleMorphRender.class);
 
+        Matrix3f rotation = this.rotation;
+
+        this.rotation = new Matrix3f();
+
         if (!listParticle.isEmpty() && (!this.isMorphParticle() || particleMorphComponent.renderTexture))
         {
             Minecraft.getMinecraft().renderEngine.bindTexture(this.scheme.texture);
@@ -484,6 +488,8 @@ public class BedrockEmitter
                 render.renderOnScreen(this.guiParticle, x, y, scale, partialTicks);
             }
         }
+
+        this.rotation = rotation;
     }
 
     /**
