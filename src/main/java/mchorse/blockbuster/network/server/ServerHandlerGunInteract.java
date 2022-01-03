@@ -42,7 +42,7 @@ public class ServerHandlerGunInteract extends ServerMessageHandler<PacketGunInte
                 }
             }
             if (entity instanceof EntityActor){
-                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT && props.timeBetweenShoot == 0) {
+                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT) {
                     gun.shootIt(packetGunInteract.itemStack, ((EntityActor) entity).fakePlayer, entityPlayerMP.world);
                 }
 

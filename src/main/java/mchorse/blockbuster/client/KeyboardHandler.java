@@ -115,6 +115,7 @@ public class KeyboardHandler
             {
                 mc.displayGuiScreen(new GuiGun(stack));
             }
+
         }
 
     }

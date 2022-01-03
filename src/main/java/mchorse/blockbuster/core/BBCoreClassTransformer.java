@@ -20,6 +20,7 @@ public class BBCoreClassTransformer extends CoreClassTransformer
     private EntityRendererTransformer entityRenderer = new EntityRendererTransformer();
     private RenderPlayerTransformer playerTransformer = new RenderPlayerTransformer();
     private RenderItemTransformer renderItem = new RenderItemTransformer();
+    private RenderEntityItemTransformer renderEntityItemTransformer = new RenderEntityItemTransformer();
     private EntityTransformer entity = new EntityTransformer();
     private EntityTransformationUtilsTransformer entityTransformationUtils = new EntityTransformationUtilsTransformer();
 
@@ -64,6 +65,10 @@ public class BBCoreClassTransformer extends CoreClassTransformer
         {
             System.out.println("BBCoreMod: Transforming RenderItem class (" + name + ")");
             return this.renderItem.transform(name, basicClass);
+
+        }else if (checkName(name, "bzu", "net.minecraft.client.renderer.entity.RenderEntityItem")){
+            System.out.println("BBCoreMod: Transforming RenderItem class (" + name + ")");
+            return this.renderEntityItemTransformer.transform(name,basicClass);
         }
 
         return basicClass;

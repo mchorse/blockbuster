@@ -76,7 +76,6 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         this.props = props;
         this.morph.setDirect(morph);
         this.original = this.morph.copy();
-
         if (props != null)
         {
             this.setSize(props.hitboxX, props.hitboxY);
