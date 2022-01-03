@@ -3,6 +3,7 @@ package mchorse.blockbuster.aperture;
 import mchorse.aperture.Aperture;
 import mchorse.aperture.ClientProxy;
 import mchorse.aperture.camera.CameraAPI;
+import mchorse.aperture.camera.minema.MinemaIntegration;
 import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.events.CameraEditorEvent;
 import mchorse.aperture.network.common.PacketCameraProfileList;
@@ -99,6 +100,23 @@ public class CameraHandler
     public static boolean isApertureLoaded()
     {
         return Loader.isModLoaded(Aperture.MOD_ID);
+    }
+
+    /**
+     * Check whether Aperture and Minema is loaded
+     */
+    public static boolean isApertureAndMinemaLoaded()
+    {
+        return isApertureLoaded() && isMinemaAvailable();
+    }
+
+    /**
+     * Check whether Minema is available
+     */
+    @Method(modid = Aperture.MOD_ID)
+    private static boolean isMinemaAvailable()
+    {
+        return MinemaIntegration.isAvailable();
     }
 
     public static void register()
