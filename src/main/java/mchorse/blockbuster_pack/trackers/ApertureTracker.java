@@ -1,5 +1,6 @@
 package mchorse.blockbuster_pack.trackers;
 
+import mchorse.aperture.Aperture;
 import mchorse.aperture.camera.CameraExporter;
 import mchorse.aperture.camera.minema.MinemaIntegration;
 import mchorse.aperture.client.gui.GuiMinemaPanel;
@@ -9,7 +10,7 @@ import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional;
 
 public class ApertureTracker extends BaseTracker
 {
@@ -18,6 +19,7 @@ public class ApertureTracker extends BaseTracker
     public boolean combineTracking;
 
     @Override
+    @Optional.Method(modid = Aperture.MOD_ID)
     public void track(EntityLivingBase target, double x, double y, double z, float entityYaw, float partialTicks)
     {
         if(!ReflectionUtils.isOptifineShadowPass() && !this.name.equals(""))
