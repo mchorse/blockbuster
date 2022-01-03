@@ -615,6 +615,16 @@ blockbuster.gui:
         pick_overlay: Pick zoom overlay
         pick_gui: Pick gui morph
         zoom: Change zoom value
+        hand_bow: Hand as bow
+        hand_bow_always: Hand as bow always
+        input_time_between_shoot: Time between shoot
+        input_ammo: Ammo
+        input_reloading_time: Reloading time
+        enable_custom_gui_morph: Use gui morph
+        hide_aim_on_zoom: Hide aim on zoom
+        need_to_be_reloaded: Need to be reloaded
+        pick_aim_morph: Aim morph
+        pick_reload_morph: Reloading morp
 
         impact_morph: Морф воздействия
         impact_delay: Задержка воздействия

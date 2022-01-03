@@ -20,9 +20,11 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -33,6 +35,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.animation.ITimeValue;
 import net.minecraftforge.fml.relauncher.Side;
@@ -93,7 +96,6 @@ public class ItemGun extends Item
             if (entity instanceof EntityPlayer){
                 EntityPlayer player = (EntityPlayer) entity;
             }
-
         super.onUpdate(stack,world,entity,p_onUpdate_4_,p_onUpdate_5_);
     }
 
@@ -180,7 +182,17 @@ public class ItemGun extends Item
                 float pitch = player.rotationPitch + (float) ((Math.random() - 0.5) * props.scatterY);
                 float yaw = player.rotationYaw + (float) ((Math.random() - 0.5) * props.scatterX);
 
-                projectile.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
+
+                double originalX = player.posX;
+                double originalZ = player.posZ;
+                double D = Math.sqrt(Math.pow(originalX - (originalX + props.srcShootX),2)+Math.pow(originalZ - (originalZ + props.srcShootZ),2));
+                double xE=originalX+Math.cos(player.getPitchYaw().y*Math.PI/180)*D;
+                double zE=originalZ+Math.sin(player.getPitchYaw().y*Math.PI/180)*D;
+
+
+                projectile.setPosition(xE,player.posY + player.getEyeHeight(),zE);
+
+
                 projectile.shoot(player, pitch, yaw, 0, props.speed, 0);
                 projectile.setInitialMotion();
 
@@ -219,13 +231,17 @@ public class ItemGun extends Item
             Dispatcher.sendTo(new PacketGunInteract(stack,player.getEntityId()), (EntityPlayerMP) player);
             List<Action> events = CommonProxy.manager.getActions(player);
             if (events != null) {
-                events.add(new ShootGunAction(stack.copy()));
+                GunProps props1 = new GunProps(NBTUtils.getGunProps(stack).toNBT());
+                ItemStack stack1 = new ItemStack(Blockbuster.gunItem,1,1);
+                NBTUtils.saveGunProps(stack1,props1.toNBT());
+                events.add(new ShootGunAction(stack1));
 
             }
         }
 
         return true;
     }
+
 
     private boolean consumeInnerAmmo(GunProps props, EntityPlayer player){
       int ammo =  props.innerAmmo;
@@ -267,8 +283,10 @@ public class ItemGun extends Item
 
     private void setThrowableHeading(EntityLivingBase entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity)
     {
-        float f = -MathHelper.sin(rotationYawIn * 0.017453292F) * MathHelper.cos(rotationPitchIn * 0.017453292F);
-        float f1 = -MathHelper.sin((rotationPitchIn + pitchOffset) * 0.017453292F);
+        GunProps props = NBTUtils.getGunProps(entityThrower.getHeldItem(EnumHand.MAIN_HAND));
+
+        float f = -MathHelper.sin(rotationYawIn * 0.017453292F)* MathHelper.cos(rotationPitchIn * 0.017453292F);
+        float f1 = -MathHelper.sin((rotationPitchIn + pitchOffset) * 0.017453292F );
         float f2 = MathHelper.cos(rotationYawIn * 0.017453292F) * MathHelper.cos(rotationPitchIn * 0.017453292F);
         this.setThrowableHeading(entityThrower, (double) f, (double) f1, (double) f2, velocity);
     }

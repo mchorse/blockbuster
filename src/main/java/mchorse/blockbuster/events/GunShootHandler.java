@@ -59,11 +59,16 @@ public class GunShootHandler {
                 flag = false;
                 return;
             }
-            flag = true;
-            if (gun_reload.isKeyDown()){
+
+            if (gun_reload.isKeyDown()&& flag){
                 ItemGun gun = (ItemGun) stack.getItem();
                 Dispatcher.sendToServer(new PacketGunReloading(stack, mc.player.getEntityId()));
+                flag = false;
+                return;
+
             }
+
+            flag = true;
         }
     }
 }

@@ -86,13 +86,15 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
             if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI
                         && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND
                         && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND
-                        && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIXED){
+                        && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIXED
+                    && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GROUND){
                     if (!(KeyboardHandler.zoom.isKeyDown()  && model.props.hideHandOnZoom)){
                     model.props.renderHands(RenderingHandler.getLastItemHolder(), partialTicks);
                     }
                     if (model.props.enableOverlay && KeyboardHandler.zoom.isKeyDown()){
                         model.props.renderOverlay(RenderingHandler.getLastItemHolder(), partialTicks);
                     }
+
             }
             if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI){
                 if (!(KeyboardHandler.zoom.isKeyDown() && model.props.hideHandOnZoom)){
