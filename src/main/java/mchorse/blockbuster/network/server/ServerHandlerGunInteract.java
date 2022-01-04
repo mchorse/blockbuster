@@ -4,6 +4,7 @@ import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemGun;
+import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.blockbuster.network.common.guns.PacketGunInteract;
 import mchorse.blockbuster.recording.actions.Action;
@@ -38,16 +39,21 @@ public class ServerHandlerGunInteract extends ServerMessageHandler<PacketGunInte
             if (props==null){return;}
             if (entity instanceof EntityPlayer){
                 if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT && props.timeBetweenShoot == 0) {
+                    Dispatcher.sendTo(new PacketGunInteract(packetGunInteract.itemStack, packetGunInteract.id), entityPlayerMP);
+    
                     gun.shootIt(packetGunInteract.itemStack, (EntityPlayer) entity, entityPlayerMP.world);
                 }
             }
             if (entity instanceof EntityActor){
                 if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT) {
+                    Dispatcher.sendTo(new PacketGunInteract(packetGunInteract.itemStack,  packetGunInteract.id), entityPlayerMP);
+    
                     gun.shootIt(packetGunInteract.itemStack, ((EntityActor) entity).fakePlayer, entityPlayerMP.world);
                 }
 
             }
         }
-
+ 
+        
     }
 }
