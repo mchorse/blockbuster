@@ -291,7 +291,7 @@ public class GuiGun extends GuiBase
         this.srcShootX= new GuiTrackpadElement(mc, (value) -> this.props.srcShootX = value.floatValue());
         this.srcShootY= new GuiTrackpadElement(mc, (value) -> this.props.srcShootY = value.floatValue());
         this.srcShootZ= new GuiTrackpadElement(mc, (value) -> this.props.srcShootZ = value.floatValue());
-        this.recoilSimple = new GuiToggleElement(mc, IKey.lang("blockhuster.gui.dun.recoil_simple"),false,(b)->this.props.recoilSimple = b.isToggled());
+        this.recoilSimple = new GuiToggleElement(mc, IKey.lang(""),false,(b)->this.props.recoilSimple = b.isToggled());
         this.recoilXMax = new GuiTrackpadElement(mc, (value) -> this.props.recoilXMax = value.floatValue());
         this.inputAmmo = new GuiTrackpadElement(mc,(value)->this.props.inputAmmo = value.intValue());
         this.inputReloadingTime = new GuiTrackpadElement(mc, (value)->this.props.inputReloadingTime = value.intValue());
@@ -317,9 +317,11 @@ public class GuiGun extends GuiBase
         this.hideHandOnZoom.flex().relative(pickMorphOverlay).w(100).y(-30).x(1,-60);
         this.zoom.flex().relative(pickMorphOverlay).set(0, 0, 100, 20).y(0).x(1,20);
         this.pickAimMorph.flex().relative(pickMorphOverlay.resizer()).w(100).x(1F, 20).y(3f, 0);
-        this.srcShootX.flex().relative(pickMorphOverlay.resizer()).w(100).set(0, 0, 100, 20).y(-0.1F,100).x(1,20);
-        this.srcShootY.flex().relative(pickMorphOverlay.resizer()).w(100).set(0, 0, 100, 20).y(-0.1F,140).x(1,20);
-        this.srcShootZ.flex().relative(pickMorphOverlay.resizer()).w(100).set(0, 0, 100, 20).y(-0.1F,180).x(1,20);
+        GuiElement srcLabel = Elements.label(IKey.lang("blockbuster.gui.gun.fire_src")).background();
+        srcLabel.flex().relative(pickMorphOverlay.resizer()).w(100).set(0, 0, 100, 20).y(-0.1F,90).x(1,0);
+        this.srcShootX.flex().relative(pickMorphOverlay.resizer()).w(100).set(0, 0, 100, 20).y(-0.1F,120).x(1,20);
+        this.srcShootY.flex().relative(pickMorphOverlay.resizer()).w(100).set(0, 0, 100, 20).y(-0.1F,160).x(1,20);
+        this.srcShootZ.flex().relative(pickMorphOverlay.resizer()).w(100).set(0, 0, 100, 20).y(-0.1F,200).x(1,20);
 
         /* GUI*/
         this.pickGuiMorph.flex().relative(area).w(100).x(0.07F, -50).y(0.5F, 0);
@@ -333,13 +335,19 @@ public class GuiGun extends GuiBase
         this.needToBeReloaded.flex().relative(pickHands.resizer()).w(100).x(1f,-60).y(1F, 0);
 
         /* RELOADING*/
-        this.pickReloadMorph.flex().relative(area).w(100).x(0.8F, -50).y(0.2F, 0);
 
+        this.pickReloadMorph.flex().relative(area).w(100).x(0.8F, -50).y(0.2F, 0);
         this.inputTimeBetweenShoot.flex().relative(pickReloadMorph.resizer()).w(100).set(0, 0, 100, 20).y(-0.1F,60).x(-0.1F,5);
         this.inputReloadingTime.flex().relative(pickReloadMorph.resizer()).w(100).set(0, 0, 100, 20).y(-0.1F,100).x(-0.1F,5);
         this.inputAmmo.flex().relative(pickReloadMorph.resizer()).w(100).set(0, 0, 100, 20).y(-0.1F,140).x(-0.1F,5);
 
-        this.aimOptions.add(srcShootZ,srcShootY,srcShootX,hand_bow,hand_bow_always,enableCustomGuiMorph,pickAimMorph,hideAimOnZoom,inputTimeBetweenShoot,inputReloadingTime,inputAmmo,needToBeReloaded,pickHands,pickGuiMorph,pickReloadMorph,pickMorphOverlay,hideHandOnZoom,enableOverlay,zoom);
+        this.recoilXMax.flex().relative(inputAmmo.resizer()).w(100).set(0, 0, 100, 20).y(3F,0).x(0.5F,20);
+        this.recoilXMin.flex().relative(inputAmmo.resizer()).w(100).set(0, 0, 100, 20).y(3F,0).x(-0.5F,-20);
+        this.recoilYMax.flex().relative(inputAmmo.resizer()).w(100).set(0, 0, 100, 20).y(5F,0).x(0.5F,20);
+        this.recoilYMin.flex().relative(inputAmmo.resizer()).w(100).set(0, 0, 100, 20).y(5F,0).x(-0.5F,-20);
+        this.recoilSimple.flex().relative(recoilYMin.resizer()).w(100).x(-1,0).y(1F, 0);
+
+        this.aimOptions.add(recoilXMin, recoilSimple,recoilXMax, recoilYMin, recoilYMax,srcLabel,srcShootZ,srcShootY,srcShootX,hand_bow,hand_bow_always,enableCustomGuiMorph,pickAimMorph,hideAimOnZoom,inputTimeBetweenShoot,inputReloadingTime,inputAmmo,needToBeReloaded,pickHands,pickGuiMorph,pickReloadMorph,pickMorphOverlay,hideHandOnZoom,enableOverlay,zoom);
 
 
 
@@ -743,7 +751,18 @@ public class GuiGun extends GuiBase
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.pick_overlay"), this.pickMorphOverlay.area.mx(), this.pickMorphOverlay.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.pick_gui"), this.pickGuiMorph.area.mx(), this.pickGuiMorph.area.y - 12, 0xffffff);
 
+
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.zoom"), this.zoom.area.mx(), this.zoom.area.y - 12, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.src_shoot_x"), this.srcShootX.area.mx(), this.srcShootX.area.y - 12, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.src_shoot_y"), this.srcShootY.area.mx(), this.srcShootY.area.y - 12, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.src_shoot_z"), this.srcShootZ.area.mx(), this.srcShootZ.area.y - 12, 0xffffff);
+
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.recoil_simple"), this.recoilSimple.area.mx()+100, this.recoilSimple.area.y+3, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.recoil_x_min"), this.recoilXMin.area.mx(), this.recoilXMin.area.y - 12, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.recoil_x_max"), this.recoilXMax.area.mx(), this.recoilXMax.area.y - 12, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.recoil_y_min"), this.recoilYMin.area.mx(), this.recoilYMin.area.y - 12, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.recoil_y_max"), this.recoilYMax.area.mx(), this.recoilYMax.area.y - 12, 0xffffff);
+
         }
         else if (this.panel.view.delegate == this.impactOptions)
         {
