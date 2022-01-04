@@ -55,21 +55,7 @@ public class BedrockComponentInitialization extends BedrockComponentBase impleme
         emitter.initialValues.clear();
 
         this.creation.get();
-
-        if (this.creation instanceof MolangMultiStatement)
-        {
-            MolangMultiStatement statement = (MolangMultiStatement) this.creation;
-
-            for (MolangExpression expression : statement.expressions)
-            {
-                if (expression instanceof MolangAssignment)
-                {
-                    MolangAssignment assignment = (MolangAssignment) expression;
-
-                    emitter.initialValues.put(assignment.variable.getName(), assignment.variable.get().doubleValue());
-                }
-            }
-        }
+        this.cacheInitialValues(this.creation, emitter);
 
         if (emitter.variables != null)
         {
@@ -84,6 +70,33 @@ public class BedrockComponentInitialization extends BedrockComponentBase impleme
     public void update(BedrockEmitter emitter)
     {
         this.update.get();
+        this.cacheInitialValues(this.update, emitter);
+
         emitter.replaceVariables();
+    }
+
+    private void cacheInitialValues(MolangExpression e, BedrockEmitter emitter)
+    {
+        if (e instanceof MolangMultiStatement)
+        {
+            MolangMultiStatement statement = (MolangMultiStatement) e;
+
+            for (MolangExpression expression : statement.expressions)
+            {
+                if (expression instanceof MolangAssignment)
+                {
+                    this.cacheInitialValue((MolangAssignment) expression, emitter);
+                }
+            }
+        }
+        else if (e instanceof MolangAssignment)
+        {
+            this.cacheInitialValue((MolangAssignment) e, emitter);
+        }
+    }
+
+    private void cacheInitialValue(MolangAssignment assignment, BedrockEmitter emitter)
+    {
+        emitter.initialValues.put(assignment.variable.getName(), assignment.variable.get().doubleValue());
     }
 }
