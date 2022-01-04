@@ -41,13 +41,12 @@ import net.minecraftforge.common.animation.ITimeValue;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.awt.geom.Point2D;
 import java.util.List;
 
-public class ItemGun extends Item
-{
+public class ItemGun extends Item {
 
-    public ItemGun()
-    {
+    public ItemGun() {
         this.setMaxStackSize(1);
         this.setRegistryName("gun");
         this.setUnlocalizedName("blockbuster.gun");
@@ -67,52 +66,49 @@ public class ItemGun extends Item
 
     @Override
     public int getMaxItemUseDuration(ItemStack p_getMaxItemUseDuration_1_) {
-        return  0;
+        return 0;
     }
 
     @Override
     public void onUpdate(ItemStack stack, World world, Entity entity, int p_onUpdate_4_, boolean p_onUpdate_5_) {
-            GunProps props = NBTUtils.getGunProps(stack);
-            if (props == null) {
-                return;
+        GunProps props = NBTUtils.getGunProps(stack);
+        if (props == null) {
+            return;
+        }
+        if (props.getGUNState() == GunState.RELOADING) {
+            props.reloadTick = props.reloadTick - 1;
+            if (props.reloadTick <= 0) {
+                props.reloadTick = 0;
+                props.setGUNState(GunState.READY_TO_SHOOT);
+                props.innerAmmo = props.inputAmmo;
             }
-            if (props.getGUNState() == GunState.RELOADING) {
-                props.reloadTick = props.reloadTick - 1;
-                if (props.reloadTick <= 0) {
-                    props.reloadTick = 0;
-                    props.setGUNState(GunState.READY_TO_SHOOT);
-                    props.innerAmmo = props.inputAmmo;
-                }
-                Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(),entity.getEntityId()));
+            Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entity.getEntityId()));
 
+        }
+        if (props.timeBetweenShoot != 0) {
+            props.timeBetweenShoot = props.timeBetweenShoot - 1;
+            if (props.timeBetweenShoot < 0) {
+                props.timeBetweenShoot = 0;
             }
-            if (props.timeBetweenShoot!=0) {
-                props.timeBetweenShoot = props.timeBetweenShoot - 1;
-                if (props.timeBetweenShoot < 0) {
-                    props.timeBetweenShoot = 0;
-                }
-                Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entity.getEntityId()));
-            }
-            if (entity instanceof EntityPlayer){
-                EntityPlayer player = (EntityPlayer) entity;
-            }
-        super.onUpdate(stack,world,entity,p_onUpdate_4_,p_onUpdate_5_);
+            Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entity.getEntityId()));
+        }
+        if (entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) entity;
+        }
+        super.onUpdate(stack, world, entity, p_onUpdate_4_, p_onUpdate_5_);
     }
 
     @SideOnly(Side.CLIENT)
-    public EnumActionResult clientShoot(ItemStack stack, EntityPlayer player, World world)
-    {
+    public EnumActionResult clientShoot(ItemStack stack, EntityPlayer player, World world) {
 
         GunProps props = NBTUtils.getGunProps(stack);
-        if (world.isRemote)
-        {
+        if (world.isRemote) {
 
-            player.rotationPitch +=  Interpolation.SINE_IN.interpolate(player.prevRotationPitch,player.prevRotationPitch+props.recoilXMin,1F) -player.prevRotationPitch ;
-            player.rotationPitch +=  Interpolation.SINE_IN.interpolate(player.prevRotationPitch,player.prevRotationPitch+props.recoilXMin,1F) -player.prevRotationPitch ;
-          //  player.prevRotationPitch += props.recoilXMin;
+            player.rotationPitch += Interpolation.SINE_IN.interpolate(player.prevRotationPitch, player.prevRotationPitch + props.recoilXMin, 1F) - player.prevRotationPitch;
+            player.rotationPitch += Interpolation.SINE_IN.interpolate(player.prevRotationPitch, player.prevRotationPitch + props.recoilXMin, 1F) - player.prevRotationPitch;
+            //  player.prevRotationPitch += props.recoilXMin;
 
-            if (props != null && props.launch)
-            {
+            if (props != null && props.launch) {
                 float pitch = player.rotationPitch + (float) ((Math.random() - 0.5) * props.scatterY);
                 float yaw = player.rotationYaw + (float) ((Math.random() - 0.5) * props.scatterX);
                 this.setThrowableHeading(player, pitch, yaw, 0, props.speed);
@@ -124,52 +120,42 @@ public class ItemGun extends Item
     }
 
 
-    public EnumActionResult shootIt(ItemStack stack, EntityPlayer player, World world)
-    {
+    public EnumActionResult shootIt(ItemStack stack, EntityPlayer player, World world) {
         GunProps props = NBTUtils.getGunProps(stack);
         return this.shoot(stack, props, player, world) ? EnumActionResult.PASS : EnumActionResult.FAIL;
     }
 
-    public boolean shoot(ItemStack stack, GunProps props, EntityPlayer player, World world)
-    {
-        if (props == null)
-        {
+    public boolean shoot(ItemStack stack, GunProps props, EntityPlayer player, World world) {
+        if (props == null) {
             return false;
         }
 
         /* Launch the player is enabled */
-        if (props.launch)
-        {
+        if (props.launch) {
             float pitch = player.rotationPitch + (float) ((Math.random() - 0.5) * props.scatterY);
             float yaw = player.rotationYaw + (float) ((Math.random() - 0.5) * props.scatterX);
 
             this.setThrowableHeading(player, pitch, yaw, 0, props.speed);
 
-            if (!props.fireCommand.isEmpty())
-            {
+            if (!props.fireCommand.isEmpty()) {
                 player.getServer().commandManager.executeCommand(player, props.fireCommand);
             }
         }
         /* Or otherwise launch bullets */
-        else
-        {
+        else {
 
-            if (!this.consumeInnerAmmo(props,player))
-            {
+            if (!this.consumeInnerAmmo(props, player)) {
                 return false;
             }
-
 
 
             EntityGunProjectile last = null;
 
 
-            for (int i = 0; i < Math.max(props.projectiles, 1); i++)
-            {
+            for (int i = 0; i < Math.max(props.projectiles, 1); i++) {
                 AbstractMorph morph = props.projectileMorph;
 
-                if (props.sequencer && morph instanceof SequencerMorph)
-                {
+                if (props.sequencer && morph instanceof SequencerMorph) {
                     SequencerMorph seq = ((SequencerMorph) morph);
 
                     morph = props.random ? seq.getRandom() : seq.get(i % seq.morphs.size());
@@ -185,19 +171,16 @@ public class ItemGun extends Item
 
                 double originalX = player.posX;
                 double originalZ = player.posZ;
-                double D = Math.sqrt(Math.pow(originalX - (originalX + props.srcShootX),2)+Math.pow(originalZ - (originalZ + props.srcShootZ),2));
-                double xE=originalX+Math.cos(player.getPitchYaw().y*Math.PI/180)*D;
-                double zE=originalZ+Math.sin(player.getPitchYaw().y*Math.PI/180)*D;
 
+                double[] coordsAfterYRotation = rotate(new double[]{originalX,originalZ},new double[]{originalX+props.srcShootX,originalZ+props.srcShootZ},player.getPitchYaw().y,true);
 
-                projectile.setPosition(xE,player.posY + player.getEyeHeight(),zE);
-
+                double[] coordsAfterXRotation = rotateX(new double[]{player.posY + player.getEyeHeight(),coordsAfterYRotation[1]},new double[]{player.posY + player.getEyeHeight() + props.srcShootY,coordsAfterYRotation[1]},player.getPitchYaw().x, player.getPitchYaw().x > 0);
+                projectile.setPosition(coordsAfterYRotation[0],coordsAfterXRotation[0],  coordsAfterXRotation[1]);
 
                 projectile.shoot(player, pitch, yaw, 0, props.speed, 0);
                 projectile.setInitialMotion();
 
-                if (props.projectiles > 0)
-                {
+                if (props.projectiles > 0) {
                     world.spawnEntity(projectile);
 
                 }
@@ -205,8 +188,7 @@ public class ItemGun extends Item
                 last = projectile;
             }
 
-            if (!props.fireCommand.isEmpty())
-            {
+            if (!props.fireCommand.isEmpty()) {
                 player.getServer().commandManager.executeCommand(last, props.fireCommand);
             }
         }
@@ -214,26 +196,25 @@ public class ItemGun extends Item
         Entity entity = player instanceof EntityFakePlayer ? ((EntityFakePlayer) player).actor : player;
         int id = entity.getEntityId();
 
-        if (player instanceof EntityPlayerMP)
-        {
+        if (player instanceof EntityPlayerMP) {
             Dispatcher.sendTo(new PacketGunShot(id), (EntityPlayerMP) player);
         }
 
         Dispatcher.sendToTracked(entity, new PacketGunShot(id));
-        if (props.innerAmmo <=0 ){
+        if (props.innerAmmo <= 0) {
             props.setGUNState(GunState.NEED_TO_BE_RELOAD);
         }
-        if (props.timeBetweenShoot <=0){
+        if (props.timeBetweenShoot <= 0) {
             props.timeBetweenShoot = props.inputTimeBetweenShoot;
         }
-        Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(),((EntityPlayerMP)  player).getEntityId()));
+        Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), ((EntityPlayerMP) player).getEntityId()));
         if (!world.isRemote) {
-            Dispatcher.sendTo(new PacketGunInteract(stack,player.getEntityId()), (EntityPlayerMP) player);
+            Dispatcher.sendTo(new PacketGunInteract(stack, player.getEntityId()), (EntityPlayerMP) player);
             List<Action> events = CommonProxy.manager.getActions(player);
             if (events != null) {
                 GunProps props1 = new GunProps(NBTUtils.getGunProps(stack).toNBT());
-                ItemStack stack1 = new ItemStack(Blockbuster.gunItem,1,1);
-                NBTUtils.saveGunProps(stack1,props1.toNBT());
+                ItemStack stack1 = new ItemStack(Blockbuster.gunItem, 1, 1);
+                NBTUtils.saveGunProps(stack1, props1.toNBT());
                 events.add(new ShootGunAction(stack1));
 
             }
@@ -241,6 +222,55 @@ public class ItemGun extends Item
 
         return true;
     }
+
+    private double transformInterval(double[] oldInterval,double[] newInterval, double value){
+       double old_range = oldInterval[1] - oldInterval[0];
+       double new_range = newInterval[1] - newInterval[0];
+       return ((value - oldInterval[0]) * new_range / old_range) + newInterval[0];
+    }
+    /*
+     For this code below, a huge thanks to the man with the stack overflow, I racked my brains trying to do it, and his code helped
+     https://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
+    */
+
+    private double[] rotate(double[] origin, double[] point, double angle, boolean staff){
+        if (staff) {
+            angle = normalise_angle(angle);
+        }
+        angle = angle*Math.PI/180;
+        double ox = origin[0];
+        double oy = origin[1];
+        double px = point[0];
+        double py = point[1];
+        double _px = px - ox;
+        double _py = py - oy;
+        double qx =(Math.cos(angle)*_px)-(Math.sin(angle)*_py);
+        double qy =(Math.sin(angle)*_px)+(Math.cos(angle)*_py);
+        qx =ox + qx;
+        qy = oy + qy;
+        return new double[]{qx,qy};
+    }
+    private double[] rotateX(double[] origin, double[] point, double angle, boolean staff){
+        angle = normalise_angle(angle);
+        angle = angle*Math.PI/180;
+        double ox = origin[0];
+        double oy = origin[1];
+        double px = point[0];
+        double py = point[1];
+        double _px = px - ox;
+        double _py = py - oy;
+        double qx =(Math.sin(angle)*_px)+(Math.cos(angle)*_py);
+        double qy =(Math.cos(angle)*_px)-(Math.sin(angle)*_py);
+        qx =ox + qx;
+        qy = oy + qy;
+        return new double[]{qx,qy};
+    }
+    private double normalise_angle(double angle) {
+        if ((angle != 0) && (Math.abs(angle) == (angle * -1))){
+        angle = 360 + angle;}
+        return angle;
+    }
+
 
 
     private boolean consumeInnerAmmo(GunProps props, EntityPlayer player){
