@@ -45,7 +45,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
         this.defaultPanel = this.general = new GuiImageMorphPanel(mc, this);
         this.registerPanel(this.general, IKey.lang("blockbuster.morph.image"), Icons.GEAR);
 
-        this.keys().register(IKey.lang("blockbuster.gui.builder.pick_texture"), Keyboard.KEY_P, () ->
+        this.keys().register(IKey.lang("blockbuster.gui.builder.pick_texture"), Keyboard.KEY_E, () ->
         {
             if (!this.general.picker.hasParent())
             {
