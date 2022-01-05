@@ -73,7 +73,7 @@ public class ItemGun extends Item
     {
         return 0;
     }
-
+    
     @Override
     public void onUpdate(ItemStack stack, World world, Entity entity, int p_onUpdate_4_, boolean p_onUpdate_5_)
     {
@@ -83,7 +83,7 @@ public class ItemGun extends Item
         {
             return;
         }
-        
+        if (!world.isRemote) {
         if (props.getGUNState() == GunState.RELOADING)
         {
             props.reloadTick = props.reloadTick - 1;
@@ -94,26 +94,17 @@ public class ItemGun extends Item
                 props.innerAmmo = props.inputAmmo;
             }
             Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entity.getEntityId()));
-
+            
         }
-        
-        if (props.timeBetweenShoot != 0)
-        {
-            props.timeBetweenShoot = props.timeBetweenShoot - 1;
-            if (props.timeBetweenShoot < 0)
-            {
-                props.timeBetweenShoot = 0;
-            }
-            Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entity.getEntityId()));
+        props.timeBetweenShoot = props.timeBetweenShoot - 1;
+        if (props.timeBetweenShoot < 0) {
+            props.timeBetweenShoot = 0;
         }
-        
-        if (entity instanceof EntityPlayer)
-        {
-            EntityPlayer player = (EntityPlayer) entity;
+        Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entity.getEntityId()));
         }
         super.onUpdate(stack, world, entity, p_onUpdate_4_, p_onUpdate_5_);
     }
-
+    
     @SideOnly(Side.CLIENT)
     public EnumActionResult clientShoot(ItemStack stack, EntityPlayer player, World world)
     {
