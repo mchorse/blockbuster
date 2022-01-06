@@ -12,6 +12,7 @@ import mchorse.blockbuster.recording.actions.ItemUseAction;
 import mchorse.blockbuster.recording.actions.ShootGunAction;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.mclib.network.ServerMessageHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -19,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextComponentString;
 
 import java.util.List;
 
@@ -40,14 +42,12 @@ public class ServerHandlerGunInteract extends ServerMessageHandler<PacketGunInte
             if (entity instanceof EntityPlayer){
                 if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT) {
                     Dispatcher.sendTo(new PacketGunInteract(packetGunInteract.itemStack, packetGunInteract.id), entityPlayerMP);
-    
                     gun.shootIt(packetGunInteract.itemStack, (EntityPlayer) entity, entityPlayerMP.world);
                 }
             }
             if (entity instanceof EntityActor){
-                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT) {
+                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT ) {
                     Dispatcher.sendTo(new PacketGunInteract(packetGunInteract.itemStack,  packetGunInteract.id), entityPlayerMP);
-    
                     gun.shootIt(packetGunInteract.itemStack, ((EntityActor) entity).fakePlayer, entityPlayerMP.world);
                 }
 

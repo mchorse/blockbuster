@@ -18,7 +18,7 @@ import net.minecraft.item.ItemStack;
  * \
  */
 public class ServerHandlerGunReloading  extends ServerMessageHandler<PacketGunReloading> {
-    private boolean b = true;
+    
     @Override
     public void run(EntityPlayerMP entityPlayerMP, PacketGunReloading packetGunReloading) {
         if (!entityPlayerMP.world.isRemote){
@@ -26,7 +26,6 @@ public class ServerHandlerGunReloading  extends ServerMessageHandler<PacketGunRe
             Entity entity = entityPlayerMP.world.getEntityByID(packetGunReloading.id);
             GunProps props = NBTUtils.getGunProps(packetGunReloading.itemStack);
             if (props==null){
-                b = true;
                 return;
             }
             if (entity instanceof EntityPlayer){
@@ -40,21 +39,16 @@ public class ServerHandlerGunReloading  extends ServerMessageHandler<PacketGunRe
                             Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entityPlayerMP.getEntityId()));
                             ammo(packetGunReloading.itemStack,props,player);
                         }
-                        b = false;
                     }else {
                         props.setGUNState(ItemGun.GunState.RELOADING);
                         Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entityPlayerMP.getEntityId()));
                         ammo(packetGunReloading.itemStack,props,player);
                     }
-                    b = false;
-                }else {
-                    b = true;
                 }
             }
         }
     }
     private void ammo(ItemStack stack,GunProps props, EntityPlayer entityPlayer){
-
         props.setGUNState(ItemGun.GunState.RELOADING);
         props.reloadTick = props.inputReloadingTime;
         Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entityPlayer.getEntityId()));
