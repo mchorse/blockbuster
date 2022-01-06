@@ -4,6 +4,7 @@ import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;
+import mchorse.blockbuster.network.common.guns.PacketGunInfoStack;
 import mchorse.blockbuster.network.common.guns.PacketGunInteract;
 import mchorse.blockbuster.network.common.guns.PacketGunReloading;
 import mchorse.blockbuster.utils.NBTUtils;
@@ -32,14 +33,15 @@ public class GunShootHandler
 {
     
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onTick(TickEvent event)
+    public void onTick(TickEvent.ClientTickEvent event)
     {
         if (event.type == TickEvent.Type.CLIENT) {
-    
+            if (event.phase== TickEvent.Phase.END){
             if (event.side.isClient()) {
                 handlerShootKeyPress();
                 handlerShootKeyDown();
                 handlerReloading();
+            }
             }
         }
     }
@@ -60,8 +62,8 @@ public class GunShootHandler
                 {
                     ItemGun gun = (ItemGun) stack.getItem();
                     Dispatcher.sendToServer(new PacketGunInteract(stack, mc.player.getEntityId()));
-                    props.timeBetweenShoot=props.inputTimeBetweenShoot;
-                   Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(),  mc.player.getEntityId()));
+                    props.timeBetweenShoot = props.inputTimeBetweenShoot;
+                    Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), mc.player.getEntityId()));
                     canBeShootPress = false;
                 }
                 if (props.timeBetweenShoot==0) {
@@ -70,7 +72,10 @@ public class GunShootHandler
             }
             else
             {
-                canBeShootPress = true;
+                if (!props.resetTimerButtonRel)
+                {
+                    canBeShootPress = true;
+                }
             }
         }
     }
@@ -117,8 +122,8 @@ public class GunShootHandler
                 {
                     ItemGun gun = (ItemGun) stack.getItem();
                     Dispatcher.sendToServer(new PacketGunInteract(stack, mc.player.getEntityId()));
-                    props.timeBetweenShoot=props.inputTimeBetweenShoot;
-                    Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(),  mc.player.getEntityId()));
+                    props.timeBetweenShoot = props.inputTimeBetweenShoot;
+                    Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), mc.player.getEntityId()));
                     canBeShootDown = false;
                     
                 }
@@ -130,9 +135,11 @@ public class GunShootHandler
             }
             else
             {
-                canBeShootDown = true;
+                if (!props.resetTimerButtonRel) {
+                    canBeShootDown = true;
+                }
             }
-    
+            
         }
     }
     

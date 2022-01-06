@@ -38,10 +38,7 @@ public class ShootGunAction extends Action{
             ItemGun gun = (ItemGun) itemStack.getItem();
             GunProps props = NBTUtils.getGunProps(itemStack);
             if (props!=null){
-         //   gun.shootIt(itemStack, player,player.world);
-            //Client Staff
-          //      Dispatcher.sendTo(new PacketGunInteract(player.getHeldItemMainhand(),player.getEntityId()), (EntityPlayerMP) player);
-                Dispatcher.sendToServer(new PacketGunInteract(itemStack,actor.getEntityId()));
+             //   Dispatcher.sendToServer(new PacketGunInteract(itemStack,actor.getEntityId()));
             }else {Blockbuster.LOGGER.error("Null gun props");}
         }
 

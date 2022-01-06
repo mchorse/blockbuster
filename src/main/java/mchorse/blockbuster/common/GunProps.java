@@ -4,26 +4,17 @@ import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.common.item.ItemGun;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.guns.PacketGunInfo;
-import mchorse.blockbuster.utils.NBTUtils;
-import mchorse.mclib.math.functions.limit.Min;
-import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -79,6 +70,7 @@ public class GunProps
     public float recoilYMax;
     public boolean acceptPressed;
     public boolean recoilSimple;
+    public boolean resetTimerButtonRel;
     /* Projectile properties */
     public AbstractMorph projectileMorph;
     public String tickCommand;
@@ -459,6 +451,7 @@ public class GunProps
         this.srcShootY = 0;
         this.srcShootZ = 0;
         this.recoilSimple = true;
+        this.resetTimerButtonRel = true;
         this.recoilXMax = 0;
         this.recoilYMin = 0;
         this.recoilYMax = 0;
@@ -600,6 +593,9 @@ public class GunProps
 
 
         if (tag.hasKey("recoilSimple")) this.recoilSimple = tag.getBoolean("recoilSimple");
+        
+        if (tag.hasKey("resetTimerAfterHandOff")) this.resetTimerButtonRel = tag.getBoolean("resetTimerAfterHandOff");
+    
         if (tag.hasKey("recoilXMax")) this.recoilXMax = tag.getFloat("recoilXMax");
         if (tag.hasKey("recoilYMin")) this.recoilYMin = tag.getFloat("recoilYMin");
         if (tag.hasKey("recoilYMax")) this.recoilYMax = tag.getFloat("recoilYMax");
@@ -696,10 +692,10 @@ public class GunProps
         if (!this.tickCommand.isEmpty()) tag.setString("TickCommand", this.tickCommand);
         if (this.ticking != 0) tag.setInteger("Ticking", this.ticking);
         if (this.inputAmmo != 1) tag.setInteger("inputAmmo", this.inputAmmo);
-        if (this.innerAmmo != 1) tag.setInteger("innerAmmo", this.innerAmmo);
+        tag.setInteger("innerAmmo", this.innerAmmo);
 
         if (this.inputReloadingTime != 0) tag.setInteger("inputReloadingTime", this.inputReloadingTime);
-        if (this.timeBetweenShoot != 0) tag.setInteger("timeBetweenShoot", this.timeBetweenShoot);
+         tag.setInteger("timeBetweenShoot", this.timeBetweenShoot);
         if (this.inputTimeBetweenShoot != 0) tag.setInteger("inputTimeBetweenShoot", this.inputTimeBetweenShoot);
 
 
@@ -732,6 +728,11 @@ public class GunProps
 
 
         if (!this.recoilSimple) tag.setBoolean("recoilSimple", this.recoilSimple);
+    
+        
+        if (!this.resetTimerButtonRel) tag.setBoolean("resetTimerAfterHandOff", this.resetTimerButtonRel);
+    
+        
         if (this.recoilXMax != 0) tag.setFloat("recoilXMax", this.recoilXMax);
         if (this.recoilYMin != 0) tag.setFloat("recoilYMin", this.recoilYMin);
         if (this.recoilYMax != 0) tag.setFloat("recoilYMax", this.recoilYMax);

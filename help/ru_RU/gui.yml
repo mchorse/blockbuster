@@ -625,6 +625,8 @@ blockbuster.gui:
         need_to_be_reloaded: Need to be reloaded
         pick_aim_morph: Aim morph
         pick_reload_morph: Reloading morp
+        accept_pressed: Shoot when press hold
+        reset_timer_button_rel: Reset when dont hold button
 
         impact_morph: Морф воздействия
         impact_delay: Задержка воздействия

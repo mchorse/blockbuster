@@ -1,6 +1,5 @@
 package mchorse.blockbuster.client.gui;
 
-import mchorse.aperture.client.gui.utils.GuiInterpolationTypeList;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.common.GunProps;
@@ -11,16 +10,12 @@ import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.*;
-import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiSlotElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
-import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
-import mchorse.mclib.client.gui.framework.elements.list.GuiInterpolationList;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
-import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
@@ -42,8 +37,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -105,6 +98,7 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement recoilYMin;
     public GuiTrackpadElement recoilYMax;
     public GuiToggleElement recoilSimple;
+    public GuiToggleElement resetTimerButtonRel;
     public GuiToggleElement enableCustomGuiMorph;
     public GuiToggleElement needToBeReloaded;
     public GuiNestedEdit pickHands;
@@ -285,12 +279,12 @@ public class GuiGun extends GuiBase
         this.pickMorphOverlay = new GuiNestedEdit(mc, (editing) -> this.openMorphs(6, editing));
         this.pickReloadMorph = new GuiNestedEdit(mc, (editing) -> this.openMorphs(8, editing));
         this.pickAimMorph= new GuiNestedEdit(mc, (editing) -> this.openMorphs(9, editing));
-
         this.zoom = new GuiTrackpadElement(mc, (value) -> this.props.zoom = value.floatValue());
         this.recoilXMin = new GuiTrackpadElement(mc, (value) -> this.props.recoilXMin = value.floatValue());
         this.srcShootX= new GuiTrackpadElement(mc, (value) -> this.props.srcShootX = value.floatValue());
         this.srcShootY= new GuiTrackpadElement(mc, (value) -> this.props.srcShootY = value.floatValue());
         this.srcShootZ= new GuiTrackpadElement(mc, (value) -> this.props.srcShootZ = value.floatValue());
+        this.resetTimerButtonRel = new GuiToggleElement(mc, IKey.lang(""),false,(b)->this.props.resetTimerButtonRel = b.isToggled());
         this.recoilSimple = new GuiToggleElement(mc, IKey.lang(""),false,(b)->this.props.recoilSimple = b.isToggled());
         this.recoilXMax = new GuiTrackpadElement(mc, (value) -> this.props.recoilXMax = value.floatValue());
         this.inputAmmo = new GuiTrackpadElement(mc,(value)->this.props.inputAmmo = value.intValue());
@@ -305,7 +299,7 @@ public class GuiGun extends GuiBase
         this.srcShootY.limit(-10,10,false);
         this.srcShootZ.limit(-10,10,false);
         this.inputTimeBetweenShoot.limit(0, Integer.MAX_VALUE);
-        this.inputAmmo.limit(1,Integer.MAX_VALUE);
+        this.inputAmmo.limit(0,Integer.MAX_VALUE);
         this.inputReloadingTime.limit(0);
         this.recoilYMin.limit(-200,200,false);
         this.recoilYMax.limit(-200,200,false);
@@ -346,8 +340,10 @@ public class GuiGun extends GuiBase
         this.recoilYMax.flex().relative(inputAmmo.resizer()).w(100).set(0, 0, 100, 20).y(5F,0).x(0.5F,20);
         this.recoilYMin.flex().relative(inputAmmo.resizer()).w(100).set(0, 0, 100, 20).y(5F,0).x(-0.5F,-20);
         this.recoilSimple.flex().relative(recoilYMin.resizer()).w(100).x(-1,0).y(1F, 0);
-
-        this.aimOptions.add(recoilXMin, recoilSimple,recoilXMax, recoilYMin, recoilYMax,srcLabel,srcShootZ,srcShootY,srcShootX,hand_bow,hand_bow_always,enableCustomGuiMorph,pickAimMorph,hideAimOnZoom,inputTimeBetweenShoot,inputReloadingTime,inputAmmo,needToBeReloaded,pickHands,pickGuiMorph,pickReloadMorph,pickMorphOverlay,hideHandOnZoom,enableOverlay,zoom);
+        this.resetTimerButtonRel.flex().relative(recoilSimple.resizer()).w(100).x(0,0).y(1F, 0);
+        this.acceptPressed.flex().relative(resetTimerButtonRel.resizer()).w(100).x(0,0).y(2F, 0);
+        
+        this.aimOptions.add(acceptPressed, resetTimerButtonRel,recoilXMin, recoilSimple,recoilXMax, recoilYMin, recoilYMax,srcLabel,srcShootZ,srcShootY,srcShootX,hand_bow,hand_bow_always,enableCustomGuiMorph,pickAimMorph,hideAimOnZoom,inputTimeBetweenShoot,inputReloadingTime,inputAmmo,needToBeReloaded,pickHands,pickGuiMorph,pickReloadMorph,pickMorphOverlay,hideHandOnZoom,enableOverlay,zoom);
 
 
 
@@ -462,6 +458,7 @@ public class GuiGun extends GuiBase
         this.recoilYMax.setValue(this.props.recoilYMax);
         this.inputTimeBetweenShoot.setValue(this.props.inputTimeBetweenShoot);
         this.recoilSimple.toggled(this.props.recoilSimple);
+        this.resetTimerButtonRel.toggled(this.props.resetTimerButtonRel);
         this.scatterX.setValue(this.props.scatterX);
         this.scatterY.setValue(this.props.scatterY);
         this.launch.toggled(this.props.launch);
@@ -757,7 +754,10 @@ public class GuiGun extends GuiBase
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.src_shoot_y"), this.srcShootY.area.mx(), this.srcShootY.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.src_shoot_z"), this.srcShootZ.area.mx(), this.srcShootZ.area.y - 12, 0xffffff);
 
-            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.recoil_simple"), this.recoilSimple.area.mx()+100, this.recoilSimple.area.y+3, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.recoil_simple"), this.recoilSimple.area.mx()+150, this.recoilSimple.area.y+3, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.accept_pressed"), this.acceptPressed.area.mx()+150, this.acceptPressed.area.y+3, 0xffffff);
+            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.reset_timer_button_rel"), this.resetTimerButtonRel.area.mx()+150, this.resetTimerButtonRel.area.y+3, 0xffffff);
+    
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.recoil_x_min"), this.recoilXMin.area.mx(), this.recoilXMin.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.recoil_x_max"), this.recoilXMax.area.mx(), this.recoilXMax.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.recoil_y_min"), this.recoilYMin.area.mx(), this.recoilYMin.area.y - 12, 0xffffff);
