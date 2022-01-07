@@ -1,4 +1,4 @@
-package mchorse.blockbuster.network.server;
+package mchorse.blockbuster.network.server.gun;
 
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;

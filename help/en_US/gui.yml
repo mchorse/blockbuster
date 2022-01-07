@@ -698,7 +698,18 @@ blockbuster.gui:
         pick_reload_morph: Reloading morp
         accept_pressed: Shoot when press hold
         reset_timer_button_rel: Reset when dont hold button
-
+        reload_command: Reload command
+        zoom_on_command: Zoom on command
+        zoom_off_command: Zoom off command
+        src_shoot_x: Shift X source
+        src_shoot_y: Shift Y source
+        src_shoot_z: Shift Z source
+        fire_src: Fire source
+        recoil_simple: recoil simple (without random)
+        recoil_x_min: recoil x min
+        recoil_x_max: recoil x max
+        recoil_y_min: recoil y min
+        recoil_y_max: recoil y max
 
         impact_morph: Impact morph
         impact_delay: Impact delay

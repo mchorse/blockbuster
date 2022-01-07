@@ -1,10 +1,8 @@
 package mchorse.blockbuster.common.item;
 
-import com.google.common.collect.ImmutableMap;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.GunProps;
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.entity.EntityActor.EntityFakePlayer;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.Dispatcher;
@@ -14,37 +12,20 @@ import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.ShootGunAction;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
-import mchorse.mclib.math.functions.limit.Min;
 import mchorse.mclib.utils.Interpolation;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.common.animation.ITimeValue;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.awt.geom.Point2D;
 import java.util.List;
 
 public class ItemGun extends Item
@@ -85,7 +66,11 @@ public class ItemGun extends Item
             return;
         }
         if (props.timeBetweenShoot > 0) {
-            --props.timeBetweenShoot;
+        
+                --props.timeBetweenShoot;
+                 NBTUtils.saveGunProps(stack, props.toNBT());
+                 Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), player.getEntityId()));
+       
             if (props.timeBetweenShoot <= 0) {
                 props.timeBetweenShoot = 0;
             }

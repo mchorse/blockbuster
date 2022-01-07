@@ -1,4 +1,4 @@
-package mchorse.blockbuster.network.server;
+package mchorse.blockbuster.network.server.gun;
 
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.item.ItemGun;
@@ -51,6 +51,9 @@ public class ServerHandlerGunReloading  extends ServerMessageHandler<PacketGunRe
     private void ammo(ItemStack stack,GunProps props, EntityPlayer entityPlayer){
         props.setGUNState(ItemGun.GunState.RELOADING);
         props.reloadTick = props.inputReloadingTime;
+        if (!props.reloadCommand.isEmpty()) {
+            entityPlayer.getServer().commandManager.executeCommand(entityPlayer, props.reloadCommand);
+        }
         Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entityPlayer.getEntityId()));
         Dispatcher.sendTo(new PacketGunReloading(stack,entityPlayer.getEntityId()), (EntityPlayerMP) entityPlayer);
     }
