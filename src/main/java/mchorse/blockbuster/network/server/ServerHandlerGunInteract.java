@@ -41,13 +41,13 @@ public class ServerHandlerGunInteract extends ServerMessageHandler<PacketGunInte
             if (props==null){return;}
             if (entity instanceof EntityPlayer){
                 if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT) {
-                    Dispatcher.sendTo(new PacketGunInteract(packetGunInteract.itemStack, packetGunInteract.id), entityPlayerMP);
+                  //  Dispatcher.sendTo(new PacketGunInteract(packetGunInteract.itemStack, packetGunInteract.id), entityPlayerMP);
                     gun.shootIt(packetGunInteract.itemStack, (EntityPlayer) entity, entityPlayerMP.world);
                 }
             }
             if (entity instanceof EntityActor){
                 if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT ) {
-                    Dispatcher.sendTo(new PacketGunInteract(packetGunInteract.itemStack,  packetGunInteract.id), entityPlayerMP);
+                   // Dispatcher.sendTo(new PacketGunInteract(packetGunInteract.itemStack,  packetGunInteract.id), entityPlayerMP);
                     gun.shootIt(packetGunInteract.itemStack, ((EntityActor) entity).fakePlayer, entityPlayerMP.world);
                 }
 

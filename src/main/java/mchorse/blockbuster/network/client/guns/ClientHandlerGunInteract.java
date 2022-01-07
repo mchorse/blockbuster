@@ -22,7 +22,7 @@ public class ClientHandlerGunInteract extends ClientMessageHandler<PacketGunInte
             ItemGun gun = (ItemGun) packetGunInteract.itemStack.getItem();
             Entity entity = entityPlayerSP.world.getEntityByID(packetGunInteract.id);
             if (entity instanceof EntityPlayer){
-                gun.clientShoot(packetGunInteract.itemStack,(EntityPlayer) entity,entityPlayerSP.world);
+                gun.shootIt(packetGunInteract.itemStack,entityPlayerSP, entity.world);
             }
         }
     }

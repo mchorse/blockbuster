@@ -4,12 +4,11 @@ import com.google.common.collect.ImmutableMap;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.GunProps;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.entity.EntityActor.EntityFakePlayer;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;
-import mchorse.blockbuster.network.common.guns.PacketGunInfoStack;
-import mchorse.blockbuster.network.common.guns.PacketGunInteract;
 import mchorse.blockbuster.network.common.guns.PacketGunShot;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.ShootGunAction;
@@ -40,6 +39,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.animation.ITimeValue;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -77,17 +77,34 @@ public class ItemGun extends Item
         return 0;
     }
     
-    @Override
-    public void onUpdate(ItemStack stack, World world, Entity entity, int p_onUpdate_4_, boolean p_onUpdate_5_)
-    {
-        GunProps props1 = NBTUtils.getGunProps(stack);
-        if (props1.innerAmmo <= 0 && props1.needToBeReloaded && props1.getGUNState() == GunState.READY_TO_SHOOT) {
-            props1.setGUNState(GunState.NEED_TO_BE_RELOAD);
-            Dispatcher.sendToServer(new PacketGunInfo(props1.toNBT(), entity.getEntityId()));
-        }
-        if (!world.isRemote){
+
+    public static void minusTime(ItemStack stack, EntityPlayer player){
         GunProps props = NBTUtils.getGunProps(stack);
-        
+        if (props == null)
+        {
+            return;
+        }
+        if (props.timeBetweenShoot > 0) {
+            --props.timeBetweenShoot;
+            if (props.timeBetweenShoot <= 0) {
+                props.timeBetweenShoot = 0;
+            }
+            NBTUtils.saveGunProps(stack, props.toNBT());
+            Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), player.getEntityId()));
+        }
+    }
+    private void resetTime(ItemStack stack, EntityPlayer player){
+        GunProps props = NBTUtils.getGunProps(stack);
+        if (props == null)
+        {
+            return;
+        }
+        props.timeBetweenShoot = props.inputTimeBetweenShoot;
+        NBTUtils.saveGunProps(stack,props.toNBT());
+        Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), player.getEntityId()));
+    }
+    public static void minusReload(ItemStack stack, EntityPlayer player){
+        GunProps props = NBTUtils.getGunProps(stack);
         if (props == null)
         {
             return;
@@ -101,33 +118,26 @@ public class ItemGun extends Item
                 props.setGUNState(GunState.READY_TO_SHOOT);
                 props.innerAmmo = props.inputAmmo;
             }
-            Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entity.getEntityId()));
-            
+            NBTUtils.saveGunProps(stack,props.toNBT());
+            Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), player.getEntityId() ));
         }
         
-        if (props.timeBetweenShoot != 0 && props.getGUNState() == GunState.READY_TO_SHOOT ) {
-            --props.timeBetweenShoot;
-            if (props.timeBetweenShoot < 0) {
-                props.timeBetweenShoot = 0;
-            }
-            Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entity.getEntityId()));
-        }
-        if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entity;
-        }
-        }
-        super.onUpdate(stack, world, entity, p_onUpdate_4_, p_onUpdate_5_);
+    }
+
+
+    public float random(float min, float max)
+    {
+        max -= min;
+        return (float) ((Math.random() * ++max) + min);
     }
     
-    @SideOnly(Side.CLIENT)
-    public EnumActionResult clientShoot(ItemStack stack, EntityPlayer player, World world)
+    public void shootIt(ItemStack stack, EntityPlayer player, World world)
     {
-
+        resetTime(stack, player);
         GunProps props = NBTUtils.getGunProps(stack);
-        
         if (world.isRemote)
         {
-            minusAmmo(props,player);
+           
             if (props.recoilSimple)
             {
                 player.rotationPitch += Interpolation.SINE_IN.interpolate(player.prevRotationPitch, player.prevRotationPitch + props.recoilXMin, 1F) - player.prevRotationPitch;
@@ -137,30 +147,18 @@ public class ItemGun extends Item
             {
                 player.rotationPitch += Interpolation.SINE_IN.interpolate(player.prevRotationPitch, player.prevRotationPitch +random(props.recoilXMin,props.recoilXMax), 1F) - player.prevRotationPitch;
                 player.rotationYaw += Interpolation.SINE_IN.interpolate(player.prevRotationYaw, player.prevRotationYaw + random(props.recoilYMin,props.recoilYMax), 1F) - player.prevRotationYaw;
-
-            }
             
+            }
+        
             if (props != null && props.launch)
             {
                 float pitch = player.rotationPitch + (float) ((Math.random() - 0.5) * props.scatterY);
                 float yaw = player.rotationYaw + (float) ((Math.random() - 0.5) * props.scatterX);
                 this.setThrowableHeading(player, pitch, yaw, 0, props.speed);
-
+            
             }
         }
-        return EnumActionResult.PASS;
-    }
-
-    public float random(float min, float max)
-    {
-        max -= min;
-        return (float) ((Math.random() * ++max) + min);
-    }
-    
-    public EnumActionResult shootIt(ItemStack stack, EntityPlayer player, World world)
-    {
-        GunProps props = NBTUtils.getGunProps(stack);
-        return this.shoot(stack, props, player, world) ? EnumActionResult.PASS : EnumActionResult.FAIL;
+        this.shoot(stack, props, player, world);
     }
     
     public boolean shoot(ItemStack stack, GunProps props, EntityPlayer player, World world)
@@ -186,14 +184,12 @@ public class ItemGun extends Item
         /* Or otherwise launch bullets */
         else
         {
-          
-            Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), ((EntityPlayerMP) player).getEntityId()));
     
-            if (!this.consumeInnerAmmo(props, player))
+            if (!this.consumeInnerAmmo(stack, player))
             {
                 return false;
             }
-
+            
             
             EntityGunProjectile last = null;
 
@@ -235,34 +231,28 @@ public class ItemGun extends Item
                 player.getServer().commandManager.executeCommand(last, props.fireCommand);
             }
         }
-
+        
         Entity entity = player instanceof EntityFakePlayer ? ((EntityFakePlayer) player).actor : player;
         int id = entity.getEntityId();
         if (player instanceof EntityPlayerMP) {
             Dispatcher.sendTo(new PacketGunShot(id), (EntityPlayerMP) player);
         }
-    
         Dispatcher.sendToTracked(entity, new PacketGunShot(id));
-        if (props.innerAmmo <= 0 && props.needToBeReloaded && props.getGUNState() == GunState.READY_TO_SHOOT) {
-            props.setGUNState(GunState.NEED_TO_BE_RELOAD);
-        }
-        if (props.timeBetweenShoot <= 0) {
-            props.timeBetweenShoot = props.inputTimeBetweenShoot;
-        }
 
-        Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), ((EntityPlayerMP) player).getEntityId()));
-   
         if (!world.isRemote) {
             List<Action> events = CommonProxy.manager.getActions(player);
             if (events != null) {
-                GunProps props1 = new GunProps(NBTUtils.getGunProps(stack).toNBT());
-                ItemStack stack1 = new ItemStack(Blockbuster.gunItem, 1, 1);
-                NBTUtils.saveGunProps(stack1, props1.toNBT());
-                events.add(new ShootGunAction(stack1));
-            
+                events.add(new ShootGunAction(stack));
             }
         }
-
+        
+        GunProps newProps = NBTUtils.getGunProps(stack);
+        if (player instanceof EntityPlayerMP) {
+            Dispatcher.sendTo(new PacketGunInfo(newProps.toNBT(), entity.getEntityId()), (EntityPlayerMP) player);
+        }
+        Dispatcher.sendToTracked(entity, new PacketGunInfo(newProps.toNBT(), entity.getEntityId()));
+        Dispatcher.sendToServer(new PacketGunInfo(newProps.toNBT(), entity.getEntityId()));
+        
         return true;
     }
 
@@ -311,10 +301,25 @@ public class ItemGun extends Item
         return angle;
     }
     
+    public static void checkGunState(ItemStack stack, EntityPlayer player)
+    {
+        GunProps props = NBTUtils.getGunProps(stack);
+        if (props == null)
+        {
+            return;
+        }
+        
+        if (props.innerAmmo <= 0 && props.needToBeReloaded && props.getGUNState() == GunState.READY_TO_SHOOT) {
+            props.setGUNState(GunState.NEED_TO_BE_RELOAD);
+        }
+        NBTUtils.saveGunProps(player.getHeldItemMainhand(),props.toNBT());
+    }
     
-    
-    private boolean consumeInnerAmmo(GunProps props, EntityPlayer player){
-        if (player.world.isRemote){
+    private boolean consumeInnerAmmo(ItemStack stack, EntityPlayer player){
+        
+        GunProps props = NBTUtils.getGunProps(stack);
+        if (props == null)
+        {
             return false;
         }
         int ammo =  props.innerAmmo;
@@ -326,27 +331,34 @@ public class ItemGun extends Item
                 if (!player.capabilities.isCreativeMode && !props.ammoStack.isEmpty()) {
                     props.innerAmmo = props.inputAmmo;
                     NBTUtils.saveGunProps(player.getHeldItemMainhand(),props.toNBT());
+                //    Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), player.getEntityId()));
                     return consumeAmmoStack(player, props.ammoStack);
                 }else {
                     props.innerAmmo = props.inputAmmo;
                     NBTUtils.saveGunProps(player.getHeldItemMainhand(),props.toNBT());
+                 //   Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), player.getEntityId()));
                     return true;
                 }
             }
         }
     
-        minusAmmo(props,player);
+        minusAmmo(stack,player);
         
 
         return true;
     }
     
-    private void minusAmmo(GunProps props, EntityPlayer player)
+    private void minusAmmo(ItemStack stack, EntityPlayer player)
     {
+        GunProps props = NBTUtils.getGunProps(stack);
+        if (props == null)
+        {
+            return;
+        }
         int ammo =  props.innerAmmo;
         props.innerAmmo = ammo - 1;
         NBTUtils.saveGunProps(player.getHeldItemMainhand(),props.toNBT());
-        Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), player.getEntityId()));
+      //  Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), player.getEntityId()));
         
     }
     public boolean consumeAmmoStack(EntityPlayer player, ItemStack ammo)
