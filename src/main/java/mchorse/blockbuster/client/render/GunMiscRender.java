@@ -63,38 +63,53 @@ public class GunMiscRender {
     public Vector3f scale = new Vector3f(1.0F, 1.0F, 1.0F);
 
     public Vector3f rotate = new Vector3f();
+    
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onTick(TickEvent.RenderTickEvent event) {
-        if (Minecraft.getMinecraft().player != null && event.phase.equals(TickEvent.Phase.END)) {
+    public void onTick(TickEvent.RenderTickEvent event)
+    {
+        if (Minecraft.getMinecraft().player != null && event.phase.equals(TickEvent.Phase.END))
+        {
+            
             EntityPlayer entityPlayer = Minecraft.getMinecraft().player;
 
             ItemStack heldItem = entityPlayer.getHeldItem(EnumHand.MAIN_HAND);
             GunProps props =  NBTUtils.getGunProps(heldItem);
-            if ( heldItem!= null && heldItem.getItem().equals(Blockbuster.gunItem) && KeyboardHandler.zoom.isKeyDown()) {
+            if ( heldItem!= null && heldItem.getItem().equals(Blockbuster.gunItem) && KeyboardHandler.zoom.isKeyDown())
+            {
                 ServerHandlerZoomCommand.onZoom = true;
                 ZOOM_TIME = Math.min(ZOOM_TIME + (event.renderTickTime * 0.1f), 1);
                 Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(),true));
-            } else {
+            }
+            else
+            {
                 ServerHandlerZoomCommand.onZoom = false;
                 ZOOM_TIME = Math.max(ZOOM_TIME - (event.renderTickTime * 0.2f), 0);
                 Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(),false));
             }
 
-            if (ZOOM_TIME == 0) {
-                if (hasChangedSensitivity) {
+            if (ZOOM_TIME == 0)
+            {
+                if (hasChangedSensitivity)
+                {
                     hasChangedSensitivity = false;
                     Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity;
-                } else {
+                }
+                else
+                {
                     lastMouseSensitivity = Minecraft.getMinecraft().gameSettings.mouseSensitivity;
                 }
-            } else if (ZOOM_TIME != 0) {
-                if (heldItem != null && heldItem.getItem().equals(Blockbuster.gunItem) && KeyboardHandler.zoom.isKeyDown()) {
+            }
+            else if (ZOOM_TIME != 0)
+            {
+                if (heldItem != null && heldItem.getItem().equals(Blockbuster.gunItem) && KeyboardHandler.zoom.isKeyDown())
+                {
                     hasChangedSensitivity = true;
                     assert props != null;
-
-                   Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity * (0.4f - (ZOOM_TIME * 0.5f));
-                } else {
+                    Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity * (0.4f - (ZOOM_TIME * 0.5f));
+                }
+                else
+                {
                     hasChangedSensitivity = true;
                     Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity;
                 }
@@ -105,19 +120,23 @@ public class GunMiscRender {
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void fovUpdateEvent(FOVUpdateEvent event){
+    public void fovUpdateEvent(FOVUpdateEvent event)
+    {
         ItemStack heldItem = event.getEntity().getHeldItem(EnumHand.MAIN_HAND);
-        if (heldItem!= null && heldItem.getItem().equals(Blockbuster.gunItem)) {
+        if (heldItem!= null && heldItem.getItem().equals(Blockbuster.gunItem))
+        {
             GunProps props =  NBTUtils.getGunProps(heldItem);
-            if(props!=null){
-
-               event.setNewfov(event.getFov() - event.getFov() * ZOOM_TIME * props.zoom);
+            if(props!=null)
+            {
+                event.setNewfov(event.getFov() - event.getFov() * ZOOM_TIME * props.zoom);
                 Minecraft mc = Minecraft.getMinecraft();
                 mc.renderGlobal.setDisplayListEntitiesDirty();
                 mc.entityRenderer.loadEntityShader(mc.getRenderViewEntity());
             }
 
-        }else {
+        }
+        else
+        {
             event.setNewfov(event.getFov());
         }
 
@@ -127,16 +146,19 @@ public class GunMiscRender {
     @SubscribeEvent(priority =  EventPriority.HIGHEST)
     public void renderGameOverlay(RenderGameOverlayEvent event)
     {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS){
+        if (event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS)
+        {
             Minecraft mc =    Minecraft.getMinecraft();
             ItemStack gun = mc.player.getHeldItemMainhand();
-            if (gun.getItem() instanceof ItemGun){
+            if (gun.getItem() instanceof ItemGun)
+            {
                 GunProps props = NBTUtils.getGunProps(gun);
-                if (props == null){
+                if (props == null)
+                {
                     return;
                 }
-
-                if((props.hideAimOnZoom && KeyboardHandler.zoom.isKeyDown()) || !props.current_aim.isEmpty()){
+                if((props.hideAimOnZoom && KeyboardHandler.zoom.isKeyDown()) || !props.current_aim.isEmpty())
+                {
                     event.setCanceled(true);
                 }
             }
@@ -154,16 +176,16 @@ public class GunMiscRender {
             if (player.getHeldItemMainhand().getItem() instanceof ItemGun)
             {
                 GunProps gunProps = NBTUtils.getGunProps(player.getHeldItemMainhand());
-                if (gunProps.aimMorph!=null && !(KeyboardHandler.zoom.isKeyDown() && gunProps.hideAimOnZoom )){
+                
+                if (gunProps.aimMorph!=null && !(KeyboardHandler.zoom.isKeyDown() && gunProps.hideAimOnZoom ))
+                {
                     render(gunProps.current_aim.get(),resolution.getScaledWidth(), resolution.getScaledHeight());
                 }
-
-
-
+                
             }
-
         }
     }
+    
     public void render(AbstractMorph morph, int width, int height)
     {
         if (morph!=null)
@@ -176,6 +198,7 @@ public class GunMiscRender {
             GlStateManager.popMatrix();
         }
     }
+    
     private void enableGLStates() {
         RenderHelper.enableStandardItemLighting();GlStateManager.enableBlend();
         GlStateManager.enableAlpha();

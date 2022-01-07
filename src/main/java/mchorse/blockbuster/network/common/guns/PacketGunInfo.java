@@ -24,13 +24,6 @@ public class PacketGunInfo implements IMessage
     {
         this.tag = tag;
         this.entity = entity;
-    /*    if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-        {
-            Minecraft.getMinecraft().player.sendMessage(new TextComponentString("CLIENT timeBetweenShoot " + tag.getInteger("timeBetweenShoot")));
-        }else {
-            Minecraft.getMinecraft().player.sendMessage(new TextComponentString("SERVER timeBetweenShoot " + tag.getInteger("timeBetweenShoot")));
-    
-        }*/
     }
 
     @Override

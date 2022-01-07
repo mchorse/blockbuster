@@ -143,29 +143,42 @@ public class RenderingHandler
      * Render BB gun Hands
      *
      */
-    public static void changePlayerHand(AbstractClientPlayer player, ModelPlayer modelPlayer){
+    public static void changePlayerHand(AbstractClientPlayer player, ModelPlayer modelPlayer)
+    {
         ItemStack itemstack = player.getHeldItemMainhand();
         ModelBiped.ArmPose modelbiped$armpose = ModelBiped.ArmPose.EMPTY;
-        if (!itemstack.isEmpty()) {
-            if (itemstack.getItem() instanceof ItemGun){
-            GunProps props = NBTUtils.getGunProps(itemstack);
-            if (props.hand_bow_always){
-                modelbiped$armpose = ModelBiped.ArmPose.BOW_AND_ARROW;
-            }else {
-                if (props.hand_bow){
-                    if (KeyboardHandler.gun_shoot.isKeyDown()){
-                        modelbiped$armpose = ModelBiped.ArmPose.BOW_AND_ARROW;
+        
+        if (!itemstack.isEmpty())
+        {
+            if (itemstack.getItem() instanceof ItemGun)
+            {
+                GunProps props = NBTUtils.getGunProps(itemstack);
+                if (props.hand_bow_always)
+                {
+                    modelbiped$armpose = ModelBiped.ArmPose.BOW_AND_ARROW;
+                }
+                else
+                {
+                    if (props.hand_bow)
+                    {
+                        if (KeyboardHandler.gun_shoot.isKeyDown())
+                        {
+                            modelbiped$armpose = ModelBiped.ArmPose.BOW_AND_ARROW;
+                        }
                     }
                 }
             }
-            }
         }
 
-        if (player.getPrimaryHand() == EnumHandSide.RIGHT) {
+        if (player.getPrimaryHand() == EnumHandSide.RIGHT)
+        {
             modelPlayer.rightArmPose = modelbiped$armpose;
-        } else {
+        }
+        else
+        {
             modelPlayer.leftArmPose = modelbiped$armpose;
         }
+        
     }
     /**
      * Render particle emitters (called by ASM)

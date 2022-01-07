@@ -19,21 +19,38 @@ public class ServerHandlerZoomCommand extends ServerMessageHandler<PacketZoomCom
 {
     public static boolean onZoom = true;
     private static boolean was = false;
+    
     @Override
-    public void run (EntityPlayerMP player, PacketZoomCommand message) {
+    public void run (EntityPlayerMP player, PacketZoomCommand message)
+    {
+        if (!(player.getHeldItemMainhand().getItem() instanceof ItemGun))
+        {
+            return;
+        }
         ItemGun gun = (ItemGun) player.getHeldItemMainhand().getItem();
         Entity entity = player.world.getEntityByID(message.entity);
         GunProps props = NBTUtils.getGunProps(player.getHeldItemMainhand());
-        if (props==null){return;}
-        if (!(entity instanceof EntityPlayer)){ return; }
-        if (message.zoomOn){
+        
+        if (props==null)
+        {
+            return;
+        }
+        
+        if (!(entity instanceof EntityPlayer))
+        {
+            return;
+        }
+        
+        if (message.zoomOn)
+        {
             if (!props.zoomOnCommand.isEmpty() && onZoom && !was)
             {
                 player.getServer().commandManager.executeCommand(player, props.zoomOnCommand);
                 was = true;
-                
             }
-        }else {
+        }
+        else
+        {
             if (!props.zoomOffCommand.isEmpty() && !onZoom && was)
             {
                 player.getServer().commandManager.executeCommand(player, props.zoomOffCommand);

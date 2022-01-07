@@ -15,23 +15,35 @@ public class RenderItemTransformer extends ClassTransformer
 {
 
     @Override
-    public void process(String s, ClassNode classNode) {
-        for (MethodNode method : classNode.methods) {
+    public void process(String s, ClassNode classNode)
+    {
+        for (MethodNode method : classNode.methods)
+        {
             String methodName = this.checkName(method, "a", "(Laip;Lvp;Lbwc$b;Z)V", "renderItem", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;Z)V");
-            if (methodName != null) {
+            
+            if (methodName != null)
+            {
                 this.processMethod(methodName,method);
             }
 
             methodName = this.checkName(method,"a","(Laip;Lcfy;Lbwc$b;Z)V","renderItemModel", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/renderer/block/model/IBakedModel;Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;Z)V");
-            if (methodName != null) {
+            
+            if (methodName != null)
+            {
                 this.processRenderItemModel(methodName,method);
             }
+            
             methodName = this.checkName(method,"a","(Laip;Lbwc$b;)V","renderItem", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;)V");
-            if (methodName != null) {
+            
+            if (methodName != null)
+            {
                 this.processRenderItem(methodName,method);
             }
+            
             methodName = this.checkName(method,"a","(Laip;IILcfy;)V","renderItemModelIntoGUI", "(Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/renderer/block/model/IBakedModel;)V");
-            if (methodName != null) {
+            
+            if (methodName != null)
+            {
                 this.processRenderItemModelInGUI(methodName,method);
             }
         }
@@ -81,7 +93,8 @@ public class RenderItemTransformer extends ClassTransformer
         }
     }
 
-    public void processRenderItem(String methodName, MethodNode method){
+    public void processRenderItem(String methodName, MethodNode method)
+    {
         String transform = CoreClassTransformer.obfuscated ? "Lbwc$b;" : "Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;";
         InsnList before = new InsnList();
         before.add(new VarInsnNode(Opcodes.ALOAD, 2));
@@ -90,7 +103,8 @@ public class RenderItemTransformer extends ClassTransformer
         method.instructions.insert(before);
     }
 
-    public void processRenderItemModel(String methodName, MethodNode method){
+    public void processRenderItemModel(String methodName, MethodNode method)
+    {
         String transform = CoreClassTransformer.obfuscated ? "Lbwc$b;" : "Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;";
         InsnList before = new InsnList();
         before.add(new VarInsnNode(Opcodes.ALOAD, 3));
@@ -99,7 +113,8 @@ public class RenderItemTransformer extends ClassTransformer
         method.instructions.insert(before);
     }
 
-    public void processRenderItemModelInGUI(String methodName, MethodNode method){
+    public void processRenderItemModelInGUI(String methodName, MethodNode method)
+    {
         InsnList list = new InsnList();
         list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType", "GUI", "Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;"));
         list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/blockbuster/client/RenderingHandler", "setTSRTTransform", "(Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;)V", false));

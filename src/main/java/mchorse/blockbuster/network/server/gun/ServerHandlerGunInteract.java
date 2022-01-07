@@ -33,24 +33,39 @@ public class ServerHandlerGunInteract extends ServerMessageHandler<PacketGunInte
 {
 
     @Override
-    public void run(EntityPlayerMP entityPlayerMP, PacketGunInteract packetGunInteract) {
-        if (!entityPlayerMP.world.isRemote){
-            ItemGun gun = (ItemGun) packetGunInteract.itemStack.getItem();
+    public void run(EntityPlayerMP entityPlayerMP, PacketGunInteract packetGunInteract)
+    {
+        if (!entityPlayerMP.world.isRemote)
+        {
+            if (!(packetGunInteract.itemStack.getItem() instanceof ItemGun))
+            {
+                return;
+            }
+            ItemGun gun = (ItemGun) packetGunInteract.itemStack.getItem() ;
             Entity entity = entityPlayerMP.world.getEntityByID(packetGunInteract.id);
             GunProps props = NBTUtils.getGunProps(packetGunInteract.itemStack);
-            if (props==null){return;}
-            if (entity instanceof EntityPlayer){
-                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT) {
+            
+            if (props==null)
+            {
+                return;
+            }
+            
+            if (entity instanceof EntityPlayer)
+            {
+                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT)
+                {
                     Dispatcher.sendTo(new PacketGunInteract(packetGunInteract.itemStack, packetGunInteract.id), entityPlayerMP);
                     gun.shootIt(packetGunInteract.itemStack, (EntityPlayer) entity, entityPlayerMP.world);
                 }
             }
-            if (entity instanceof EntityActor){
-                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT ) {
+            
+            if (entity instanceof EntityActor)
+            {
+                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT )
+                {
                     Dispatcher.sendTo(new PacketGunInteract(packetGunInteract.itemStack,  packetGunInteract.id), entityPlayerMP);
                     gun.shootIt(packetGunInteract.itemStack, ((EntityActor) entity).fakePlayer, entityPlayerMP.world);
                 }
-
             }
         }
  
