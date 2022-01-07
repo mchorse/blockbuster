@@ -72,7 +72,11 @@ public class ItemGun extends Item
         {
             --props.timeBetweenShoot;
             NBTUtils.saveGunProps(stack, props.toNBT());
-            Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), player.getEntityId()));
+            if (!player.world.isRemote)
+            {
+                Dispatcher.sendTo(new PacketGunInfo(props.toNBT(), player.getEntityId()), (EntityPlayerMP) player);
+                Dispatcher.sendToTracked(player,new PacketGunInfo(props.toNBT(), player.getEntityId()));
+            }
        
             if (props.timeBetweenShoot <= 0)
             {
@@ -80,7 +84,11 @@ public class ItemGun extends Item
             }
             
             NBTUtils.saveGunProps(stack, props.toNBT());
-            Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), player.getEntityId()));
+            if (!player.world.isRemote)
+            {
+                Dispatcher.sendTo(new PacketGunInfo(props.toNBT(), player.getEntityId()), (EntityPlayerMP) player);
+                Dispatcher.sendToTracked(player,new PacketGunInfo(props.toNBT(), player.getEntityId()));
+            }
         }
     }
     
@@ -93,7 +101,7 @@ public class ItemGun extends Item
         }
         props.timeBetweenShoot = props.inputTimeBetweenShoot;
         NBTUtils.saveGunProps(stack,props.toNBT());
-        Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), player.getEntityId()));
+
     }
     
     public static void minusReload(ItemStack stack, EntityPlayer player)
@@ -113,7 +121,6 @@ public class ItemGun extends Item
                 props.innerAmmo = props.inputAmmo;
             }
             NBTUtils.saveGunProps(stack,props.toNBT());
-            Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), player.getEntityId() ));
         }
         
     }
@@ -244,8 +251,7 @@ public class ItemGun extends Item
         if (player instanceof EntityPlayerMP) {
             Dispatcher.sendTo(new PacketGunInfo(newProps.toNBT(), entity.getEntityId()), (EntityPlayerMP) player);
         }
-        Dispatcher.sendToTracked(entity, new PacketGunInfo(newProps.toNBT(), entity.getEntityId()));
-        Dispatcher.sendToServer(new PacketGunInfo(newProps.toNBT(), entity.getEntityId()));
+
         
         return true;
     }

@@ -7,10 +7,13 @@ import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.blockbuster.network.common.guns.PacketGunReloading;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.mclib.network.ServerMessageHandler;
+import mchorse.mclib.utils.OpHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
  * \* User: Evanechecssss
@@ -47,18 +50,34 @@ public class ServerHandlerGunReloading  extends ServerMessageHandler<PacketGunRe
                         if (gun.consumeAmmoStack(player,ammo))
                         {
                             props.setGUNState(ItemGun.GunState.RELOADING);
-                            Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entityPlayerMP.getEntityId()));
+                            update((EntityPlayerMP) player,props.toNBT());
                             ammo(packetGunReloading.itemStack,props,player);
                         }
                     }
                     else
                     {
                         props.setGUNState(ItemGun.GunState.RELOADING);
-                        Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entityPlayerMP.getEntityId()));
+                        update((EntityPlayerMP) player,props.toNBT());
                         ammo(packetGunReloading.itemStack,props,player);
                     }
                 }
             }
+        }
+    }
+    private void update(EntityPlayerMP player, NBTTagCompound compound)
+    {
+        if (!OpHelper.isPlayerOp(player))
+        {
+            return;
+        }
+    
+        ItemStack stack = player.getHeldItemMainhand();
+    
+        if (NBTUtils.saveGunProps(stack, compound))
+        {
+            IMessage packet = new PacketGunInfo(compound, player.getEntityId());
+            Dispatcher.sendTo(packet, player);
+            Dispatcher.sendToTracked(player, packet);
         }
     }
     private void ammo(ItemStack stack,GunProps props, EntityPlayer entityPlayer)
@@ -69,7 +88,6 @@ public class ServerHandlerGunReloading  extends ServerMessageHandler<PacketGunRe
         {
             entityPlayer.getServer().commandManager.executeCommand(entityPlayer, props.reloadCommand);
         }
-        Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entityPlayer.getEntityId()));
-        Dispatcher.sendTo(new PacketGunReloading(stack,entityPlayer.getEntityId()), (EntityPlayerMP) entityPlayer);
+        update((EntityPlayerMP) entityPlayer,props.toNBT());
     }
 }
