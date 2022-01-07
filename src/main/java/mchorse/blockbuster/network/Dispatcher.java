@@ -52,6 +52,10 @@ import mchorse.blockbuster.network.common.structure.PacketStructureList;
 import mchorse.blockbuster.network.common.structure.PacketStructureListRequest;
 import mchorse.blockbuster.network.common.structure.PacketStructureRequest;
 import mchorse.blockbuster.network.server.*;
+import mchorse.blockbuster.network.server.gun.ServerHandlerGunInfo;
+import mchorse.blockbuster.network.server.gun.ServerHandlerGunInteract;
+import mchorse.blockbuster.network.server.gun.ServerHandlerGunReloading;
+import mchorse.blockbuster.network.server.gun.ServerHandlerZoomCommand;
 import mchorse.blockbuster.network.server.recording.ServerHandlerFramesChunk;
 import mchorse.blockbuster.network.server.recording.ServerHandlerPlayback;
 import mchorse.blockbuster.network.server.recording.ServerHandlerRequestFrames;
@@ -141,7 +145,7 @@ public class Dispatcher
 
             /* Guns */
             register(PacketGunInfo.class, ServerHandlerGunInfo.class, Side.SERVER);
-            
+            register(PacketZoomCommand.class, ServerHandlerZoomCommand.class, Side.SERVER);
             register(PacketGunInfo.class, ClientHandlerGunInfo.class, Side.CLIENT);
             register(PacketGunShot.class, ClientHandlerGunShot.class, Side.CLIENT);
             register(PacketGunProjectile.class, ClientHandlerGunProjectile.class, Side.CLIENT);

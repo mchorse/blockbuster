@@ -1,4 +1,4 @@
-package mchorse.blockbuster.network.server;
+package mchorse.blockbuster.network.server.gun;
 
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.GunProps;

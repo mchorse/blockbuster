@@ -84,7 +84,7 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement fadeIn;
     public GuiTrackpadElement fadeOut;
     /*
-    Overlay options
+    AIM options
     */
     public GuiElement aimOptions;
     public GuiTrackpadElement zoom;
@@ -100,6 +100,9 @@ public class GuiGun extends GuiBase
     public GuiToggleElement recoilSimple;
     public GuiToggleElement resetTimerButtonRel;
     public GuiToggleElement enableCustomGuiMorph;
+    public GuiTextElement reloadCommand;
+    public GuiTextElement zoomOnCommand;
+    public GuiTextElement zoomOffCommand;
     public GuiToggleElement needToBeReloaded;
     public GuiNestedEdit pickHands;
     public GuiNestedEdit pickGuiMorph;
@@ -274,6 +277,9 @@ public class GuiGun extends GuiBase
         this.enableCustomGuiMorph = new GuiToggleElement(mc,IKey.str(""),false,(b) -> this.props.enableCustomGuiMorph = b.isToggled());
         this.needToBeReloaded = new GuiToggleElement(mc, IKey.str(""),false, (b) -> this.props.needToBeReloaded = b.isToggled());
         this.hand_bow_always = new GuiToggleElement(mc, IKey.str(""), false, (b) -> this.props.hand_bow_always = b.isToggled());
+        this.reloadCommand = new GuiTextElement(mc, 10000, (value) -> this.props.reloadCommand = value);
+        this.zoomOnCommand= new GuiTextElement(mc, 10000, (value) -> this.props.zoomOnCommand = value);
+        this.zoomOffCommand = new GuiTextElement(mc, 10000, (value) -> this.props.zoomOffCommand = value);
         this.pickHands = new GuiNestedEdit(mc, (editing) -> this.openMorphs(5, editing));
         this.pickGuiMorph= new GuiNestedEdit(mc, (editing) -> this.openMorphs(7, editing));
         this.pickMorphOverlay = new GuiNestedEdit(mc, (editing) -> this.openMorphs(6, editing));
@@ -298,9 +304,9 @@ public class GuiGun extends GuiBase
         this.srcShootX.limit(-10,10,false);
         this.srcShootY.limit(-10,10,false);
         this.srcShootZ.limit(-10,10,false);
-        this.inputTimeBetweenShoot.limit(0, Integer.MAX_VALUE);
+        this.inputTimeBetweenShoot.limit(0,Math.round(Long.MAX_VALUE));
         this.inputAmmo.limit(0,Integer.MAX_VALUE);
-        this.inputReloadingTime.limit(0,Math.round(Long.MAX_VALUE/2F));
+        this.inputReloadingTime.limit(0,Math.round(Long.MAX_VALUE));
         this.recoilYMin.limit(-200,200,false);
         this.recoilYMax.limit(-200,200,false);
 
@@ -319,6 +325,9 @@ public class GuiGun extends GuiBase
 
         /* GUI*/
         this.pickGuiMorph.flex().relative(area).w(100).x(0.07F, -50).y(0.5F, 0);
+        this.reloadCommand.flex().relative(area).set(10, 0, 0, 20).w(0.3f, 0).y(0.5F, 0).x(0.3F,0);
+        this.zoomOnCommand.flex().relative(area).set(10, 0, 0, 20).w(0.3f, 0).y(0.4F, 0).x(0.3F,0);
+        this.zoomOffCommand.flex().relative(area).set(10, 0, 0, 20).w(0.3f, 0).y(0.6F, 0).x(0.3F,0);
 
         /* HANDS*/
         this.pickHands.flex().relative(area).w(100).x(0.07F, -50).y(0.8F, 0);
@@ -343,7 +352,7 @@ public class GuiGun extends GuiBase
         this.resetTimerButtonRel.flex().relative(recoilSimple.resizer()).w(100).x(0,0).y(1F, 0);
         this.acceptPressed.flex().relative(resetTimerButtonRel.resizer()).w(100).x(0,0).y(2F, 0);
         
-        this.aimOptions.add(acceptPressed, resetTimerButtonRel,recoilXMin, recoilSimple,recoilXMax, recoilYMin, recoilYMax,srcLabel,srcShootZ,srcShootY,srcShootX,hand_bow,hand_bow_always,enableCustomGuiMorph,pickAimMorph,hideAimOnZoom,inputTimeBetweenShoot,inputReloadingTime,inputAmmo,needToBeReloaded,pickHands,pickGuiMorph,pickReloadMorph,pickMorphOverlay,hideHandOnZoom,enableOverlay,zoom);
+        this.aimOptions.add(reloadCommand, zoomOnCommand, zoomOffCommand,acceptPressed, resetTimerButtonRel,recoilXMin, recoilSimple,recoilXMax, recoilYMin, recoilYMax,srcLabel,srcShootZ,srcShootY,srcShootX,hand_bow,hand_bow_always,enableCustomGuiMorph,pickAimMorph,hideAimOnZoom,inputTimeBetweenShoot,inputReloadingTime,inputAmmo,needToBeReloaded,pickHands,pickGuiMorph,pickReloadMorph,pickMorphOverlay,hideHandOnZoom,enableOverlay,zoom);
 
 
 
@@ -464,10 +473,13 @@ public class GuiGun extends GuiBase
         this.launch.toggled(this.props.launch);
         this.useTarget.toggled(this.props.useTarget);
         this.ammoStack.setStack(this.props.ammoStack);
-
+        this.reloadCommand.setText(this.props.reloadCommand);
+        this.zoomOnCommand.setText(this.props.zoomOnCommand);
+        this.zoomOffCommand.setText(this.props.zoomOffCommand);
         /* Projectile properties */
         this.pickProjectile.setMorph(this.props.projectileMorph);
         this.tickCommand.setText(this.props.tickCommand);
+
         this.ticking.setValue(this.props.ticking);
         this.lifeSpan.setValue(this.props.lifeSpan);
         this.yaw.toggled(this.props.yaw);
@@ -747,8 +759,12 @@ public class GuiGun extends GuiBase
 
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.pick_overlay"), this.pickMorphOverlay.area.mx(), this.pickMorphOverlay.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.pick_gui"), this.pickGuiMorph.area.mx(), this.pickGuiMorph.area.y - 12, 0xffffff);
-
-
+            
+            this.fontRenderer.drawStringWithShadow(I18n.format("blockbuster.gui.gun.reload_command"), this.reloadCommand.area.x, this.reloadCommand.area.y - 12, 0xffffff);
+            this.fontRenderer.drawStringWithShadow(I18n.format("blockbuster.gui.gun.zoom_on_command"), this.zoomOnCommand.area.x, this.zoomOnCommand.area.y - 12, 0xffffff);
+            this.fontRenderer.drawStringWithShadow(I18n.format("blockbuster.gui.gun.zoom_off_command"), this.zoomOffCommand.area.x, this.zoomOffCommand.area.y - 12, 0xffffff);
+    
+    
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.zoom"), this.zoom.area.mx(), this.zoom.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.src_shoot_x"), this.srcShootX.area.mx(), this.srcShootX.area.y - 12, 0xffffff);
             this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.src_shoot_y"), this.srcShootY.area.mx(), this.srcShootY.area.y - 12, 0xffffff);

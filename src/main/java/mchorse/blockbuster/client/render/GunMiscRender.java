@@ -8,6 +8,8 @@ import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.guns.PacketGunInteract;
+import mchorse.blockbuster.network.common.guns.PacketZoomCommand;
+import mchorse.blockbuster.network.server.gun.ServerHandlerZoomCommand;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.mclib.events.RenderOverlayEvent;
 import mchorse.mclib.math.functions.limit.Min;
@@ -70,10 +72,13 @@ public class GunMiscRender {
             ItemStack heldItem = entityPlayer.getHeldItem(EnumHand.MAIN_HAND);
             GunProps props =  NBTUtils.getGunProps(heldItem);
             if ( heldItem!= null && heldItem.getItem().equals(Blockbuster.gunItem) && KeyboardHandler.zoom.isKeyDown()) {
-
+                ServerHandlerZoomCommand.onZoom = true;
                 ZOOM_TIME = Math.min(ZOOM_TIME + (event.renderTickTime * 0.1f), 1);
+                Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(),true));
             } else {
+                ServerHandlerZoomCommand.onZoom = false;
                 ZOOM_TIME = Math.max(ZOOM_TIME - (event.renderTickTime * 0.2f), 0);
+                Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(),false));
             }
 
             if (ZOOM_TIME == 0) {

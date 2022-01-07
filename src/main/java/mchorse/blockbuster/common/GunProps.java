@@ -51,6 +51,9 @@ public class GunProps
     public boolean launch;
     public boolean useTarget;
     public ItemStack ammoStack = ItemStack.EMPTY;
+    public String reloadCommand;
+    public String zoomOnCommand;
+    public String zoomOffCommand;
     public float zoom;
     public boolean hideHandOnZoom;
     public boolean hideAimOnZoom;
@@ -458,6 +461,9 @@ public class GunProps
         /* Projectile properties */
         this.projectileMorph = null;
         this.tickCommand = "";
+        this.zoomOffCommand = "";
+        this.zoomOnCommand = "";
+        this.reloadCommand = "";
         this.ticking = 0;
         this.lifeSpan = 200;
         this.yaw = true;
@@ -555,6 +561,11 @@ public class GunProps
         /* Projectile properties */
         this.projectileMorph = this.create(tag, "Projectile");
         if (tag.hasKey("TickCommand")) this.tickCommand = tag.getString("TickCommand");
+        if (tag.hasKey("reloadCommand")) this.reloadCommand = tag.getString("reloadCommand");
+        if (tag.hasKey("zoomOnCommand")) this.zoomOnCommand = tag.getString("zoomOnCommand");
+        if (tag.hasKey("zoomOffCommand")) this.zoomOffCommand = tag.getString("zoomOffCommand");
+
+        
         if (tag.hasKey("Ticking")) this.ticking = tag.getInteger("Ticking");
         if (tag.hasKey("innerAmmo")) this.innerAmmo = tag.getInteger("innerAmmo");
         if (tag.hasKey("inputReloadingTime")) this.inputReloadingTime = tag.getInteger("inputReloadingTime");
@@ -690,6 +701,11 @@ public class GunProps
         /* Projectile properties */
         if (this.projectileMorph != null) tag.setTag("Projectile", this.to(this.projectileMorph));
         if (!this.tickCommand.isEmpty()) tag.setString("TickCommand", this.tickCommand);
+    
+        if (!this.reloadCommand.isEmpty()) tag.setString("reloadCommand", this.reloadCommand);
+        if (!this.zoomOnCommand.isEmpty()) tag.setString("zoomOnCommand", this.zoomOnCommand);
+        if (!this.zoomOffCommand.isEmpty()) tag.setString("zoomOffCommand", this.zoomOffCommand);
+        
         if (this.ticking != 0) tag.setInteger("Ticking", this.ticking);
         if (this.inputAmmo != 1) tag.setInteger("inputAmmo", this.inputAmmo);
         tag.setInteger("innerAmmo", this.innerAmmo);
