@@ -300,7 +300,7 @@ public class GuiGun extends GuiBase
         this.srcShootZ.limit(-10,10,false);
         this.inputTimeBetweenShoot.limit(0, Integer.MAX_VALUE);
         this.inputAmmo.limit(0,Integer.MAX_VALUE);
-        this.inputReloadingTime.limit(0);
+        this.inputReloadingTime.limit(0,Math.round(Long.MAX_VALUE/2F));
         this.recoilYMin.limit(-200,200,false);
         this.recoilYMax.limit(-200,200,false);
 

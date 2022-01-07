@@ -142,8 +142,6 @@ public class Dispatcher
             /* Guns */
             register(PacketGunInfo.class, ServerHandlerGunInfo.class, Side.SERVER);
             
-            register(PacketGunInfoStack.class, ServerHandlerGunInfoStack.class, Side.SERVER);
-            register(PacketGunInfoStack.class, ClientHandlerGunInfoStack.class, Side.CLIENT);
             register(PacketGunInfo.class, ClientHandlerGunInfo.class, Side.CLIENT);
             register(PacketGunShot.class, ClientHandlerGunShot.class, Side.CLIENT);
             register(PacketGunProjectile.class, ClientHandlerGunProjectile.class, Side.CLIENT);

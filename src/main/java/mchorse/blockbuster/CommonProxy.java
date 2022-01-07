@@ -23,6 +23,7 @@ import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.events.GunShootHandler;
+import mchorse.blockbuster.events.PlayerTickHandler;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.recording.capturing.ActionHandler;
@@ -185,6 +186,8 @@ public class CommonProxy
         MinecraftForge.EVENT_BUS.register(new GunShootHandler());
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
         MinecraftForge.EVENT_BUS.register(new MetamorphHandler());
+        MinecraftForge.EVENT_BUS.register(new PlayerTickHandler());
+        
     }
 
     /**

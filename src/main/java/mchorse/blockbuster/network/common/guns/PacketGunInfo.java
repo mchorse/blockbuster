@@ -5,8 +5,10 @@ import mchorse.mclib.utils.NBTUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class PacketGunInfo implements IMessage
 {
@@ -22,7 +24,13 @@ public class PacketGunInfo implements IMessage
     {
         this.tag = tag;
         this.entity = entity;
-        Minecraft.getMinecraft().player.sendMessage(new TextComponentString("inner" + tag.getInteger("innerAmmo")));
+    /*    if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+        {
+            Minecraft.getMinecraft().player.sendMessage(new TextComponentString("CLIENT timeBetweenShoot " + tag.getInteger("timeBetweenShoot")));
+        }else {
+            Minecraft.getMinecraft().player.sendMessage(new TextComponentString("SERVER timeBetweenShoot " + tag.getInteger("timeBetweenShoot")));
+    
+        }*/
     }
 
     @Override

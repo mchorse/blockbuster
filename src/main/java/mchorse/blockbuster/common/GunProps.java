@@ -45,7 +45,7 @@ public class GunProps
     public boolean enableCustomGuiMorph;
     public boolean needToBeReloaded;
     public int projectiles;
-    public int reloadTick;
+    public long reloadTick;
     public float scatterX;
     public float scatterY;
     public boolean launch;
@@ -54,9 +54,9 @@ public class GunProps
     public float zoom;
     public boolean hideHandOnZoom;
     public boolean hideAimOnZoom;
-    public int inputReloadingTime;
-    public int timeBetweenShoot;
-    public int inputTimeBetweenShoot;
+    public long inputReloadingTime;
+    public long timeBetweenShoot;
+    public long inputTimeBetweenShoot;
     public int innerAmmo;
     public int inputAmmo;
     public boolean hand_bow;
@@ -558,8 +558,8 @@ public class GunProps
         if (tag.hasKey("Ticking")) this.ticking = tag.getInteger("Ticking");
         if (tag.hasKey("innerAmmo")) this.innerAmmo = tag.getInteger("innerAmmo");
         if (tag.hasKey("inputReloadingTime")) this.inputReloadingTime = tag.getInteger("inputReloadingTime");
-        if (tag.hasKey("timeBetweenShoot")) this.timeBetweenShoot = tag.getInteger("timeBetweenShoot");
-        if (tag.hasKey("inputTimeBetweenShoot")) this.inputTimeBetweenShoot = tag.getInteger("inputTimeBetweenShoot");
+        if (tag.hasKey("timeBetweenShoot")) this.timeBetweenShoot = tag.getLong("timeBetweenShoot");
+        if (tag.hasKey("inputTimeBetweenShoot")) this.inputTimeBetweenShoot = tag.getLong("inputTimeBetweenShoot");
 
 
 
@@ -668,7 +668,7 @@ public class GunProps
         if (this.delay != 0) tag.setInteger("Delay", this.delay);
 
         if (this.projectiles != 1) tag.setInteger("Projectiles", this.projectiles);
-        if (this.reloadTick !=0) tag.setInteger("reloadTick",this.reloadTick);
+        if (this.reloadTick !=0) tag.setLong("reloadTick",this.reloadTick);
 
         if (this.scatterX != 0F || this.scatterY != 0F)
         {
@@ -694,9 +694,9 @@ public class GunProps
         if (this.inputAmmo != 1) tag.setInteger("inputAmmo", this.inputAmmo);
         tag.setInteger("innerAmmo", this.innerAmmo);
 
-        if (this.inputReloadingTime != 0) tag.setInteger("inputReloadingTime", this.inputReloadingTime);
-         tag.setInteger("timeBetweenShoot", this.timeBetweenShoot);
-        if (this.inputTimeBetweenShoot != 0) tag.setInteger("inputTimeBetweenShoot", this.inputTimeBetweenShoot);
+        if (this.inputReloadingTime != 0) tag.setLong("inputReloadingTime", this.inputReloadingTime);
+         tag.setLong("timeBetweenShoot", this.timeBetweenShoot);
+        if (this.inputTimeBetweenShoot != 0) tag.setLong("inputTimeBetweenShoot", this.inputTimeBetweenShoot);
 
 
 
