@@ -33,9 +33,12 @@ public class GunShootHandler
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onTick(TickEvent.ClientTickEvent event)
     {
-        if (event.type == TickEvent.Type.CLIENT) {
-            if (event.phase== TickEvent.Phase.END){
-            if (event.side.isClient()) {
+        if (event.type == TickEvent.Type.CLIENT)
+        {
+            if (event.phase== TickEvent.Phase.END)
+            {
+            if (event.side.isClient())
+            {
                 handlerShootKeyPress();
                 handlerShootKeyDown();
                 handlerReloading();
@@ -49,7 +52,10 @@ public class GunShootHandler
     private void handlerShootKeyPress()
     {
         Minecraft mc = Minecraft.getMinecraft();
-        if (mc.player==null){return;}
+        if (mc.player==null)
+        {
+            return;
+        }
         ItemStack stack = mc.player.getHeldItemMainhand();
         if (stack.getItem() instanceof ItemGun)
         {
@@ -82,18 +88,21 @@ public class GunShootHandler
     private void handlerReloading()
     {
         Minecraft mc = Minecraft.getMinecraft();
-        if (mc.player==null){return;}
+        if (mc.player==null)
+        {
+            return;
+        }
         ItemStack stack = mc.player.getHeldItemMainhand();
         if (stack.getItem() instanceof ItemGun)
         {
-            if (gun_reload.isKeyDown()){
+            if (gun_reload.isKeyDown())
+            {
                 if (canBeReload)
                 {
                 ItemGun gun = (ItemGun) stack.getItem();
                 Dispatcher.sendToServer(new PacketGunReloading(stack, mc.player.getEntityId()));
                 canBeReload = false;
                 }
-                
             }
             else
             {
@@ -108,8 +117,14 @@ public class GunShootHandler
     private void handlerShootKeyDown()
     {
         Minecraft mc = Minecraft.getMinecraft();
-        if (mc.player==null){return;}
+        
+        if (mc.player==null)
+        {
+            return;
+        }
+        
         ItemStack stack = mc.player.getHeldItemMainhand();
+        
         if (stack.getItem() instanceof ItemGun)
         {
             GunProps props = NBTUtils.getGunProps(stack);
@@ -123,14 +138,16 @@ public class GunShootHandler
                     return;
                 }
                 
-                if (props.timeBetweenShoot==0){
+                if (props.timeBetweenShoot==0)
+                {
                     canBeShootDown = true;
                 }
                
             }
             else
             {
-                if (!props.resetTimerButtonRel) {
+                if (!props.resetTimerButtonRel)
+                {
                     canBeShootDown = true;
                 }
             }

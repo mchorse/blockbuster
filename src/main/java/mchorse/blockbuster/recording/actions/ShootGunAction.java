@@ -33,21 +33,30 @@ public class ShootGunAction extends Action{
     {
         Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();
         EntityPlayer player = actor instanceof EntityPlayer ? (EntityPlayer) actor : ((EntityActor) actor).fakePlayer;
-        if (frame == null) return;
-        if (player!=null){
+        if (frame == null)
+        {
+            return;
+        }
+        if (player!=null)
+        {
             ItemGun gun = (ItemGun) itemStack.getItem();
             GunProps props = NBTUtils.getGunProps(itemStack);
-            if (props!=null){
-             //   Dispatcher.sendToServer(new PacketGunInteract(itemStack,actor.getEntityId()));
-            }else {Blockbuster.LOGGER.error("Null gun props");}
+            if (props!=null)
+            {
+                Dispatcher.sendToServer(new PacketGunInteract(itemStack,actor.getEntityId()));
+            }else
+            {
+                Blockbuster.LOGGER.error("Null gun props");
+            }
         }
 
     }
 
     @Override
-    public void fromBuf(ByteBuf buf) {
+    public void fromBuf(ByteBuf buf)
+    {
         super.fromBuf(buf);
-this.itemStack = ByteBufUtils.readItemStack(buf);
+        this.itemStack = ByteBufUtils.readItemStack(buf);
     }
 
     @Override

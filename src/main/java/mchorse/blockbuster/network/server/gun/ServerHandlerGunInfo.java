@@ -18,13 +18,12 @@ public class ServerHandlerGunInfo extends ServerMessageHandler<PacketGunInfo>
         {
             return;
         }
-
+        
         ItemStack stack = player.getHeldItemMainhand();
 
         if (NBTUtils.saveGunProps(stack, message.tag))
         {
             IMessage packet = new PacketGunInfo(message.tag, player.getEntityId());
-
             Dispatcher.sendTo(packet, player);
             Dispatcher.sendToTracked(player, packet);
         }

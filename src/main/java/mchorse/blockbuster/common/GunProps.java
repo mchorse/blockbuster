@@ -795,7 +795,8 @@ public class GunProps
         return tag;
     }
 
-    public void setGUNState(ItemGun.GunState state){
+    public void setGUNState(ItemGun.GunState state)
+    {
         switch (state){
             case UNDEF:
                 this.state = -1;
@@ -814,8 +815,11 @@ public class GunProps
         }
     }
 
-    public ItemGun.GunState getGUNState(){
-     switch (this.state){
+    public ItemGun.GunState getGUNState()
+    {
+     
+     switch (this.state)
+     {
          case 0:
              return ItemGun.GunState.READY_TO_SHOOT;
          case 1:
@@ -825,6 +829,7 @@ public class GunProps
          default:
              return ItemGun.GunState.UNDEF;
      }
+     
     }
 
 }

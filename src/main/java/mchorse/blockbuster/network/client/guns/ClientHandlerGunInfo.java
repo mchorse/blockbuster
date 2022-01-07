@@ -22,7 +22,7 @@ public class ClientHandlerGunInfo extends ClientMessageHandler<PacketGunInfo>
         {
             EntityLivingBase base = (EntityLivingBase) entity;
             ItemStack stack = base.getHeldItemMainhand();
-
+            
             if (!stack.isEmpty())
             {
                 NBTUtils.saveGunProps(stack, message.tag);

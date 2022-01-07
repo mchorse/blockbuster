@@ -87,29 +87,34 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
                         && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND
                         && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND
                         && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIXED
-                    && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GROUND){
-                    if (!(KeyboardHandler.zoom.isKeyDown()  && model.props.hideHandOnZoom)){
+                    && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GROUND)
+            {
+                if (!(KeyboardHandler.zoom.isKeyDown()  && model.props.hideHandOnZoom))
+                {
                     model.props.renderHands(RenderingHandler.getLastItemHolder(), partialTicks);
-                    }
-                    if (model.props.enableOverlay && KeyboardHandler.zoom.isKeyDown()){
+                }
+                if (model.props.enableOverlay && KeyboardHandler.zoom.isKeyDown())
+                {
                         model.props.renderOverlay(RenderingHandler.getLastItemHolder(), partialTicks);
-                    }
-
+                }
             }
-            if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI){
-                if (!(KeyboardHandler.zoom.isKeyDown() && model.props.hideHandOnZoom)){
+            if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI)
+            {
+                if (!(KeyboardHandler.zoom.isKeyDown() && model.props.hideHandOnZoom))
+                {
                     model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
             }
-            if (RenderingHandler.itemTransformType == ItemCameraTransforms.TransformType.GUI){
-                if (model.props.enableCustomGuiMorph && model.props.guiMorph!=null){
+            if (RenderingHandler.itemTransformType == ItemCameraTransforms.TransformType.GUI)
+            {
+                if (model.props.enableCustomGuiMorph && model.props.guiMorph!=null)
+                {
                     model.props.renderGUIMorph(RenderingHandler.getLastItemHolder(), partialTicks);
                 }else {
                     model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
             }
-
-
+            
             this.reset();
         }
     }

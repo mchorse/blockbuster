@@ -14,20 +14,22 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
  * \* https://evanechecssss.github.io
  * \
  */
-public class PlayerTickHandler {
+public class PlayerTickHandler
+{
     
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void playerTick(TickEvent.PlayerTickEvent event)
     {
         EntityPlayer player = event.player;
+        
         if (player.getHeldItemMainhand().getItem() instanceof ItemGun)
         {
             doGunStaff(player.getHeldItemMainhand(), player);
         }
     }
+    
     private void doGunStaff(ItemStack stack, EntityPlayer player)
     {
-        
         ItemGun.minusReload(stack, player);
         ItemGun.minusTime(stack, player);
         ItemGun.checkGunState(stack,player);

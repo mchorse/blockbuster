@@ -17,29 +17,42 @@ import net.minecraft.item.ItemStack;
  * \* https://evanechecssss.github.io
  * \
  */
-public class ServerHandlerGunReloading  extends ServerMessageHandler<PacketGunReloading> {
+public class ServerHandlerGunReloading  extends ServerMessageHandler<PacketGunReloading>
+{
     
     @Override
-    public void run(EntityPlayerMP entityPlayerMP, PacketGunReloading packetGunReloading) {
+    public void run(EntityPlayerMP entityPlayerMP, PacketGunReloading packetGunReloading)
+    {
         if (!entityPlayerMP.world.isRemote){
+            if (!(packetGunReloading.itemStack.getItem() instanceof ItemGun))
+            {
+                return;
+            }
             ItemGun gun = (ItemGun) packetGunReloading.itemStack.getItem();
             Entity entity = entityPlayerMP.world.getEntityByID(packetGunReloading.id);
             GunProps props = NBTUtils.getGunProps(packetGunReloading.itemStack);
-            if (props==null){
+            if (props==null)
+            {
                 return;
             }
-            if (entity instanceof EntityPlayer){
+            
+            if (entity instanceof EntityPlayer)
+            {
                 EntityPlayer player = (EntityPlayer) entity;
-                if (props.getGUNState()== ItemGun.GunState.NEED_TO_BE_RELOAD) {
+                if (props.getGUNState()== ItemGun.GunState.NEED_TO_BE_RELOAD)
+                {
                     if (!player.capabilities.isCreativeMode && !props.ammoStack.isEmpty())
                     {
                         ItemStack ammo = props.ammoStack;
-                        if (gun.consumeAmmoStack(player,ammo)){
+                        if (gun.consumeAmmoStack(player,ammo))
+                        {
                             props.setGUNState(ItemGun.GunState.RELOADING);
                             Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entityPlayerMP.getEntityId()));
                             ammo(packetGunReloading.itemStack,props,player);
                         }
-                    }else {
+                    }
+                    else
+                    {
                         props.setGUNState(ItemGun.GunState.RELOADING);
                         Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entityPlayerMP.getEntityId()));
                         ammo(packetGunReloading.itemStack,props,player);
@@ -48,10 +61,12 @@ public class ServerHandlerGunReloading  extends ServerMessageHandler<PacketGunRe
             }
         }
     }
-    private void ammo(ItemStack stack,GunProps props, EntityPlayer entityPlayer){
+    private void ammo(ItemStack stack,GunProps props, EntityPlayer entityPlayer)
+    {
         props.setGUNState(ItemGun.GunState.RELOADING);
         props.reloadTick = props.inputReloadingTime;
-        if (!props.reloadCommand.isEmpty()) {
+        if (!props.reloadCommand.isEmpty())
+        {
             entityPlayer.getServer().commandManager.executeCommand(entityPlayer, props.reloadCommand);
         }
         Dispatcher.sendToServer(new PacketGunInfo(props.toNBT(), entityPlayer.getEntityId()));
