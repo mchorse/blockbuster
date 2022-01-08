@@ -710,6 +710,7 @@ blockbuster.gui:
         recoil_x_max: recoil x max
         recoil_y_min: recoil y min
         recoil_y_max: recoil y max
+        aim_options: Pro options
 
         impact_morph: Impact morph
         impact_delay: Impact delay
