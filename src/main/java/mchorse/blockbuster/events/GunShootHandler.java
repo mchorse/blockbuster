@@ -18,6 +18,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Date;
+
 import static mchorse.blockbuster.client.KeyboardHandler.gun_reload;
 import static mchorse.blockbuster.client.KeyboardHandler.gun_shoot;
 
@@ -134,6 +136,7 @@ public class GunShootHandler
                 {
                     ItemGun gun = (ItemGun) stack.getItem();
                     Dispatcher.sendToServer(new PacketGunInteract(stack, mc.player.getEntityId()));
+                
                     canBeShootDown = false;
                     return;
                 }

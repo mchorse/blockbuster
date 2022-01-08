@@ -15,6 +15,7 @@ import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.mclib.utils.Interpolation;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,8 +25,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
+import java.util.Date;
 import java.util.List;
 
 public class ItemGun extends Item
@@ -212,8 +215,8 @@ public class ItemGun extends Item
                 float yaw = player.rotationYaw + (float) ((Math.random() - 0.5) * props.scatterX);
                 double originalX = player.posX;
                 double originalZ = player.posZ;
-                double[] coordsAfterYRotation = rotate(new double[]{originalX,originalZ},new double[]{originalX+props.srcShootX,originalZ+props.srcShootZ},player.getPitchYaw().y,true);
-                double[] coordsAfterXRotation = rotateX(new double[]{player.posY + player.getEyeHeight(),coordsAfterYRotation[1]},new double[]{player.posY + player.getEyeHeight() + props.srcShootY,coordsAfterYRotation[1]},player.getPitchYaw().x, player.getPitchYaw().x > 0);
+                double[] coordsAfterYRotation = rotate(new double[]{originalX,originalZ},new double[]{originalX+props.srcShootX,originalZ+props.srcShootZ},player.rotationYaw,true);
+                double[] coordsAfterXRotation = rotateX(new double[]{player.posY + player.getEyeHeight(),coordsAfterYRotation[1]},new double[]{player.posY + player.getEyeHeight() + props.srcShootY,coordsAfterYRotation[1]},player.rotationPitch, player.rotationPitch > 0);
 
                 projectile.setPosition(coordsAfterYRotation[0],coordsAfterXRotation[0],  coordsAfterXRotation[1]);
                 projectile.shoot(player, pitch, yaw, 0, props.speed, 0);
@@ -221,7 +224,10 @@ public class ItemGun extends Item
 
                 if (props.projectiles > 0)
                 {
-                    world.spawnEntity(projectile);
+                    if (!world.isRemote)
+                    {
+                        world.spawnEntity(projectile);
+                    }
                 }
 
                 last = projectile;

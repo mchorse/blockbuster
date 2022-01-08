@@ -22,6 +22,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentString;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,8 +53,9 @@ public class ServerHandlerGunInteract extends ServerMessageHandler<PacketGunInte
             
             if (entity instanceof EntityPlayer)
             {
-                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT)
+                if (props.getGUNState()== ItemGun.GunState.READY_TO_SHOOT && props.timeBetweenShoot == 0)
                 {
+        
                     Dispatcher.sendTo(new PacketGunInteract(packetGunInteract.itemStack, packetGunInteract.id), entityPlayerMP);
                     gun.shootIt(packetGunInteract.itemStack, (EntityPlayer) entity, entityPlayerMP.world);
                 }

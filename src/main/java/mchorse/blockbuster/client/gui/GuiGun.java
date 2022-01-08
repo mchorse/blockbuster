@@ -169,7 +169,7 @@ public class GuiGun extends GuiBase
         this.panel.setPanel(this.gunOptions);
         this.panel.registerPanel(this.gunOptions, IKey.lang("blockbuster.gui.gun.fire_props"), Icons.GEAR);
         this.panel.registerPanel(this.projectileOptions, IKey.lang("blockbuster.gui.gun.projectile_props"), BBIcons.BULLET);
-        this.panel.registerPanel(this.aimOptions, IKey.lang("blockbuster.gui.gun.aimOptions"), Icons.CURSOR);
+        this.panel.registerPanel(this.aimOptions, IKey.lang("blockbuster.gui.gun.aim_options"), Icons.CURSOR);
         this.panel.registerPanel(this.impactOptions, IKey.lang("blockbuster.gui.gun.impact_props"), Icons.DOWNLOAD);
         this.panel.registerPanel(this.transformOptions, IKey.lang("blockbuster.gui.gun.transforms"), Icons.POSE);
 
