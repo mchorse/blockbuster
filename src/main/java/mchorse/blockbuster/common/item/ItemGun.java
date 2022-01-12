@@ -15,17 +15,16 @@ import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.mclib.utils.Interpolation;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import java.util.Date;
@@ -34,35 +33,55 @@ import java.util.List;
 public class ItemGun extends Item
 {
 
-    public ItemGun()
+    public ItemGun ()
     {
         this.setMaxStackSize(1);
         this.setRegistryName("gun");
         this.setUnlocalizedName("blockbuster.gun");
         this.setCreativeTab(Blockbuster.blockbusterTab);
+        
     }
+    
 
+    
     @Override
-    public boolean shouldCauseReequipAnimation(ItemStack stack, ItemStack stack1, boolean should)
+    public boolean shouldCauseReequipAnimation (ItemStack stack, ItemStack stack1, boolean should)
     {
         return false;
     }
     // what animation to use when the player holds the "use" button
-
+    
+    
     @Override
-    public EnumAction getItemUseAction(ItemStack p_getItemUseAction_1_)
+    public boolean hitEntity (ItemStack stack, EntityLivingBase hit, EntityLivingBase sc) {
+        GunProps props = NBTUtils.getGunProps(stack);
+        boolean result = super.hitEntity(stack, hit, sc);
+        if (props == null)
+        {
+            return result;
+        }
+        if (!result)
+        {
+            hit.setHealth(hit.getHealth() - props.meleeDamage);
+            return false;
+        }
+        return true;
+    }
+    
+    @Override
+    public EnumAction getItemUseAction (ItemStack p_getItemUseAction_1_)
     {
         return EnumAction.NONE;
     }
 
     @Override
-    public int getMaxItemUseDuration(ItemStack p_getMaxItemUseDuration_1_)
+    public int getMaxItemUseDuration (ItemStack p_getMaxItemUseDuration_1_)
     {
         return 0;
     }
     
 
-    public static void minusTime(ItemStack stack, EntityPlayer player)
+    public static void minusTime (ItemStack stack, EntityPlayer player)
     {
         GunProps props = NBTUtils.getGunProps(stack);
         
@@ -95,7 +114,7 @@ public class ItemGun extends Item
         }
     }
     
-    private void resetTime(ItemStack stack, EntityPlayer player)
+    private void resetTime (ItemStack stack, EntityPlayer player)
     {
         GunProps props = NBTUtils.getGunProps(stack);
         if (props == null)
@@ -107,7 +126,7 @@ public class ItemGun extends Item
 
     }
     
-    public static void minusReload(ItemStack stack, EntityPlayer player)
+    public static void minusReload (ItemStack stack, EntityPlayer player)
     {
         GunProps props = NBTUtils.getGunProps(stack);
         if (props == null)
@@ -127,15 +146,52 @@ public class ItemGun extends Item
         }
         
     }
-
-
-    public float random(float min, float max)
+    
+    public void minusDurability (GunProps props, ItemStack stack, EntityPlayer player)
     {
-        max -= min;
-        return (float) ((Math.random() * ++max) + min);
+        if (props == null)
+        {
+            return;
+        }
+        
+        if (props.durability!=0)
+        {
+            int val = props.hidedurability;
+            val -=1;
+            
+            if (val<=0)
+            {
+                InventoryPlayer inventory = player.inventory;
+                for(int i = 0; i<inventory.getSizeInventory(); i++)
+                {
+                    if (isGunEqual(stack,inventory.getStackInSlot(i)))
+                    {
+                        inventory.setInventorySlotContents(i,ItemStack.EMPTY);
+                    }
+                }
+                
+            }
+            
+            props.hidedurability = val;
+            NBTUtils.saveGunProps(player.getHeldItemMainhand(),props.toNBT());
+        }
+
+    }
+
+    @Override
+    public boolean onLeftClickEntity (ItemStack p_onLeftClickEntity_1_, EntityPlayer p_onLeftClickEntity_2_, Entity p_onLeftClickEntity_3_) {
+        return false;
     }
     
-    public void shootIt(ItemStack stack, EntityPlayer player, World world)
+    public static double getRandomIntegerBetweenRange (float x, float y)
+    {
+        double max = Math.max(x, y);
+        double min = Math.min(x, y);
+        return (int)(Math.random()*((max-min)+1))+min;
+    }
+
+    
+    public void shootIt (ItemStack stack, EntityPlayer player, World world)
     {
         resetTime(stack, player);
         GunProps props = NBTUtils.getGunProps(stack);
@@ -144,13 +200,12 @@ public class ItemGun extends Item
            
             if (props.recoilSimple)
             {
-                player.rotationPitch += Interpolation.SINE_IN.interpolate(player.prevRotationPitch, player.prevRotationPitch + props.recoilXMin, 1F) - player.prevRotationPitch;
-                player.rotationYaw += Interpolation.SINE_IN.interpolate(player.prevRotationYaw, player.prevRotationYaw + props.recoilYMin, 1F) - player.prevRotationYaw;
+                player.rotationPitch += Interpolation.QUINT_IN.interpolate(player.prevRotationPitch, player.prevRotationPitch + props.recoilXMin, 1F) - player.prevRotationPitch;
+                player.rotationYaw += Interpolation.QUINT_IN.interpolate(player.prevRotationYaw, player.prevRotationYaw + props.recoilYMin, 1F) - player.prevRotationYaw;
             }
-            else
-            {
-                player.rotationPitch += Interpolation.SINE_IN.interpolate(player.prevRotationPitch, player.prevRotationPitch +random(props.recoilXMin,props.recoilXMax), 1F) - player.prevRotationPitch;
-                player.rotationYaw += Interpolation.SINE_IN.interpolate(player.prevRotationYaw, player.prevRotationYaw + random(props.recoilYMin,props.recoilYMax), 1F) - player.prevRotationYaw;
+            else {
+                player.rotationPitch += Interpolation.SINE_IN.interpolate(player.prevRotationPitch, player.prevRotationPitch + getRandomIntegerBetweenRange(props.recoilXMin, props.recoilXMax), 1F) - player.prevRotationPitch;
+                player.rotationYaw += Interpolation.SINE_IN.interpolate(player.prevRotationYaw, player.prevRotationYaw + getRandomIntegerBetweenRange(props.recoilYMin,props.recoilYMax), 1F) - player.prevRotationYaw;
             
             }
         
@@ -165,7 +220,7 @@ public class ItemGun extends Item
         this.shoot(stack, props, player, world);
     }
     
-    public boolean shoot(ItemStack stack, GunProps props, EntityPlayer player, World world)
+    public boolean shoot (ItemStack stack, GunProps props, EntityPlayer player, World world)
     {
         if (props == null)
         {
@@ -221,7 +276,6 @@ public class ItemGun extends Item
                 projectile.setPosition(coordsAfterYRotation[0],coordsAfterXRotation[0],  coordsAfterXRotation[1]);
                 projectile.shoot(player, pitch, yaw, 0, props.speed, 0);
                 projectile.setInitialMotion();
-
                 if (props.projectiles > 0)
                 {
                     if (!world.isRemote)
@@ -253,16 +307,32 @@ public class ItemGun extends Item
             }
         }
         
+  
         GunProps newProps = NBTUtils.getGunProps(stack);
+       
         if (player instanceof EntityPlayerMP) {
             Dispatcher.sendTo(new PacketGunInfo(newProps.toNBT(), entity.getEntityId()), (EntityPlayerMP) player);
         }
-
-        
+    
+        minusDurability(newProps,stack,player);
+    
+        GunProps newProps2 = NBTUtils.getGunProps(stack);
+    
+        if (player instanceof EntityPlayerMP) {
+            Dispatcher.sendTo(new PacketGunInfo(newProps2.toNBT(), entity.getEntityId()), (EntityPlayerMP) player);
+        }
         return true;
     }
-
-    private double[] rotate(double[] origin, double[] point, double angle, boolean staff)
+    private boolean isGunEqual(ItemStack stack, ItemStack other) {
+        if (other.isEmpty())
+            return false;
+        if (stack.getItem() != other.getItem())
+            return false;
+        if (stack.getItemDamage() < 0)
+            return true;
+        return (stack.getItemDamage() == other.getItemDamage());
+    }
+    private double[] rotate (double[] origin, double[] point, double angle, boolean staff)
     {
         if (staff)
         {
@@ -282,7 +352,7 @@ public class ItemGun extends Item
         qy = oy + qy;
         return new double[]{qx,qy};
     }
-    private double[] rotateX(double[] origin, double[] point, double angle, boolean staff)
+    private double[] rotateX (double[] origin, double[] point, double angle, boolean staff)
     {
         angle = normalise_angle(angle);
         angle = angle*Math.PI/180;
@@ -298,7 +368,7 @@ public class ItemGun extends Item
         qy = oy + qy;
         return new double[]{qx,qy};
     }
-    private double normalise_angle(double angle)
+    private double normalise_angle (double angle)
     {
         if ((angle != 0) && (Math.abs(angle) == (angle * -1)))
         {
@@ -307,7 +377,7 @@ public class ItemGun extends Item
         return angle;
     }
     
-    public static void checkGunState(ItemStack stack, EntityPlayer player)
+    public static void checkGunState (ItemStack stack, EntityPlayer player)
     {
         GunProps props = NBTUtils.getGunProps(stack);
         if (props == null)
@@ -321,7 +391,7 @@ public class ItemGun extends Item
         NBTUtils.saveGunProps(player.getHeldItemMainhand(),props.toNBT());
     }
     
-    private boolean consumeInnerAmmo(ItemStack stack, EntityPlayer player){
+    private boolean consumeInnerAmmo (ItemStack stack, EntityPlayer player){
         
         GunProps props = NBTUtils.getGunProps(stack);
         if (props == null)
@@ -358,7 +428,7 @@ public class ItemGun extends Item
         return true;
     }
     
-    private void minusAmmo(ItemStack stack, EntityPlayer player)
+    private void minusAmmo (ItemStack stack, EntityPlayer player)
     {
         GunProps props = NBTUtils.getGunProps(stack);
         if (props == null)
@@ -371,7 +441,7 @@ public class ItemGun extends Item
         
     }
     
-    public boolean consumeAmmoStack(EntityPlayer player, ItemStack ammo)
+    public boolean consumeAmmoStack (EntityPlayer player, ItemStack ammo)
     {
         int total = 0;
 
@@ -398,7 +468,7 @@ public class ItemGun extends Item
         return player.inventory.clearMatchingItems(ammo.getItem(), -1, ammo.getCount(), null) >= 0;
     }
 
-    private void setThrowableHeading(EntityLivingBase entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity)
+    private void setThrowableHeading (EntityLivingBase entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity)
     {
         GunProps props = NBTUtils.getGunProps(entityThrower.getHeldItem(EnumHand.MAIN_HAND));
         float f = -MathHelper.sin(rotationYawIn * 0.017453292F)* MathHelper.cos(rotationPitchIn * 0.017453292F);
@@ -407,7 +477,7 @@ public class ItemGun extends Item
         this.setThrowableHeading(entityThrower, (double) f, (double) f1, (double) f2, velocity);
     }
 
-    public void setThrowableHeading(EntityLivingBase entity, double x, double y, double z, float velocity)
+    public void setThrowableHeading (EntityLivingBase entity, double x, double y, double z, float velocity)
     {
         float f = MathHelper.sqrt(x * x + y * y + z * z);
         x = x / (double) f;

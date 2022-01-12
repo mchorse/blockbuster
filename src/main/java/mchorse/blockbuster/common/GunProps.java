@@ -63,6 +63,9 @@ public class GunProps
     public int innerAmmo;
     public int inputAmmo;
     public boolean hand_bow;
+    public boolean off_click;
+    public boolean int_click;
+    public boolean ent_clock;
     public boolean hand_bow_always;
     public float srcShootX;
     public float srcShootY;
@@ -74,6 +77,11 @@ public class GunProps
     public boolean acceptPressed;
     public boolean recoilSimple;
     public boolean resetTimerButtonRel;
+    public int durability;
+    public int hidedurability;
+    public float mouseZoom;
+    public float meleeDamage;
+    public boolean fixZoom; //UNUSED
     /* Projectile properties */
     public AbstractMorph projectileMorph;
     public String tickCommand;
@@ -451,6 +459,8 @@ public class GunProps
         this.zoom = 0;
         this.recoilXMin = 0;
         this.srcShootX = 0;
+        this.mouseZoom = 0;
+        this.meleeDamage = 0;
         this.srcShootY = 0;
         this.srcShootZ = 0;
         this.recoilSimple = true;
@@ -465,13 +475,19 @@ public class GunProps
         this.zoomOnCommand = "";
         this.reloadCommand = "";
         this.ticking = 0;
+        this.durability = 0;
+        this.hidedurability = 0;
         this.lifeSpan = 200;
         this.yaw = true;
         this.enableOverlay = false;
         this.hideHandOnZoom = false;
         this.hideAimOnZoom = false;
         this.hand_bow = false;
+        this.off_click = false;
+        this.int_click = false;
+        this.ent_clock = false;
         this.acceptPressed = true;
+        this.fixZoom = false;
         this.hand_bow_always = false;
         this.pitch = true;
         this.sequencer = false;
@@ -584,12 +600,16 @@ public class GunProps
 
 
         if (tag.hasKey("acceptPressed")) this.acceptPressed = tag.getBoolean("acceptPressed");
-
-
+        if (tag.hasKey("fixZoom")) this.fixZoom = tag.getBoolean("fixZoom");
+    
+        
         if (tag.hasKey("hand_bow")) this.hand_bow = tag.getBoolean("hand_bow");
         if (tag.hasKey("hand_bow_always")) this.hand_bow_always = tag.getBoolean("hand_bow_always");
-
-
+        if (tag.hasKey("off_click")) this.off_click = tag.getBoolean("off_click");
+        if (tag.hasKey("int_click")) this.int_click = tag.getBoolean("int_click");
+        if (tag.hasKey("ent_clock")) this.ent_clock = tag.getBoolean("ent_clock");
+    
+        
         if (tag.hasKey("Pitch")) this.pitch = tag.getBoolean("Pitch");
         if (tag.hasKey("Sequencer")) this.sequencer = tag.getBoolean("Sequencer");
         if (tag.hasKey("Random")) this.random = tag.getBoolean("Random");
@@ -599,6 +619,10 @@ public class GunProps
         if (tag.hasKey("Zoom")) this.zoom = tag.getFloat("Zoom");
         if (tag.hasKey("recoilXMin")) this.recoilXMin = tag.getFloat("recoilXMin");
         if (tag.hasKey("srcShootX")) this.srcShootX = tag.getFloat("srcShootX");
+        if (tag.hasKey("mouseZoom")) this.mouseZoom = tag.getFloat("mouseZoom");
+        if (tag.hasKey("meleeDamage")) this.meleeDamage = tag.getFloat("meleeDamage");
+    
+        
         if (tag.hasKey("srcShootY")) this.srcShootY = tag.getFloat("srcShootY");
         if (tag.hasKey("srcShootZ")) this.srcShootZ = tag.getFloat("srcShootZ");
 
@@ -613,6 +637,11 @@ public class GunProps
 
         if (tag.hasKey("Friction")) this.friction = tag.getFloat("Friction");
         if (tag.hasKey("Gravity")) this.gravity = tag.getFloat("Gravity");
+        
+        if (tag.hasKey("durability")) this.durability = tag.getInteger("durability");
+        if (tag.hasKey("hidedurability")) this.hidedurability = tag.getInteger("hidedurability");
+    
+        
         if (tag.hasKey("FadeIn")) this.fadeIn = tag.getInteger("FadeIn");
         if (tag.hasKey("FadeOut")) this.fadeOut = tag.getInteger("FadeOut");
         /* Impact properties */
@@ -725,12 +754,19 @@ public class GunProps
 
 
         if (!this.acceptPressed) tag.setBoolean("acceptPressed", this.acceptPressed);
-
+        if (this.fixZoom) tag.setBoolean("fixZoom", this.fixZoom);
+    
+        
 
         if (this.hand_bow_always) tag.setBoolean("hand_bow_always", this.hand_bow_always);
         if (this.hand_bow) tag.setBoolean("hand_bow", this.hand_bow);
-
-
+        if (this.off_click) tag.setBoolean("off_click", this.off_click);
+        if (this.int_click) tag.setBoolean("int_click", this.int_click);
+        if (this.ent_clock) tag.setBoolean("ent_clock", this.ent_clock);
+    
+        
+        
+        
         if (!this.pitch) tag.setBoolean("Pitch", this.pitch);
         if (this.sequencer) tag.setBoolean("Sequencer", this.sequencer);
         if (this.random) tag.setBoolean("Random", this.random);
@@ -741,8 +777,10 @@ public class GunProps
         if (this.srcShootX != 0) tag.setFloat("srcShootX", this.srcShootX);
         if (this.srcShootY != 0) tag.setFloat("srcShootY", this.srcShootY);
         if (this.srcShootZ != 0) tag.setFloat("srcShootZ", this.srcShootZ);
-
-
+        if (this.mouseZoom != 0) tag.setFloat("mouseZoom", this.mouseZoom);
+        if (this.mouseZoom != 0) tag.setFloat("meleeDamage", this.meleeDamage);
+    
+        
         if (!this.recoilSimple) tag.setBoolean("recoilSimple", this.recoilSimple);
     
         
@@ -755,6 +793,11 @@ public class GunProps
         if (this.speed != 1.0F) tag.setFloat("Speed", this.speed);
         if (this.friction != 0.99F) tag.setFloat("Friction", this.friction);
         if (this.gravity != 0.03F) tag.setFloat("Gravity", this.gravity);
+        
+        if (this.durability != 0) tag.setInteger("durability", this.durability);
+        if (this.hidedurability != 0) tag.setInteger("hidedurability", this.hidedurability);
+    
+        
         if (this.fadeIn != 10) tag.setInteger("FadeIn", this.fadeIn);
         if (this.fadeOut != 10) tag.setInteger("FadeOut", this.fadeOut);
 

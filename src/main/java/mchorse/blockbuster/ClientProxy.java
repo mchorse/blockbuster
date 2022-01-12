@@ -78,7 +78,9 @@ public class ClientProxy extends CommonProxy
     public static GuiBlockbusterPanels panels;
 
     public static RecordManager manager = new RecordManager();
-
+    
+    public static boolean onZoom = true;
+    
     public static RenderCustomActor actorRenderer;
     public static TileEntityModelRenderer modelRenderer;
     public static KeyboardHandler keys;
