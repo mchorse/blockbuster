@@ -646,6 +646,9 @@ blockbuster.gui:
         off_click: Blocks break block
         int_click: Interaction break block
         ent_clock: Entity damage block
+        melee_command: Command on melee attack
+        destrCommand: Command on destroyd gun
+        aim_options_second: Pro setting +
 
         impact_morph: Морф воздействия
         impact_delay: Задержка воздействия
