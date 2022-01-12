@@ -62,6 +62,14 @@ public class ItemGun extends Item
         }
         if (!result)
         {
+            if (!props.meleeCommand.isEmpty())
+            {
+                if (sc instanceof EntityPlayerMP)
+                {
+                    EntityPlayerMP player = (EntityPlayerMP) sc;
+                    player.getServer().commandManager.executeCommand(player, props.meleeCommand);
+                }
+            }
             hit.setHealth(hit.getHealth() - props.meleeDamage);
             return false;
         }
@@ -161,15 +169,11 @@ public class ItemGun extends Item
             
             if (val<=0)
             {
-                InventoryPlayer inventory = player.inventory;
-                for(int i = 0; i<inventory.getSizeInventory(); i++)
+                if (!props.destrCommand.isEmpty())
                 {
-                    if (isGunEqual(stack,inventory.getStackInSlot(i)))
-                    {
-                        inventory.setInventorySlotContents(i,ItemStack.EMPTY);
-                    }
+                    player.getServer().commandManager.executeCommand(player, props.destrCommand);
                 }
-                
+                player.getHeldItemMainhand().setCount(0);
             }
             
             props.hidedurability = val;
