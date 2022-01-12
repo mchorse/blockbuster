@@ -8,3 +8,6 @@ key:
         record_director: Record scene replay
         pause_director: Pause scene / Cancel recording
         open_gun: Configure gun
+        zoom: Zoom
+        gun_reload: Reload
+        gun_shoot: Shoot

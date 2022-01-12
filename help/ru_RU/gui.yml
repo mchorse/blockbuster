@@ -627,7 +627,7 @@ blockbuster.gui:
         pick_reload_morph: Reloading morp
         accept_pressed: Shoot when press hold
         reset_timer_button_rel: Reset when dont hold button
-        reload_command: Reload command
+        reload_command: Reload command #cumzone_from_русский
         zoom_on_command: Zoom on command
         zoom_off_command: Zoom off command
         src_shoot_x: Shift X source
@@ -640,6 +640,12 @@ blockbuster.gui:
         recoil_y_min: recoil y min
         recoil_y_max: recoil y max
         aim_options: Pro options
+        mouse_zoom: Mouse Intensivnosty on zoom
+        melee_damage: Melee uron
+        durability: Dolgovechnost
+        off_click: Blocks break block
+        int_click: Interaction break block
+        ent_clock: Entity damage block
 
         impact_morph: Морф воздействия
         impact_delay: Задержка воздействия

@@ -55,9 +55,9 @@ public class KeyboardHandler
         this.record = new KeyBinding("key.blockbuster.record_director", Keyboard.KEY_RMENU, category);
         this.pause = new KeyBinding("key.blockbuster.pause_director", Keyboard.KEY_RSHIFT, category);
         this.openGun = new KeyBinding("key.blockbuster.open_gun", Keyboard.KEY_END  , category);
-        zoom = new KeyBinding("key.blockbuster.zoom", -98, "key.categories.gameplay");
-        gun_reload = new KeyBinding("key.blockbuster.gun_reload", 19, "key.categories.gameplay");
-        gun_shoot= new KeyBinding("key.blockbuster.gun_shoot", -100, "key.categories.gameplay");
+        zoom = new KeyBinding("key.blockbuster.zoom", -98, category);
+        gun_reload = new KeyBinding("key.blockbuster.gun_reload", 19, category);
+        gun_shoot= new KeyBinding("key.blockbuster.gun_shoot", -100, category);
         ClientRegistry.registerKeyBinding(this.plause);
         ClientRegistry.registerKeyBinding(this.record);
         ClientRegistry.registerKeyBinding(zoom);

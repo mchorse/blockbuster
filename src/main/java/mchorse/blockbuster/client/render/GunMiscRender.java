@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.render;
 
 import akka.actor.Props;
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.common.GunProps;
@@ -29,6 +30,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -64,30 +66,29 @@ public class GunMiscRender {
 
     public Vector3f rotate = new Vector3f();
     
+    
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onTick(TickEvent.RenderTickEvent event)
     {
-        if (Minecraft.getMinecraft().player != null && event.phase.equals(TickEvent.Phase.END))
-        {
-            
+        if (Minecraft.getMinecraft().player != null && event.phase.equals(TickEvent.Phase.END)) {
+    
             EntityPlayer entityPlayer = Minecraft.getMinecraft().player;
-
+    
             ItemStack heldItem = entityPlayer.getHeldItem(EnumHand.MAIN_HAND);
-            GunProps props =  NBTUtils.getGunProps(heldItem);
-            if ( heldItem!= null && heldItem.getItem().equals(Blockbuster.gunItem) && KeyboardHandler.zoom.isKeyDown())
-            {
-                ServerHandlerZoomCommand.onZoom = true;
-                ZOOM_TIME = Math.min(ZOOM_TIME + (event.renderTickTime * 0.1f), 1);
-                Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(),true));
+            GunProps props = NBTUtils.getGunProps(heldItem);
+            if (heldItem != null && heldItem.getItem().equals(Blockbuster.gunItem) && KeyboardHandler.zoom.isKeyDown() ) {
+                    ClientProxy.onZoom = true;
+                    ZOOM_TIME = Math.min(ZOOM_TIME + (event.renderTickTime * 0.1f), 1);
+                    Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(), true));
             }
             else
             {
-                ServerHandlerZoomCommand.onZoom = false;
+              
+                ClientProxy.onZoom = false;
                 ZOOM_TIME = Math.max(ZOOM_TIME - (event.renderTickTime * 0.2f), 0);
-                Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(),false));
+                Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(), false));
             }
-
             if (ZOOM_TIME == 0)
             {
                 if (hasChangedSensitivity)
@@ -100,13 +101,12 @@ public class GunMiscRender {
                     lastMouseSensitivity = Minecraft.getMinecraft().gameSettings.mouseSensitivity;
                 }
             }
-            else if (ZOOM_TIME != 0)
-            {
+            else if (ZOOM_TIME != 0) {
                 if (heldItem != null && heldItem.getItem().equals(Blockbuster.gunItem) && KeyboardHandler.zoom.isKeyDown())
                 {
-                    hasChangedSensitivity = true;
-                    assert props != null;
-                    Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity * (0.4f - (ZOOM_TIME * 0.5f));
+                        hasChangedSensitivity = true;
+                        assert props != null;
+                        Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity + (-props.mouseZoom+ (ZOOM_TIME * 0.5f));
                 }
                 else
                 {
