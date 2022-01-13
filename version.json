@@ -1,6 +1,9 @@
 {
     "homepage": "https://curseforge.com/minecraft/mc-mods/blockbuster/",
     "1.12.2": {
+        "2.3.4": "This quick hotfix patch was made by Chryfi, which fixes an issue with Snowstorm particle emitter morphs.",
+        "2.3.3": "This update was made by Chryfi, which features dozen or so QoL tweaks. Exceptions are mentioned at the respective items.",
+        "2.3.2": "I forgot to make change log for this update...",
         "2.3.1": "This patch update fixes a couple of bugs.",
         "2.3": "This update doesn't have any aim, but rather has a lot of random features, nothing groundbreaking though.",
         "2.2.2": "This patch update was made to complement BB guns tutorial video.",
@@ -53,8 +56,8 @@
         "1.4.10": "Patch 1.4.10 adds few nice misc. features (model block and OBJ loading without JSON model) which generally should improve UX a bit and simplify decorating set with Blockbuster models/Metamorph morphs, and lay down a foundation for future new features (which involves removing old useless code)."
     },
     "promos": {
-        "1.12.2-latest": "2.3.1",
-        "1.12.2-recommended": "2.3.1",
+        "1.12.2-latest": "2.3.4",
+        "1.12.2-recommended": "2.3.4",
         "1.11.2-latest": "1.6.6",
         "1.11.2-recommended": "1.6.6",
         "1.10.2-latest": "1.6.6",

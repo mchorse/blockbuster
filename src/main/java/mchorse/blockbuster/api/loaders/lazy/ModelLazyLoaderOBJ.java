@@ -278,6 +278,8 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
         }
         catch (Exception e)
         {
+            e.printStackTrace();
+
             return null;
         }
 

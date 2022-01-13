@@ -8,6 +8,7 @@ import mchorse.blockbuster.client.particles.components.appearance.BedrockCompone
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionTinting;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentParticleMorph;
 import mchorse.blockbuster.client.particles.components.meta.BedrockComponentInitialization;
+import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRateSteady;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.math.IValue;
@@ -497,12 +498,15 @@ public class BedrockEmitter
 
         this.setupCameraProperties(partialTicks);
 
-        BedrockComponentParticleMorph particleMorphComponent = this.scheme.get(BedrockComponentParticleMorph.class);
+        BedrockComponentParticleMorph particleMorphComponent = this.scheme.getOrCreate(BedrockComponentParticleMorph.class);
         List<IComponentParticleRender> renders = this.scheme.particleRender;
         List<IComponentParticleMorphRender> morphRenders = this.scheme.particleMorphRender;
 
+        boolean morphRendering = this.isMorphParticle();
+        boolean particleRendering = !morphRendering || particleMorphComponent.renderTexture;
+
         /* particle rendering */
-        if (!this.isMorphParticle() || particleMorphComponent.renderTexture)
+        if (particleRendering)
         {
             this.setupOpenGL(partialTicks);
 
@@ -515,11 +519,9 @@ public class BedrockEmitter
             {
                 this.depthSorting();
 
-                BedrockComponentCollisionAppearance collisionAppearance = this.scheme.get(BedrockComponentCollisionAppearance.class);
-                BedrockComponentCollisionTinting collisionTinting = this.scheme.get(BedrockComponentCollisionTinting.class);
-                boolean collisionRendering = MolangExpression.isOne(collisionAppearance.enabled) || MolangExpression.isOne(collisionTinting.enabled);
-
                 this.renderParticles(this.scheme.texture, renders, false, partialTicks);
+
+                BedrockComponentCollisionAppearance collisionAppearance = this.scheme.getOrCreate(BedrockComponentCollisionAppearance.class);
 
                 /* rendering the collided particles with an extra component */
                 if (collisionAppearance != null && collisionAppearance.texture != null)
@@ -537,7 +539,7 @@ public class BedrockEmitter
         }
 
         /* Morph rendering */
-        if (this.isMorphParticle())
+        if (morphRendering)
         {
             for (IComponentParticleMorphRender component : morphRenders)
             {
@@ -546,11 +548,15 @@ public class BedrockEmitter
 
             if (!this.particles.isEmpty())
             {
-                this.depthSorting();
+                //only depth sort either in particle rendering or morph rendering
+                if (!particleRendering)
+                {
+                    this.depthSorting();
+                }
 
                 this.renderParticles(morphRenders, false, partialTicks);
 
-                /*BedrockComponentCollisionParticleMorph collisionComponent = this.scheme.get(BedrockComponentCollisionParticleMorph.class);
+                /*BedrockComponentCollisionParticleMorph collisionComponent = this.scheme.getOrCreate(BedrockComponentCollisionParticleMorph.class);
 
                 if (collisionComponent != null && collisionComponent.morph != null)
                 {
@@ -560,7 +566,18 @@ public class BedrockEmitter
 
             for (IComponentParticleMorphRender component : morphRenders)
             {
-                component.postRender(this, partialTicks);
+                if (component.getClass() == BedrockComponentRateSteady.class)
+                {
+                    if (!particleRendering)
+                    {
+                        //only spawn particles either in particles or in morph rendering
+                        component.postRender(this, partialTicks);
+                    }
+                }
+                else
+                {
+                    component.postRender(this, partialTicks);
+                }
             }
         }
     }

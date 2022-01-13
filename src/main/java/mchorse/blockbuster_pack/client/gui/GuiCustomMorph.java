@@ -5,7 +5,6 @@ import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.formats.obj.OBJMaterial;
 import mchorse.blockbuster.api.formats.obj.ShapeKey;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiBBModelRenderer;
-import mchorse.blockbuster.client.gui.utils.GuiShapeKeysEditor;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
@@ -13,9 +12,7 @@ import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
-import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
-import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
@@ -25,7 +22,6 @@ import mchorse.mclib.client.gui.utils.Label;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Direction;
-import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
 import mchorse.mclib.utils.files.entries.FileEntry;
 import mchorse.mclib.utils.files.entries.FolderEntry;
@@ -37,7 +33,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -45,7 +40,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -132,6 +126,16 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             if (!this.materials.picker.hasParent())
             {
                 this.materials.skin.clickItself(GuiBase.getCurrent());
+            }
+        }).held(Keyboard.KEY_LSHIFT);
+
+        this.keys().register(IKey.lang("blockbuster.gui.builder.pick_texture"), Keyboard.KEY_E, () ->
+        {
+            this.setPanel(this.materials);
+
+            if (!this.materials.picker.hasParent())
+            {
+                this.materials.texture.clickItself(GuiBase.getCurrent());
             }
         }).held(Keyboard.KEY_LSHIFT);
     }

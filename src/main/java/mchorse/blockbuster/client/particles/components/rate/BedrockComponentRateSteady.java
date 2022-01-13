@@ -20,8 +20,6 @@ public class BedrockComponentRateSteady extends BedrockComponentRate implements 
 
     public MolangExpression spawnRate = MolangParser.ONE;
 
-    private boolean spawned;
-
     public BedrockComponentRateSteady()
     {
         this.particles = DEFAULT_PARTICLES;
@@ -65,7 +63,7 @@ public class BedrockComponentRateSteady extends BedrockComponentRate implements 
     @Override
     public void postRender(BedrockEmitter emitter, float partialTicks)
     {
-        if (emitter.playing && !this.spawned)
+        if (emitter.playing)
         {
             double particles = emitter.getAge(partialTicks) * this.spawnRate.get();
             double diff = particles - emitter.spawnedParticles;
@@ -90,13 +88,7 @@ public class BedrockComponentRateSteady extends BedrockComponentRate implements 
                 }
 
                 emitter.spawnedParticles += track;
-
-                this.spawned = true;
             }
-        }
-        else if (this.spawned) //only execute rate once
-        {
-            spawned = false;
         }
     }
 

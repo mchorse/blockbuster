@@ -67,7 +67,7 @@ public class BedrockComponentInitialSpeed extends BedrockComponentBase implement
             particle.speed.set(
                 (float) this.direction[0].get(),
                 (float) this.direction[1].get(),
-                (float) this.direction[1].get()
+                (float) this.direction[2].get()
             );
         }
         else

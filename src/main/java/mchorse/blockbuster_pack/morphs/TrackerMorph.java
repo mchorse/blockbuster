@@ -1,11 +1,6 @@
 package mchorse.blockbuster_pack.morphs;
 
-import java.awt.Color;
-
-import javax.vecmath.Matrix4f;
-
 import com.google.common.base.Objects;
-
 import mchorse.blockbuster_pack.trackers.ApertureTracker;
 import mchorse.blockbuster_pack.trackers.BaseTracker;
 import mchorse.blockbuster_pack.trackers.TrackerRegistry;
@@ -28,6 +23,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.vecmath.Matrix4f;
+import java.awt.Color;
 
 public class TrackerMorph extends AbstractMorph
 {
@@ -114,13 +112,13 @@ public class TrackerMorph extends AbstractMorph
         if (Minecraft.isGuiEnabled() && Minecraft.getMinecraft().currentScreen == null && !this.hidden || GuiModelRenderer.isRendering())
         {
             GlStateManager.disableLighting();
-            renderPointer();
+            this.renderPointer();
             GlStateManager.enableLighting();
 
-            /* dont render labels in gui - it clutters the screen */
+            /* Don't render labels in gui - it clutters the screen */
             if (!this.hidden)
             {
-                renderLabel();
+                this.renderLabel();
             }
         }
 
@@ -264,8 +262,8 @@ public class TrackerMorph extends AbstractMorph
     private void renderPointer()
     {
         this.renderTimer %= 50;
-        int rgb = Color.HSBtoRGB(this.renderTimer / 50.0f, 1.0f, 1.0f);
-        int rgb2 = Color.HSBtoRGB(this.renderTimer / 50.0f + 0.5f, 1.0f, 1.0f);
+        int rgb = Color.HSBtoRGB(this.renderTimer / 50.0F, 1.0F, 1.0F);
+        int rgb2 = Color.HSBtoRGB(this.renderTimer / 50.0F + 0.5F, 1.0F, 1.0F);
 
         GlStateManager.pushMatrix();
 
@@ -278,9 +276,9 @@ public class TrackerMorph extends AbstractMorph
         BufferBuilder buffer = tessellator.getBuffer();
         GlStateManager.glLineWidth(5.0F);
         buffer.begin(1, DefaultVertexFormats.POSITION_COLOR);
-        buffer.pos(0.0, 0.0, 0.0).color(0.0f, 0.0f, 0.0f, 1.0f).endVertex();
+        buffer.pos(0.0, 0.0, 0.0).color(0.0F, 0.0F, 0.0F, 1.0F).endVertex();
         buffer.pos(0.0, 0.0, 1.0).color(rgb >> 16 & 0xFF, rgb >> 8 & 0xFF, rgb >> 0 & 0xFF, 255).endVertex();
-        buffer.pos(0.0, 0.0, 0.0).color(0.0f, 0.0f, 0.0f, 1.0f).endVertex();
+        buffer.pos(0.0, 0.0, 0.0).color(0.0F, 0.0F, 0.0F, 1.0F).endVertex();
         buffer.pos(0.0, 0.5, 0.0).color(rgb2 >> 16 & 0xFF, rgb2 >> 8 & 0xFF, rgb2 >> 0 & 0xFF, 255).endVertex();
         tessellator.draw();
         GlStateManager.glLineWidth(1.0F);
