@@ -11,8 +11,8 @@ import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRender
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.common.GunProps;
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.OrientedBB;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordRecorder;
@@ -28,13 +28,16 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumHandSide;
@@ -52,7 +55,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * Rendering handler
@@ -88,7 +97,7 @@ public class RenderingHandler
     private GuiRecordingOverlay overlay;
 
     /**
-     *    ItemRender
+     *  ItemRender
      */
     public static ItemCameraTransforms.TransformType itemTransformType;
 
@@ -139,32 +148,30 @@ public class RenderingHandler
      */
     public static void renderLitParticles(float partialTicks)
     {}
+
     /**
-     * Render BB gun Hands
-     *
+     * Render BB gun рands
      */
     public static void changePlayerHand(AbstractClientPlayer player, ModelPlayer modelPlayer)
     {
         ItemStack itemstack = player.getHeldItemMainhand();
-        ModelBiped.ArmPose modelbiped$armpose = ModelBiped.ArmPose.EMPTY;
+        ModelBiped.ArmPose armPose = ModelBiped.ArmPose.EMPTY;
         
-        if (!itemstack.isEmpty())
+        if (!itemstack.isEmpty() && itemstack.getItem() instanceof ItemGun)
         {
-            if (itemstack.getItem() instanceof ItemGun)
+            GunProps props = NBTUtils.getGunProps(itemstack);
+
+            if (props.handBowAlways)
             {
-                GunProps props = NBTUtils.getGunProps(itemstack);
-                if (props.hand_bow_always)
+                armPose = ModelBiped.ArmPose.BOW_AND_ARROW;
+            }
+            else
+            {
+                if (props.handBow)
                 {
-                    modelbiped$armpose = ModelBiped.ArmPose.BOW_AND_ARROW;
-                }
-                else
-                {
-                    if (props.hand_bow)
+                    if (KeyboardHandler.gunShoot.isKeyDown())
                     {
-                        if (KeyboardHandler.gun_shoot.isKeyDown())
-                        {
-                            modelbiped$armpose = ModelBiped.ArmPose.BOW_AND_ARROW;
-                        }
+                        armPose = ModelBiped.ArmPose.BOW_AND_ARROW;
                     }
                 }
             }
@@ -172,11 +179,11 @@ public class RenderingHandler
 
         if (player.getPrimaryHand() == EnumHandSide.RIGHT)
         {
-            modelPlayer.rightArmPose = modelbiped$armpose;
+            modelPlayer.rightArmPose = armPose;
         }
         else
         {
-            modelPlayer.leftArmPose = modelbiped$armpose;
+            modelPlayer.leftArmPose = armPose;
         }
         
     }
@@ -337,10 +344,12 @@ public class RenderingHandler
             lastItemHolder = entity;
         }
     }
+
     /**
      * Called by ASMR
      */
-    public static void setTSRTTransform(ItemCameraTransforms.TransformType type){
+    public static void setTSRTTransform(ItemCameraTransforms.TransformType type)
+    {
         itemTransformType = type;
     }
 
@@ -461,9 +470,9 @@ public class RenderingHandler
         
         if (mc.gameSettings.showDebugInfo && !obbsToRender.isEmpty())
         {
-            for(OrientedBB obb : this.obbsToRender) 
+            for (OrientedBB obb : this.obbsToRender)
             {
-            	obb.render(event);
+                obb.render(event);
             }
         }
         obbsToRender.clear();

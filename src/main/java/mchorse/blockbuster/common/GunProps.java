@@ -24,20 +24,20 @@ import org.lwjgl.opengl.GL11;
 
 /**
  * Blockbuster gun properties
- * 
- * This savage fellow is responsible for keeping all of the properties 
- * that a gun can have. Those are including: gun properties itself, 
- * projectile that will be spawned from the gun, and projectile impact 
+ * <p>
+ * This savage fellow is responsible for keeping all of the properties
+ * that a gun can have. Those are including: gun properties itself,
+ * projectile that will be spawned from the gun, and projectile impact
  * properties.
  */
 public class GunProps
 {
     /* Gun properties */
     public AbstractMorph defaultMorph;
-    public AbstractMorph hands;
+    public AbstractMorph handsMorph;
     public AbstractMorph guiMorph;
     public AbstractMorph reloadMorph;
-    public AbstractMorph morph_overlay;
+    public AbstractMorph overlayMorph;
     public AbstractMorph firingMorph;
     public AbstractMorph aimMorph;
     public String fireCommand;
@@ -64,11 +64,11 @@ public class GunProps
     public long inputTimeBetweenShoot;
     public int innerAmmo;
     public int inputAmmo;
-    public boolean hand_bow;
-    public boolean off_click;
-    public boolean int_click;
-    public boolean ent_clock;
-    public boolean hand_bow_always;
+    public boolean handBow;
+    public boolean rightClick;
+    public boolean leftClick;
+    public boolean attackClick;
+    public boolean handBowAlways;
     public float srcShootX;
     public float srcShootY;
     public float srcShootZ;
@@ -83,7 +83,6 @@ public class GunProps
     public int hidedurability;
     public float mouseZoom;
     public float meleeDamage;
-    public boolean fixZoom; //UNUSED
     /* Projectile properties */
     public AbstractMorph projectileMorph;
     public String tickCommand;
@@ -110,7 +109,7 @@ public class GunProps
     public boolean bounce;
     public boolean sticks;
     public int hits;
-    public int state;
+    public ItemGun.GunState state = ItemGun.GunState.READY_TO_SHOOT;
     public float damage;
     public float knockbackHorizontal;
     public float knockbackVertical;
@@ -127,11 +126,11 @@ public class GunProps
 
     private int shoot = 0;
     private Morph current = new Morph();
-    private Morph current_hands = new Morph();
-    private Morph current_guiMorph = new Morph();
-    private Morph current_overlay = new Morph();
-    private Morph current_reloadMorph = new Morph();
-    public Morph current_aim = new Morph();
+    private Morph currentHands = new Morph();
+    private Morph currentGui = new Morph();
+    private Morph currentOverlay = new Morph();
+    private Morph currentReload = new Morph();
+    public Morph currentAim = new Morph();
     private boolean renderLock;
 
     public EntityLivingBase target;
@@ -150,23 +149,33 @@ public class GunProps
     {
         this.current.setDirect(morph);
     }
+
     public void setCurrentOverlay(AbstractMorph morph)
     {
-        this.current_overlay.setDirect(morph);
+        this.currentOverlay.setDirect(morph);
     }
-    public void setHands(AbstractMorph morph){
-        this.current_hands.setDirect(morph);
-    }
-    public void setAimMorph(AbstractMorph morph){
 
-        this.current_aim.setDirect(morph);
+    public void setHandsMorph(AbstractMorph morph)
+    {
+        this.currentHands.setDirect(morph);
     }
-    public void setGuiMorph(AbstractMorph morph){
-        this.current_guiMorph.setDirect(morph);
+
+    public void setAimMorph(AbstractMorph morph)
+    {
+
+        this.currentAim.setDirect(morph);
     }
-    public void setReloadMorph(AbstractMorph morph){
-        this.current_reloadMorph.setDirect(morph);
+
+    public void setGuiMorph(AbstractMorph morph)
+    {
+        this.currentGui.setDirect(morph);
     }
+
+    public void setReloadMorph(AbstractMorph morph)
+    {
+        this.currentReload.setDirect(morph);
+    }
+
     public void shot()
     {
         if (this.delay <= 0)
@@ -240,8 +249,10 @@ public class GunProps
         }
 
     }
+
     @SideOnly(Side.CLIENT)
-    public void renderOverlay(EntityLivingBase lastItemHolder, float partialTicks) {
+    public void renderOverlay(EntityLivingBase lastItemHolder, float partialTicks)
+    {
         if (this.renderLock)
         {
             return;
@@ -255,7 +266,7 @@ public class GunProps
         }
 
         EntityLivingBase entity = this.useTarget ? target : this.target;
-        AbstractMorph morph = this.current_overlay.get();
+        AbstractMorph morph = this.currentOverlay.get();
 
         if (morph != null && entity != null)
         {
@@ -270,7 +281,6 @@ public class GunProps
 
             GL11.glPushMatrix();
             GL11.glTranslatef(0.5F, 0, 0.5F);
-           // this.gunTransform.transform();
 
             this.setupEntity();
             MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
@@ -282,10 +292,9 @@ public class GunProps
             entity.rotationYawHead = rotationYawHead;
             entity.prevRotationYawHead = prevRotationYawHead;
         }
+
         this.renderLock = false;
     }
-
-
 
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase target, float partialTicks)
@@ -305,12 +314,8 @@ public class GunProps
         EntityLivingBase entity = this.useTarget ? target : this.target;
         AbstractMorph morph = this.current.get();
 
-
-
         if (morph != null && entity != null)
         {
-
-
             float rotationYaw = entity.renderYawOffset;
             float prevRotationYaw = entity.prevRenderYawOffset;
             float rotationYawHead = entity.rotationYawHead;
@@ -325,16 +330,15 @@ public class GunProps
             this.gunTransform.transform();
 
             this.setupEntity();
-            if (getGUNState() == ItemGun.GunState.RELOADING){
-                AbstractMorph reloadMorph = this.current_reloadMorph.get();
-                if(reloadMorph != null) {
-                    MorphUtils.render(reloadMorph, entity, 0, 0, 0, 0, partialTicks);
-                }else {
-                    MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
 
-                }
+            if (this.state == ItemGun.GunState.RELOADING)
+            {
+                AbstractMorph reloadMorph = this.currentReload.get();
 
-            }else {
+                MorphUtils.render(reloadMorph == null ? morph : reloadMorph, entity, 0, 0, 0, 0, partialTicks);
+            }
+            else
+            {
                 MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
             }
             GL11.glPopMatrix();
@@ -344,21 +348,28 @@ public class GunProps
             entity.rotationYawHead = rotationYawHead;
             entity.prevRotationYawHead = prevRotationYawHead;
         }
+
         this.renderLock = false;
     }
+
     @SideOnly(Side.CLIENT)
-    public void renderGUIMorph(EntityLivingBase target, float partialTicks){
+    public void renderGUIMorph(EntityLivingBase target, float partialTicks)
+    {
         if (this.renderLock)
         {
             return;
         }
+
         this.renderLock = true;
+
         if (this.target == null)
         {
             this.createEntity();
         }
+
         EntityLivingBase entity = this.useTarget ? target : this.target;
-        AbstractMorph morph = this.current_guiMorph.get();
+        AbstractMorph morph = this.currentGui.get();
+
         if (morph != null && entity != null)
         {
             GL11.glPushMatrix();
@@ -367,8 +378,10 @@ public class GunProps
             MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
             GL11.glPopMatrix();
         }
+
         this.renderLock = false;
     }
+
     @SideOnly(Side.CLIENT)
     public void renderHands(EntityLivingBase target, float partialTicks)
     {
@@ -385,7 +398,7 @@ public class GunProps
         }
 
         EntityLivingBase entity = this.useTarget ? target : this.target;
-        AbstractMorph morph = this.current_hands.get();
+        AbstractMorph morph = this.currentHands.get();
 
         if (morph != null && entity != null)
         {
@@ -413,6 +426,7 @@ public class GunProps
             entity.rotationYawHead = rotationYawHead;
             entity.prevRotationYawHead = prevRotationYawHead;
         }
+
         this.renderLock = false;
     }
 
@@ -420,7 +434,7 @@ public class GunProps
     @SideOnly(Side.CLIENT)
     private void setupEntity()
     {
-        /* Reset entity's values, just in case some weird shit is going 
+        /* Reset entity's values, just in case some weird shit is going
          * to happen in morph's update code*/
         this.target.setPositionAndRotation(0, 0, 0, 0, 0);
         this.target.setLocationAndAngles(0, 0, 0, 0, 0);
@@ -432,27 +446,27 @@ public class GunProps
     }
 
     /**
-     * Reset properties to default values 
+     * Reset properties to default values
      */
     public void reset()
     {
         /* Gun properties */
         this.defaultMorph = null;
-        this.hands = null;
+        this.handsMorph = null;
         this.guiMorph = null;
         this.reloadMorph = null;
         this.aimMorph = null;
-        this.morph_overlay = null;
+        this.overlayMorph = null;
         this.firingMorph = null;
         this.fireCommand = "";
         this.delay = 0;
         this.projectiles = 1;
-        this.innerAmmo=1;
+        this.innerAmmo = 1;
         this.inputReloadingTime = 0;
         this.timeBetweenShoot = 0;
-        this.inputTimeBetweenShoot=0;
+        this.inputTimeBetweenShoot = 0;
         this.inputAmmo = 1;
-        this.reloadTick=0;
+        this.reloadTick = 0;
         this.scatterX = this.scatterY = 0F;
         this.launch = false;
         this.enableCustomGuiMorph = false;
@@ -486,13 +500,12 @@ public class GunProps
         this.enableOverlay = false;
         this.hideHandOnZoom = false;
         this.hideAimOnZoom = false;
-        this.hand_bow = false;
-        this.off_click = false;
-        this.int_click = false;
-        this.ent_clock = false;
+        this.handBow = false;
+        this.rightClick = false;
+        this.leftClick = false;
+        this.attackClick = false;
         this.acceptPressed = true;
-        this.fixZoom = false;
-        this.hand_bow_always = false;
+        this.handBowAlways = false;
         this.pitch = true;
         this.sequencer = false;
         this.random = false;
@@ -512,7 +525,7 @@ public class GunProps
         this.bounce = false;
         this.sticks = false;
         this.hits = 1;
-        this.state = 0;
+        this.state = ItemGun.GunState.READY_TO_SHOOT;
         this.damage = 0F;
         this.knockbackHorizontal = 0F;
         this.knockbackVertical = 0F;
@@ -534,20 +547,18 @@ public class GunProps
 
         /* Gun properties */
         this.defaultMorph = this.create(tag, "Morph");
-        this.hands = this.create(tag, "Hands");
-        this.guiMorph = this.create(tag,"GUIMorph");
-        this.reloadMorph = this.create(tag,"ReloadMorph");
-        this.aimMorph = this.create(tag,"AimMorph");
-        this.morph_overlay = this.create(tag, "OverlayMorph");
+        this.handsMorph = this.create(tag, "Hands");
+        this.guiMorph = this.create(tag, "GuiMorph");
+        this.reloadMorph = this.create(tag, "ReloadMorph");
+        this.aimMorph = this.create(tag, "AimMorph");
+        this.overlayMorph = this.create(tag, "OverlayMorph");
         this.firingMorph = this.create(tag, "Fire");
+
         if (tag.hasKey("FireCommand")) this.fireCommand = tag.getString("FireCommand");
         if (tag.hasKey("Delay")) this.delay = tag.getInteger("Delay");
 
-
         if (tag.hasKey("Projectiles")) this.projectiles = tag.getInteger("Projectiles");
         if (tag.hasKey("reloadTick")) this.reloadTick = tag.getInteger("reloadTick");
-
-
 
         if (tag.hasKey("Scatter"))
         {
@@ -587,13 +598,12 @@ public class GunProps
         if (tag.hasKey("zoomOnCommand")) this.zoomOnCommand = tag.getString("zoomOnCommand");
         if (tag.hasKey("zoomOffCommand")) this.zoomOffCommand = tag.getString("zoomOffCommand");
 
-        
+
         if (tag.hasKey("Ticking")) this.ticking = tag.getInteger("Ticking");
         if (tag.hasKey("innerAmmo")) this.innerAmmo = tag.getInteger("innerAmmo");
         if (tag.hasKey("inputReloadingTime")) this.inputReloadingTime = tag.getInteger("inputReloadingTime");
         if (tag.hasKey("timeBetweenShoot")) this.timeBetweenShoot = tag.getLong("timeBetweenShoot");
         if (tag.hasKey("inputTimeBetweenShoot")) this.inputTimeBetweenShoot = tag.getLong("inputTimeBetweenShoot");
-
 
 
         if (tag.hasKey("inputAmmo")) this.inputAmmo = tag.getInteger("inputAmmo");
@@ -606,16 +616,15 @@ public class GunProps
 
 
         if (tag.hasKey("acceptPressed")) this.acceptPressed = tag.getBoolean("acceptPressed");
-        if (tag.hasKey("fixZoom")) this.fixZoom = tag.getBoolean("fixZoom");
-    
-        
-        if (tag.hasKey("hand_bow")) this.hand_bow = tag.getBoolean("hand_bow");
-        if (tag.hasKey("hand_bow_always")) this.hand_bow_always = tag.getBoolean("hand_bow_always");
-        if (tag.hasKey("off_click")) this.off_click = tag.getBoolean("off_click");
-        if (tag.hasKey("int_click")) this.int_click = tag.getBoolean("int_click");
-        if (tag.hasKey("ent_clock")) this.ent_clock = tag.getBoolean("ent_clock");
-    
-        
+
+
+        if (tag.hasKey("hand_bow")) this.handBow = tag.getBoolean("hand_bow");
+        if (tag.hasKey("hand_bow_always")) this.handBowAlways = tag.getBoolean("hand_bow_always");
+        if (tag.hasKey("off_click")) this.rightClick = tag.getBoolean("off_click");
+        if (tag.hasKey("int_click")) this.leftClick = tag.getBoolean("int_click");
+        if (tag.hasKey("ent_clock")) this.attackClick = tag.getBoolean("ent_clock");
+
+
         if (tag.hasKey("Pitch")) this.pitch = tag.getBoolean("Pitch");
         if (tag.hasKey("Sequencer")) this.sequencer = tag.getBoolean("Sequencer");
         if (tag.hasKey("Random")) this.random = tag.getBoolean("Random");
@@ -627,27 +636,27 @@ public class GunProps
         if (tag.hasKey("srcShootX")) this.srcShootX = tag.getFloat("srcShootX");
         if (tag.hasKey("mouseZoom")) this.mouseZoom = tag.getFloat("mouseZoom");
         if (tag.hasKey("meleeDamage")) this.meleeDamage = tag.getFloat("meleeDamage");
-    
-        
+
+
         if (tag.hasKey("srcShootY")) this.srcShootY = tag.getFloat("srcShootY");
         if (tag.hasKey("srcShootZ")) this.srcShootZ = tag.getFloat("srcShootZ");
 
 
         if (tag.hasKey("recoilSimple")) this.recoilSimple = tag.getBoolean("recoilSimple");
-        
+
         if (tag.hasKey("resetTimerAfterHandOff")) this.resetTimerButtonRel = tag.getBoolean("resetTimerAfterHandOff");
-    
+
         if (tag.hasKey("recoilXMax")) this.recoilXMax = tag.getFloat("recoilXMax");
         if (tag.hasKey("recoilYMin")) this.recoilYMin = tag.getFloat("recoilYMin");
         if (tag.hasKey("recoilYMax")) this.recoilYMax = tag.getFloat("recoilYMax");
 
         if (tag.hasKey("Friction")) this.friction = tag.getFloat("Friction");
         if (tag.hasKey("Gravity")) this.gravity = tag.getFloat("Gravity");
-        
+
         if (tag.hasKey("durability")) this.durability = tag.getInteger("durability");
         if (tag.hasKey("hidedurability")) this.hidedurability = tag.getInteger("hidedurability");
-    
-        
+
+
         if (tag.hasKey("FadeIn")) this.fadeIn = tag.getInteger("FadeIn");
         if (tag.hasKey("FadeOut")) this.fadeOut = tag.getInteger("FadeOut");
         /* Impact properties */
@@ -659,8 +668,8 @@ public class GunProps
         if (tag.hasKey("Bounce")) this.bounce = tag.getBoolean("Bounce");
         if (tag.hasKey("Stick")) this.sticks = tag.getBoolean("Stick");
         if (tag.hasKey("Hits")) this.hits = tag.getInteger("Hits");
-        if (tag.hasKey("state")) this.state = tag.getInteger("state");
 
+        if (tag.hasKey("State")) this.state = ItemGun.GunState.values()[tag.getInteger("State")];
 
         if (tag.hasKey("Damage")) this.damage = tag.getFloat("Damage");
         if (tag.hasKey("KnockbackH")) this.knockbackHorizontal = tag.getFloat("KnockbackH");
@@ -679,11 +688,11 @@ public class GunProps
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
             this.current.set(MorphUtils.copy(this.defaultMorph));
-            this.current_hands.set(MorphUtils.copy(this.hands));
-            this.current_overlay.set(MorphUtils.copy(this.morph_overlay));
-            this.current_guiMorph.set(MorphUtils.copy(this.guiMorph));
-            this.current_reloadMorph.set(MorphUtils.copy(this.reloadMorph));
-            this.current_aim.set(MorphUtils.copy(this.aimMorph));
+            this.currentHands.set(MorphUtils.copy(this.handsMorph));
+            this.currentOverlay.set(MorphUtils.copy(this.overlayMorph));
+            this.currentGui.set(MorphUtils.copy(this.guiMorph));
+            this.currentReload.set(MorphUtils.copy(this.reloadMorph));
+            this.currentAim.set(MorphUtils.copy(this.aimMorph));
         }
     }
 
@@ -703,18 +712,18 @@ public class GunProps
 
         /* Gun properties */
         if (this.defaultMorph != null) tag.setTag("Morph", this.to(this.defaultMorph));
-        if (this.hands != null) tag.setTag("Hands", this.to(this.hands));
-        if (this.guiMorph !=null) tag.setTag("GUIMorph", this.to(this.guiMorph));
-        if (this.reloadMorph !=null) tag.setTag("ReloadMorph", this.to(this.reloadMorph));
-        if (this.aimMorph !=null) tag.setTag("AimMorph",this.to(this.aimMorph));
+        if (this.handsMorph != null) tag.setTag("Hands", this.to(this.handsMorph));
+        if (this.guiMorph != null) tag.setTag("GuiMorph", this.to(this.guiMorph));
+        if (this.reloadMorph != null) tag.setTag("ReloadMorph", this.to(this.reloadMorph));
+        if (this.aimMorph != null) tag.setTag("AimMorph", this.to(this.aimMorph));
 
-        if (this.morph_overlay != null) tag.setTag("OverlayMorph", this.to(this.morph_overlay));
+        if (this.overlayMorph != null) tag.setTag("OverlayMorph", this.to(this.overlayMorph));
         if (this.firingMorph != null) tag.setTag("Fire", this.to(this.firingMorph));
         if (!this.fireCommand.isEmpty()) tag.setString("FireCommand", this.fireCommand);
         if (this.delay != 0) tag.setInteger("Delay", this.delay);
 
         if (this.projectiles != 1) tag.setInteger("Projectiles", this.projectiles);
-        if (this.reloadTick !=0) tag.setLong("reloadTick",this.reloadTick);
+        if (this.reloadTick != 0) tag.setLong("reloadTick", this.reloadTick);
 
         if (this.scatterX != 0F || this.scatterY != 0F)
         {
@@ -726,8 +735,8 @@ public class GunProps
             tag.setTag("Scatter", scatter);
         }
         if (this.launch) tag.setBoolean("Launch", this.launch);
-        if (this.enableCustomGuiMorph) tag.setBoolean("enableCustomGuiMorph",this.enableCustomGuiMorph);
-        if (this.needToBeReloaded) tag.setBoolean("needToBeReloaded",this.needToBeReloaded);
+        if (this.enableCustomGuiMorph) tag.setBoolean("enableCustomGuiMorph", this.enableCustomGuiMorph);
+        if (this.needToBeReloaded) tag.setBoolean("needToBeReloaded", this.needToBeReloaded);
 
 
         if (this.useTarget) tag.setBoolean("Target", this.useTarget);
@@ -736,22 +745,21 @@ public class GunProps
         /* Projectile properties */
         if (this.projectileMorph != null) tag.setTag("Projectile", this.to(this.projectileMorph));
         if (!this.tickCommand.isEmpty()) tag.setString("TickCommand", this.tickCommand);
-    
+
         if (!this.reloadCommand.isEmpty()) tag.setString("reloadCommand", this.reloadCommand);
         if (!this.zoomOnCommand.isEmpty()) tag.setString("zoomOnCommand", this.zoomOnCommand);
         if (!this.zoomOffCommand.isEmpty()) tag.setString("zoomOffCommand", this.zoomOffCommand);
-        
+
         if (!this.meleeCommand.isEmpty()) tag.setString("meleeCommand", this.meleeCommand);
         if (!this.destrCommand.isEmpty()) tag.setString("destrCommand", this.destrCommand);
-        
+
         if (this.ticking != 0) tag.setInteger("Ticking", this.ticking);
         if (this.inputAmmo != 1) tag.setInteger("inputAmmo", this.inputAmmo);
         tag.setInteger("innerAmmo", this.innerAmmo);
 
         if (this.inputReloadingTime != 0) tag.setLong("inputReloadingTime", this.inputReloadingTime);
-         tag.setLong("timeBetweenShoot", this.timeBetweenShoot);
+        tag.setLong("timeBetweenShoot", this.timeBetweenShoot);
         if (this.inputTimeBetweenShoot != 0) tag.setLong("inputTimeBetweenShoot", this.inputTimeBetweenShoot);
-
 
 
         if (this.lifeSpan != 200) tag.setInteger("LifeSpan", this.lifeSpan);
@@ -763,19 +771,15 @@ public class GunProps
 
 
         if (!this.acceptPressed) tag.setBoolean("acceptPressed", this.acceptPressed);
-        if (this.fixZoom) tag.setBoolean("fixZoom", this.fixZoom);
-    
-        
 
-        if (this.hand_bow_always) tag.setBoolean("hand_bow_always", this.hand_bow_always);
-        if (this.hand_bow) tag.setBoolean("hand_bow", this.hand_bow);
-        if (this.off_click) tag.setBoolean("off_click", this.off_click);
-        if (this.int_click) tag.setBoolean("int_click", this.int_click);
-        if (this.ent_clock) tag.setBoolean("ent_clock", this.ent_clock);
-    
-        
-        
-        
+
+        if (this.handBowAlways) tag.setBoolean("hand_bow_always", this.handBowAlways);
+        if (this.handBow) tag.setBoolean("hand_bow", this.handBow);
+        if (this.rightClick) tag.setBoolean("off_click", this.rightClick);
+        if (this.leftClick) tag.setBoolean("int_click", this.leftClick);
+        if (this.attackClick) tag.setBoolean("ent_clock", this.attackClick);
+
+
         if (!this.pitch) tag.setBoolean("Pitch", this.pitch);
         if (this.sequencer) tag.setBoolean("Sequencer", this.sequencer);
         if (this.random) tag.setBoolean("Random", this.random);
@@ -788,25 +792,25 @@ public class GunProps
         if (this.srcShootZ != 0) tag.setFloat("srcShootZ", this.srcShootZ);
         if (this.mouseZoom != 0) tag.setFloat("mouseZoom", this.mouseZoom);
         if (this.mouseZoom != 0) tag.setFloat("meleeDamage", this.meleeDamage);
-    
-        
+
+
         if (!this.recoilSimple) tag.setBoolean("recoilSimple", this.recoilSimple);
-    
-        
+
+
         if (!this.resetTimerButtonRel) tag.setBoolean("resetTimerAfterHandOff", this.resetTimerButtonRel);
-    
-        
+
+
         if (this.recoilXMax != 0) tag.setFloat("recoilXMax", this.recoilXMax);
         if (this.recoilYMin != 0) tag.setFloat("recoilYMin", this.recoilYMin);
         if (this.recoilYMax != 0) tag.setFloat("recoilYMax", this.recoilYMax);
         if (this.speed != 1.0F) tag.setFloat("Speed", this.speed);
         if (this.friction != 0.99F) tag.setFloat("Friction", this.friction);
         if (this.gravity != 0.03F) tag.setFloat("Gravity", this.gravity);
-        
+
         if (this.durability != 0) tag.setInteger("durability", this.durability);
         if (this.hidedurability != 0) tag.setInteger("hidedurability", this.hidedurability);
-    
-        
+
+
         if (this.fadeIn != 10) tag.setInteger("FadeIn", this.fadeIn);
         if (this.fadeOut != 10) tag.setInteger("FadeOut", this.fadeOut);
 
@@ -819,8 +823,8 @@ public class GunProps
         if (this.bounce) tag.setBoolean("Bounce", this.bounce);
         if (this.sticks) tag.setBoolean("Stick", this.sticks);
         if (this.hits != 1) tag.setInteger("Hits", this.hits);
-        tag.setInteger("state", this.state);
 
+        tag.setInteger("State", this.state.ordinal());
 
         if (this.damage != 0) tag.setFloat("Damage", this.damage);
         if (this.knockbackHorizontal != 0F) tag.setFloat("KnockbackH", this.knockbackHorizontal);
@@ -846,42 +850,4 @@ public class GunProps
 
         return tag;
     }
-
-    public void setGUNState(ItemGun.GunState state)
-    {
-        switch (state){
-            case UNDEF:
-                this.state = -1;
-                return;
-            case RELOADING:
-                this.state = 2;
-                return;
-            case NEED_TO_BE_RELOAD:
-                this.state = 1;
-                return;
-            case READY_TO_SHOOT:
-                this.state = 0;
-                return;
-            default:
-                this.state = -1;
-        }
-    }
-
-    public ItemGun.GunState getGUNState()
-    {
-     
-     switch (this.state)
-     {
-         case 0:
-             return ItemGun.GunState.READY_TO_SHOOT;
-         case 1:
-             return ItemGun.GunState.NEED_TO_BE_RELOAD;
-         case 2:
-             return ItemGun.GunState.RELOADING;
-         default:
-             return ItemGun.GunState.UNDEF;
-     }
-     
-    }
-
 }

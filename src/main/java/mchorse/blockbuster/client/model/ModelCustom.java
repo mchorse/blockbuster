@@ -1,9 +1,5 @@
 package mchorse.blockbuster.client.model;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelLimb.Holding;
 import mchorse.blockbuster.api.ModelPose;
@@ -33,9 +29,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Custom Model class
- *
+ * <p>
  * This class is responsible for managing available custom models that have
  * been loaded from config folder or from server and also render a custom model
  * itself.
@@ -118,13 +118,13 @@ public class ModelCustom extends ModelBiped
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         }
 
-        if(this.current!=null)
+        if (this.current != null)
         {
             for (List<OrientedBB> obbs : this.current.orientedBBlimbs.values())
             {
-                for(OrientedBB obb : obbs)
+                for (OrientedBB obb : obbs)
                 {
-                    obb.center.set( entityIn.prevPosX + (entityIn.posX - entityIn.prevPosX) * Minecraft.getMinecraft().getRenderPartialTicks(),
+                    obb.center.set(entityIn.prevPosX + (entityIn.posX - entityIn.prevPosX) * Minecraft.getMinecraft().getRenderPartialTicks(),
                             entityIn.prevPosY + (entityIn.posY - entityIn.prevPosY) * Minecraft.getMinecraft().getRenderPartialTicks(),
                             entityIn.prevPosZ + (entityIn.posZ - entityIn.prevPosZ) * Minecraft.getMinecraft().getRenderPartialTicks());
                 }
@@ -152,7 +152,7 @@ public class ModelCustom extends ModelBiped
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
-        for (int i = 0; i < this.limbs.length; i ++)
+        for (int i = 0; i < this.limbs.length; i++)
         {
             this.limbs[i].setupStencilRendering(i + 1);
         }
@@ -193,20 +193,18 @@ public class ModelCustom extends ModelBiped
                     right = ModelBiped.ArmPose.BOW_AND_ARROW;
                 }
             }
-            if (rightItem.getItem() instanceof ItemGun){
-               GunProps props = NBTUtils.getGunProps(rightItem);
+            if (rightItem.getItem() instanceof ItemGun)
+            {
+                GunProps props = NBTUtils.getGunProps(rightItem);
 
-                if (props.hand_bow_always){
+                if (props.handBowAlways)
+                {
                     right = ModelBiped.ArmPose.BOW_AND_ARROW;
-                }else {
-                    if (props.hand_bow){
-                        if (KeyboardHandler.gun_shoot.isKeyDown()){
-                            right = ModelBiped.ArmPose.BOW_AND_ARROW;
-                        }
-                    }
                 }
-
-
+                else if (props.handBow && KeyboardHandler.gunShoot.isKeyDown())
+                {
+                    right = ModelBiped.ArmPose.BOW_AND_ARROW;
+                }
             }
         }
 
@@ -216,9 +214,9 @@ public class ModelCustom extends ModelBiped
 
             if (entity.getItemInUseCount() > 0)
             {
-                EnumAction enumaction1 = leftItem.getItemUseAction();
+                EnumAction action = leftItem.getItemUseAction();
 
-                if (enumaction1 == EnumAction.BLOCK)
+                if (action == EnumAction.BLOCK)
                 {
                     left = ModelBiped.ArmPose.BLOCK;
                 }
@@ -377,14 +375,14 @@ public class ModelCustom extends ModelBiped
                     case BLOCK:
                         limb.rotateAngleX = limb.rotateAngleX * 0.5F - 0.9424779F;
                         limb.rotateAngleY = 0.5235988F * (right ? -1 : 1);
-                    break;
+                        break;
 
                     case ITEM:
                         if (limb.limb.hold)
                         {
                             limb.rotateAngleX = limb.rotateAngleX * 0.5F - PI / 10F;
                         }
-                    break;
+                        break;
                 }
 
                 float rotateAngleX = headPitch * 0.017453292F;
@@ -465,7 +463,7 @@ public class ModelCustom extends ModelBiped
     }
 
     /**
-     * Clean up resources used by this model 
+     * Clean up resources used by this model
      */
     public void delete()
     {

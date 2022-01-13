@@ -187,7 +187,6 @@ public class CommonProxy
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
         MinecraftForge.EVENT_BUS.register(new MetamorphHandler());
         MinecraftForge.EVENT_BUS.register(new PlayerTickHandler());
-        
     }
 
     /**

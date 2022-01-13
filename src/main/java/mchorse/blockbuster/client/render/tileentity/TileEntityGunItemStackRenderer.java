@@ -4,26 +4,12 @@ import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.utils.NBTUtils;
-import mchorse.mclib.math.functions.limit.Min;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.BakedItemModel;
-import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.event.entity.item.ItemTossEvent;
-import net.minecraftforge.event.entity.player.PlayerDropsEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -33,8 +19,8 @@ import java.util.Map;
 
 /**
  * Gun items's TEISR
- * 
- * This class is responsible for rendering gun items
+ *
+ * <p>This class is responsible for rendering gun items</p>
  */
 @SideOnly(Side.CLIENT)
 public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
@@ -42,7 +28,6 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
     /**
      * A cache of model TEs
      */
-
     public static final Map<ItemStack, GunEntry> models = new HashMap<ItemStack, GunEntry>();
 
     @Override
@@ -81,23 +66,26 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
 
         if (model != null)
         {
-
             model.timer = 20;
-            if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI
-                        && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND
-                        && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND
-                        && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIXED
-                    && RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GROUND)
-            {
-                if (!(KeyboardHandler.zoom.isKeyDown()  && model.props.hideHandOnZoom))
+
+            if (
+                RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI &&
+                RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND &&
+                RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND &&
+                RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIXED &&
+                RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GROUND
+            ) {
+                if (!(KeyboardHandler.zoom.isKeyDown() && model.props.hideHandOnZoom))
                 {
                     model.props.renderHands(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
+
                 if (model.props.enableOverlay && KeyboardHandler.zoom.isKeyDown())
                 {
-                        model.props.renderOverlay(RenderingHandler.getLastItemHolder(), partialTicks);
+                    model.props.renderOverlay(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
             }
+
             if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI)
             {
                 if (!(KeyboardHandler.zoom.isKeyDown() && model.props.hideHandOnZoom))
@@ -105,16 +93,19 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
                     model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
             }
+
             if (RenderingHandler.itemTransformType == ItemCameraTransforms.TransformType.GUI)
             {
-                if (model.props.enableCustomGuiMorph && model.props.guiMorph!=null)
+                if (model.props.enableCustomGuiMorph && model.props.guiMorph != null)
                 {
                     model.props.renderGUIMorph(RenderingHandler.getLastItemHolder(), partialTicks);
-                }else {
+                }
+                else
+                {
                     model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
             }
-            
+
             this.reset();
         }
     }
@@ -129,10 +120,8 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
         mc.getTextureMapBlocks().setBlurMipmap(false, false);
     }
 
-
     public static class GunEntry
     {
-
         public int timer = 20;
         public GunProps props;
 

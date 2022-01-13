@@ -2,13 +2,9 @@ package mchorse.blockbuster.network.common.guns;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.mclib.utils.NBTUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class PacketGunInfo implements IMessage
 {

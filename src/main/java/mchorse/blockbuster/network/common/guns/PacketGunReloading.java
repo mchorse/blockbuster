@@ -12,29 +12,29 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
  */
 public class PacketGunReloading implements IMessage
 {
-    public ItemStack itemStack;
+    public ItemStack stack;
     public int id;
 
     public PacketGunReloading()
     {}
-    
-    public PacketGunReloading(ItemStack itemStack, int id)
+
+    public PacketGunReloading(ItemStack stack, int id)
     {
-        this.itemStack =itemStack;
+        this.stack = stack;
         this.id = id;
     }
 
     @Override
     public void fromBytes(ByteBuf byteBuf)
     {
-        this.itemStack = ByteBufUtils.readItemStack(byteBuf);
+        this.stack = ByteBufUtils.readItemStack(byteBuf);
         this.id = byteBuf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf byteBuf)
     {
-        ByteBufUtils.writeItemStack(byteBuf,itemStack);
-        byteBuf.writeInt(id);
+        ByteBufUtils.writeItemStack(byteBuf, this.stack);
+        byteBuf.writeInt(this.id);
     }
 }

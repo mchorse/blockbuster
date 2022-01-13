@@ -3,18 +3,18 @@ package mchorse.blockbuster.events;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.utils.NBTUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.util.function.Function;
 
 /**
  * \* User: Evanechecssss
@@ -23,173 +23,83 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
  */
 public class PlayerTickHandler
 {
-    
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void playerInteract(PlayerInteractEvent.EntityInteract event)
-    {
-        EntityPlayer player = event.getEntityPlayer();
-        
-        if (!(player.getHeldItemMainhand().getItem() instanceof ItemGun))
-        {
-            return;
-        }
-        
-        ItemStack stack = player.getHeldItemMainhand();
-        GunProps props = NBTUtils.getGunProps(stack);
-        
-        if (props == null)
-        {
-            return;
-        }
-        
-        if (props.off_click)
-        {
-            if (event.isCancelable())
-            {
-                event.setCanceled(true);
-                event.setCancellationResult(EnumActionResult.FAIL);
-            }
-        }
-    }
-    
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void playerInteract(PlayerInteractEvent.LeftClickBlock event)
-    {
-        EntityPlayer player = event.getEntityPlayer();
-        
-        if (!(player.getHeldItemMainhand().getItem() instanceof ItemGun))
-        {
-            return;
-        }
-        
-        ItemStack stack = player.getHeldItemMainhand();
-        GunProps props = NBTUtils.getGunProps(stack);
-        
-        if (props == null)
-        {
-            return;
-        }
-        
-        if (props.int_click)
-        {
-            if (event.isCancelable())
-            {
-                event.setCanceled(true);
-                event.setCancellationResult(EnumActionResult.FAIL);
-            }
-        }
-    }
-    
+    private Function<GunProps, Boolean> leftHandler = (props) -> props.leftClick;
+    private Function<GunProps, Boolean> rightHandler = (props) -> props.rightClick;
+    private Function<GunProps, Boolean> attackHandler = (props) -> props.attackClick;
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onLivingAttack(LivingAttackEvent event)
     {
-        Entity damaged = event.getEntity();
-        Entity src =  event.getSource().getTrueSource();
-        
-        if (!(src instanceof EntityPlayer))
-        {
-            return;
-        }
-        
-        EntityPlayer player = (EntityPlayer) src;
-        
-        if (!(player.getHeldItemMainhand().getItem() instanceof ItemGun))
-        {
-            return;
-        }
-        
-        ItemStack stack = player.getHeldItemMainhand();
-        GunProps props = NBTUtils.getGunProps(stack);
-        
-        if (props == null)
-        {
-            return;
-        }
-        
-        if (props.ent_clock)
-        {
-            if (event.isCancelable())
-            {
-                event.setCanceled(true);
-            }
-        }
-    }
-    
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void playerInteract(PlayerInteractEvent.RightClickBlock event)
-    {
-        
-        EntityPlayer player = event.getEntityPlayer();
-        
-        if (!(player.getHeldItemMainhand().getItem() instanceof ItemGun))
-        {
-            return;
-        }
-        
-        ItemStack stack = player.getHeldItemMainhand();
-        GunProps props = NBTUtils.getGunProps(stack);
-        
-        if (props == null)
-        {
-            return;
-        }
-        
-        if (props.off_click)
-        {
-            if (event.isCancelable())
-            {
-                event.setCanceled(true);
-                event.setCancellationResult(EnumActionResult.FAIL);
-            }
-        }
-    }
-    
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void playerInteract(PlayerInteractEvent.RightClickItem event)
-    {
-        EntityPlayer player = event.getEntityPlayer();
-        
-        if (!(player.getHeldItemMainhand().getItem() instanceof ItemGun))
-        {
-            return;
-        }
-        
-        ItemStack stack = player.getHeldItemMainhand();
-        GunProps props = NBTUtils.getGunProps(stack);
-        
-        if (props == null)
-        {
-            return;
-        }
-        
-        if (props.off_click)
-        {
-            if (event.isCancelable())
-            {
-                event.setCanceled(true);
-                event.setCancellationResult(EnumActionResult.FAIL);
-            }
-        }
-    }
-    
+        Entity source = event.getSource().getTrueSource();
 
-    
+        if (source instanceof EntityPlayer)
+        {
+            this.handle((EntityPlayer) source, event, attackHandler);
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void playerTick(TickEvent.PlayerTickEvent event)
+    public void onPlayerInteract(PlayerInteractEvent.LeftClickBlock event)
+    {
+        this.handle(event.getEntityPlayer(), event, leftHandler);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onPlayerInteract(PlayerInteractEvent.EntityInteract event)
+    {
+        this.handle(event.getEntityPlayer(), event, rightHandler);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event)
+    {
+        this.handle(event.getEntityPlayer(), event, rightHandler);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onPlayerInteract(PlayerInteractEvent.RightClickItem event)
+    {
+        this.handle(event.getEntityPlayer(), event, rightHandler);
+    }
+
+    private void handle(EntityPlayer player, LivingEvent event, Function<GunProps, Boolean> handler)
+    {
+        ItemStack stack = player.getHeldItemMainhand();
+
+        if (!(stack.getItem() instanceof ItemGun))
+        {
+            return;
+        }
+
+        GunProps props = NBTUtils.getGunProps(stack);
+
+        if (props == null)
+        {
+            return;
+        }
+
+        if (handler.apply(props) && event.isCancelable())
+        {
+            event.setCanceled(true);
+
+            if (event instanceof PlayerInteractEvent)
+            {
+                ((PlayerInteractEvent) event).setCancellationResult(EnumActionResult.FAIL);
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onPlayerTick(TickEvent.PlayerTickEvent event)
     {
         EntityPlayer player = event.player;
-        
-        if (player.getHeldItemMainhand().getItem() instanceof ItemGun)
+        ItemStack stack = player.getHeldItemMainhand();
+
+        if (stack.getItem() instanceof ItemGun)
         {
-            doGunStaff(player.getHeldItemMainhand(), player);
+            ItemGun.decreaseReload(stack, player);
+            ItemGun.decreaseTime(stack, player);
+            ItemGun.checkGunState(stack, player);
         }
     }
-    
-    private void doGunStaff(ItemStack stack, EntityPlayer player)
-    {
-        ItemGun.minusReload(stack, player);
-        ItemGun.minusTime(stack, player);
-        ItemGun.checkGunState(stack,player);
-    }
-    
 }
