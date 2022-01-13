@@ -1,7 +1,6 @@
 package mchorse.blockbuster.client.render;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.item.ItemGun;
@@ -23,7 +22,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -37,6 +35,7 @@ import org.lwjgl.util.vector.Vector3f;
 public class GunMiscRender
 {
     public static float ZOOM_TIME;
+    public static boolean onZoom = true;
 
     private boolean hasChangedSensitivity = false;
     private float lastMouseSensitivity;
@@ -45,31 +44,19 @@ public class GunMiscRender
     public Vector3f scale = new Vector3f(1F, 1F, 1F);
     public Vector3f rotate = new Vector3f();
 
-
-    @SideOnly(Side.CLIENT)
     @SubscribeEvent
+    @SideOnly(Side.CLIENT)
     public void onTick(TickEvent.RenderTickEvent event)
     {
         if (Minecraft.getMinecraft().player != null && event.phase.equals(TickEvent.Phase.END))
         {
-            EntityPlayer entityPlayer = Minecraft.getMinecraft().player;
-            ItemStack heldItem = entityPlayer.getHeldItem(EnumHand.MAIN_HAND);
+            EntityPlayer player = Minecraft.getMinecraft().player;
+            ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
             GunProps props = NBTUtils.getGunProps(heldItem);
 
-            if (heldItem.getItem().equals(Blockbuster.gunItem) && KeyboardHandler.zoom.isKeyDown())
+            if (heldItem.getItem().equals(Blockbuster.gunItem))
             {
-                ClientProxy.onZoom = true;
-                ZOOM_TIME = Math.min(ZOOM_TIME + (event.renderTickTime * 0.1F), 1);
-
-                Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(), true));
-            }
-            else
-            {
-
-                ClientProxy.onZoom = false;
-                ZOOM_TIME = Math.max(ZOOM_TIME - (event.renderTickTime * 0.2F), 0);
-
-                Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(), false));
+                this.handleZoom(event.renderTickTime);
             }
 
             if (ZOOM_TIME == 0)
@@ -101,6 +88,32 @@ public class GunMiscRender
                     hasChangedSensitivity = true;
                     Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity;
                 }
+            }
+        }
+    }
+
+    private void handleZoom(float partialTick)
+    {
+        boolean zoomed = onZoom;
+
+        if (KeyboardHandler.zoom.isKeyDown())
+        {
+            onZoom = true;
+            ZOOM_TIME = Math.min(ZOOM_TIME + (partialTick * 0.1F), 1);
+
+            if (!zoomed)
+            {
+                Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(), true));
+            }
+        }
+        else
+        {
+            onZoom = false;
+            ZOOM_TIME = Math.max(ZOOM_TIME - (partialTick * 0.2F), 0);
+
+            if (zoomed)
+            {
+                Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(), false));
             }
         }
     }

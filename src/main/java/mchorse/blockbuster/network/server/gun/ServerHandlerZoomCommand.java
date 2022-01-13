@@ -1,6 +1,5 @@
 package mchorse.blockbuster.network.server.gun;
 
-import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.network.common.guns.PacketZoomCommand;
@@ -17,8 +16,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
  */
 public class ServerHandlerZoomCommand extends ServerMessageHandler<PacketZoomCommand>
 {
-    private static boolean was = false;
-
     @Override
     public void run(EntityPlayerMP player, PacketZoomCommand message)
     {
@@ -37,18 +34,16 @@ public class ServerHandlerZoomCommand extends ServerMessageHandler<PacketZoomCom
 
         if (message.zoomOn)
         {
-            if (!props.zoomOnCommand.isEmpty() && ClientProxy.onZoom && !was)
+            if (!props.zoomOnCommand.isEmpty())
             {
                 player.getServer().commandManager.executeCommand(player, props.zoomOnCommand);
-                was = true;
             }
         }
         else
         {
-            if (!props.zoomOffCommand.isEmpty() && !ClientProxy.onZoom && was)
+            if (!props.zoomOffCommand.isEmpty())
             {
                 player.getServer().commandManager.executeCommand(player, props.zoomOffCommand);
-                was = false;
             }
         }
     }
