@@ -136,7 +136,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
             {
                 return new GuiSimpleContextMenu(this.mc)
                     .action(Icons.FULLSCREEN, IKey.lang("blockbuster.gui.me.limbs.context.anchor_setup"), () -> this.setupAnchorPoint(renderer, false))
-                    .action(Icons.DOWNLOAD, IKey.lang("blockbuster.gui.me.limbs.context.anchor_setup"), () -> this.setupAnchorPoint(renderer, true));
+                    .action(Icons.DOWNLOAD, IKey.lang("blockbuster.gui.me.limbs.context.anchor_move"), () -> this.setupAnchorPoint(renderer, true));
             }
 
             return null;
