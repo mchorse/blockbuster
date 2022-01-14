@@ -5,6 +5,9 @@ key:
         category: Blockbuster
 
         plause_director: 播放/停止回放
-        record_director: 錄制回放
-        pause_director: 暫停場景回放 / 取消錄制
+        record_director: 錄製回放
+        pause_director: 暫停場景回放 / 取消錄製
         open_gun: 配置槍
+        zoom: 瞄準
+        gun_reload: 換彈
+        gun_shoot: 射擊

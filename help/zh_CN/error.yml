@@ -52,6 +52,7 @@ blockbuster.error:
         index_out_range: "{f}索引 %s{f} 超出范围！范围应在 {7}0{r} 和 %s{r} 之间。"
         already_empty: "{f}玩家回放 %s{r} 中，索引 %s{r} 处没有动作！"
         wrong_action: "{f}动作类别 %s{f} 不存在！"
+        delete_rights: "该命令的用户权限不足！"
         add: "{f}动作类别 %s{f} 由于以下错误而无法添加：%s"
         already_exists: "{f}名为 %s{f} 的玩家回放已经存在了！"
         couldnt_save: "{f}无法以 %s{f} 的文件名保存玩家回放！"

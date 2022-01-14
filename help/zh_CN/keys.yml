@@ -8,3 +8,6 @@ key:
         record_director: 录制回放
         pause_director: 暂停场景回放 / 取消录制
         open_gun: 配置枪
+        zoom: 瞄准
+        gun_reload: 换弹
+        gun_shoot: 射击

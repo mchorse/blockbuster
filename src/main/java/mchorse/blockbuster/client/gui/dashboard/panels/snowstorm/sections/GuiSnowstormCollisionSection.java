@@ -76,7 +76,7 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
             this.component.realisticCollisionDrag = b.isToggled();
             this.parent.dirty();
         });
-        this.realisticCollisionDrag.tooltip(IKey.lang("blockbuster.gui.snowstorm.realistic_collision_drag_tooltip"));
+        this.realisticCollisionDrag.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.realistic_collision_drag_tooltip"));
         
         this.drag = new GuiTrackpadElement(mc, (value) ->
         {
