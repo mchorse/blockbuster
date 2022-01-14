@@ -680,46 +680,56 @@ blockbuster.gui:
         fade_in: Fade in
         fade_out: Fade out
 
-        pick_hands: Pick hands
-        enable_overlay: Enable zoom overlay
+        aim_options: Pro options
+        static_recoil: Static recoil
+        recoil_x: Recoil X
+        recoil_y: Recoil Y
+        recoil_min: Minimum recoil factor
+        recoil_max: Maximum recoil factor
+
+        arm_shooting_pose: Arms shooting pose
+        arm_shooting_pose_tooltip: When enabled and shooting BB gun, character's arms will be held in a bow shooting pose
+        arm_shooting_pose_always: Keep arms shooting pose
+        arm_shooting_pose_always_tooltip: When enabled, arms will always be held in a bow shooting pose
+
+        shooting_offset: Shooting offset
+        shooting_offset_tooltip: XYZ values relative to head rotation that allow you to adjust where does the projectile will be shot from
+        shooting_offset_x: Shooting offset X
+        shooting_offset_y: Shooting offset Y
+        shooting_offset_z: Shooting offset Z
+
+        inventory_morph: Inventory morph
+        crosshair_morph: Crosshair morph
+        hands_morph: Hands morph
+        reload_morph: Reloading morph
+        overlay_morph: Zoom overlay morph
+
+        use_inventory_morph: Use inventory morph
+        use_crosshair_morph: Use crosshair morph
+        use_overlay_morph: Use zoom overlay morph
+
         hide_zoom: Hide gun on zoom
-        pick_overlay: Pick zoom overlay
-        pick_gui: Pick gui morph
         zoom: Change zoom value
-        hand_bow: Hand as bow
-        hand_bow_always: Hand as bow always
         input_time_between_shoot: Time between shoot
         input_ammo: Ammo
         input_reloading_time: Reloading time
-        enable_custom_gui_morph: Use gui morph
-        hide_aim_on_zoom: Hide aim on zoom
         need_to_be_reloaded: Need to be reloaded
-        pick_aim_morph: Aim morph
-        pick_reload_morph: Reloading morp
         accept_pressed: Shoot when press hold
         reset_timer_button_rel: Reset when dont hold button
-        reload_command: Reload command #cummamds
-        zoom_on_command: Zoom on command
-        zoom_off_command: Zoom off command
-        src_shoot_x: Shift X source
-        src_shoot_y: Shift Y source
-        src_shoot_z: Shift Z source
-        fire_src: Fire source
-        recoil_simple: recoil simple (without random)
-        recoil_x_min: recoil x min
-        recoil_x_max: recoil x max
-        recoil_y_min: recoil y min
-        recoil_y_max: recoil y max
-        aim_options: Pro options
-        mouse_zoom: Mouse Intensivnosty on zoom
-        melee_damage: Melee uron
-        durability: Dolgovechnost
-        off_click: Blocks break block
-        int_click: Interaction break block
-        ent_clock: Entity damage block
+
+        aim_options_second: Pro options (page 2)
+        destroyed_command: Command on gun destroyed # Evanechecssss: cummands
         melee_command: Command on melee attack
-        destrCommand: Command on destroyd gun
-        aim_options_second: Pro setting +
+        reload_command: Command on reload
+        zoom_on_command: Command on zoom
+        zoom_off_command: command on zoom off
+
+        melee_damage: Melee damage
+        mouse_zoom: Mouse intensity on zoom
+        durability: Durability
+        prevent_left_click: Prevent block breaking
+        prevent_right_click: Prevent interaction
+        prevent_entity_attack: Prevent entity attack
 
         impact_morph: Impact morph
         impact_delay: Impact delay

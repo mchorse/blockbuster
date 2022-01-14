@@ -161,13 +161,13 @@ public class RenderingHandler
         {
             GunProps props = NBTUtils.getGunProps(itemstack);
 
-            if (props.handBowAlways)
+            if (props.alwaysArmsShootingPose)
             {
                 armPose = ModelBiped.ArmPose.BOW_AND_ARROW;
             }
             else
             {
-                if (props.handBow)
+                if (props.enableArmsShootingPose)
                 {
                     if (KeyboardHandler.gunShoot.isKeyDown())
                     {

@@ -80,9 +80,9 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
                     model.props.renderHands(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
 
-                if (model.props.enableOverlay && KeyboardHandler.zoom.isKeyDown())
+                if (model.props.useZoomOverlayMorph && KeyboardHandler.zoom.isKeyDown())
                 {
-                    model.props.renderOverlay(RenderingHandler.getLastItemHolder(), partialTicks);
+                    model.props.renderZoomOverlay(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
             }
 
@@ -96,9 +96,9 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
 
             if (RenderingHandler.itemTransformType == ItemCameraTransforms.TransformType.GUI)
             {
-                if (model.props.enableCustomGuiMorph && model.props.guiMorph != null)
+                if (model.props.useInventoryMorph && model.props.inventoryMorph != null)
                 {
-                    model.props.renderGUIMorph(RenderingHandler.getLastItemHolder(), partialTicks);
+                    model.props.renderInventoryMorph(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
                 else
                 {

@@ -23,9 +23,9 @@ import java.util.function.Function;
  */
 public class PlayerTickHandler
 {
-    private Function<GunProps, Boolean> leftHandler = (props) -> props.leftClick;
-    private Function<GunProps, Boolean> rightHandler = (props) -> props.rightClick;
-    private Function<GunProps, Boolean> attackHandler = (props) -> props.attackClick;
+    private Function<GunProps, Boolean> leftHandler = (props) -> props.preventLeftClick;
+    private Function<GunProps, Boolean> rightHandler = (props) -> props.preventRightClick;
+    private Function<GunProps, Boolean> attackHandler = (props) -> props.preventEntityAttack;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onLivingAttack(LivingAttackEvent event)

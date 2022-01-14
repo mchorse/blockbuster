@@ -197,11 +197,11 @@ public class ModelCustom extends ModelBiped
             {
                 GunProps props = NBTUtils.getGunProps(rightItem);
 
-                if (props.handBowAlways)
+                if (props.alwaysArmsShootingPose)
                 {
                     right = ModelBiped.ArmPose.BOW_AND_ARROW;
                 }
-                else if (props.handBow && KeyboardHandler.gunShoot.isKeyDown())
+                else if (props.enableArmsShootingPose && KeyboardHandler.gunShoot.isKeyDown())
                 {
                     right = ModelBiped.ArmPose.BOW_AND_ARROW;
                 }

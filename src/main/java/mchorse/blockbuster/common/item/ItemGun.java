@@ -161,19 +161,19 @@ public class ItemGun extends Item
 
         if (props.durability != 0)
         {
-            int val = props.hidedurability - 1;
+            int val = props.hideDurability - 1;
 
             if (val <= 0)
             {
-                if (!props.destrCommand.isEmpty())
+                if (!props.destroyCommand.isEmpty())
                 {
-                    player.getServer().commandManager.executeCommand(player, props.destrCommand);
+                    player.getServer().commandManager.executeCommand(player, props.destroyCommand);
                 }
 
                 player.getHeldItemMainhand().setCount(0);
             }
 
-            props.hidedurability = val;
+            props.hideDurability = val;
 
             NBTUtils.saveGunProps(player.getHeldItemMainhand(), props.toNBT());
         }
@@ -192,7 +192,7 @@ public class ItemGun extends Item
 
         if (world.isRemote && props != null)
         {
-            if (props.recoilSimple)
+            if (props.staticRecoil)
             {
                 player.rotationPitch += Interpolation.QUINT_IN.interpolate(player.prevRotationPitch, player.prevRotationPitch + props.recoilXMin, 1F) - player.prevRotationPitch;
                 player.rotationYaw += Interpolation.QUINT_IN.interpolate(player.prevRotationYaw, player.prevRotationYaw + props.recoilYMin, 1F) - player.prevRotationYaw;
@@ -264,7 +264,7 @@ public class ItemGun extends Item
                 double x = player.posX;
                 double y = player.posY + player.getEyeHeight();
                 double z = player.posZ;
-                Vector3f offset = new Vector3f(props.srcShootX, props.srcShootY, props.srcShootZ);
+                Vector3f offset = new Vector3f(props.shootingOffsetX, props.shootingOffsetY, props.shootingOffsetZ);
                 Vector3f vector = this.rotate(offset, player.rotationYaw, player.rotationPitch);
 
                 x += vector.x;
@@ -335,8 +335,8 @@ public class ItemGun extends Item
         Matrix3f a = new Matrix3f();
         Matrix3f b = new Matrix3f();
 
-        a.rotY(yaw / 180F * (float) Math.PI);
-        b.rotX(pitch / 180F * (float) Math.PI);
+        a.rotY((180 - yaw) / 180F * (float) Math.PI);
+        b.rotX(-pitch / 180F * (float) Math.PI);
         a.mul(b);
         a.transform(vector);
 

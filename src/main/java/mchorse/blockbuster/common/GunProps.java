@@ -34,28 +34,40 @@ public class GunProps
 {
     /* Gun properties */
     public AbstractMorph defaultMorph;
-    public AbstractMorph handsMorph;
-    public AbstractMorph guiMorph;
-    public AbstractMorph reloadMorph;
-    public AbstractMorph overlayMorph;
     public AbstractMorph firingMorph;
-    public AbstractMorph aimMorph;
     public String fireCommand;
     public int delay;
-    public boolean enableCustomGuiMorph;
-    public boolean needToBeReloaded;
     public int projectiles;
-    public long reloadTick;
     public float scatterX;
     public float scatterY;
     public boolean launch;
     public boolean useTarget;
     public ItemStack ammoStack = ItemStack.EMPTY;
-    public String reloadCommand;
-    public String zoomOnCommand;
-    public String zoomOffCommand;
-    public String meleeCommand;
-    public String destrCommand;
+    /* Evanechecssss' options */
+    public boolean staticRecoil;
+    public float recoilXMin;
+    public float recoilXMax;
+    public float recoilYMin;
+    public float recoilYMax;
+
+    public boolean enableArmsShootingPose;
+    public boolean alwaysArmsShootingPose;
+
+    public float shootingOffsetX;
+    public float shootingOffsetY;
+    public float shootingOffsetZ;
+
+    public AbstractMorph inventoryMorph;
+    public AbstractMorph crosshairMorph;
+    public AbstractMorph handsMorph;
+    public AbstractMorph reloadMorph;
+    public AbstractMorph zoomOverlayMorph;
+
+    public boolean useInventoryMorph;
+    public boolean useZoomOverlayMorph;
+
+    public boolean needToBeReloaded;
+    public long reloadTick;
     public float zoom;
     public boolean hideHandOnZoom;
     public boolean hideAimOnZoom;
@@ -64,25 +76,22 @@ public class GunProps
     public long inputTimeBetweenShoot;
     public int innerAmmo;
     public int inputAmmo;
-    public boolean handBow;
-    public boolean rightClick;
-    public boolean leftClick;
-    public boolean attackClick;
-    public boolean handBowAlways;
-    public float srcShootX;
-    public float srcShootY;
-    public float srcShootZ;
-    public float recoilXMin;
-    public float recoilXMax;
-    public float recoilYMin;
-    public float recoilYMax;
     public boolean acceptPressed;
-    public boolean recoilSimple;
     public boolean resetTimerButtonRel;
-    public int durability;
-    public int hidedurability;
-    public float mouseZoom;
+    public int hideDurability;
+
+    public String destroyCommand;
+    public String meleeCommand;
+    public String reloadCommand;
+    public String zoomOnCommand;
+    public String zoomOffCommand;
+
     public float meleeDamage;
+    public float mouseZoom;
+    public int durability;
+    public boolean preventLeftClick;
+    public boolean preventRightClick;
+    public boolean preventEntityAttack;
     /* Projectile properties */
     public AbstractMorph projectileMorph;
     public String tickCommand;
@@ -99,7 +108,6 @@ public class GunProps
     public float gravity;
     public int fadeIn;
     public int fadeOut;
-    public boolean enableOverlay;
     /* Impact properties */
     public AbstractMorph impactMorph;
     public String impactCommand;
@@ -127,10 +135,10 @@ public class GunProps
     private int shoot = 0;
     private Morph current = new Morph();
     private Morph currentHands = new Morph();
-    private Morph currentGui = new Morph();
-    private Morph currentOverlay = new Morph();
+    private Morph currentInventory = new Morph();
+    private Morph currentZoomOverlay = new Morph();
     private Morph currentReload = new Morph();
-    public Morph currentAim = new Morph();
+    public Morph currentCrosshair = new Morph();
     private boolean renderLock;
 
     public EntityLivingBase target;
@@ -150,9 +158,9 @@ public class GunProps
         this.current.setDirect(morph);
     }
 
-    public void setCurrentOverlay(AbstractMorph morph)
+    public void setCurrentZoomOverlay(AbstractMorph morph)
     {
-        this.currentOverlay.setDirect(morph);
+        this.currentZoomOverlay.setDirect(morph);
     }
 
     public void setHandsMorph(AbstractMorph morph)
@@ -160,15 +168,14 @@ public class GunProps
         this.currentHands.setDirect(morph);
     }
 
-    public void setAimMorph(AbstractMorph morph)
+    public void setCrosshairMorph(AbstractMorph morph)
     {
-
-        this.currentAim.setDirect(morph);
+        this.currentCrosshair.setDirect(morph);
     }
 
-    public void setGuiMorph(AbstractMorph morph)
+    public void setInventoryMorph(AbstractMorph morph)
     {
-        this.currentGui.setDirect(morph);
+        this.currentInventory.setDirect(morph);
     }
 
     public void setReloadMorph(AbstractMorph morph)
@@ -251,7 +258,7 @@ public class GunProps
     }
 
     @SideOnly(Side.CLIENT)
-    public void renderOverlay(EntityLivingBase lastItemHolder, float partialTicks)
+    public void renderZoomOverlay(EntityLivingBase lastItemHolder, float partialTicks)
     {
         if (this.renderLock)
         {
@@ -266,7 +273,7 @@ public class GunProps
         }
 
         EntityLivingBase entity = this.useTarget ? target : this.target;
-        AbstractMorph morph = this.currentOverlay.get();
+        AbstractMorph morph = this.currentZoomOverlay.get();
 
         if (morph != null && entity != null)
         {
@@ -353,7 +360,7 @@ public class GunProps
     }
 
     @SideOnly(Side.CLIENT)
-    public void renderGUIMorph(EntityLivingBase target, float partialTicks)
+    public void renderInventoryMorph(EntityLivingBase target, float partialTicks)
     {
         if (this.renderLock)
         {
@@ -368,7 +375,7 @@ public class GunProps
         }
 
         EntityLivingBase entity = this.useTarget ? target : this.target;
-        AbstractMorph morph = this.currentGui.get();
+        AbstractMorph morph = this.currentInventory.get();
 
         if (morph != null && entity != null)
         {
@@ -402,7 +409,6 @@ public class GunProps
 
         if (morph != null && entity != null)
         {
-
             float rotationYaw = entity.renderYawOffset;
             float prevRotationYaw = entity.prevRenderYawOffset;
             float rotationYawHead = entity.rotationYawHead;
@@ -453,10 +459,10 @@ public class GunProps
         /* Gun properties */
         this.defaultMorph = null;
         this.handsMorph = null;
-        this.guiMorph = null;
+        this.inventoryMorph = null;
         this.reloadMorph = null;
-        this.aimMorph = null;
-        this.overlayMorph = null;
+        this.crosshairMorph = null;
+        this.zoomOverlayMorph = null;
         this.firingMorph = null;
         this.fireCommand = "";
         this.delay = 0;
@@ -469,17 +475,17 @@ public class GunProps
         this.reloadTick = 0;
         this.scatterX = this.scatterY = 0F;
         this.launch = false;
-        this.enableCustomGuiMorph = false;
+        this.useInventoryMorph = false;
         this.useTarget = false;
         this.ammoStack = ItemStack.EMPTY;
         this.zoom = 0;
         this.recoilXMin = 0;
-        this.srcShootX = 0;
+        this.shootingOffsetX = 0;
         this.mouseZoom = 0;
         this.meleeDamage = 0;
-        this.srcShootY = 0;
-        this.srcShootZ = 0;
-        this.recoilSimple = true;
+        this.shootingOffsetY = 0;
+        this.shootingOffsetZ = 0;
+        this.staticRecoil = true;
         this.resetTimerButtonRel = true;
         this.recoilXMax = 0;
         this.recoilYMin = 0;
@@ -491,21 +497,21 @@ public class GunProps
         this.zoomOnCommand = "";
         this.reloadCommand = "";
         this.meleeCommand = "";
-        this.destrCommand = "";
+        this.destroyCommand = "";
         this.ticking = 0;
         this.durability = 0;
-        this.hidedurability = 0;
+        this.hideDurability = 0;
         this.lifeSpan = 200;
         this.yaw = true;
-        this.enableOverlay = false;
+        this.useZoomOverlayMorph = false;
         this.hideHandOnZoom = false;
         this.hideAimOnZoom = false;
-        this.handBow = false;
-        this.rightClick = false;
-        this.leftClick = false;
-        this.attackClick = false;
+        this.enableArmsShootingPose = false;
+        this.preventRightClick = false;
+        this.preventLeftClick = false;
+        this.preventEntityAttack = false;
         this.acceptPressed = true;
-        this.handBowAlways = false;
+        this.alwaysArmsShootingPose = false;
         this.pitch = true;
         this.sequencer = false;
         this.random = false;
@@ -548,10 +554,10 @@ public class GunProps
         /* Gun properties */
         this.defaultMorph = this.create(tag, "Morph");
         this.handsMorph = this.create(tag, "Hands");
-        this.guiMorph = this.create(tag, "GuiMorph");
+        this.inventoryMorph = this.create(tag, "GuiMorph");
         this.reloadMorph = this.create(tag, "ReloadMorph");
-        this.aimMorph = this.create(tag, "AimMorph");
-        this.overlayMorph = this.create(tag, "OverlayMorph");
+        this.crosshairMorph = this.create(tag, "AimMorph");
+        this.zoomOverlayMorph = this.create(tag, "OverlayMorph");
         this.firingMorph = this.create(tag, "Fire");
 
         if (tag.hasKey("FireCommand")) this.fireCommand = tag.getString("FireCommand");
@@ -582,7 +588,7 @@ public class GunProps
         }
         if (tag.hasKey("ScatterY")) this.scatterY = tag.getFloat("ScatterY");
         if (tag.hasKey("Launch")) this.launch = tag.getBoolean("Launch");
-        if (tag.hasKey("enableCustomGuiMorph")) this.enableCustomGuiMorph = tag.getBoolean("enableCustomGuiMorph");
+        if (tag.hasKey("enableCustomGuiMorph")) this.useInventoryMorph = tag.getBoolean("enableCustomGuiMorph");
         if (tag.hasKey("needToBeReloaded")) this.needToBeReloaded = tag.getBoolean("needToBeReloaded");
 
 
@@ -593,7 +599,7 @@ public class GunProps
         this.projectileMorph = this.create(tag, "Projectile");
         if (tag.hasKey("TickCommand")) this.tickCommand = tag.getString("TickCommand");
         if (tag.hasKey("meleeCommand")) this.meleeCommand = tag.getString("meleeCommand");
-        if (tag.hasKey("destrCommand")) this.destrCommand = tag.getString("destrCommand");
+        if (tag.hasKey("destrCommand")) this.destroyCommand = tag.getString("destrCommand");
         if (tag.hasKey("reloadCommand")) this.reloadCommand = tag.getString("reloadCommand");
         if (tag.hasKey("zoomOnCommand")) this.zoomOnCommand = tag.getString("zoomOnCommand");
         if (tag.hasKey("zoomOffCommand")) this.zoomOffCommand = tag.getString("zoomOffCommand");
@@ -610,7 +616,7 @@ public class GunProps
 
         if (tag.hasKey("LifeSpan")) this.lifeSpan = tag.getInteger("LifeSpan");
         if (tag.hasKey("Yaw")) this.yaw = tag.getBoolean("Yaw");
-        if (tag.hasKey("EnableOverlay")) this.enableOverlay = tag.getBoolean("EnableOverlay");
+        if (tag.hasKey("EnableOverlay")) this.useZoomOverlayMorph = tag.getBoolean("EnableOverlay");
         if (tag.hasKey("hideHandOnZoom")) this.hideHandOnZoom = tag.getBoolean("hideHandOnZoom");
         if (tag.hasKey("hideAimOnZoom")) this.hideAimOnZoom = tag.getBoolean("hideAimOnZoom");
 
@@ -618,11 +624,11 @@ public class GunProps
         if (tag.hasKey("acceptPressed")) this.acceptPressed = tag.getBoolean("acceptPressed");
 
 
-        if (tag.hasKey("hand_bow")) this.handBow = tag.getBoolean("hand_bow");
-        if (tag.hasKey("hand_bow_always")) this.handBowAlways = tag.getBoolean("hand_bow_always");
-        if (tag.hasKey("off_click")) this.rightClick = tag.getBoolean("off_click");
-        if (tag.hasKey("int_click")) this.leftClick = tag.getBoolean("int_click");
-        if (tag.hasKey("ent_clock")) this.attackClick = tag.getBoolean("ent_clock");
+        if (tag.hasKey("hand_bow")) this.enableArmsShootingPose = tag.getBoolean("hand_bow");
+        if (tag.hasKey("hand_bow_always")) this.alwaysArmsShootingPose = tag.getBoolean("hand_bow_always");
+        if (tag.hasKey("PreventLeftClick")) this.preventLeftClick = tag.getBoolean("PreventLeftClick");
+        if (tag.hasKey("PreventRightClick")) this.preventRightClick = tag.getBoolean("PreventRightClick");
+        if (tag.hasKey("PreventEntityAttack")) this.preventEntityAttack = tag.getBoolean("PreventEntityAttack");
 
 
         if (tag.hasKey("Pitch")) this.pitch = tag.getBoolean("Pitch");
@@ -633,16 +639,16 @@ public class GunProps
         if (tag.hasKey("Speed")) this.speed = tag.getFloat("Speed");
         if (tag.hasKey("Zoom")) this.zoom = tag.getFloat("Zoom");
         if (tag.hasKey("recoilXMin")) this.recoilXMin = tag.getFloat("recoilXMin");
-        if (tag.hasKey("srcShootX")) this.srcShootX = tag.getFloat("srcShootX");
+        if (tag.hasKey("srcShootX")) this.shootingOffsetX = tag.getFloat("srcShootX");
         if (tag.hasKey("mouseZoom")) this.mouseZoom = tag.getFloat("mouseZoom");
         if (tag.hasKey("meleeDamage")) this.meleeDamage = tag.getFloat("meleeDamage");
 
 
-        if (tag.hasKey("srcShootY")) this.srcShootY = tag.getFloat("srcShootY");
-        if (tag.hasKey("srcShootZ")) this.srcShootZ = tag.getFloat("srcShootZ");
+        if (tag.hasKey("srcShootY")) this.shootingOffsetY = tag.getFloat("srcShootY");
+        if (tag.hasKey("srcShootZ")) this.shootingOffsetZ = tag.getFloat("srcShootZ");
 
 
-        if (tag.hasKey("recoilSimple")) this.recoilSimple = tag.getBoolean("recoilSimple");
+        if (tag.hasKey("recoilSimple")) this.staticRecoil = tag.getBoolean("recoilSimple");
 
         if (tag.hasKey("resetTimerAfterHandOff")) this.resetTimerButtonRel = tag.getBoolean("resetTimerAfterHandOff");
 
@@ -654,7 +660,7 @@ public class GunProps
         if (tag.hasKey("Gravity")) this.gravity = tag.getFloat("Gravity");
 
         if (tag.hasKey("durability")) this.durability = tag.getInteger("durability");
-        if (tag.hasKey("hidedurability")) this.hidedurability = tag.getInteger("hidedurability");
+        if (tag.hasKey("hidedurability")) this.hideDurability = tag.getInteger("hidedurability");
 
 
         if (tag.hasKey("FadeIn")) this.fadeIn = tag.getInteger("FadeIn");
@@ -689,10 +695,10 @@ public class GunProps
         {
             this.current.set(MorphUtils.copy(this.defaultMorph));
             this.currentHands.set(MorphUtils.copy(this.handsMorph));
-            this.currentOverlay.set(MorphUtils.copy(this.overlayMorph));
-            this.currentGui.set(MorphUtils.copy(this.guiMorph));
+            this.currentZoomOverlay.set(MorphUtils.copy(this.zoomOverlayMorph));
+            this.currentInventory.set(MorphUtils.copy(this.inventoryMorph));
             this.currentReload.set(MorphUtils.copy(this.reloadMorph));
-            this.currentAim.set(MorphUtils.copy(this.aimMorph));
+            this.currentCrosshair.set(MorphUtils.copy(this.crosshairMorph));
         }
     }
 
@@ -713,11 +719,11 @@ public class GunProps
         /* Gun properties */
         if (this.defaultMorph != null) tag.setTag("Morph", this.to(this.defaultMorph));
         if (this.handsMorph != null) tag.setTag("Hands", this.to(this.handsMorph));
-        if (this.guiMorph != null) tag.setTag("GuiMorph", this.to(this.guiMorph));
+        if (this.inventoryMorph != null) tag.setTag("GuiMorph", this.to(this.inventoryMorph));
         if (this.reloadMorph != null) tag.setTag("ReloadMorph", this.to(this.reloadMorph));
-        if (this.aimMorph != null) tag.setTag("AimMorph", this.to(this.aimMorph));
+        if (this.crosshairMorph != null) tag.setTag("AimMorph", this.to(this.crosshairMorph));
 
-        if (this.overlayMorph != null) tag.setTag("OverlayMorph", this.to(this.overlayMorph));
+        if (this.zoomOverlayMorph != null) tag.setTag("OverlayMorph", this.to(this.zoomOverlayMorph));
         if (this.firingMorph != null) tag.setTag("Fire", this.to(this.firingMorph));
         if (!this.fireCommand.isEmpty()) tag.setString("FireCommand", this.fireCommand);
         if (this.delay != 0) tag.setInteger("Delay", this.delay);
@@ -735,7 +741,7 @@ public class GunProps
             tag.setTag("Scatter", scatter);
         }
         if (this.launch) tag.setBoolean("Launch", this.launch);
-        if (this.enableCustomGuiMorph) tag.setBoolean("enableCustomGuiMorph", this.enableCustomGuiMorph);
+        if (this.useInventoryMorph) tag.setBoolean("enableCustomGuiMorph", this.useInventoryMorph);
         if (this.needToBeReloaded) tag.setBoolean("needToBeReloaded", this.needToBeReloaded);
 
 
@@ -751,7 +757,7 @@ public class GunProps
         if (!this.zoomOffCommand.isEmpty()) tag.setString("zoomOffCommand", this.zoomOffCommand);
 
         if (!this.meleeCommand.isEmpty()) tag.setString("meleeCommand", this.meleeCommand);
-        if (!this.destrCommand.isEmpty()) tag.setString("destrCommand", this.destrCommand);
+        if (!this.destroyCommand.isEmpty()) tag.setString("destrCommand", this.destroyCommand);
 
         if (this.ticking != 0) tag.setInteger("Ticking", this.ticking);
         if (this.inputAmmo != 1) tag.setInteger("inputAmmo", this.inputAmmo);
@@ -764,7 +770,7 @@ public class GunProps
 
         if (this.lifeSpan != 200) tag.setInteger("LifeSpan", this.lifeSpan);
         if (!this.yaw) tag.setBoolean("Yaw", this.yaw);
-        if (this.enableOverlay) tag.setBoolean("EnableOverlay", this.enableOverlay);
+        if (this.useZoomOverlayMorph) tag.setBoolean("EnableOverlay", this.useZoomOverlayMorph);
         if (this.hideHandOnZoom) tag.setBoolean("hideHandOnZoom", this.hideHandOnZoom);
 
         if (this.hideAimOnZoom) tag.setBoolean("hideAimOnZoom", this.hideAimOnZoom);
@@ -773,11 +779,11 @@ public class GunProps
         if (!this.acceptPressed) tag.setBoolean("acceptPressed", this.acceptPressed);
 
 
-        if (this.handBowAlways) tag.setBoolean("hand_bow_always", this.handBowAlways);
-        if (this.handBow) tag.setBoolean("hand_bow", this.handBow);
-        if (this.rightClick) tag.setBoolean("off_click", this.rightClick);
-        if (this.leftClick) tag.setBoolean("int_click", this.leftClick);
-        if (this.attackClick) tag.setBoolean("ent_clock", this.attackClick);
+        if (this.alwaysArmsShootingPose) tag.setBoolean("hand_bow_always", this.alwaysArmsShootingPose);
+        if (this.enableArmsShootingPose) tag.setBoolean("hand_bow", this.enableArmsShootingPose);
+        if (this.preventRightClick) tag.setBoolean("PreventRightClick", this.preventRightClick);
+        if (this.preventLeftClick) tag.setBoolean("PreventLeftClick", this.preventLeftClick);
+        if (this.preventEntityAttack) tag.setBoolean("PreventEntityAttack", this.preventEntityAttack);
 
 
         if (!this.pitch) tag.setBoolean("Pitch", this.pitch);
@@ -787,14 +793,14 @@ public class GunProps
         if (this.hitboxY != 0.25F) tag.setFloat("HY", this.hitboxY);
         if (this.zoom != 0) tag.setFloat("Zoom", this.zoom);
         if (this.recoilXMin != 0) tag.setFloat("recoilXMin", this.recoilXMin);
-        if (this.srcShootX != 0) tag.setFloat("srcShootX", this.srcShootX);
-        if (this.srcShootY != 0) tag.setFloat("srcShootY", this.srcShootY);
-        if (this.srcShootZ != 0) tag.setFloat("srcShootZ", this.srcShootZ);
+        if (this.shootingOffsetX != 0) tag.setFloat("srcShootX", this.shootingOffsetX);
+        if (this.shootingOffsetY != 0) tag.setFloat("srcShootY", this.shootingOffsetY);
+        if (this.shootingOffsetZ != 0) tag.setFloat("srcShootZ", this.shootingOffsetZ);
         if (this.mouseZoom != 0) tag.setFloat("mouseZoom", this.mouseZoom);
         if (this.mouseZoom != 0) tag.setFloat("meleeDamage", this.meleeDamage);
 
 
-        if (!this.recoilSimple) tag.setBoolean("recoilSimple", this.recoilSimple);
+        if (!this.staticRecoil) tag.setBoolean("recoilSimple", this.staticRecoil);
 
 
         if (!this.resetTimerButtonRel) tag.setBoolean("resetTimerAfterHandOff", this.resetTimerButtonRel);
@@ -808,7 +814,7 @@ public class GunProps
         if (this.gravity != 0.03F) tag.setFloat("Gravity", this.gravity);
 
         if (this.durability != 0) tag.setInteger("durability", this.durability);
-        if (this.hidedurability != 0) tag.setInteger("hidedurability", this.hidedurability);
+        if (this.hideDurability != 0) tag.setInteger("hidedurability", this.hideDurability);
 
 
         if (this.fadeIn != 10) tag.setInteger("FadeIn", this.fadeIn);
