@@ -8,16 +8,16 @@ blockbuster.info:
 
     # General command infos
     commands:
-        load_chunks: "{f}已加載在渲染範圍裏的已創建區塊。"
+        load_chunks: "{f}已加載在渲染範圍裡的已創建區塊。"
 
         replace_texture: "{f}材質 %s{f} 已被替換為材質 %s{f}。"
         restore_texture: "{f}材質 %s{f} 已還原為初始狀態。"
 
         not_loaded: "{f}材質 %s{f} 沒有加載。"
 
-        started_combining: "{f}開始合並 %s{f} 中的皮膚..."
-        combined: "{f}已合並皮膚 %s{f}。"
-        finished_combining: "{f}已完成皮膚合並！"
+        started_combining: "{f}開始合併 %s{f} 中的皮膚..."
+        combined: "{f}已合併皮膚 %s{f}。"
+        finished_combining: "{f}已完成皮膚合併！"
 
     models.loaded: "{f}已從服務器收到 %s{f} 個自定義模型和 %s{f} 個皮膚。"
 
@@ -38,10 +38,10 @@ blockbuster.info:
 
     # Recording strings
     recording:
-        recording: "%s{f} 已處於被錄制狀態。"
-        dead: "{f}已終止錄制 %s{f}，因為玩家已死亡。"
-        message: "{f}若要開始錄制 %s{f}，%s{f}！"
-        clickhere: 點擊這裏
+        recording: "%s{f} 已處於被錄製狀態。"
+        dead: "{f}已終止錄製 %s{f}，因為玩家已死亡。"
+        message: "{f}若要開始錄製 %s{f}，%s{f}！"
+        clickhere: 點擊這裡
 
     action:
-        cancel: "{f}當前錄制進程已取消。"
+        cancel: "{f}當前錄製進程已取消。"

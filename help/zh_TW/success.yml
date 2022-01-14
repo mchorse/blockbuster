@@ -8,8 +8,8 @@ blockbuster.success:
 
         convert_skin: "{f}成功轉換 %s{r}/%s{r} 皮膚！"
 
-        item_nbt: "{f}所持物品的 NBT 數據已覆制到剪貼板！"
-        model_report: "{f}模型文件夾的報告已成功覆制到您的剪貼板！"
+        item_nbt: "{f}所持物品的 NBT 數據已複製到剪貼板！"
+        model_report: "{f}模型文件夾的報告已成功複製到您的剪貼板！"
 
     scene:
         play: "{f}場景 %s{f} 已開始播放！"
@@ -25,13 +25,14 @@ blockbuster.success:
 
     record:
         changed_origin: "{f}玩家回放的來源已經成功從 %s{f} 從（%s{f}, %s{f}, %s{f}）更換為（%s{f}, %s{f}, %s{f}）！"
-        duped: "{f}玩家回放 %s{f} 已被成功覆制到 %s{f}！"
+        duped: "{f}玩家回放 %s{f} 已被成功複製到 %s{f}！"
         clean: "{f}玩家回放 %s{f} 的屬性 %s{f} 已成功從 %s{f} 到 %s{f} 清除！"
+        create: "{f}玩家回放 %s{f} 創建成功！"
         prolonged: "{f}已在玩家回放 %s{f} 設定延遲。其播放前、後延遲分別是：%s{f} 和 %s{f}。"
         faded: "{f}玩家回放 %s{f} 的最後 %s{f} 幀會用於拖至起點。"
-        flipped: "{f}已在玩家回放 %s{f} 以 %s{f} 軸，在 %s{f} 坐標翻轉！"
+        flipped: "{f}已在玩家回放 %s{f} 以 %s{f} 軸，在 %s{f} 座標翻轉！"
         cut: "{f}玩家回放 %s{f} 已裁剪。留下了 %s{f} 幀 和 %s{f} 幀之間的內容。"
-        restored: "{f}已恢覆到玩家回放 %s{f} 的第 %s{f} 版本！"
+        restored: "{f}已恢復到玩家回放 %s{f} 的第 %s{f} 版本！"
         reversed: "{f}已翻轉玩家回放 %s{f}！"
         fill: "{f}成功填充 %s{f} 幀到 %s{f} Tick 處的 %s{f} 玩家回放（最終長度為 %s{f} Tick）！"
         erase: "{f}成功抹去 %s{f} 幀到 %s{f} Tick 處的 %s{f} 玩家回放（最終長度為 %s{f} Tick）！"

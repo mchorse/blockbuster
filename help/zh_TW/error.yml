@@ -10,9 +10,9 @@ blockbuster.error:
 
     # General command errors
     commands:
-        load_chunks: 無法加載渲染範圍裏所有已創建的區塊！請參閱日志了解詳細的錯誤信息。
+        load_chunks: 無法加載渲染範圍裡所有已創建的區塊！請參閱日誌瞭解詳細的錯誤信息。
 
-        restore_texture: "{f}材質 %s{f} 無法被恢覆，因為它沒有被該命令更改過。"
+        restore_texture: "{f}材質 %s{f} 無法被恢復，因為它沒有被該命令更改過。"
         replace_texture: "{f}材質 %s{f} 和 %s{f} 未被加載！"
         replace_texture_one: "{f}材質 %s{f} 未被加載！"
 
@@ -23,7 +23,7 @@ blockbuster.error:
         convert_skin: "{f}在轉換 %s{f}/%s{f} 皮膚過程中，出現了錯誤：%s{f}"
         convert_skin_size: "{f}皮膚的大小為 %s{f}x%s{f}，且/皮膚的比例必須為 1:1 或 2:1！"
 
-        item_nbt_empty: "你的手裏沒有拿著任何東西..."
+        item_nbt_empty: "你的手裡沒有拿著任何東西..."
 
         combining_empty: "{f}在 {7}[路徑...]{r} 中沒有找到指定的文件夾..."
         combining_folders_empty: "{f}在 {7}[路徑...]{r} 中沒有找到指定的材質文件..."
@@ -52,6 +52,7 @@ blockbuster.error:
         index_out_range: "{f}索引 %s{f} 超出範圍！範圍應在 {7}0{r} 和 %s{r} 之間。"
         already_empty: "{f}玩家回放 %s{r} 中，索引 %s{r} 處沒有動作！"
         wrong_action: "{f}動作類別 %s{f} 不存在！"
+        delete_rights: "該命令的用戶權限不足！"
         add: "{f}動作類別 %s{f} 由於以下錯誤而無法添加：%s"
         already_exists: "{f}名為 %s{f} 的玩家回放已經存在了！"
         couldnt_save: "{f}無法以 %s{f} 的文件名保存玩家回放！"
@@ -66,10 +67,10 @@ blockbuster.error:
     # Recording errors
     recording:
         read: "{f}名為 %s{f} 的回放文件不適合播放（{7}舊版文件{f}，{7}已損壞{f}，或不是{7}回放文件{f}）。"
-        logout: "{f}已停止錄制 %s{f}，因為已玩家登出！"
+        logout: "{f}已停止錄製 %s{f}，因為已玩家登出！"
         not_found: "{f}無法找到 %s{f} 回放文件！"
         fill_filename: "{f}請填寫{7}回放 ID{f}框！"
-        empty_filename: "{f}無法在{7}回放 ID{f}為空的情況下錄制玩家回放."
+        empty_filename: "{f}無法在{7}回放 ID{f}為空的情況下錄製玩家回放."
         empty_record: "{f}無法播放回放 %s{f}，因為是空的！"
 
     modelblock:

@@ -5,14 +5,14 @@ blockbuster.gui:
     done: 完成
     next: 下一個
     previous: 上一個
-    restore: 恢覆默認
+    restore: 恢復默認
     reset: 初始化
     add: 添加
     edit: 編輯
     remove: 移除
-    record: 錄制
+    record: 錄製
     pick: 選擇偽裝
-    duplicate: 覆制
+    duplicate: 複製
     search: 搜索
     cancel: 取消
     select: 選擇
@@ -28,7 +28,7 @@ blockbuster.gui:
     first_time:
         title: "首次使用？"
         welcome: "歡迎使用 Blockbuster mod!\n\n如果您是第一次使用這個 mod，可以去看看 {c}嗶哩嗶哩{r} 上的 {a}Blockbuster 學院視頻教程{r}。"
-        social: "如果您遇到了任何問題，可前往 {6}Discord{r} 服務器獲得幫助。還有，您可以關註我的 {b}Twitter{r}，我會在那兒發布更新。"
+        social: "如果您遇到了任何問題，可前往 {6}Discord{r} 服務器獲得幫助。還有，您可以關注我的 {b}Twitter{r}，我會在那兒發佈更新。"
         channel: 嗶哩嗶哩
 
     # Morphs popup strings
@@ -70,7 +70,7 @@ blockbuster.gui:
         no_replays: 創建一段回放...
 
         add_replay: 添加一段回放
-        dupe_replay: 覆制所選的回放
+        dupe_replay: 複製所選的回放
         remove_replay: 移除所選的回放
 
         display_title: 顯示標題
@@ -85,8 +85,8 @@ blockbuster.gui:
         open_audio_folder: 打開包含音軌的文件夾
 
         id: 回放 ID
-        name: 名稱標簽
-        name_tooltip: 演員的名稱標簽。你可以通過這一參數，並結合命令（比如 @e[name]=Test）來鎖定該演員，或知識單純讓演員顯示名稱。\n\n你可以使用 [ 作為顯示名稱的格式化代碼。如 [cR[aG[1B[r 會變成 {c}R{a}G{1}B{r}.
+        name: 名稱標籤
+        name_tooltip: 演員的名稱標籤。你可以通過這一參數，並結合命令（比如 @e[name]=Test）來鎖定該演員，或知識單純讓演員顯示名稱。\n\n你可以使用 [ 作為顯示名稱的格式化代碼。如 [cR[aG[1B[r 會變成 {c}R{a}G{1}B{r}.
         target: 目標
         target_tooltip: 你可以在此指定需要哪個玩家來播放這段回放。\n\n額外的目標選擇器可以用來選擇玩家的用戶名. @r - 隨機玩家, @{n}team{r} - 其中 {n}team{r} 是計分板中的隊伍名稱.
         invincible: 無敵
@@ -103,6 +103,7 @@ blockbuster.gui:
         update_data_tooltip: 更新在回放文件中的玩家數據
         rename_prefix: 重命名前綴
         rename_prefix_tooltip: 使用新前綴來重命名回放的回放 ID
+        rename_replay_dupe_modal: 該回放 ID 已存在於當前場景。你也可以重複使用它，如果你想的話。
         rename_prefix_popup: "輸入一個新的前綴："
 
         attach: 鏈接
@@ -124,12 +125,14 @@ blockbuster.gui:
         title: 場景
 
         add_scene: "添加一個場景..."
-        dupe_scene: "覆制選中的場景..."
+        dupe_scene: "複製選中的場景..."
         rename_scene: "重命名選中的場景..."
         remove_scene: "移除選中的場景..."
 
         add_modal: "命名新場景："
         dupe_modal: "命名副本場景："
+        dupe_recordings: "拷貝回放"
+        dupe_recordings_tooltip: "啟用後，玩家回放會以新的文件名的形式被複制進來"
         rename_modal: "重命名當前場景："
         remove_modal: "您確定要移除該場景嗎？"
 
@@ -181,7 +184,7 @@ blockbuster.gui:
         cut: 剪切動作
         copy: 拷貝動作
         paste: 粘貼動作
-        capture: 從光標處開始錄制
+        capture: 從光標處開始錄製
         teleport: 從光標處進行傳送
 
         drop: 掉落方塊
@@ -204,7 +207,7 @@ blockbuster.gui:
                 desc: 丟下一個物品（類似於按了 Q）
             equip:
                 title: 穿戴物品 Equip an item
-                desc: 任何一只手拿著東西或者穿戴了盔甲
+                desc: 任何一隻手拿著東西或者穿戴了盔甲
 
                 none: 無
                 main_hand: 主手
@@ -270,13 +273,13 @@ blockbuster.gui:
         profile: 相機配置文件名稱
         scene: 場景
 
-        nothing: 什麽都不做
+        nothing: 什麼都不做
         play: 僅播放
         load_profile: 讀取並播放
 
     builder:
         pose_editor: 姿勢編輯器
-        body_part: 身體部分
+        body_part: 身體附件
         materials: 材質
         nbt: NBT
 
@@ -289,12 +292,12 @@ blockbuster.gui:
         pick_texture: 選擇材質貼圖
 
         limbs: 肢體
-        body_parts: 身體部分
+        body_parts: 身體附件
         use_target: 使用目標
 
         shape_keys: 形態鍵
-        shape_keys_factor: 形態鍵系數
-        shape_keys_factor_tooltip: 該參數決定了應用於形態鍵的系數量級（0 = 無影響，1 = 完全變形）
+        shape_keys_factor: 形態鍵係數
+        shape_keys_factor_tooltip: 該參數決定了應用於形態鍵的係數量級（0 = 無影響，1 = 完全變形）
         relative: 相對
         relative_tooltip: 該選項可以將形變相對地應用到當前的形變之上
 
@@ -311,11 +314,13 @@ blockbuster.gui:
         bottom: 下
         resize_crop: 調整尺寸
         dimensions: "大小（%spx, %spx）"
-        offset_x: X 軸坐標偏移
-        offset_y: Y 軸坐標偏移
-        rotation: 坐標旋轉
+        offset_x: X 軸座標偏移
+        offset_y: Y 軸座標偏移
+        rotation: 座標旋轉
         keying: 鍵控
-        keying_tooltip: 該選項會清除屏幕中，由這個偽裝（在幀緩沖器中）渲染的顏色數據，最終可以用於 Minema 的“使用 Alpha 通道”選項輸出已鍵控（摳像）的畫面，而不需要外部視頻編輯軟件
+        keying_tooltip: 該選項會清除屏幕中，由這個偽裝（在幀緩衝器中）渲染的顏色數據，最終可以用於 Minema 的“使用 Alpha 通道”選項輸出已鍵控（摳像）的畫面，而不需要外部視頻編輯軟件
+        shadow: 陰影
+        shadow_tooltip: 該圖像偽裝是否會在加載了 OptiFine 的光影后產生陰影（當圖像偽裝過大時，它能夠修復圖像偽裝自身的陰影問題），不使用 OptiFine 功能則會不產生影響
 
     sequencer:
         duration: 持續長度
@@ -356,7 +361,7 @@ blockbuster.gui:
         dy: Y 偏移
         dz: Z 偏移
         local_rotation: 局部旋轉
-        local_rotation_tooltip: 當綁定於身體部分時，原版粒子會相對於身體部分的旋轉來發射，否則它們會相對於世界發射
+        local_rotation_tooltip: 當綁定於身體附件時，原版粒子會相對於身體附件的旋轉來發射，否則它們會相對於世界發射
         speed: 速度
         count: 數量
         args: 附加參數
@@ -378,7 +383,7 @@ blockbuster.gui:
         open_tooltip: 粒子效果管理器
         save_tooltip: 保存當前的粒子效果
         add_tooltip: 創建新的粒子效果
-        dupe_tooltip: 覆制當的前粒子效果
+        dupe_tooltip: 複製當的前粒子效果
         remove_tooltip: 移除當前的粒子效果
         remove_factory_tooltip: 您無法移除預設效果...
         folder_tooltip: 打開粒子效果所在文件夾
@@ -391,11 +396,16 @@ blockbuster.gui:
             title: 常規
             pick: 選擇材質
 
-            identifier: 該粒子效果的標識，可以作為顯示名稱，但在基巖版中，它是粒子效果的 ID
+            identifier: 該粒子效果的標識，可以作為顯示名稱，但在基岩版中，它是粒子效果的 ID
 
             particles_opaque: 不透明度
             particles_alpha: Alpha
             particles_blend: 混合
+
+        particle_morph:
+            title: 偽裝
+            enabled: 啟用
+            render_texture: 始終以告示板形式渲染
 
         space:
             title: 粒子空間屬性
@@ -409,21 +419,21 @@ blockbuster.gui:
             direction: 相對方向
             direction_tooltip: 會根據目標在生成時的旋轉情況旋轉一次方向矢量。
             acceleration: 相對加速度
-            acceleration_tooltip: 會在整個生命周期內根據目標的旋轉來旋轉加速度向量。
+            acceleration_tooltip: 會在整個生命週期內根據目標的旋轉來旋轉加速度向量。
             gravity: 重力
             scale_billboard: 縮放材質
             scale_billboard_tooltip: 根據目標的比例來縮放粒子的材質大小。
             object_velocity_title: 對象
             linear_velocity: 速度
-            linear_velocity_tooltip: 會讓對象給粒子一個初速度。該速度會根據 Snowstorm 偽裝的位置變化來計算，再乘以給定的系數。它會被添加至粒子在生成時間的速度中去。
+            linear_velocity_tooltip: 會讓對象給粒子一個初速度。該速度會根據 Snowstorm 偽裝的位置變化來計算，再乘以給定的係數。它會被添加至粒子在生成時間的速度中去。
             angular_velocity: 角速度
-            angular_velocity_tooltip: 角度速度會根據 Snowstorm 偽裝的旋轉變化來計算，並乘以給定的系數。它會被添加至粒子在生成時間的速度中去。半徑為 Snowstorm 偽裝身體部分的位移。
+            angular_velocity_tooltip: 角度速度會根據 Snowstorm 偽裝的旋轉變化來計算，並乘以給定的係數。它會被添加至粒子在生成時間的速度中去。半徑為 Snowstorm 偽裝身體附件的位移。
 
 
         initialization:
             title: 初始化表達式
 
-            emitter_expression_title: 發射器表達式（基巖版）
+            emitter_expression_title: 發射器表達式（基岩版）
             create: 起始表達式，會在發射器啟動時運行
             update: 更新表達式，會在每一 Tick 中運行
 
@@ -437,7 +447,7 @@ blockbuster.gui:
             instant: 瞬間
             steady: 穩定
 
-            spawn_rate: 生成頻率表達式決定了一秒內會有多少粒子被發射出來
+            spawn_rate: 生成頻率表達式決定了一秒內會有多少粒子被髮射出來
             max_particles: 能夠同時存在多少個粒子
             particles: 一次能夠釋放出多少個粒子
 
@@ -449,11 +459,11 @@ blockbuster.gui:
             once: 僅一次
 
             active_expression: 負責重啟發射器的表達式，若計算結果為非零數，則重啟發射器
-            active_looping: 用於確定在休眠階段之前，單個周期的活動時間的表達式
-            active_once: 表達式，決定了單個周期的時間長短
+            active_looping: 用於確定在休眠階段之前，單個週期的活動時間的表達式
+            active_once: 表達式，決定了單個週期的時間長短
 
             expiration_expression: 負責停止發射器的表達式，若計算結果為非零數，則停止發射器
-            sleep_time: 決定發射器在下一個周期之前將休眠多長時間的表達式
+            sleep_time: 決定發射器在下一個週期之前將休眠多長時間的表達式
 
         shape:
             title: 發射器形狀
@@ -510,7 +520,7 @@ blockbuster.gui:
             max_tooltip: 該表達式以秒為單位定義粒子的存活時間
 
             kill_plane: 消失平面
-            kill_plane_tooltip: 您可以用 Ax + By + Cz + D = 0 來指定一個平面，如果粒子穿過了這個平面，那麽它就失效了
+            kill_plane_tooltip: 您可以用 Ax + By + Cz + D = 0 來指定一個平面，如果粒子穿過了這個平面，那麼它就失效了
 
             in_blocks: 在方塊中失效
             not_in_blocks: 不在方塊中失效
@@ -531,22 +541,25 @@ blockbuster.gui:
                 lookat_y: 看向 Y
                 rotate_xyz: 旋轉 XYZ
                 rotate_y: 旋轉 Y
+                emitter_xy: 沿發射器 XY-平面
+                emitter_xz: 沿發射器 XZ-平面
+                emitter_yz: 沿發射器 YZ-平面
 
             size: 告示板尺寸
             width: 寬度
             height: 高度
 
             mapping: UV 映射
-            uv_x: 材質的 X 坐標表達式
-            uv_y: 材質的 Y 坐標表達式
+            uv_x: 材質的 X 座標表達式
+            uv_y: 材質的 Y 座標表達式
             uv_w: 材質四邊形寬度
             uv_h: 材質四邊形高度
-            step_x: 每幀 X 坐標步長
-            step_y: 每幀 Y 坐標步長
+            step_x: 每幀 X 座標步長
+            step_y: 每幀 Y 座標步長
             fps: 每秒動畫幀數
             max: 動畫最大幀數
             stretch: 延續
-            stretch_tooltip: 將材質動畫延續到粒子的生命周期
+            stretch_tooltip: 將材質動畫延續到粒子的生命週期
             loop: 循環
             loop_tooltip: 當動畫到達最後（最大）幀時，將動畫後退以開始播放
 
@@ -558,16 +571,25 @@ blockbuster.gui:
 
             solid: 純色
             expression: 表達式
+            gradient: 漸變
+
+            interpolant_tooltip: 顏色漸變插值
+            range_tooltip: 顏色漸變範圍
 
             red: R
             green: G
             blue: B
             alpha: Alpha
 
+            context:
+                add_stop: 添加漸變顏色
+                remove_stop: 移除漸變顏色
+
         collision:
             title: 碰撞
 
             enabled: 啟用
+            condition_tooltip: 值為 True / 非零或未設置時啟用
             realistic_collision: 真實碰撞
             preserve_energy: 保留能量
             preserve_energy_tooltip: 保留能量選項可用於保留粒子在碰撞後的速度
@@ -596,13 +618,14 @@ blockbuster.gui:
             appearance:
                 title: 碰撞時的材質
             lighting:
-                title: 碰撞時的發光
+                title: 碰撞時的顏色與發光
 
     record_morph:
         random_skip: 隨機跳過
 
     structure_morph:
         lighting: 使用外部光照
+        anchor: 錨點
     
     tracker_morph:
         name: 追蹤器
@@ -610,7 +633,12 @@ blockbuster.gui:
             title: 名稱
         type:
             title: 類型
-        hidden: 隱藏追蹤器標志
+            aperture_tracker: Aperture 偽裝追蹤器
+        hidden: 隱藏追蹤器標誌
+
+        aperture_tracker:
+            combine_tracking: 合併同名追蹤器
+            combine_tracking_tooltip: 合併具有相同名稱的追蹤器數據。當您在多個不會同時出現的偽裝上設置有相同名稱的追蹤器時，可以開啟此選項。
 
     texture:
         title: 材質管理器
@@ -618,14 +646,14 @@ blockbuster.gui:
         linear: 線性
         linear_tooltip: 啟用後，材質看起來會更平滑
         mipmap: Mipmap
-        mipmap_tooltip: 啟用後，從遠處看不會有那麽多噪點
+        mipmap_tooltip: 啟用後，從遠處看不會有那麼多噪點
         replace: 替換
         replace_modal: "輸入您想要替換的 {l}已加載的{r} 材質資源的位置："
         export: 保存材質
         export_modal: "所選材質已被成功導出為 {7}%s{r}!"
-        export_error: "該材質無法導出... 請檢查運行日志以查看錯誤信息！"
+        export_error: "該材質無法導出... 請檢查運行日誌以查看錯誤信息！"
         open_folder: "打開導出文件夾..."
-        copy: "將當前所選的材質覆制為文字路徑（域:路徑）"
+        copy: "將當前所選的材質複製為文字路徑（域:路徑）"
 
     gun:
         title: 槍配置
@@ -645,7 +673,6 @@ blockbuster.gui:
         launch: 發射玩家
         ammo_stack: 該選項可以指定一個物品，並且會在射擊時被消耗掉。如果在生存模式下射擊時沒有這類物品及其數量，炮彈則不會被射出。\n\n可以把它看作是一個彈藥選項。
 
-
         projectile_morph: 炮彈偽裝
         tick_command: 以 Tick 頻率執行的命令
         ticking: Tick 頻率
@@ -662,6 +689,66 @@ blockbuster.gui:
         fade_in: 緩入
         fade_out: 緩出
 
+        aim_options: 高級選項
+        static_recoil: 固定後坐力
+        static_recoil_tooltip:
+            |
+                啟用該選項時，每次都會將最小 X 和 Y 後坐力的值加在玩家所看的方向上。
+
+                否則（禁用時）將隨機產生一個介於最小和最大值之間的數字並加在玩家所看的方向上。
+        recoil_x: X 後坐力
+        recoil_y: Y 後坐力
+        recoil_min: 最小後坐力係數
+        recoil_max: 最大後坐力係數
+
+        arm_pose: 擡手射擊姿勢
+        arm_shooting_pose: 射擊時啟用
+        arm_shooting_pose_tooltip: 啟用併發射 BB 槍時，角色的雙臂會擺出射箭的姿勢。
+        arm_shooting_pose_always: 保持擡手姿勢
+        arm_shooting_pose_always_tooltip: 啟用後，手臂將始終保持射箭的姿勢
+
+        shooting_offset: 
+        shooting_offset_tooltip: 相對於頭部旋轉的 XYZ 值，用於調整炮彈發射的位置。
+        shooting_offset_x: X 射擊偏移
+        shooting_offset_y: Y 射擊偏移
+        shooting_offset_z: Z 射擊偏移
+
+        inventory_morph: 物品欄偽裝
+        crosshair_morph: 準星偽裝
+        hands_morph: 手部偽裝
+        reload_morph: 換彈偽裝
+        overlay_morph: 瞄準疊加層偽裝
+
+        hide_crosshair_on_zoom: 瞄準時隱藏
+        use_inventory_morph: 啟用偽裝
+        hide_hands_on_zoom: 瞄準時隱藏
+        use_zoom_overlay_morph: 啟用偽裝
+
+        zoom_factor: 瞄準縮放係數
+        zoom_factor_tooltip: 任意的縮放係數，數值越大，越接近 {7}0{r} 度 FOV，係數為 {7}0.5{r} 時大約為您當前 FOV 的 {7}50%%{r}
+        ammo: 彈藥
+        ammo_tooltip: 一把槍能打多少次才需要重新裝彈（如果啟用了換彈的話）
+        reloading: 換彈
+        use_reloading: 啟用換彈
+        reloading_time_tooltip: 給槍換彈需要消耗多少 Tick
+        shooting: 射擊
+        shoot_when_held: 拿起時射擊
+        shot_delay_tooltip: 自動射擊時每發子彈的時間間隔（單位為 Tick）
+
+        aim_options_second: 高級選項（第 2 頁）
+        destroyed_command: 槍毀壞時的命令 # Evanechecssss: cummands
+        melee_command: 近戰攻擊時的命令
+        reload_command: 換彈命令
+        zoom_on_command: 開鏡瞄準命令
+        zoom_off_command: 退出瞄準命令
+
+        melee_damage: 近戰傷害
+        mouse_zoom: 瞄準中的鼠標靈敏度
+        durability: 耐久
+        prevent_left_click: 避免方塊裂痕
+        prevent_right_click: 避免交互
+        prevent_entity_attack: 避免攻擊實體
+
         impact_morph: 撞擊偽裝
         impact_delay: 撞擊延遲
         impact_command: 撞擊時的命令
@@ -671,12 +758,12 @@ blockbuster.gui:
         bounce: 反彈
         hits: 反彈次數
         damage: 傷害
-        knockback_horizontal: 水平方向的擊退系數，0 表示沒有擊退，數值越大，實體被擊退的就越遠
-        knockback_vertical: 垂直方向的擊退系數，0 表示沒有擊退，數值越大，實體被擊退的就越遠。若水平擊退系數為 0，則該選項不會生效
-        bounce_factor: 系數
+        knockback_horizontal: 水平方向的擊退係數，0 表示沒有擊退，數值越大，實體被擊退的就越遠
+        knockback_vertical: 垂直方向的擊退係數，0 表示沒有擊退，數值越大，實體被擊退的就越遠。若水平擊退係數為 0，則該選項不會生效
+        bounce_factor: 係數
         vanish_command: 消失時的命令
         vanish_delay: 消失延遲
-        penetration: 穿透系數 - 炮彈會穿透多厚的方塊（該選項僅在啟用“附著”時才有效）
+        penetration: 穿透係數 - 炮彈會穿透多厚的方塊（該選項僅在啟用“附著”時才有效）
 
         collision: 碰撞
         ignore_blocks: 忽略方塊
