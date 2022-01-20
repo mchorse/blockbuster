@@ -62,7 +62,7 @@ public abstract class BaseTracker implements INBTSerializable
     {
         if (morph != null)
         {
-            return this.name.equals(morph);
+            return this.name.equals(morph.name);
         }
 
         return false;
