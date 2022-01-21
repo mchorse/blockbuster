@@ -71,7 +71,7 @@ public class ServerHandlerGunReloading extends ServerMessageHandler<PacketGunRel
     private void ammo(ItemStack stack, GunProps props, EntityPlayer player)
     {
         props.state = ItemGun.GunState.RELOADING;
-        props.reloadTick = props.inputReloadingTime;
+        props.storedReloadingTime = props.reloadingTime;
 
         if (!props.reloadCommand.isEmpty())
         {

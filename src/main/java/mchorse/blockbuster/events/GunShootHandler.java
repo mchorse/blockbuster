@@ -23,9 +23,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class GunShootHandler
 {
-    private boolean canBeShootPress = true;
-    private boolean canBeReload = true;
-    private boolean canBeShootDown = true;
+    private boolean canBeShotPress = true;
+    private boolean canBeReloaded = true;
+    private boolean canBeShotDown = true;
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -58,43 +58,40 @@ public class GunShootHandler
     {
         GunProps props = NBTUtils.getGunProps(stack);
 
-        if (KeyboardHandler.gunShoot.isPressed() && !props.acceptPressed)
+        if (KeyboardHandler.gunShoot.isPressed() && !props.shootWhenHeld)
         {
-            if (canBeShootPress && props.timeBetweenShoot == 0 && props.state == ItemGun.GunState.READY_TO_SHOOT)
+            if (canBeShotPress && props.storedShotDelay == 0 && props.state == ItemGun.GunState.READY_TO_SHOOT)
             {
                 Dispatcher.sendToServer(new PacketGunInteract(stack, mc.player.getEntityId()));
 
-                canBeShootPress = false;
+                canBeShotPress = false;
 
                 return;
             }
 
-            if (props.timeBetweenShoot == 0)
+            if (props.storedShotDelay == 0)
             {
-                canBeShootPress = true;
+                canBeShotPress = true;
             }
         }
         else
         {
-            if (!props.resetTimerButtonRel)
-            {
-                canBeShootPress = true;
-            }
+            canBeShotPress = true;
         }
     }
 
     @SideOnly(Side.CLIENT)
     private void handleReloading(Minecraft mc, ItemStack stack)
     {
-        if (KeyboardHandler.gunReload.isKeyDown() && canBeReload)
+        if (KeyboardHandler.gunReload.isKeyDown() && canBeReloaded)
         {
             Dispatcher.sendToServer(new PacketGunReloading(stack, mc.player.getEntityId()));
 
-            canBeReload = false;
+            canBeReloaded = false;
         }
         else
         {
-            canBeReload = true;
+            canBeReloaded = true;
         }
     }
 
@@ -103,25 +100,25 @@ public class GunShootHandler
     {
         GunProps props = NBTUtils.getGunProps(stack);
 
-        if (KeyboardHandler.gunShoot.isKeyDown() && props.acceptPressed)
+        if (KeyboardHandler.gunShoot.isKeyDown() && props.shootWhenHeld)
         {
-            if (canBeShootDown && props.timeBetweenShoot == 0 && props.state == ItemGun.GunState.READY_TO_SHOOT)
+            if (canBeShotDown && props.storedShotDelay == 0 && props.state == ItemGun.GunState.READY_TO_SHOOT)
             {
                 Dispatcher.sendToServer(new PacketGunInteract(stack, mc.player.getEntityId()));
 
-                canBeShootDown = false;
+                canBeShotDown = false;
 
                 return;
             }
 
-            if (props.timeBetweenShoot == 0)
+            if (props.storedShotDelay == 0)
             {
-                canBeShootDown = true;
+                canBeShotDown = true;
             }
         }
-        else if (!props.resetTimerButtonRel)
+        else
         {
-            canBeShootDown = true;
+            canBeShotDown = true;
         }
     }
 }

@@ -75,7 +75,7 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
                 RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIXED &&
                 RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GROUND
             ) {
-                if (!(KeyboardHandler.zoom.isKeyDown() && model.props.hideHandOnZoom))
+                if (!(KeyboardHandler.zoom.isKeyDown() && model.props.hideHandsOnZoom))
                 {
                     model.props.renderHands(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
@@ -88,7 +88,7 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
 
             if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI)
             {
-                if (!(KeyboardHandler.zoom.isKeyDown() && model.props.hideHandOnZoom))
+                if (!(KeyboardHandler.zoom.isKeyDown() && model.props.hideHandsOnZoom))
                 {
                     model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
                 }

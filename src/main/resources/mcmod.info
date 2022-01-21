@@ -7,7 +7,7 @@
         "mcversion": "${mcversion}",
         "url": "https://www.curseforge.com/minecraft/mc-mods/blockbuster",
         "updateJSON": "https://raw.githubusercontent.com/mchorse/blockbuster/1.12/version.json",
-        "authorList": ["mchorse"],
+        "authorList": ["mchorse", "Chryfi", "MiaoNLI", "Evanechecssss"],
         "credits": "Minecraft Forge, Minecraft Forge forum, Ernio, NlL5, EchebKeso and his Mocap mod, Badr, Tom Soel, Vasily12345, The Minebox, AzureZhen for feature suggesting and testing! Also TheImaginationCrafter for suggesting OBJ feature, and also all members of McHorse's Pub Discord server! Also big thanks to ycwei982 for testing, adding few features and localization, Andruxioid and Olrik&Flynn for testing and localization!",
         "requiredMods": ["mclib", "metamorph"],
         "dependencies": ["mclib", "metamorph"]

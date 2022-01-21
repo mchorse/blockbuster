@@ -33,7 +33,7 @@ public class ClientHandlerGunInteract extends ClientMessageHandler<PacketGunInte
 
         if (entity instanceof EntityPlayer)
         {
-            if (props.state == ItemGun.GunState.READY_TO_SHOOT && props.timeBetweenShoot == 0)
+            if (props.state == ItemGun.GunState.READY_TO_SHOOT && props.storedShotDelay == 0)
             {
                 gun.shootIt(packet.stack, player, entity.world);
             }

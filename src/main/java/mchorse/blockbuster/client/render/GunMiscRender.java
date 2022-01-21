@@ -130,15 +130,12 @@ public class GunMiscRender
 
             if (props != null)
             {
-                event.setNewfov(event.getFov() - event.getFov() * ZOOM_TIME * props.zoom);
+                event.setNewfov(event.getFov() - event.getFov() * ZOOM_TIME * props.zoomFactor);
+
                 Minecraft mc = Minecraft.getMinecraft();
+
                 mc.renderGlobal.setDisplayListEntitiesDirty();
-                mc.entityRenderer.loadEntityShader(mc.getRenderViewEntity());
             }
-        }
-        else
-        {
-            event.setNewfov(event.getFov());
         }
     }
 
@@ -159,7 +156,7 @@ public class GunMiscRender
                 {
                     return;
                 }
-                if ((props.hideAimOnZoom && KeyboardHandler.zoom.isKeyDown()) || !props.currentCrosshair.isEmpty())
+                if ((props.hideCrosshairOnZoom && KeyboardHandler.zoom.isKeyDown()) || !props.currentCrosshair.isEmpty())
                 {
                     event.setCanceled(true);
                 }
@@ -181,7 +178,7 @@ public class GunMiscRender
             {
                 GunProps props = NBTUtils.getGunProps(player.getHeldItemMainhand());
 
-                if (props != null && props.crosshairMorph != null && !(KeyboardHandler.zoom.isKeyDown() && props.hideAimOnZoom))
+                if (props != null && props.crosshairMorph != null && !(KeyboardHandler.zoom.isKeyDown() && props.hideCrosshairOnZoom))
                 {
                     render(props.currentCrosshair.get(), resolution.getScaledWidth(), resolution.getScaledHeight());
                 }

@@ -682,14 +682,20 @@ blockbuster.gui:
 
         aim_options: Pro options
         static_recoil: Static recoil
+        static_recoil_tooltip:
+            |
+                When enabled, the minimum X and Y recoil will be added to player's look direction every time.
+
+                Otherwise (when disabled) a number between minimum and maximum fields will be randomly generated and added to player's look direction.
         recoil_x: Recoil X
         recoil_y: Recoil Y
         recoil_min: Minimum recoil factor
         recoil_max: Maximum recoil factor
 
-        arm_shooting_pose: Arms shooting pose
+        arm_pose: Shooting arm pose
+        arm_shooting_pose: Enable when shooting
         arm_shooting_pose_tooltip: When enabled and shooting BB gun, character's arms will be held in a bow shooting pose
-        arm_shooting_pose_always: Keep arms shooting pose
+        arm_shooting_pose_always: Keep the pose
         arm_shooting_pose_always_tooltip: When enabled, arms will always be held in a bow shooting pose
 
         shooting_offset: Shooting offset
@@ -704,25 +710,28 @@ blockbuster.gui:
         reload_morph: Reloading morph
         overlay_morph: Zoom overlay morph
 
-        use_inventory_morph: Use inventory morph
-        use_crosshair_morph: Use crosshair morph
-        use_overlay_morph: Use zoom overlay morph
+        hide_crosshair_on_zoom: Hide on zoom
+        use_inventory_morph: Enable morph
+        hide_hands_on_zoom: Hide on zoom
+        use_zoom_overlay_morph: Enable morph
 
-        hide_zoom: Hide gun on zoom
-        zoom: Change zoom value
-        input_time_between_shoot: Time between shoot
-        input_ammo: Ammo
-        input_reloading_time: Reloading time
-        need_to_be_reloaded: Need to be reloaded
-        accept_pressed: Shoot when press hold
-        reset_timer_button_rel: Reset when dont hold button
+        zoom_factor: Zoom factor
+        zoom_factor_tooltip: Arbitrary zoom factor, the higher the number, the closer it will be to {7}0{r} degrees FOV, {7}0.5{r} factor is about {7}50%%{r} of your current FOV
+        ammo: Ammo
+        ammo_tooltip: How many time can a gun get shot before needing a reloading (if reloading is enabled)
+        reloading: Reloading
+        use_reloading: Enable reloading
+        reloading_time_tooltip: How many ticks it takes to reload the gun
+        shooting: Shooting
+        shoot_when_held: Shoot when held
+        shot_delay_tooltip: Delay between shots during automatic firing (in ticks)
 
         aim_options_second: Pro options (page 2)
         destroyed_command: Command on gun destroyed # Evanechecssss: cummands
         melee_command: Command on melee attack
         reload_command: Command on reload
         zoom_on_command: Command on zoom
-        zoom_off_command: command on zoom off
+        zoom_off_command: Command on zoom off
 
         melee_damage: Melee damage
         mouse_zoom: Mouse intensity on zoom
