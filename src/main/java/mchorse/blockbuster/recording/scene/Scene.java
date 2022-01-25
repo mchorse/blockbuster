@@ -11,13 +11,11 @@ import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.audio.PacketAudio;
-import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.recording.scene.fake.FakeContext;
-import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.vanilla_pack.morphs.PlayerMorph;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
@@ -110,6 +108,8 @@ public class Scene
      */
     public String audio = "";
 
+    private AudioState audioState = AudioState.PAUSE;
+
     /**
      * Audio shift
      */
@@ -196,6 +196,11 @@ public class Scene
         }
 
         return 0;
+    }
+
+    public AudioState getAudioState()
+    {
+        return this.audioState;
     }
 
     /**
@@ -366,7 +371,7 @@ public class Scene
             CommonProxy.damage.addDamageControl(this, firstActor);
         }
 
-        this.sendAudio(AudioState.REWIND);
+        this.sendAudioToPlayer(AudioState.REWIND);
         this.wasRecording = false;
         this.paused = false;
         this.tick = tick;
@@ -402,7 +407,7 @@ public class Scene
 
         this.setPlaying(true);
         this.sendCommand(this.startCommand);
-        this.sendAudio(AudioState.REWIND, tick);
+        this.sendAudioToPlayer(AudioState.REWIND, tick);
         this.wasRecording = true;
         this.paused = false;
         this.tick = tick;
@@ -464,7 +469,7 @@ public class Scene
             j++;
         }
 
-        this.sendAudio(AudioState.PAUSE_SET, tick);
+        this.sendAudioToPlayer(AudioState.PAUSE_SET, tick);
         this.tick = tick;
 
         return true;
@@ -479,7 +484,7 @@ public class Scene
     {
         if (!triggered && !this.wasRecording || triggered)
         {
-            this.sendAudio(AudioState.STOP);
+            this.sendAudioToPlayer(AudioState.STOP);
             this.wasRecording = false;
         }
 
@@ -693,7 +698,7 @@ public class Scene
             actor.pause();
         }
 
-        this.sendAudio(AudioState.PAUSE);
+        this.sendAudioToPlayer(AudioState.PAUSE);
         this.paused = true;
     }
 
@@ -712,7 +717,7 @@ public class Scene
             player.resume(tick);
         }
 
-        this.sendAudio(AudioState.RESUME_SET, tick < 0 ? this.tick : tick);
+        this.sendAudioToPlayer(AudioState.RESUME_SET, tick < 0 ? this.tick : tick);
         this.paused = false;
     }
 
@@ -735,7 +740,7 @@ public class Scene
             entry.getValue().goTo(tick, actions);
         }
 
-        this.sendAudio(this.isPlaying() ? AudioState.SET : AudioState.PAUSE_SET, tick);
+        this.sendAudioToPlayer(this.isPlaying() ? AudioState.SET : AudioState.PAUSE_SET, tick);
     }
 
     /**
@@ -907,12 +912,43 @@ public class Scene
         }
     }
 
-    public void sendAudio(AudioState state)
+    public void sendAudioToPlayer(AudioState state)
     {
-        this.sendAudio(state, 0);
+        this.sendAudioToPlayer(state, 0);
     }
 
-    public void sendAudio(AudioState state, int shift)
+    /**
+     * Send the audio in the scene, if present, to all players on the server
+     * and set this.audioState to the provided state.
+     * @param state
+     * @param shift
+     */
+    public void sendAudioToPlayer(AudioState state, int shift)
+    {
+        this.audioState = audioState;
+
+        if (this.audio == null || this.audio.isEmpty())
+        {
+            return;
+        }
+
+        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
+
+        for (String username : players.getOnlinePlayerNames())
+        {
+            EntityPlayerMP player = players.getPlayerByUsername(username);
+
+            this.sendAudioToPlayer(state, shift, player);
+        }
+    }
+
+    /**
+     * Send the audio to the provided player
+     * @param state
+     * @param shift
+     * @param player
+     */
+    public void sendAudioToPlayer(AudioState state, int shift, EntityPlayerMP player)
     {
         if (this.audio == null || this.audio.isEmpty())
         {
@@ -920,16 +956,10 @@ public class Scene
         }
 
         PacketAudio packet = new PacketAudio(this.audio, state, this.audioShift + shift);
-        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
 
-        for (String username : players.getOnlinePlayerNames())
+        if (player != null)
         {
-            EntityPlayerMP player = players.getPlayerByUsername(username);
-
-            if (player != null)
-            {
-                Dispatcher.sendTo(packet, player);
-            }
+            Dispatcher.sendTo(packet, player);
         }
     }
 
