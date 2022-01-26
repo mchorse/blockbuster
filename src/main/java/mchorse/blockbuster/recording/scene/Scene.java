@@ -16,6 +16,7 @@ import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.recording.scene.fake.FakeContext;
+import mchorse.mclib.utils.LatencyTimer;
 import mchorse.vanilla_pack.morphs.PlayerMorph;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
@@ -371,7 +372,7 @@ public class Scene
             CommonProxy.damage.addDamageControl(this, firstActor);
         }
 
-        this.sendAudioToPlayer(AudioState.REWIND);
+        this.sendAudio(AudioState.REWIND);
         this.wasRecording = false;
         this.paused = false;
         this.tick = tick;
@@ -407,7 +408,7 @@ public class Scene
 
         this.setPlaying(true);
         this.sendCommand(this.startCommand);
-        this.sendAudioToPlayer(AudioState.REWIND, tick);
+        this.sendAudio(AudioState.REWIND, tick);
         this.wasRecording = true;
         this.paused = false;
         this.tick = tick;
@@ -469,7 +470,7 @@ public class Scene
             j++;
         }
 
-        this.sendAudioToPlayer(AudioState.PAUSE_SET, tick);
+        this.sendAudio(AudioState.PAUSE_SET, tick);
         this.tick = tick;
 
         return true;
@@ -484,7 +485,7 @@ public class Scene
     {
         if (!triggered && !this.wasRecording || triggered)
         {
-            this.sendAudioToPlayer(AudioState.STOP);
+            this.sendAudio(AudioState.STOP);
             this.wasRecording = false;
         }
 
@@ -698,7 +699,7 @@ public class Scene
             actor.pause();
         }
 
-        this.sendAudioToPlayer(AudioState.PAUSE);
+        this.sendAudio(AudioState.PAUSE);
         this.paused = true;
     }
 
@@ -717,7 +718,7 @@ public class Scene
             player.resume(tick);
         }
 
-        this.sendAudioToPlayer(AudioState.RESUME_SET, tick < 0 ? this.tick : tick);
+        this.sendAudio(AudioState.RESUME_SET, tick < 0 ? this.tick : tick);
         this.paused = false;
     }
 
@@ -740,7 +741,7 @@ public class Scene
             entry.getValue().goTo(tick, actions);
         }
 
-        this.sendAudioToPlayer(this.isPlaying() ? AudioState.SET : AudioState.PAUSE_SET, tick);
+        this.sendAudio(this.isPlaying() ? AudioState.SET : AudioState.PAUSE_SET, tick);
     }
 
     /**
@@ -912,9 +913,9 @@ public class Scene
         }
     }
 
-    public void sendAudioToPlayer(AudioState state)
+    public void sendAudio(AudioState state)
     {
-        this.sendAudioToPlayer(state, 0);
+        this.sendAudio(state, 0);
     }
 
     /**
@@ -923,9 +924,9 @@ public class Scene
      * @param state
      * @param shift
      */
-    public void sendAudioToPlayer(AudioState state, int shift)
+    public void sendAudio(AudioState state, int shift)
     {
-        this.audioState = audioState;
+        this.audioState = state;
 
         if (this.audio == null || this.audio.isEmpty())
         {
@@ -950,12 +951,26 @@ public class Scene
      */
     public void sendAudioToPlayer(AudioState state, int shift, EntityPlayerMP player)
     {
+        this.sendAudioToPlayer(state, shift, null, player);
+    }
+
+    /**
+     * Send the audio to the provided player
+     * @param state
+     * @param shift
+     * @param latencyTimer a timer to measure (approximately) the delay to sync the audio properly
+     * @param player
+     */
+    public void sendAudioToPlayer(AudioState state, int shift, LatencyTimer latencyTimer, EntityPlayerMP player)
+    {
+        this.audioState = state;
+
         if (this.audio == null || this.audio.isEmpty())
         {
             return;
         }
 
-        PacketAudio packet = new PacketAudio(this.audio, state, this.audioShift + shift);
+        PacketAudio packet = new PacketAudio(this.audio, state, this.audioShift + shift, latencyTimer);
 
         if (player != null)
         {
