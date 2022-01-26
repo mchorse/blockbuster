@@ -1,11 +1,13 @@
 package mchorse.blockbuster.audio;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.mclib.utils.LatencyTimer;
 import mchorse.mclib.utils.wav.Wave;
 import mchorse.mclib.utils.wav.WavePlayer;
 import mchorse.mclib.utils.wav.WaveReader;
 import mchorse.mclib.utils.wav.Waveform;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -101,13 +103,29 @@ public class AudioLibrary
         return audio;
     }
 
-    public boolean play(String audio, AudioState state, int shift)
+    /**
+     *
+     * @param audio name of the file (without .wav file ending)
+     * @param state
+     * @param shift in ticks
+     * @param delay for syncing purposes, if not used, pass null as value
+     * @return
+     */
+    public boolean play(String audio, AudioState state, int shift, @Nullable LatencyTimer delay)
     {
         AudioFile file = this.files.get(audio);
+
+        float elapsed = 0;
 
         if (file == null || file.canBeUpdated())
         {
             file = this.load(audio, new File(this.folder, audio + ".wav"));
+
+            /* Account for networking and loading delays */
+            if (delay != null)
+            {
+                elapsed = delay.getElapsedTime() / 1000F;
+            }
         }
 
         if (file == null || file.isEmpty())
@@ -117,7 +135,7 @@ public class AudioLibrary
 
         WavePlayer player = file.player;
 
-        float seconds = shift / 20F;
+        float seconds = shift / 20F + elapsed;
 
         if (state == AudioState.REWIND)
         {
