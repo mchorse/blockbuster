@@ -4,7 +4,6 @@ import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -12,7 +11,6 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -30,9 +28,7 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
     {
         this.livingEntityRenderer = livingEntityRendererIn;
     }
-    public void event(TickEvent event){
 
-    }
     @Override
     public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
@@ -60,7 +56,7 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
     /**
      * Render item in every arm.
      *
-     * Items could be rendered to several limbs.
+     * <p>Items could be rendered to several limbs.</p>
      */
     public static void renderHeldItem(EntityLivingBase entity, ItemStack item, HeldModel model, ItemCameraTransforms.TransformType transform, EnumHandSide handSide)
     {
@@ -82,7 +78,7 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
 
     /**
      * Render item in every arm.
-     *
+     * <p>
      * Items could be rendered to several limbs.
      */
     public static void renderHeldItem(EntityLivingBase entity, ItemStack item, ModelCustom model, ItemCameraTransforms.TransformType transform, EnumHandSide handSide)
@@ -125,19 +121,6 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
         }
 
         GlStateManager.scale(arm.limb.itemScale, arm.limb.itemScale, arm.limb.itemScale);
-
-        /* if (p_188358_1_.isSneaking())
-        {
-            GlStateManager.translate(0.0F, 0.2F, 0.0F);
-        }
-        // Forge: moved this call down, fixes incorrect offset while sneaking.
-        this.translateToHand(handSide);
-        GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
-        GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-        boolean flag = handSide == EnumHandSide.LEFT;
-        GlStateManager.translate((float)(flag ? -1 : 1) / 16.0F, 0.125F, -0.625F);
-        Minecraft.getMinecraft().getItemRenderer().renderItemSide(p_188358_1_, p_188358_2_, p_188358_3_, flag);
-        GlStateManager.popMatrix(); */
     }
 
     /**
@@ -152,11 +135,11 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
 
     /**
      * Held model class
-     * 
-     * This class is responsible for storing the data related to rendering of 
-     * some stuff in the layer class. This is needed to store the rotation and 
-     * angles during that stage, because recursive model block item stack 
-     * rendering messing up the angles, this class used to restore the original 
+     * <p>
+     * This class is responsible for storing the data related to rendering of
+     * some stuff in the layer class. This is needed to store the rotation and
+     * angles during that stage, because recursive model block item stack
+     * rendering messing up the angles, this class used to restore the original
      * state.
      */
     public static class HeldModel

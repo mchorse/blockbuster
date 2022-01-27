@@ -1,7 +1,5 @@
 package mchorse.blockbuster.common.entity;
 
-import java.util.List;
-
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.GunProps;
@@ -34,6 +32,8 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 /**
  * Gun projectile entity
@@ -416,14 +416,17 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
                 if (this.props.damage > 0)
                 {
-                    if (result.entityHit instanceof EntityLiving){
-                        result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, null), 0);
+                    if (result.entityHit instanceof EntityLiving)
+                    {
                         EntityLiving living = (EntityLiving) result.entityHit;
-                        living.setHealth(living.getHealth()-this.props.damage);
-                    }else {
+
+                        result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, null), 0);
+                        living.setHealth(living.getHealth() - this.props.damage);
+                    }
+                    else
+                    {
                         result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, null), this.props.damage);
                     }
-
                 }
 
                 if (this.props.knockbackHorizontal != 0 && result.entityHit instanceof EntityLivingBase)
@@ -511,7 +514,6 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         {
             this.morph.fromNBT(NBTUtils.readInfiniteTag(additionalData));
         }
-
 
         this.initMX = additionalData.readDouble();
         this.initMY = additionalData.readDouble();

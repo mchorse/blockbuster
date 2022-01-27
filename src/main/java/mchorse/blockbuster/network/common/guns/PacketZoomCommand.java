@@ -10,32 +10,30 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
  */
 public class PacketZoomCommand implements IMessage
 {
-    public boolean zoomOn;
     public int entity;
-    
-    public PacketZoomCommand ()
-    {
-        super();
-    }
-    
-    public PacketZoomCommand (int entity, boolean zoomOn)
+    public boolean zoomOn;
+
+    public PacketZoomCommand()
+    {}
+
+    public PacketZoomCommand(int entity, boolean zoomOn)
     {
         super();
         this.entity = entity;
         this.zoomOn = zoomOn;
     }
-    
+
     @Override
-    public void fromBytes (ByteBuf byteBuf)
+    public void fromBytes(ByteBuf byteBuf)
     {
         this.entity = byteBuf.readInt();
         this.zoomOn = byteBuf.readBoolean();
     }
-    
+
     @Override
-    public void toBytes (ByteBuf byteBuf)
+    public void toBytes(ByteBuf byteBuf)
     {
         byteBuf.writeInt(this.entity);
-        byteBuf.writeBoolean(zoomOn);
+        byteBuf.writeBoolean(this.zoomOn);
     }
 }

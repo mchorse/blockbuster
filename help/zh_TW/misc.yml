@@ -5,11 +5,11 @@ blockbuster:
         lacks_pose: 解析的 "%s" 模型沒有名為 "%s" 的姿勢！
         lacks_limbs: 解析的 "%s" 模型沒有任何肢體！
 
-    recording: 錄制到 {7}%s{r}
+    recording: 錄製到 {7}%s{r}
     "yes": "是"
     "no": "否"
     morph_error: 未找到模型
-    start_recording: "即將開始錄制 {7}%s{r}，距開始還有 {7}%s{r}"
+    start_recording: "即將開始錄製 {7}%s{r}，距開始還有 {7}%s{r}"
 
     bye_director_block: 導演方塊已被移除。該導演方塊已被轉換為場景。請使用場景進行拍攝。
     bye_director_block_guide: "要了解更多關於本次改動的信息，"

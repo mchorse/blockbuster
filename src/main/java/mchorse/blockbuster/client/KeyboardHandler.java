@@ -2,31 +2,19 @@ package mchorse.blockbuster.client;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.client.gui.GuiGun;
-import mchorse.blockbuster.common.item.ItemGun;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.guns.PacketGunInteract;
-import mchorse.blockbuster.recording.actions.Action;
-import mchorse.blockbuster.recording.actions.ItemUseAction;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
-
-import java.util.List;
 
 /**
  * Separate event handler for keyboard events
@@ -40,8 +28,9 @@ public class KeyboardHandler
     private KeyBinding pause;
     private KeyBinding openGun;
     public static KeyBinding zoom;
-    public static KeyBinding gun_reload;
-    public static KeyBinding gun_shoot;
+    public static KeyBinding gunReload;
+    public static KeyBinding gunShoot;
+
     /**
      * Create and register key bindings for mod
      */
@@ -54,17 +43,18 @@ public class KeyboardHandler
         this.plause = new KeyBinding("key.blockbuster.plause_director", Keyboard.KEY_RCONTROL, category);
         this.record = new KeyBinding("key.blockbuster.record_director", Keyboard.KEY_RMENU, category);
         this.pause = new KeyBinding("key.blockbuster.pause_director", Keyboard.KEY_RSHIFT, category);
-        this.openGun = new KeyBinding("key.blockbuster.open_gun", Keyboard.KEY_END  , category);
-        zoom = new KeyBinding("key.blockbuster.zoom", -98, category);
-        gun_reload = new KeyBinding("key.blockbuster.gun_reload", 19, category);
-        gun_shoot= new KeyBinding("key.blockbuster.gun_shoot", -100, category);
+        this.openGun = new KeyBinding("key.blockbuster.open_gun", Keyboard.KEY_END, category);
+        this.zoom = new KeyBinding("key.blockbuster.zoom", -98, category);
+        this.gunReload = new KeyBinding("key.blockbuster.gun_reload", 19, category);
+        this.gunShoot = new KeyBinding("key.blockbuster.gun_shoot", -100, category);
+
         ClientRegistry.registerKeyBinding(this.plause);
         ClientRegistry.registerKeyBinding(this.record);
-        ClientRegistry.registerKeyBinding(zoom);
-        ClientRegistry.registerKeyBinding(gun_reload);
-        ClientRegistry.registerKeyBinding(gun_shoot);
         ClientRegistry.registerKeyBinding(this.pause);
         ClientRegistry.registerKeyBinding(this.openGun);
+        ClientRegistry.registerKeyBinding(this.zoom);
+        ClientRegistry.registerKeyBinding(this.gunReload);
+        ClientRegistry.registerKeyBinding(this.gunShoot);
     }
 
     @SubscribeEvent
@@ -115,8 +105,6 @@ public class KeyboardHandler
             {
                 mc.displayGuiScreen(new GuiGun(stack));
             }
-
         }
-
     }
 }
