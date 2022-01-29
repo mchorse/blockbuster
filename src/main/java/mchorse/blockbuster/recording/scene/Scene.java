@@ -922,7 +922,7 @@ public class Scene
      * Send the audio in the scene, if present, to all players on the server
      * and set this.audioState to the provided state.
      * @param state
-     * @param shift
+     * @param shift shift the audio in ticks
      */
     public void sendAudio(AudioState state, int shift)
     {
@@ -946,20 +946,27 @@ public class Scene
     /**
      * Send the audio to the provided player
      * @param state
-     * @param shift
-     * @param player
+     * @param shift shift the audio in ticks
+     * @param player the entity player the audio should be sent to
      */
     public void sendAudioToPlayer(AudioState state, int shift, EntityPlayerMP player)
     {
-        this.sendAudioToPlayer(state, shift, null, player);
+        LatencyTimer timer = null;
+
+        if (Blockbuster.audioSync.get())
+        {
+            timer = new LatencyTimer();
+        }
+
+        this.sendAudioToPlayer(state, shift, timer, player);
     }
 
     /**
      * Send the audio to the provided player
      * @param state
-     * @param shift
+     * @param shift shift the audio in ticks
      * @param latencyTimer a timer to measure (approximately) the delay to sync the audio properly
-     * @param player
+     * @param player the entity player the audio should be sent to
      */
     public void sendAudioToPlayer(AudioState state, int shift, LatencyTimer latencyTimer, EntityPlayerMP player)
     {
