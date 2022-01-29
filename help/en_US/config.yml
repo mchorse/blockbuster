@@ -87,3 +87,4 @@ blockbuster.config:
         waveform_height: Audio bar height
         waveform_filename: Show audio bar's filename
         waveform_time: Show audio bar's playback time
+        audio_sync: Sync audio between server and client

@@ -109,7 +109,7 @@ public class AudioLibrary
      * @param state
      * @param shift in ticks
      * @param delay for syncing purposes, if not used, pass null as value
-     * @return
+     * @return false if the file is null or empty
      */
     public boolean play(String audio, AudioState state, int shift, @Nullable LatencyTimer delay)
     {
