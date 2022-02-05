@@ -1,5 +1,23 @@
 {
     "variants": {
-        "normal": { "model": "blockbuster:model" }
+        "normal": { "model": "blockbuster:model" },
+        "light": {
+            "0": { "model": "blockbuster:model" },
+            "1": { "model": "blockbuster:model" },
+            "2": { "model": "blockbuster:model" },
+            "3": { "model": "blockbuster:model" },
+            "4": { "model": "blockbuster:model" },
+            "5": { "model": "blockbuster:model" },
+            "6": { "model": "blockbuster:model" },
+            "7": { "model": "blockbuster:model" },
+            "8": { "model": "blockbuster:model" },
+            "9": { "model": "blockbuster:model" },
+            "10": { "model": "blockbuster:model" },
+            "11": { "model": "blockbuster:model" },
+            "12": { "model": "blockbuster:model" },
+            "13": { "model": "blockbuster:model" },
+            "14": { "model": "blockbuster:model" },
+            "15": { "model": "blockbuster:model" }
+        }
     }
 }

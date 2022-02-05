@@ -5,6 +5,7 @@ import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.GuiImmersiveEditor;
 import mchorse.blockbuster.client.gui.GuiImmersiveMorphMenu;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
+import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.blockbuster.network.Dispatcher;
@@ -19,6 +20,7 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
+import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.ColorUtils;
@@ -61,6 +63,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     private GuiToggleElement shadow;
     private GuiToggleElement global;
     private GuiToggleElement enabled;
+    private GuiTrackpadElement lightLevel;
 
     private GuiModelBlockList list;
     private GuiElement subChildren;
@@ -156,7 +159,16 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.enabled"), false, (button) -> this.model.enabled = button.isToggled());
         this.enabled.tooltip(IKey.lang("blockbuster.gui.model_block.enabled_tooltip"), Direction.BOTTOM);
 
-        column.add(this.pickMorph, look, this.shadow, this.global, this.enabled);
+        this.lightLevel = new GuiTrackpadElement(mc, (value) ->
+        {
+            this.model.lightValue = value.intValue();
+
+            this.model.getWorld().setBlockState(this.model.getPos(), this.model.getWorld().getBlockState(this.model.getPos()).withProperty(BlockModel.LIGHT, this.model.lightValue) , 2);
+        });
+        this.lightLevel.integer().limit(0, 15);
+        this.lightLevel.tooltip(IKey.lang("blockbuster.gui.model_block.light_level_tooltip"));
+
+        column.add(this.pickMorph, look, this.shadow, this.global, this.enabled, Elements.label(IKey.lang("blockbuster.gui.model_block.light_level")), this.lightLevel);
         this.subChildren.add(column);
 
         /* Model blocks */
@@ -383,6 +395,8 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
             {
                 this.slots[i].setStack(this.model.slots[i]);
             }
+
+            this.lightLevel.setValue(this.model.lightValue);
         }
     }
 
