@@ -2,6 +2,7 @@ package mchorse.blockbuster.common.tileentity;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
@@ -10,6 +11,7 @@ import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -36,6 +38,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityModel extends TileEntity implements ITickable
 {
     private static AbstractMorph DEFAULT_MORPH;
+
+    public int lightValue;
 
     public Morph morph = new Morph();
     public EntityLivingBase entity;
@@ -189,6 +193,7 @@ public class TileEntityModel extends TileEntity implements ITickable
 
     public void copyData(TileEntityModel model, boolean merge)
     {
+        this.lightValue = model.lightValue;
         this.order = model.order;
         this.rotateYawHead = model.rotateYawHead;
         this.rotatePitch = model.rotatePitch;
@@ -227,6 +232,12 @@ public class TileEntityModel extends TileEntity implements ITickable
         this.markDirty();
     }
 
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    {
+        return (oldState.getBlock() != newSate.getBlock());// || oldState.getValue(BlockModel.LIGHT) != newSate.getValue(BlockModel.LIGHT);
+    }
+
     /* NBT methods */
 
     /**
@@ -255,6 +266,10 @@ public class TileEntityModel extends TileEntity implements ITickable
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
     {
         this.readFromNBT(pkt.getNbtCompound());
+
+        IBlockState currentState = this.getWorld().getBlockState(this.pos).getActualState(this.getWorld(), this.pos);
+
+        this.getWorld().notifyBlockUpdate(this.pos, currentState, currentState, 2);
     }
 
     @Override
@@ -262,6 +277,7 @@ public class TileEntityModel extends TileEntity implements ITickable
     {
         if (this.order != RotationOrder.ZYX) compound.setByte("Order", (byte) this.order.ordinal());
 
+        if (this.lightValue != 0) compound.setInteger("LightValue", this.lightValue);
         if (this.rotateYawHead != 0) compound.setFloat("Yaw", this.rotateYawHead);
         if (this.rotatePitch != 0) compound.setFloat("Pitch", this.rotatePitch);
         if (this.rotateBody != 0) compound.setFloat("Body", this.rotateBody);
@@ -324,6 +340,7 @@ public class TileEntityModel extends TileEntity implements ITickable
             this.order = RotationOrder.values()[compound.getByte("Order")];
         }
 
+        if (compound.hasKey("LightValue")) this.lightValue = compound.getInteger("LightValue");
         if (compound.hasKey("Yaw")) this.rotateYawHead = compound.getFloat("Yaw");
         if (compound.hasKey("Pitch")) this.rotatePitch = compound.getFloat("Pitch");
         if (compound.hasKey("Body")) this.rotateBody = compound.getFloat("Body");
@@ -366,6 +383,7 @@ public class TileEntityModel extends TileEntity implements ITickable
     {
         this.order = RotationOrder.values()[buf.readByte()];
 
+        this.lightValue = buf.readInt();
         this.rotateYawHead = buf.readFloat();
         this.rotatePitch = buf.readFloat();
         this.rotateBody = buf.readFloat();
@@ -397,6 +415,7 @@ public class TileEntityModel extends TileEntity implements ITickable
     {
         buf.writeByte(this.order.ordinal());
 
+        buf.writeInt(this.lightValue);
         buf.writeFloat(this.rotateYawHead);
         buf.writeFloat(this.rotatePitch);
         buf.writeFloat(this.rotateBody);
