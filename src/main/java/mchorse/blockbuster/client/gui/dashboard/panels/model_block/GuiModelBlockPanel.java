@@ -396,7 +396,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
                 this.slots[i].setStack(this.model.slots[i]);
             }
 
-            this.lightLevel.setValue(this.model.lightValue);
+            this.lightLevel.setValue(this.model.getWorld().getBlockState(this.model.getPos()).getValue(BlockModel.LIGHT));
         }
     }
 
