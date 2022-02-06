@@ -18,6 +18,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.common.item.ItemActorConfig;
 import mchorse.blockbuster.common.item.ItemBlockGreen;
+import mchorse.blockbuster.common.item.ItemBlockModel;
 import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
@@ -143,7 +144,7 @@ public class CommonProxy
         ForgeRegistries.ITEMS.register(new ItemBlock(director).setRegistryName(director.getRegistryName()));
 
         ForgeRegistries.BLOCKS.register(Blockbuster.modelBlock = model);
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem = new ItemBlock(model).setRegistryName(model.getRegistryName()));
+        ForgeRegistries.ITEMS.register(new ItemBlockModel(model));
 
         ForgeRegistries.BLOCKS.register(Blockbuster.greenBlock = green);
         ForgeRegistries.ITEMS.register(new ItemBlockGreen(green, true).setRegistryName(green.getRegistryName()));
