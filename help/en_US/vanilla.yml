@@ -37,22 +37,22 @@ item:
         register.name: Registering device
         actor_config.name: Actor configuration device
         gun.name: BB gun
-        model_light0.name: Model block light 0
-        model_light1.name: Model block light 1
-        model_light2.name: Model block light 2
-        model_light3.name: Model block light 3
-        model_light4.name: Model block light 4
-        model_light5.name: Model block light 5
-        model_light6.name: Model block light 6
-        model_light7.name: Model block light 7
-        model_light8.name: Model block light 8
-        model_light9.name: Model block light 9
-        model_light10.name: Model block light 10
-        model_light11.name: Model block light 11
-        model_light12.name: Model block light 12
-        model_light13.name: Model block light 13
-        model_light14.name: Model block light 14
-        model_light15.name: Model block light 15
+        model0.name: Model block light 0
+        model1.name: Model block light 1
+        model2.name: Model block light 2
+        model3.name: Model block light 3
+        model4.name: Model block light 4
+        model5.name: Model block light 5
+        model6.name: Model block light 6
+        model7.name: Model block light 7
+        model8.name: Model block light 8
+        model9.name: Model block light 9
+        model10.name: Model block light 10
+        model11.name: Model block light 11
+        model12.name: Model block light 12
+        model13.name: Model block light 13
+        model14.name: Model block light 14
+        model15.name: Model block light 15
 
 # Entity names
 entity.blockbuster.Actor.name: Actor
