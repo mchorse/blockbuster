@@ -63,6 +63,45 @@ public class BlockModel extends Block implements ITileEntityProvider
         this.setDefaultState(this.getDefaultState().withProperty(LIGHT, 0));
     }
 
+    public static Item getItemFromMeta(int meta)
+    {
+        switch(meta)
+        {
+            case 1:
+                return Blockbuster.modelBlockItem1;
+            case 2:
+                return Blockbuster.modelBlockItem2;
+            case 3:
+                return Blockbuster.modelBlockItem3;
+            case 4:
+                return Blockbuster.modelBlockItem4;
+            case 5:
+                return Blockbuster.modelBlockItem5;
+            case 6:
+                return Blockbuster.modelBlockItem6;
+            case 7:
+                return Blockbuster.modelBlockItem7;
+            case 8:
+                return Blockbuster.modelBlockItem8;
+            case 9:
+                return Blockbuster.modelBlockItem9;
+            case 10:
+                return Blockbuster.modelBlockItem10;
+            case 11:
+                return Blockbuster.modelBlockItem11;
+            case 12:
+                return Blockbuster.modelBlockItem12;
+            case 13:
+                return Blockbuster.modelBlockItem13;
+            case 14:
+                return Blockbuster.modelBlockItem14;
+            case 15:
+                return Blockbuster.modelBlockItem15;
+        }
+
+        return Blockbuster.modelBlockItem0;
+    }
+
     @Override
     public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos)
     {
@@ -70,18 +109,22 @@ public class BlockModel extends Block implements ITileEntityProvider
     }
 
     @Override
+    public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
+    {
+        return this.getItemStack(state);
+    }
+
+    private ItemStack getItemStack(IBlockState state)
+    {
+        int meta = this.damageDropped(state);
+
+        return new ItemStack(this.getItemFromMeta(meta), 1, meta);
+    }
+
+    @Override
     public int damageDropped(IBlockState state)
     {
         return this.getMetaFromState(state);
-    }
-
-    /*
-    Does not work lol wat?
-     */
-    @Override
-    public Item getItemDropped(IBlockState state, Random rand, int fortune)
-    {
-        return (new ItemStack(Item.getItemFromBlock(this), 1, this.damageDropped(state))).getItem();
     }
 
     @Override
@@ -112,7 +155,7 @@ public class BlockModel extends Block implements ITileEntityProvider
     @Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
     {
-        ItemStack stack = new ItemStack(Item.getItemFromBlock(this));
+        ItemStack stack = this.getItemStack(state);
         TileEntity te = ActionHandler.lastTE;
 
         if (te instanceof TileEntityModel)

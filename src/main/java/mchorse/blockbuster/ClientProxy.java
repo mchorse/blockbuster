@@ -19,6 +19,7 @@ import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
 import mchorse.blockbuster.commands.CommandItemNBT;
 import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.common.block.BlockGreen.ChromaColor;
+import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
@@ -42,6 +43,7 @@ import mchorse.mclib.utils.files.FileTree;
 import mchorse.mclib.utils.files.GlobalTree;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -112,12 +114,18 @@ public class ClientProxy extends CommonProxy
         final ModelResourceLocation model = new ModelResourceLocation(Blockbuster.path("model"), "inventory");
 
         /* Register model block's configurable render disable */
-        Item item = Item.getItemFromBlock(Blockbuster.modelBlock);
-        ModelBakery.registerItemVariants(item, model, modelStatic);
+        ItemMeshDefinition meshDefinition = (stack) -> Blockbuster.modelBlockDisableItemRendering.get() ? modelStatic : model;
+        TileEntityModelItemStackRenderer teModelItemSR = new TileEntityModelItemStackRenderer();
 
-        ModelLoader.setCustomMeshDefinition(item, (stack) -> Blockbuster.modelBlockDisableItemRendering.get() ? modelStatic : model);
+        for (int i = 0; i <= 15; i++)
+        {
+            Item modelBlockItem = BlockModel.getItemFromMeta(i);
 
-        Blockbuster.modelBlockItem.setTileEntityItemStackRenderer(new TileEntityModelItemStackRenderer());
+            ModelBakery.registerItemVariants(modelBlockItem, model, modelStatic);
+            ModelLoader.setCustomMeshDefinition(modelBlockItem, meshDefinition);
+            modelBlockItem.setTileEntityItemStackRenderer(teModelItemSR);
+        }
+
         Blockbuster.gunItem.setTileEntityItemStackRenderer(new TileEntityGunItemStackRenderer());
 
         /* Entities */

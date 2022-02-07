@@ -128,7 +128,22 @@ public class Blockbuster
     public static Item playbackItem;
     public static Item registerItem;
     public static Item actorConfigItem;
-    public static Item modelBlockItem;
+    public static Item modelBlockItem0;
+    public static Item modelBlockItem1;
+    public static Item modelBlockItem2;
+    public static Item modelBlockItem3;
+    public static Item modelBlockItem4;
+    public static Item modelBlockItem5;
+    public static Item modelBlockItem6;
+    public static Item modelBlockItem7;
+    public static Item modelBlockItem8;
+    public static Item modelBlockItem9;
+    public static Item modelBlockItem10;
+    public static Item modelBlockItem11;
+    public static Item modelBlockItem12;
+    public static Item modelBlockItem13;
+    public static Item modelBlockItem14;
+    public static Item modelBlockItem15;
     public static Item gunItem;
 
     /* Blocks */
