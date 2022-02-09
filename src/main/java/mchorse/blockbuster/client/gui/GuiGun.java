@@ -322,7 +322,7 @@ public class GuiGun extends GuiBase
         this.useZoomOverlayMorph = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.use_zoom_overlay_morph"), false, (b) -> this.props.useZoomOverlayMorph = b.isToggled());
 
         this.zoomFactor = new GuiTrackpadElement(mc, (value) -> this.props.zoomFactor = value.floatValue());
-        this.zoomFactor.limit(-800).tooltip(IKey.lang("blockbuster.gui.gun.zoom_factor_tooltip"));
+        this.zoomFactor.limit(0,1,false).tooltip(IKey.lang("blockbuster.gui.gun.zoom_factor_tooltip"));
         this.ammo = new GuiTrackpadElement(mc, (value) -> this.props.ammo = value.intValue());
         this.ammo.limit(0).tooltip(IKey.lang("blockbuster.gui.gun.ammo_tooltip"));
         this.useReloading = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.use_reloading"), false, (b) -> this.props.useReloading = b.isToggled());
@@ -399,7 +399,7 @@ public class GuiGun extends GuiBase
 
         this.meleeDamage = new GuiTrackpadElement(mc, (value) -> this.props.meleeDamage = value.floatValue());
         this.mouseZoom = new GuiTrackpadElement(mc, (value) -> this.props.mouseZoom = value.floatValue());
-        this.mouseZoom.limit(-3, 3, false);
+        this.mouseZoom.limit(0, 1.5f, false);
         this.durability = new GuiTrackpadElement(mc, (value) -> this.props.durability = value.intValue());
         this.durability.limit(0, Integer.MAX_VALUE, true);
         this.preventLeftClick = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.prevent_left_click"), false, (b) -> this.props.preventLeftClick = b.isToggled());
