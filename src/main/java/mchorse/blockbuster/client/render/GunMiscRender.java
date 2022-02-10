@@ -16,8 +16,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -124,8 +122,8 @@ public class GunMiscRender
         if (KeyboardHandler.zoom.isKeyDown())
         {
             onZoom = true;
-            ZOOM_TIME = Math.min(ZOOM_TIME + (partialTick * 0.1F), 1);
-            UN_ZOOM_TIME = Math.max(UN_ZOOM_TIME - (partialTick * 0.2F), 0);
+            ZOOM_TIME = Math.min(ZOOM_TIME + partialTick * 0.1F, 1);
+            UN_ZOOM_TIME = Math.max(UN_ZOOM_TIME - partialTick * 0.2F, 0);
             
             if (!zoomed)
             {
@@ -135,8 +133,8 @@ public class GunMiscRender
         else
         {
             onZoom = false;
-            ZOOM_TIME = Math.max(ZOOM_TIME - (partialTick * 0.1F), 0);
-            UN_ZOOM_TIME = Math.min(UN_ZOOM_TIME + (partialTick * 0.2F), 1);
+            ZOOM_TIME = Math.max(ZOOM_TIME - partialTick * 0.1F, 0);
+            UN_ZOOM_TIME = Math.min(UN_ZOOM_TIME + partialTick * 0.2F, 1);
             
             if (zoomed)
             {
