@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.render;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.item.ItemGun;
@@ -15,6 +16,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -35,15 +37,16 @@ import org.lwjgl.util.vector.Vector3f;
 public class GunMiscRender
 {
     public static float ZOOM_TIME;
+    public static float UN_ZOOM_TIME;
     public static boolean onZoom = true;
-
+    private boolean writeZoom = true;
     private boolean hasChangedSensitivity = false;
     private float lastMouseSensitivity;
 
     public Vector3f translate = new Vector3f();
     public Vector3f scale = new Vector3f(1F, 1F, 1F);
     public Vector3f rotate = new Vector3f();
-
+    
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onTick(TickEvent.RenderTickEvent event)
@@ -53,10 +56,32 @@ public class GunMiscRender
             EntityPlayer player = Minecraft.getMinecraft().player;
             ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
             GunProps props = NBTUtils.getGunProps(heldItem);
-
+            Minecraft mc = Minecraft.getMinecraft();
+            
             if (heldItem.getItem().equals(Blockbuster.gunItem))
             {
                 this.handleZoom(event.renderTickTime);
+                
+                if (writeZoom)
+                {
+                    ClientProxy.oldFov = mc.gameSettings.fovSetting;
+                    writeZoom = false;
+                    mc.renderGlobal.setDisplayListEntitiesDirty();
+                }
+                
+                if (onZoom)
+                {
+                    if (props != null)
+                    {
+                        mc.gameSettings.fovSetting = ClientProxy.oldFov - ClientProxy.oldFov * ZOOM_TIME * props.zoomFactor;
+                        mc.renderGlobal.setDisplayListEntitiesDirty();
+                    }
+                }
+                else
+                {
+                    mc.gameSettings.fovSetting = ClientProxy.oldFov;
+                    mc.renderGlobal.setDisplayListEntitiesDirty();
+                }
             }
 
             if (ZOOM_TIME == 0)
@@ -64,7 +89,6 @@ public class GunMiscRender
                 if (hasChangedSensitivity)
                 {
                     hasChangedSensitivity = false;
-
                     Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity;
                 }
                 else
@@ -80,7 +104,7 @@ public class GunMiscRender
 
                     if (props != null)
                     {
-                        Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity + (-props.mouseZoom + (ZOOM_TIME * 0.5F));
+                        Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity * props.mouseZoom - 0.3f;
                     }
                 }
                 else
@@ -89,18 +113,20 @@ public class GunMiscRender
                     Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity;
                 }
             }
+
         }
     }
-
+    
     private void handleZoom(float partialTick)
     {
         boolean zoomed = onZoom;
-
+        
         if (KeyboardHandler.zoom.isKeyDown())
         {
             onZoom = true;
             ZOOM_TIME = Math.min(ZOOM_TIME + (partialTick * 0.1F), 1);
-
+            UN_ZOOM_TIME = Math.max(UN_ZOOM_TIME - (partialTick * 0.2F), 0);
+            
             if (!zoomed)
             {
                 Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(), true));
@@ -109,36 +135,16 @@ public class GunMiscRender
         else
         {
             onZoom = false;
-            ZOOM_TIME = Math.max(ZOOM_TIME - (partialTick * 0.2F), 0);
-
+            ZOOM_TIME = Math.max(ZOOM_TIME - (partialTick * 0.1F), 0);
+            UN_ZOOM_TIME = Math.min(UN_ZOOM_TIME + (partialTick * 0.2F), 1);
+            
             if (zoomed)
             {
                 Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(), false));
             }
         }
     }
-
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onFOVUpdateEvent(FOVUpdateEvent event)
-    {
-        ItemStack heldItem = event.getEntity().getHeldItem(EnumHand.MAIN_HAND);
-
-        if (heldItem.getItem().equals(Blockbuster.gunItem))
-        {
-            GunProps props = NBTUtils.getGunProps(heldItem);
-
-            if (props != null)
-            {
-                event.setNewfov(event.getFov() - event.getFov() * ZOOM_TIME * props.zoomFactor);
-
-                Minecraft mc = Minecraft.getMinecraft();
-
-                mc.renderGlobal.setDisplayListEntitiesDirty();
-            }
-        }
-    }
-
+    
     @SideOnly(Side.CLIENT)
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void renderGameOverlay(RenderGameOverlayEvent event)
@@ -163,7 +169,7 @@ public class GunMiscRender
             }
         }
     }
-
+    
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onHUDRender(RenderGameOverlayEvent.Post event)
@@ -185,7 +191,7 @@ public class GunMiscRender
             }
         }
     }
-
+    
     public void render(AbstractMorph morph, int width, int height)
     {
         if (morph == null)
@@ -203,7 +209,7 @@ public class GunMiscRender
 
         GlStateManager.popMatrix();
     }
-
+    
     private void enableGLStates()
     {
         RenderHelper.enableStandardItemLighting();

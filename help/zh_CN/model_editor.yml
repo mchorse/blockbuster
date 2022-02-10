@@ -43,6 +43,7 @@ blockbuster.gui.me:
         rename: 重命名
         parent: 父级
 
+        anchor_modal: "输入目标锚点（各个轴的值在 0~1 之间）："
         new_limb: 为新肢体命名...
         last_limb: 您不能移除最后一个肢体...
         rename_limb: "重命名当前肢体："
@@ -59,6 +60,10 @@ blockbuster.gui.me:
             right_leg: 右腿
             left_foot: 左鞋
             right_foot: 右鞋
+
+        context:
+            anchor_setup: 设置锚点...
+            anchor_move: 设置并移动至锚点...
 
     models:
         title: 模型

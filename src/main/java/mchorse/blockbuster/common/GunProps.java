@@ -485,7 +485,7 @@ public class GunProps
         this.zoomFactor = 0;
         this.recoilXMin = 0;
         this.shootingOffsetX = 0;
-        this.mouseZoom = 0;
+        this.mouseZoom = 0.5F;
         this.meleeDamage = 0;
         this.shootingOffsetY = 0;
         this.shootingOffsetZ = 0;
@@ -591,7 +591,7 @@ public class GunProps
         }
         if (tag.hasKey("ScatterY")) this.scatterY = tag.getFloat("ScatterY");
         if (tag.hasKey("Launch")) this.launch = tag.getBoolean("Launch");
-        if (tag.hasKey("enableCustomGuiMorph")) this.useInventoryMorph = tag.getBoolean("enableCustomGuiMorph");
+        if (tag.hasKey("UseInventoryMorph")) this.useInventoryMorph = tag.getBoolean("UseInventoryMorph");
         if (tag.hasKey("UseReloading")) this.useReloading = tag.getBoolean("UseReloading");
 
 
@@ -775,7 +775,7 @@ public class GunProps
         if (!this.zoomOffCommand.isEmpty()) tag.setString("ZoomOffCommand", this.zoomOffCommand);
 
         if (this.meleeDamage != 0) tag.setFloat("MeleeDamage", this.meleeDamage);
-        if (this.mouseZoom != 0) tag.setFloat("MouseZoom", this.mouseZoom);
+        if (this.mouseZoom != 0.5F) tag.setFloat("MouseZoom", this.mouseZoom);
         if (this.durability != 0) tag.setInteger("Durability", this.durability);
         if (this.preventLeftClick) tag.setBoolean("PreventLeftClick", this.preventLeftClick);
         if (this.preventRightClick) tag.setBoolean("PreventRightClick", this.preventRightClick);

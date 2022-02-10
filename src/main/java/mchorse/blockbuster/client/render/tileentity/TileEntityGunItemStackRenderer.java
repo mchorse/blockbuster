@@ -4,12 +4,14 @@ import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.utils.NBTUtils;
+import mchorse.mclib.math.functions.limit.Min;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -85,15 +87,25 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
                     model.props.renderZoomOverlay(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
             }
-
+            
             if (RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI)
             {
-                if (!(KeyboardHandler.zoom.isKeyDown() && model.props.hideHandsOnZoom))
+                if (KeyboardHandler.zoom.isKeyDown() && model.props.hideHandsOnZoom)
+                {
+                    if
+                    (
+                     RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND &&
+                     RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND
+                    ) {
+                        model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
+                    }
+                }
+                else
                 {
                     model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
             }
-
+            
             if (RenderingHandler.itemTransformType == ItemCameraTransforms.TransformType.GUI)
             {
                 if (model.props.useInventoryMorph && model.props.inventoryMorph != null)

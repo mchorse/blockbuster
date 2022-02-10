@@ -27,6 +27,7 @@ blockbuster.success:
         changed_origin: "{f}玩家回放的来源已经成功从 %s{f} 从（%s{f}, %s{f}, %s{f}）更换为（%s{f}, %s{f}, %s{f}）！"
         duped: "{f}玩家回放 %s{f} 已被成功复制到 %s{f}！"
         clean: "{f}玩家回放 %s{f} 的属性 %s{f} 已成功从 %s{f} 到 %s{f} 清除！"
+        create: "{f}玩家回放 %s{f} 创建成功！"
         prolonged: "{f}已在玩家回放 %s{f} 设定延迟。其播放前、后延迟分别是：%s{f} 和 %s{f}。"
         faded: "{f}玩家回放 %s{f} 的最后 %s{f} 帧会用于拖至起点。"
         flipped: "{f}已在玩家回放 %s{f} 以 %s{f} 轴，在 %s{f} 坐标翻转！"

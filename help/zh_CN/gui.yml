@@ -103,6 +103,7 @@ blockbuster.gui:
         update_data_tooltip: 更新在回放文件中的玩家数据
         rename_prefix: 重命名前缀
         rename_prefix_tooltip: 使用新前缀来重命名回放的回放 ID
+        rename_replay_dupe_modal: 该回放 ID 已存在于当前场景。你也可以重复使用它，如果你想的话。
         rename_prefix_popup: "输入一个新的前缀："
 
         attach: 链接
@@ -130,6 +131,8 @@ blockbuster.gui:
 
         add_modal: "命名新场景："
         dupe_modal: "命名副本场景："
+        dupe_recordings: "拷贝回放"
+        dupe_recordings_tooltip: "启用后，玩家回放会以新的文件名的形式被复制进来"
         rename_modal: "重命名当前场景："
         remove_modal: "您确定要移除该场景吗？"
 
@@ -316,6 +319,8 @@ blockbuster.gui:
         rotation: 坐标旋转
         keying: 键控
         keying_tooltip: 该选项会清除屏幕中，由这个伪装（在帧缓冲器中）渲染的颜色数据，最终可以用于 Minema 的“使用 Alpha 通道”选项输出已键控（抠像）的画面，而不需要外部视频编辑软件
+        shadow: 阴影
+        shadow_tooltip: 该图像伪装是否会在加载了 OptiFine 的光影后产生阴影（当图像伪装过大时，它能够修复图像伪装自身的阴影问题），不使用 OptiFine 功能则会不产生影响
 
     sequencer:
         duration: 持续长度
@@ -396,6 +401,11 @@ blockbuster.gui:
             particles_opaque: 不透明度
             particles_alpha: Alpha
             particles_blend: 混合
+
+        particle_morph:
+            title: 伪装
+            enabled: 启用
+            render_texture: 始终以告示板形式渲染
 
         space:
             title: 粒子空间属性
@@ -531,6 +541,9 @@ blockbuster.gui:
                 lookat_y: 看向 Y
                 rotate_xyz: 旋转 XYZ
                 rotate_y: 旋转 Y
+                emitter_xy: 沿发射器 XY-平面
+                emitter_xz: 沿发射器 XZ-平面
+                emitter_yz: 沿发射器 YZ-平面
 
             size: 告示板尺寸
             width: 宽度
@@ -558,16 +571,25 @@ blockbuster.gui:
 
             solid: 纯色
             expression: 表达式
+            gradient: 渐变
+
+            interpolant_tooltip: 颜色渐变插值
+            range_tooltip: 颜色渐变范围
 
             red: R
             green: G
             blue: B
             alpha: Alpha
 
+            context:
+                add_stop: 添加渐变颜色
+                remove_stop: 移除渐变颜色
+
         collision:
             title: 碰撞
 
             enabled: 启用
+            condition_tooltip: 值为 True / 非零或未设置时启用
             realistic_collision: 真实碰撞
             preserve_energy: 保留能量
             preserve_energy_tooltip: 保留能量选项可用于保留粒子在碰撞后的速度
@@ -596,13 +618,14 @@ blockbuster.gui:
             appearance:
                 title: 碰撞时的材质
             lighting:
-                title: 碰撞时的发光
+                title: 碰撞时的颜色与发光
 
     record_morph:
         random_skip: 随机跳过
 
     structure_morph:
         lighting: 使用外部光照
+        anchor: 锚点
     
     tracker_morph:
         name: 追踪器
@@ -610,7 +633,12 @@ blockbuster.gui:
             title: 名称
         type:
             title: 类型
+            aperture_tracker: Aperture 伪装追踪器
         hidden: 隐藏追踪器标志
+
+        aperture_tracker:
+            combine_tracking: 合并同名追踪器
+            combine_tracking_tooltip: 合并具有相同名称的追踪器数据。当您在多个不会同时出现的伪装上设置有相同名称的追踪器时，可以开启此选项。
 
     texture:
         title: 材质管理器
@@ -645,7 +673,6 @@ blockbuster.gui:
         launch: 发射玩家
         ammo_stack: 该选项可以指定一个物品，并且会在射击时被消耗掉。如果在生存模式下射击时没有这类物品及其数量，炮弹则不会被射出。\n\n可以把它看作是一个弹药选项。
 
-
         projectile_morph: 炮弹伪装
         tick_command: 以 Tick 频率执行的命令
         ticking: Tick 频率
@@ -661,6 +688,66 @@ blockbuster.gui:
         gravity: 引力
         fade_in: 缓入
         fade_out: 缓出
+
+        aim_options: 高级选项
+        static_recoil: 固定后坐力
+        static_recoil_tooltip:
+            |
+                启用该选项时，每次都会将最小 X 和 Y 后坐力的值加在玩家所看的方向上。
+
+                否则（禁用时）将随机产生一个介于最小和最大值之间的数字并加在玩家所看的方向上。
+        recoil_x: X 后坐力
+        recoil_y: Y 后坐力
+        recoil_min: 最小后坐力系数
+        recoil_max: 最大后坐力系数
+
+        arm_pose: 抬手射击姿势
+        arm_shooting_pose: 射击时启用
+        arm_shooting_pose_tooltip: 启用并发射 BB 枪时，角色的双臂会摆出射箭的姿势。
+        arm_shooting_pose_always: 保持抬手姿势
+        arm_shooting_pose_always_tooltip: 启用后，手臂将始终保持射箭的姿势
+
+        shooting_offset: 
+        shooting_offset_tooltip: 相对于头部旋转的 XYZ 值，用于调整炮弹发射的位置。
+        shooting_offset_x: X 射击偏移
+        shooting_offset_y: Y 射击偏移
+        shooting_offset_z: Z 射击偏移
+
+        inventory_morph: 物品栏伪装
+        crosshair_morph: 准星伪装
+        hands_morph: 手部伪装
+        reload_morph: 换弹伪装
+        overlay_morph: 瞄准叠加层伪装
+
+        hide_crosshair_on_zoom: 瞄准时隐藏
+        use_inventory_morph: 启用伪装
+        hide_hands_on_zoom: 瞄准时隐藏
+        use_zoom_overlay_morph: 启用伪装
+
+        zoom_factor: 瞄准缩放系数
+        zoom_factor_tooltip: 任意的缩放系数，数值越大，越接近 {7}0{r} 度 FOV，系数为 {7}0.5{r} 时大约为您当前 FOV 的 {7}50%%{r}
+        ammo: 弹药
+        ammo_tooltip: 一把枪能打多少次才需要重新装弹（如果启用了换弹的话）
+        reloading: 换弹
+        use_reloading: 启用换弹
+        reloading_time_tooltip: 给枪换弹需要消耗多少 Tick
+        shooting: 射击
+        shoot_when_held: 拿起时射击
+        shot_delay_tooltip: 自动射击时每发子弹的时间间隔（单位为 Tick）
+
+        aim_options_second: 高级选项（第 2 页）
+        destroyed_command: 枪毁坏时的命令 # Evanechecssss: cummands
+        melee_command: 近战攻击时的命令
+        reload_command: 换弹命令
+        zoom_on_command: 开镜瞄准命令
+        zoom_off_command: 退出瞄准命令
+
+        melee_damage: 近战伤害
+        mouse_zoom: 瞄准中的鼠标灵敏度
+        durability: 耐久
+        prevent_left_click: 避免方块裂痕
+        prevent_right_click: 避免交互
+        prevent_entity_attack: 避免攻击实体
 
         impact_morph: 撞击伪装
         impact_delay: 撞击延迟
