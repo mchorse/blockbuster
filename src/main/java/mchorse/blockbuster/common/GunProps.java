@@ -485,7 +485,7 @@ public class GunProps
         this.zoomFactor = 0;
         this.recoilXMin = 0;
         this.shootingOffsetX = 0;
-        this.mouseZoom = 0.5f;
+        this.mouseZoom = 0.5F;
         this.meleeDamage = 0;
         this.shootingOffsetY = 0;
         this.shootingOffsetZ = 0;
@@ -775,7 +775,7 @@ public class GunProps
         if (!this.zoomOffCommand.isEmpty()) tag.setString("ZoomOffCommand", this.zoomOffCommand);
 
         if (this.meleeDamage != 0) tag.setFloat("MeleeDamage", this.meleeDamage);
-        if (this.mouseZoom != 0.5f) tag.setFloat("MouseZoom", this.mouseZoom);
+        if (this.mouseZoom != 0.5F) tag.setFloat("MouseZoom", this.mouseZoom);
         if (this.durability != 0) tag.setInteger("Durability", this.durability);
         if (this.preventLeftClick) tag.setBoolean("PreventLeftClick", this.preventLeftClick);
         if (this.preventRightClick) tag.setBoolean("PreventRightClick", this.preventRightClick);

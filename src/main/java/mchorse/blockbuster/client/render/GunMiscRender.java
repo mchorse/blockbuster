@@ -39,7 +39,7 @@ public class GunMiscRender
     public static float ZOOM_TIME;
     public static float UN_ZOOM_TIME;
     public static boolean onZoom = true;
-    boolean writeZoom = true;
+    private boolean writeZoom = true;
     private boolean hasChangedSensitivity = false;
     private float lastMouseSensitivity;
 
@@ -57,15 +57,18 @@ public class GunMiscRender
             ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
             GunProps props = NBTUtils.getGunProps(heldItem);
             Minecraft mc = Minecraft.getMinecraft();
+            
             if (heldItem.getItem().equals(Blockbuster.gunItem))
             {
                 this.handleZoom(event.renderTickTime);
+                
                 if (writeZoom)
                 {
                     ClientProxy.oldFov = mc.gameSettings.fovSetting;
                     writeZoom = false;
                     mc.renderGlobal.setDisplayListEntitiesDirty();
                 }
+                
                 if (onZoom)
                 {
                     if (props != null)
@@ -76,8 +79,8 @@ public class GunMiscRender
                 }
                 else
                 {
-                        mc.gameSettings.fovSetting = ClientProxy.oldFov;
-                        mc.renderGlobal.setDisplayListEntitiesDirty();
+                    mc.gameSettings.fovSetting = ClientProxy.oldFov;
+                    mc.renderGlobal.setDisplayListEntitiesDirty();
                 }
             }
 
@@ -86,7 +89,6 @@ public class GunMiscRender
                 if (hasChangedSensitivity)
                 {
                     hasChangedSensitivity = false;
-
                     Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity;
                 }
                 else
@@ -114,7 +116,6 @@ public class GunMiscRender
 
         }
     }
-
     
     private void handleZoom(float partialTick)
     {
@@ -125,6 +126,7 @@ public class GunMiscRender
             onZoom = true;
             ZOOM_TIME = Math.min(ZOOM_TIME + (partialTick * 0.1F), 1);
             UN_ZOOM_TIME = Math.max(UN_ZOOM_TIME - (partialTick * 0.2F), 0);
+            
             if (!zoomed)
             {
                 Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(), true));
@@ -135,6 +137,7 @@ public class GunMiscRender
             onZoom = false;
             ZOOM_TIME = Math.max(ZOOM_TIME - (partialTick * 0.1F), 0);
             UN_ZOOM_TIME = Math.min(UN_ZOOM_TIME + (partialTick * 0.2F), 1);
+            
             if (zoomed)
             {
                 Dispatcher.sendToServer(new PacketZoomCommand(Minecraft.getMinecraft().player.getEntityId(), false));
@@ -142,7 +145,6 @@ public class GunMiscRender
         }
     }
     
-
     @SideOnly(Side.CLIENT)
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void renderGameOverlay(RenderGameOverlayEvent event)
@@ -167,7 +169,6 @@ public class GunMiscRender
             }
         }
     }
-
     
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
@@ -190,7 +191,6 @@ public class GunMiscRender
             }
         }
     }
-
     
     public void render(AbstractMorph morph, int width, int height)
     {
@@ -209,7 +209,6 @@ public class GunMiscRender
 
         GlStateManager.popMatrix();
     }
-
     
     private void enableGLStates()
     {

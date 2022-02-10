@@ -79,7 +79,6 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
             ) {
                 if (!(KeyboardHandler.zoom.isKeyDown() && model.props.hideHandsOnZoom))
                 {
-                    
                     model.props.renderHands(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
 
@@ -97,8 +96,7 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
                     (
                      RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND &&
                      RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND
-                    )
-                    {
+                    ) {
                         model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
                     }
                 }
@@ -116,7 +114,6 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
                 }
                 else
                 {
-                    
                     model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
                 }
             }
