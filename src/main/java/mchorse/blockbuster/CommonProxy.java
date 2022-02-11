@@ -144,22 +144,10 @@ public class CommonProxy
         ForgeRegistries.ITEMS.register(new ItemBlock(director).setRegistryName(director.getRegistryName()));
 
         ForgeRegistries.BLOCKS.register(Blockbuster.modelBlock = model);
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem0 = new ItemBlockModel(model, 0));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem1 = new ItemBlockModel(model, 1));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem2 = new ItemBlockModel(model, 2));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem3 = new ItemBlockModel(model, 3));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem4 = new ItemBlockModel(model, 4));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem5 = new ItemBlockModel(model, 5));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem6 = new ItemBlockModel(model, 6));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem7 = new ItemBlockModel(model, 7));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem8 = new ItemBlockModel(model, 8));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem9 = new ItemBlockModel(model, 9));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem10 = new ItemBlockModel(model, 10));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem11 = new ItemBlockModel(model, 11));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem12 = new ItemBlockModel(model, 12));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem13 = new ItemBlockModel(model, 13));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem14 = new ItemBlockModel(model, 14));
-        ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem15 = new ItemBlockModel(model, 15));
+        for (int i = 0; i < Blockbuster.modelBlockItems.length; i++)
+        {
+            ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItems[i] = new ItemBlockModel(model, i));
+        }
 
         ForgeRegistries.BLOCKS.register(Blockbuster.greenBlock = green);
         ForgeRegistries.ITEMS.register(new ItemBlockGreen(green, true).setRegistryName(green.getRegistryName()));

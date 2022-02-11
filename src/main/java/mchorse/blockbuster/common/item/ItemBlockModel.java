@@ -27,32 +27,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
+/**
+ * Item for Model Block. It cant extend ItemBlock because it seems like Optifine does not recognise ItemBlock subclasses for dynamic_lighting.properties
+ */
 public class ItemBlockModel extends Item
 {
-    private String unlocalizedName;
     private int lightValue;
     private Block block;
 
     public ItemBlockModel(Block block, int lightValue)
     {
+        String name = "model" + ((lightValue != 0) ? lightValue : "");
+
         this.block = block;
-        this.unlocalizedName = "blockbuster.model" + lightValue;
         this.lightValue = lightValue;
 
-        this.setRegistryName("model" + lightValue);
-        this.setUnlocalizedName(this.unlocalizedName);
-    }
-
-    @Override
-    public String getUnlocalizedName(ItemStack stack)
-    {
-        return this.getUnlocalizedName();
-    }
-
-    @Override
-    public String getUnlocalizedName()
-    {
-        return "item." + this.unlocalizedName;
+        this.setRegistryName(name);
+        this.setUnlocalizedName("blockbuster." + name);
     }
 
     @Override
@@ -70,6 +61,7 @@ public class ItemBlockModel extends Item
 
         if (!itemstack.isEmpty() && player.canPlayerEdit(pos, facing, itemstack) && worldIn.mayPlace(this.block, pos, false, facing, (Entity)null))
         {
+            /* The Model Block uses metadata for lightValue, the item should use its lightValue as "metadata" for that purpose */
             int i = this.lightValue;
             IBlockState iblockstate1 = this.block.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, i, player, hand);
 
@@ -123,6 +115,7 @@ public class ItemBlockModel extends Item
                     {
                         tileentity.readFromNBT(nbttagcompound1);
                         tileentity.markDirty();
+
                         return true;
                     }
                 }
@@ -163,16 +156,23 @@ public class ItemBlockModel extends Item
      */
     public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState)
     {
-        if (!world.setBlockState(pos, newState, 11)) return false;
+        if (!world.setBlockState(pos, newState, 11))
+        {
+            return false;
+        }
 
         IBlockState state = world.getBlockState(pos);
+
         if (state.getBlock() == this.block)
         {
-            setTileEntityNBT(world, player, pos, stack);
+            this.setTileEntityNBT(world, player, pos, stack);
+
             this.block.onBlockPlacedBy(world, pos, state, player, stack);
 
             if (player instanceof EntityPlayerMP)
+            {
                 CriteriaTriggers.PLACED_BLOCK.trigger((EntityPlayerMP)player, pos, stack);
+            }
         }
 
         return true;
