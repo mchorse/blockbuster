@@ -61,7 +61,7 @@ public class BlockbusterTab extends CreativeTabs
             item.getSubItems(this, items);
         }
 
-        ItemStack modelBlockStack = new ItemStack(Blockbuster.modelBlockItem0);
+        ItemStack modelBlockStack = new ItemStack(Blockbuster.modelBlockItems[0]);
 
         items.add(modelBlockStack);
 

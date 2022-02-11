@@ -9,7 +9,9 @@ import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -17,6 +19,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
@@ -25,6 +28,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+
+import javax.vecmath.Matrix4f;
 
 /**
  * Model tile entity renderer
@@ -163,6 +168,21 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             else
             {
                 tessellator.draw();
+            }
+
+            if (te.lightValue != 0)
+            {
+                FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+                String text = I18n.format("blockbuster.light", te.lightValue);
+                RenderManager manager = mc.getRenderManager();
+
+                boolean isInventory = false;
+
+                float yaw = (isInventory) ? 180F : manager.playerViewY;
+                float pitch = (isInventory) ? 0F : manager.playerViewX;
+
+
+                EntityRenderer.drawNameplate(this.getFontRenderer(), text, (float) (x + 0.5F), (float) (y + 0.75F) + font.FONT_HEIGHT / 48.0F + 0.05F, (float) (z + 0.5F), 0, yaw, pitch, mc.gameSettings.thirdPersonView == 2, false);
             }
 
             GlStateManager.disableBlend();

@@ -27,7 +27,7 @@ itemGroup.blockbuster: Blockbuster
 tile.blockbuster:
     director.name: Director block
     model.name: Model block
-    green.name: Chroma block
+    green.name: Chroma blockA
     dim_green.name: Dim chroma block
 
 # Item names
@@ -37,7 +37,7 @@ item:
         register.name: Registering device
         actor_config.name: Actor configuration device
         gun.name: BB gun
-        model0.name: Model block light 0
+        model.name: Model block
         model1.name: Model block light 1
         model2.name: Model block light 2
         model3.name: Model block light 3

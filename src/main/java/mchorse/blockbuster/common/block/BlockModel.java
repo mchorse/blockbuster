@@ -65,41 +65,12 @@ public class BlockModel extends Block implements ITileEntityProvider
 
     public static Item getItemFromMeta(int meta)
     {
-        switch(meta)
+        if (meta >= 0 && meta <= 15)
         {
-            case 1:
-                return Blockbuster.modelBlockItem1;
-            case 2:
-                return Blockbuster.modelBlockItem2;
-            case 3:
-                return Blockbuster.modelBlockItem3;
-            case 4:
-                return Blockbuster.modelBlockItem4;
-            case 5:
-                return Blockbuster.modelBlockItem5;
-            case 6:
-                return Blockbuster.modelBlockItem6;
-            case 7:
-                return Blockbuster.modelBlockItem7;
-            case 8:
-                return Blockbuster.modelBlockItem8;
-            case 9:
-                return Blockbuster.modelBlockItem9;
-            case 10:
-                return Blockbuster.modelBlockItem10;
-            case 11:
-                return Blockbuster.modelBlockItem11;
-            case 12:
-                return Blockbuster.modelBlockItem12;
-            case 13:
-                return Blockbuster.modelBlockItem13;
-            case 14:
-                return Blockbuster.modelBlockItem14;
-            case 15:
-                return Blockbuster.modelBlockItem15;
+            return Blockbuster.modelBlockItems[meta];
         }
 
-        return Blockbuster.modelBlockItem0;
+        return Blockbuster.modelBlockItems[0];
     }
 
     @Override
@@ -111,7 +82,14 @@ public class BlockModel extends Block implements ITileEntityProvider
     @Override
     public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
     {
-        return this.getItemStack(state);
+        ItemStack stack = this.getItemStack(state);
+        TileEntityModel model = new TileEntityModel();
+
+        model.lightValue = this.damageDropped(state);
+
+        this.setTENBTtoStack(stack, model);
+
+        return stack;
     }
 
     private ItemStack getItemStack(IBlockState state)
@@ -161,22 +139,30 @@ public class BlockModel extends Block implements ITileEntityProvider
         if (te instanceof TileEntityModel)
         {
             TileEntityModel model = (TileEntityModel) te;
-            NBTTagCompound tag = model.writeToNBT(new NBTTagCompound());
-            NBTTagCompound block = new NBTTagCompound();
 
-            tag.removeTag("x");
-            tag.removeTag("y");
-            tag.removeTag("z");
-
-            block.setTag("BlockEntityTag", tag);
-
-            if (!(tag.getSize() == 2 && tag.hasKey("id") && tag.hasKey("Morph") && tag.getTag("Morph").equals(TileEntityModel.getDefaultMorph().toNBT())))
-            {
-                stack.setTagCompound(block);
-            }
+            this.setTENBTtoStack(stack, model);
         }
 
         drops.add(stack);
+    }
+
+    public ItemStack setTENBTtoStack(ItemStack stack, TileEntityModel teModel)
+    {
+        NBTTagCompound tag = teModel.writeToNBT(new NBTTagCompound());
+        NBTTagCompound block = new NBTTagCompound();
+
+        tag.removeTag("x");
+        tag.removeTag("y");
+        tag.removeTag("z");
+
+        block.setTag("BlockEntityTag", tag);
+
+        if (!(tag.getSize() == 2 && tag.hasKey("id") && tag.hasKey("Morph") && tag.getTag("Morph").equals(TileEntityModel.getDefaultMorph().toNBT())))
+        {
+            stack.setTagCompound(block);
+        }
+
+        return stack;
     }
 
     @Override

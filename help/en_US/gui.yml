@@ -164,6 +164,8 @@ blockbuster.gui:
         global_tooltip: Enables surpassing of chunk culling
         enabled: Enabled
         enabled_tooltip: Enables model block rendering
+        light_level: Light value
+        light_level_tooltip: Emits light with the given level, Minecraft's maximum light value is 15.
         look: Rotate at you
         
         entity: Entity
