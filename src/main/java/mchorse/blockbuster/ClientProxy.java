@@ -84,7 +84,6 @@ public class ClientProxy extends CommonProxy
     public static KeyboardHandler keys;
     public static BlockbusterTree tree;
     public static AudioLibrary audio;
-    public static float oldFov;
     public static File skinsFolder;
 
     /**

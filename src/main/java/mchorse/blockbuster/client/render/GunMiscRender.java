@@ -37,9 +37,10 @@ public class GunMiscRender
     public static float ZOOM_TIME;
     public static float UN_ZOOM_TIME;
     public static boolean onZoom = true;
-    private boolean writeZoom = true;
     private boolean hasChangedSensitivity = false;
+    private boolean hasChangedFov = false;
     private float lastMouseSensitivity;
+    private float lastFov;
 
     public Vector3f translate = new Vector3f();
     public Vector3f scale = new Vector3f(1F, 1F, 1F);
@@ -54,36 +55,26 @@ public class GunMiscRender
             EntityPlayer player = Minecraft.getMinecraft().player;
             ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
             GunProps props = NBTUtils.getGunProps(heldItem);
-            Minecraft mc = Minecraft.getMinecraft();
             
             if (heldItem.getItem().equals(Blockbuster.gunItem))
             {
                 this.handleZoom(event.renderTickTime);
-                
-                if (writeZoom)
-                {
-                    ClientProxy.oldFov = mc.gameSettings.fovSetting;
-                    writeZoom = false;
-                    mc.renderGlobal.setDisplayListEntitiesDirty();
-                }
-                
-                if (onZoom)
-                {
-                    if (props != null)
-                    {
-                        mc.gameSettings.fovSetting = ClientProxy.oldFov - ClientProxy.oldFov * ZOOM_TIME * props.zoomFactor;
-                        mc.renderGlobal.setDisplayListEntitiesDirty();
-                    }
-                }
-                else
-                {
-                    mc.gameSettings.fovSetting = ClientProxy.oldFov;
-                    mc.renderGlobal.setDisplayListEntitiesDirty();
-                }
             }
 
             if (ZOOM_TIME == 0)
             {
+                if (hasChangedFov)
+                {
+                    hasChangedFov = false;
+                    Minecraft.getMinecraft().gameSettings.fovSetting = lastFov;
+                }
+                else
+                {
+                    lastFov = Minecraft.getMinecraft().gameSettings.fovSetting;
+                }
+                
+                Minecraft.getMinecraft().renderGlobal.setDisplayListEntitiesDirty();
+    
                 if (hasChangedSensitivity)
                 {
                     hasChangedSensitivity = false;
@@ -99,16 +90,22 @@ public class GunMiscRender
                 if (heldItem.getItem().equals(Blockbuster.gunItem) && KeyboardHandler.zoom.isKeyDown())
                 {
                     hasChangedSensitivity = true;
-
+                    hasChangedFov = true;
+                    
                     if (props != null)
                     {
                         Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity * props.mouseZoom - 0.3f;
+                        Minecraft.getMinecraft().gameSettings.fovSetting = lastFov - lastFov * ZOOM_TIME * props.zoomFactor;
+                        Minecraft.getMinecraft().renderGlobal.setDisplayListEntitiesDirty();
+    
                     }
                 }
                 else
                 {
                     hasChangedSensitivity = true;
+                    hasChangedFov = true;
                     Minecraft.getMinecraft().gameSettings.mouseSensitivity = lastMouseSensitivity;
+                    Minecraft.getMinecraft().gameSettings.fovSetting = lastFov;
                 }
             }
 
