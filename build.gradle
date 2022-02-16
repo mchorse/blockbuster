@@ -44,6 +44,7 @@ minecraft
     replace "%MCLIB%", project.mclib
     replace "%APERTURE%", project.aperture
     replace "%EMOTICONS%", project.emoticons
+    replace "%MINEMA%", project.minema
 }
 
 dependencies 
@@ -51,6 +52,7 @@ dependencies
 	compile files("run/libs/mclib-${mclib}-${project.minecraft.version}-dev.jar")
 	compile files("run/libs/metamorph-${metamorph}-${project.minecraft.version}-dev.jar")
 	compile files("run/libs/aperture-${aperture}-${project.minecraft.version}-dev.jar")
+    compile files("run/libs/Minema-${minema}-${project.minecraft.version}-dev.jar")
 }
 
 jar {

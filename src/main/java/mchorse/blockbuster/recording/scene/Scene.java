@@ -11,13 +11,12 @@ import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.audio.PacketAudio;
-import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.recording.scene.fake.FakeContext;
-import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.mclib.utils.LatencyTimer;
 import mchorse.vanilla_pack.morphs.PlayerMorph;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
@@ -110,6 +109,8 @@ public class Scene
      */
     public String audio = "";
 
+    private AudioState audioState = AudioState.PAUSE;
+
     /**
      * Audio shift
      */
@@ -196,6 +197,11 @@ public class Scene
         }
 
         return 0;
+    }
+
+    public AudioState getAudioState()
+    {
+        return this.audioState;
     }
 
     /**
@@ -912,24 +918,70 @@ public class Scene
         this.sendAudio(state, 0);
     }
 
+    /**
+     * Send the audio in the scene, if present, to all players on the server
+     * and set this.audioState to the provided state.
+     * @param state
+     * @param shift shift the audio in ticks
+     */
     public void sendAudio(AudioState state, int shift)
     {
+        this.audioState = state;
+
         if (this.audio == null || this.audio.isEmpty())
         {
             return;
         }
 
-        PacketAudio packet = new PacketAudio(this.audio, state, this.audioShift + shift);
         PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
 
         for (String username : players.getOnlinePlayerNames())
         {
             EntityPlayerMP player = players.getPlayerByUsername(username);
 
-            if (player != null)
-            {
-                Dispatcher.sendTo(packet, player);
-            }
+            this.sendAudioToPlayer(state, shift, player);
+        }
+    }
+
+    /**
+     * Send the audio to the provided player
+     * @param state
+     * @param shift shift the audio in ticks
+     * @param player the entity player the audio should be sent to
+     */
+    public void sendAudioToPlayer(AudioState state, int shift, EntityPlayerMP player)
+    {
+        LatencyTimer timer = null;
+
+        if (Blockbuster.audioSync.get())
+        {
+            timer = new LatencyTimer();
+        }
+
+        this.sendAudioToPlayer(state, shift, timer, player);
+    }
+
+    /**
+     * Send the audio to the provided player
+     * @param state
+     * @param shift shift the audio in ticks
+     * @param latencyTimer a timer to measure (approximately) the delay to sync the audio properly
+     * @param player the entity player the audio should be sent to
+     */
+    public void sendAudioToPlayer(AudioState state, int shift, LatencyTimer latencyTimer, EntityPlayerMP player)
+    {
+        this.audioState = state;
+
+        if (this.audio == null || this.audio.isEmpty())
+        {
+            return;
+        }
+
+        PacketAudio packet = new PacketAudio(this.audio, state, this.audioShift + shift, latencyTimer);
+
+        if (player != null)
+        {
+            Dispatcher.sendTo(packet, player);
         }
     }
 

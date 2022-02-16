@@ -92,8 +92,7 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
             {
                 if (KeyboardHandler.zoom.isKeyDown() && model.props.hideHandsOnZoom)
                 {
-                    if
-                    (
+                    if (
                         RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND &&
                         RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND
                     ) {

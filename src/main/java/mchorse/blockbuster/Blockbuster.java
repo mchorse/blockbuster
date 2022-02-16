@@ -69,7 +69,7 @@ import org.apache.logging.log4j.Logger;
  * of custom models)</li>
  * </ul>
  */
-@Mod(modid = Blockbuster.MOD_ID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, dependencies = "after:aperture@[%APERTURE%,);before:emoticons@[%EMOTICONS%,);required-after:metamorph@[%METAMORPH%,);required-after:mclib@[%MCLIB%,);required-after:forge@[14.23.2.2638,)", updateJSON = "https://raw.githubusercontent.com/mchorse/blockbuster/1.12/version.json")
+@Mod(modid = Blockbuster.MOD_ID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, dependencies = "after:minema@[%MINEMA%,);before:aperture@[%APERTURE%,);before:emoticons@[%EMOTICONS%,);required-after:metamorph@[%METAMORPH%,);required-after:mclib@[%MCLIB%,);required-after:forge@[14.23.2.2638,)", updateJSON = "https://raw.githubusercontent.com/mchorse/blockbuster/1.12/version.json")
 public class Blockbuster
 {
     /* Mod info */
@@ -194,6 +194,7 @@ public class Blockbuster
     public static ValueInt audioWaveformHeight;
     public static ValueBoolean audioWaveformFilename;
     public static ValueBoolean audioWaveformTime;
+    public static ValueBoolean audioSync;
 
     /**
      * "Macro" for getting resource location for Blockbuster mod items,
@@ -288,13 +289,24 @@ public class Blockbuster
         builder.category("audio").register(new ValueAudioButtons("buttons"));
 
         audioWaveformVisible = builder.getBoolean("waveform_visible", true);
-        audioWaveformDensity = builder.getInt("waveform_density", 20, 10, 100);
-        audioWaveformWidth = builder.getFloat("waveform_width", 0.5F, 0F, 1F);
-        audioWaveformHeight = builder.getInt("waveform_height", 24, 10, 40);
-        audioWaveformFilename = builder.getBoolean("waveform_filename", true);
-        audioWaveformTime = builder.getBoolean("waveform_time", true);
+        audioWaveformVisible.clientSide();
 
-        builder.getCategory().markClientSide();
+        audioWaveformDensity = builder.getInt("waveform_density", 20, 10, 100);
+        audioWaveformDensity.clientSide();
+
+        audioWaveformWidth = builder.getFloat("waveform_width", 0.5F, 0F, 1F);
+        audioWaveformWidth.clientSide();
+
+        audioWaveformHeight = builder.getInt("waveform_height", 24, 10, 40);
+        audioWaveformHeight.clientSide();
+
+        audioWaveformFilename = builder.getBoolean("waveform_filename", true);
+        audioWaveformFilename.clientSide();
+
+        audioWaveformTime = builder.getBoolean("waveform_time", true);
+        audioWaveformTime.clientSide();
+
+        audioSync = builder.getBoolean("audio_sync", true);
     }
 
     @EventHandler
