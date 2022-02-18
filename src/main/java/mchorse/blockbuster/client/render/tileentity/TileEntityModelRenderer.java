@@ -182,7 +182,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
                 float pitch = (isInventory) ? 0F : manager.playerViewX;
 
 
-                EntityRenderer.drawNameplate(this.getFontRenderer(), text, (float) (x + 0.5F), (float) (y + 0.75F) + font.FONT_HEIGHT / 48.0F + 0.05F, (float) (z + 0.5F), 0, yaw, pitch, mc.gameSettings.thirdPersonView == 2, false);
+                EntityRenderer.drawNameplate(this.getFontRenderer(), text, (float) (x + 0.5F), (float) (y + 0.5F) + font.FONT_HEIGHT / 48.0F + 0.05F, (float) (z + 0.5F), 0, yaw, pitch, mc.gameSettings.thirdPersonView == 2, false);
             }
 
             GlStateManager.disableBlend();
