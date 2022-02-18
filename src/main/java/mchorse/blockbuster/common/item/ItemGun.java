@@ -13,6 +13,7 @@ import mchorse.blockbuster.recording.actions.ShootGunAction;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.mclib.utils.Interpolation;
+import mchorse.mclib.utils.OpHelper;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
@@ -22,8 +23,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3f;
@@ -156,6 +159,7 @@ public class ItemGun extends Item
 
     public void decreaseDurability(GunProps props, ItemStack stack, EntityPlayer player)
     {
+        
         if (props == null)
         {
             return;
@@ -176,11 +180,37 @@ public class ItemGun extends Item
             }
 
             props.storedDurability = val;
-
-            NBTUtils.saveGunProps(stack, props.toNBT());
+            
+            if (NBTUtils.saveGunProps(stack, props.toNBT()))
+            {
+                IMessage packet = new PacketGunInfo(props.toNBT(), player.getEntityId());
+                synchronize((EntityPlayerMP) player,props.toNBT());
+                Dispatcher.sendTo(packet, (EntityPlayerMP) player);
+                Dispatcher.sendToTracked(player, packet);
+                
+            }
+    
+            
         }
     }
-
+    
+    private void synchronize(EntityPlayerMP player, NBTTagCompound tag)
+    {
+        if (!OpHelper.isPlayerOp(player))
+        {
+            return;
+        }
+        
+        ItemStack stack = player.getHeldItemMainhand();
+        
+        if (NBTUtils.saveGunProps(stack, tag))
+        {
+            IMessage packet = new PacketGunInfo(tag, player.getEntityId());
+            Dispatcher.sendTo(packet, player);
+            Dispatcher.sendToTracked(player, packet);
+        }
+    }
+    
     @Override
     public boolean onLeftClickEntity(ItemStack p_onLeftClickEntity_1_, EntityPlayer p_onLeftClickEntity_2_, Entity p_onLeftClickEntity_3_)
     {
@@ -311,15 +341,19 @@ public class ItemGun extends Item
             {
                 events.add(new ShootGunAction(stack));
             }
-
-            GunProps newProps = NBTUtils.getGunProps(stack);
-
-            decreaseDurability(newProps, stack, player);
-
+    
+            
+            decreaseDurability(NBTUtils.getGunProps(stack), stack, player);
+            
             if (player instanceof EntityPlayerMP)
             {
-                Dispatcher.sendTo(new PacketGunInfo(newProps.toNBT(), entity.getEntityId()), (EntityPlayerMP) player);
+                GunProps p = NBTUtils.getGunProps(stack);
+                NBTUtils.saveGunProps(stack, p.toNBT());
+                Dispatcher.sendTo(new PacketGunInfo(p.toNBT(), entity.getEntityId()), (EntityPlayerMP) player);
+                Dispatcher.sendToTracked(player, new PacketGunInfo(p.toNBT(), entity.getEntityId()));
+                
             }
+            
         }
 
         return true;
