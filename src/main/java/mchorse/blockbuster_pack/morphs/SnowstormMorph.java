@@ -6,7 +6,6 @@ import mchorse.blockbuster.client.particles.BedrockLibrary;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
-import mchorse.mclib.math.IValue;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -174,13 +173,9 @@ public class SnowstormMorph extends AbstractMorph
 
         if (MatrixUtils.matrix != null)
         {
-            Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
-            Matrix4f matrix4f = MatrixUtils.readModelView(getMatrix());
+            MatrixUtils.Transformation transformation = MatrixUtils.extractTransformations(MatrixUtils.matrix, MatrixUtils.readModelView(), MatrixUtils.MatrixMajor.COLUMN);
 
-            parent.invert();
-            parent.mul(matrix4f);
-
-            Vector4f zero = calculateGlobal(parent, target, 0, 0, 0, partialTicks);
+            Vector4f zero = calculateGlobal(transformation.translation, target, 0, 0, 0, partialTicks);
 
             if (this.lastAge != this.age)
             {
@@ -194,43 +189,13 @@ public class SnowstormMorph extends AbstractMorph
             emitter.lastGlobal.y = zero.y;
             emitter.lastGlobal.z = zero.z;
 
-            //emitter.angularVelocity.set(this.angularVelocity);
-            emitter.rotation.setIdentity();
-
             emitter.translation.set(this.cachedTranslation);
 
-            Vector3f ax = new Vector3f(parent.m00, parent.m01, parent.m02);
-            Vector3f ay = new Vector3f(parent.m10, parent.m11, parent.m12);
-            Vector3f az = new Vector3f(parent.m20, parent.m21, parent.m22);
+            emitter.rotation.set(transformation.getRotation3f());
 
-            ax.normalize();
-            ay.normalize();
-            az.normalize();
-
-            emitter.rotation.setRow(0, ax);
-            emitter.rotation.setRow(1, ay);
-            emitter.rotation.setRow(2, az);
-
-            Matrix3d rotation = new Matrix3d(emitter.rotation);
-            Matrix3d rotscale = new Matrix3d(parent.m00, parent.m01, parent.m02,
-                                             parent.m10, parent.m11, parent.m12,
-                                             parent.m20, parent.m21, parent.m22);
-
-            try
-            {
-                rotation.invert();
-                rotscale.mul(rotation);
-
-                emitter.scale[0] = rotscale.m00;
-                emitter.scale[1] = rotscale.m11;
-                emitter.scale[2] = rotscale.m22;
-            }
-            catch (SingularMatrixException e)
-            {
-                emitter.scale[0] = 0;
-                emitter.scale[1] = 0;
-                emitter.scale[2] = 0;
-            }
+            emitter.scale[0] = transformation.scale.m00;
+            emitter.scale[1] = transformation.scale.m11;
+            emitter.scale[2] = transformation.scale.m22;
 
             Iterator<BedrockEmitter> it = this.getLastEmitters().iterator();
 
