@@ -9,6 +9,7 @@ import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -384,6 +385,7 @@ public class GunProps
         {
             GL11.glPushMatrix();
             GL11.glTranslatef(0.5F, 0, 0.5F);
+            GlStateManager.enableDepth();
             this.setupEntity();
             MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
             GL11.glPopMatrix();
