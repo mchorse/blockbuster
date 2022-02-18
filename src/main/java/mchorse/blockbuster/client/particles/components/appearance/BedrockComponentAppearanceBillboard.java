@@ -421,26 +421,27 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
         if (particle.relativePosition && particle.relativeRotation)
         {
             this.vector.set((float) px, (float) py, (float) pz);
-            emitter.rotation.transform(this.vector);
-
-            px = this.vector.x;
-            py = this.vector.y;
-            pz = this.vector.z;
 
             if (particle.relativeScale)
             {
                 Vector3d pos = new Vector3d(px, py, pz);
 
                 Matrix3d scale = new Matrix3d(emitter.scale[0], 0, 0,
-                                        0, emitter.scale[1], 0,
-                                        0, 0, emitter.scale[2]);
+                        0, emitter.scale[1], 0,
+                        0, 0, emitter.scale[2]);
 
                 scale.transform(pos);
 
-                px = pos.x;
-                py = pos.y;
-                pz = pos.z;
+                this.vector.x = (float) pos.x;
+                this.vector.y = (float) pos.y;
+                this.vector.z = (float) pos.z;
             }
+
+            emitter.rotation.transform(this.vector);
+
+            px = this.vector.x;
+            py = this.vector.y;
+            pz = this.vector.z;
 
             px += emitter.lastGlobal.x;
             py += emitter.lastGlobal.y;

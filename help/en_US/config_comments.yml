@@ -13,6 +13,8 @@ blockbuster.config.comments:
     model_block:
         model_block_disable_rendering: Whether model blocks should be rendered
         model_block_disable_item_rendering: Whether model block item rendering should be disabled (who would want that?)
+        model_block_missing_name_rendering: Render the path of models if they are missing. They will always render in F3 mode.
+        model_block_debug_rendering_f1: Render the debug cube of model blocks while being in F1 mode, alongside F3 mode.
         restore: This option allows to bring back old bug that allows to restore broken by accident model blocks.
         reset_on_playback: When enabled, once a scene starts playing all playback, all model blocks will reset themselves
 

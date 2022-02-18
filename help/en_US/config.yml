@@ -22,6 +22,8 @@ blockbuster.config:
         
         model_block_disable_rendering: Disable model block rendering
         model_block_disable_item_rendering: Disable item rendering
+        model_block_missing_name_rendering: Render missing model path
+        model_block_debug_rendering_f1: Render model block debug in F1 mode
         restore: Restore model blocks
         reset_on_playback: Reset on playback
     
