@@ -120,7 +120,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
         }
 
         /* Debug render (so people could find the block, lmao) */
-        if (mc.gameSettings.showDebugInfo && !mc.gameSettings.hideGUI)
+        if (mc.gameSettings.showDebugInfo && (!mc.gameSettings.hideGUI || Blockbuster.modelBlockRenderDebuginf1.get()))
         {
             int shader = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
 

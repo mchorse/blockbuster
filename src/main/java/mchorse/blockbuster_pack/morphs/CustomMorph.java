@@ -14,6 +14,7 @@ import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.OrientedBB;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
+import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
@@ -42,6 +43,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.vecmath.Vector3f;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -515,7 +517,30 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             FontRenderer font = mc.fontRenderer;
             RenderManager manager = mc.getRenderManager();
 
-            EntityRenderer.drawNameplate(font, this.getKey(), (float) x, (float) y + 1, (float) z, 0, manager.playerViewY, manager.playerViewX, mc.gameSettings.thirdPersonView == 2, entity.isSneaking());
+            if (Blockbuster.modelBlockRenderMissingName.get() || mc.gameSettings.showDebugInfo)
+            {
+                MatrixUtils.Transformation transformation = MatrixUtils.extractTransformations(MatrixUtils.matrix, MatrixUtils.readModelView(), MatrixUtils.MatrixMajor.COLUMN);
+
+                float invSx = (transformation.scale.m00 != 0) ? 1 / transformation.scale.m00 : 0;
+                float invSy = (transformation.scale.m11 != 0) ? 1 / transformation.scale.m11 : 0;
+                float invSz = (transformation.scale.m22 != 0) ? 1 / transformation.scale.m22 : 0;
+
+                try
+                {
+                    transformation.rotation.invert();
+                }
+                catch (Exception e)
+                { }
+
+                Vector3f rot = transformation.getRotation(MatrixUtils.Transformation.RotationOrder.XYZ);
+
+                GlStateManager.scale(invSx, invSy, invSz);
+                GlStateManager.rotate(rot.z, 0, 0, 1);
+                GlStateManager.rotate(rot.y, 0, 1, 0);
+                GlStateManager.rotate(rot.x, 1, 0, 0);
+
+                EntityRenderer.drawNameplate(font, this.getKey(), (float) x, (float) y + 1, (float) z, 0, manager.playerViewY, manager.playerViewX, mc.gameSettings.thirdPersonView == 2, entity.isSneaking());
+            }
         }
     }
 
