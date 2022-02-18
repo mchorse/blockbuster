@@ -159,6 +159,8 @@ public class Blockbuster
     public static ValueBoolean modelBlockDisableItemRendering;
     public static ValueBoolean modelBlockRestore;
     public static ValueBoolean modelBlockResetOnPlayback;
+    public static ValueBoolean modelBlockRenderMissingName;
+    public static ValueBoolean modelBlockRenderDebuginf1;
 
     public static ValueFloat recordingCountdown;
     public static ValueInt recordUnloadTime;
@@ -239,6 +241,8 @@ public class Blockbuster
         modelBlockDisableRendering = builder.category("model_block").getBoolean("model_block_disable_rendering", false);
         modelBlockDisableItemRendering = builder.getBoolean("model_block_disable_item_rendering", false);
         modelBlockRestore = builder.getBoolean("restore", false);
+        modelBlockRenderMissingName = builder.getBoolean("model_block_missing_name_rendering", true);
+        modelBlockRenderDebuginf1 = builder.getBoolean("model_block_debug_rendering_f1", false);
 
         builder.getCategory().markClientSide();
 
