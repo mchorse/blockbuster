@@ -1,3 +1,19 @@
+## Version 2.4.1
+
+This patch with QoL improvements was made by Chryfi.
+
+**Compatible** with McLib `2.3.7`, Metamorph `1.2.11` and Aperture `1.7`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+* Changed default key of BB gun zoom from "Middle Mouse" to "None"
+* Fixed crash because of ApertureTracker when aperture is not loaded
+* Fixed snowstorm local scale and local texture acting weird
+* Fixed missing model path rendering with rotation and scale
+* Added option to disable the rendering of missing model paths
+* Added option to render debug of model blocks in F1 + F3 mode still
+* Added playback and syncing of audio on servers when rejoining
+* Added syncing mechanism for audio for servers (server-side option) for general playback
+* Added Minema as optional dependency with a required minimum version. The required minimum version is 3.6.2
+
 ## Version 2.3.4
 
 This quick hotfix patch was made by Chryfi, which fixes an issue with Snowstorm particle emitter morphs.
