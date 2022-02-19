@@ -14,6 +14,7 @@ import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.mclib.utils.LatencyTimer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,6 +24,8 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.StartTracking;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+
+import java.util.Map;
 
 /**
  * Capability handler class
@@ -68,6 +71,13 @@ public class CapabilityHandler
             {
                 Dispatcher.sendTo(new PacketSceneCast(new SceneLocation(scene)).open(false), player);
             }
+        }
+
+        /* send playing audio to client */
+        for(Map.Entry<String, Scene> entry : CommonProxy.scenes.getScenes().entrySet())
+        {
+            Scene scene = entry.getValue();
+            scene.sendAudioToPlayer(scene.getAudioState(), scene.getTick(), new LatencyTimer(), player);
         }
     }
 

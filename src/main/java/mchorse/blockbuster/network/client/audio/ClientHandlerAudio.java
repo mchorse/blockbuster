@@ -13,6 +13,6 @@ public class ClientHandlerAudio extends ClientMessageHandler<PacketAudio>
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketAudio message)
     {
-        ClientProxy.audio.play(message.audio, message.state, message.shift);
+        ClientProxy.audio.play(message.audio, message.state, message.shift, message.delay);
     }
 }

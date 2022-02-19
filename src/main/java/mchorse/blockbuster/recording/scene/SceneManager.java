@@ -37,6 +37,11 @@ public class SceneManager
     private Map<String, Scene> toPut = new HashMap<String, Scene>();
     private boolean ticking;
 
+    public Map<String, Scene> getScenes()
+    {
+        return new HashMap<>(this.scenes);
+    }
+
     public static boolean isValidFilename(String filename)
     {
         return !filename.isEmpty() && Patterns.FILENAME.matcher(filename).matches();

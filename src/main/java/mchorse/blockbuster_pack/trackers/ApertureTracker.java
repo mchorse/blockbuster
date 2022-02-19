@@ -1,13 +1,16 @@
 package mchorse.blockbuster_pack.trackers;
 
+import mchorse.aperture.Aperture;
 import mchorse.aperture.camera.CameraExporter;
 import mchorse.aperture.camera.minema.MinemaIntegration;
 import mchorse.aperture.client.gui.GuiMinemaPanel;
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster_pack.morphs.TrackerMorph;
 import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.Optional;
 
 public class ApertureTracker extends BaseTracker
 {
@@ -16,33 +19,37 @@ public class ApertureTracker extends BaseTracker
     public boolean combineTracking;
 
     @Override
+    @Optional.Method(modid = Aperture.MOD_ID)
     public void track(EntityLivingBase target, double x, double y, double z, float entityYaw, float partialTicks)
     {
         if(!ReflectionUtils.isOptifineShadowPass() && !this.name.equals(""))
         {
-            if (MinemaIntegration.isRecording() && this.trackingPacket == null)
+            if(CameraHandler.isApertureAndMinemaLoaded())
             {
-                CameraExporter.TrackingPacket packet = new CameraExporter.TrackingPacket(this.name, this.combineTracking);
-
-                if (GuiMinemaPanel.trackingExporter.addTracker(packet))
+                if (MinemaIntegration.isRecording() && this.trackingPacket == null)
                 {
-                    this.trackingPacket = packet;
+                    CameraExporter.TrackingPacket packet = new CameraExporter.TrackingPacket(this.name, this.combineTracking);
 
-                    //dont rename - when actors are present it can result in canMerge not being called before render
-                    //this.name = packet.getName();
+                    if (GuiMinemaPanel.trackingExporter.addTracker(packet))
+                    {
+                        this.trackingPacket = packet;
+
+                        //dont rename - when actors are present it can result in canMerge not being called before render
+                        //this.name = packet.getName();
+                    }
                 }
-            }
-            else if (!MinemaIntegration.isRecording() && this.trackingPacket != null)
-            {
-                if(this.trackingPacket.isReset())
+                else if (!MinemaIntegration.isRecording() && this.trackingPacket != null)
                 {
-                    this.trackingPacket = null;
+                    if(this.trackingPacket.isReset())
+                    {
+                        this.trackingPacket = null;
+                    }
                 }
-            }
 
-            if (MinemaIntegration.isRecording() && this.trackingPacket != null)
-            {
-                GuiMinemaPanel.trackingExporter.track(this.trackingPacket, target, partialTicks);
+                if (MinemaIntegration.isRecording() && this.trackingPacket != null)
+                {
+                    GuiMinemaPanel.trackingExporter.track(this.trackingPacket, target, partialTicks);
+                }
             }
         }
     }
