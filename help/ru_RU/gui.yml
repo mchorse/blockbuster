@@ -51,8 +51,8 @@ blockbuster.gui:
         models: Открыть модели...
         skins: Открыть скины...
 
-        reset_audio: Сбросить пути аудио
-        open_audio: Открыть пути аудио...
+        reset_audio: Сбросить аудиотреки
+        open_audio: Открыть аудиотреки...
         
         options: Настройки
     
@@ -88,12 +88,15 @@ blockbuster.gui:
         fake_player: Поддельный игрок
         tp_back: Телепортироваться обратно
         tp_back_tooltip: Телепортировать себя обратно на точку начала
+        render_last: Отрисовывать сверху
+        render_last_tooltip: Делает так, что актёр отрисовывается сверху, что должно исправить большую часть случаев, в которых непрозрачные актёры появляются за актёрами с полупрозрачными морфами.\n\nДля работы этой опции необходимо включить опцию Всегда отображать актёров, а опцию поддельного игрока необходимо выключить.
         health: Здоровье
         edit_record: Редактировать запись
         update_data: Обновить данные
         update_data_tooltip: Обновляет данные игрока в файле записи
         rename_prefix: Переименовать префикс
         rename_prefix_tooltip: Переименовывает ID воспрозведения записи с новым префиксом
+        rename_replay_dupe_modal: Этот ID записи уже использовать в этой сцене. Но вы можете использовать его ещё раз, если вам так угодно.
         rename_prefix_popup: "Введите новый префикс:"
         
         attach: Прикрепить
@@ -121,6 +124,8 @@ blockbuster.gui:
 
         add_modal: "Впишите название для новой сцены:"
         dupe_modal: "Впишите название для дублированной сцены:"
+        dupe_recordings: "Копировать записи"
+        dupe_recordings_tooltip: "Если включена, эта опция будет дублировать записи в файлы с новыми названиями"
         rename_modal: "Впишите новое название для текущей сцены:"
         remove_modal: "Вы уверенны, что хотите удалить эту сцену?"
 
@@ -290,9 +295,9 @@ blockbuster.gui:
         relative_tooltip: Эта опция позволяет применять трансформации относительно, друг на друга
 
         context:
-            add: Добавить ключ формыAdd a shape key...
-            add_to: "Add \"%s\" shape key"
-            remove: Remove this shape key
+            add: Добавить ключ формы...
+            add_to: "Добавить ключ формы \"%s\""
+            remove: Удалить этот ключ формы
      
     image:
         crop: Обрезать
@@ -307,6 +312,8 @@ blockbuster.gui:
         rotation: Вращение
         keying: Кеинг
         keying_tooltip: Этот параметр удаляет данные о цвете на экране (в кадровом буффере), на котором отображается морф; его можно использоваться вместе с функцией "Использовать альфа-канал" Минемы чтобы записать закеейнный футаж без необходиости кеинга со стороны внешних плагинов по обработке видео
+        shadow: Тень
+        shadow_tooltip: Должен ли этот морф-изображение отбрасывать тень в шейдерах Optifine (может испрвить баг с тем, что морф-изображение отбрасывает слишком большую тень), без Optifine настройка бесполезна
 
     sequencer:
         duration: Длительность
@@ -317,9 +324,10 @@ blockbuster.gui:
         no_morph: (Морф отсутствует)
         morphs: Морфы
         random_order: Случайный порядок
-        ticks: Тики
+        truly_random_order: Истинно случайный порядок
+        ticks: тиков
 
-        preview_tick: Предпросмотр тика этого секвенсер-морфа
+        preview_tick: Тик предпросмотра этого секвенсер-морфа
 
         keys:
             toggle: Вкл/Выкл воспроизведение секвенсера
@@ -387,20 +395,42 @@ blockbuster.gui:
             particles_alpha: Альфа
             particles_blend: Смешение
 
+        particle_morph:
+            title: Морф
+            enabled: Включён
+            render_texture: Всё ещё отображать текстуру
+
         space:
             title: Пространство частиц
 
             position: Относительная позиция
+            position_tooltip: Частицы будут симулироваться в пространстве сущностей.
             rotation: Относительное вращение
-            direction: Локальное направление
-            acceleration: Локальное ускорение
+            rotation_tooltip: Вращение частиц будет симулировано в пространстве сущностей. Работает только в том случае, если включена относительная позиция.
+            scale: Относительный масштаб
+            scale_tooltip: Масштабирует частицы относительно масштаба цели. Лучше всего работает со включёнными относительной позицией и вращением. Не лучшим образом работает со столкновениями!
+            direction: Относительное направление
+            direction_tooltip: Вращает вектор направления относительно вращения цели единожды во время появления.
+            acceleration: Относительное ускорение
+            acceleration_tooltip: Вращает вектор ускорения относительно вращения цели на протяжении всего жизненного цикла.
             gravity: Гравитация
+            scale_billboard: Масштабировать текстуру
+            scale_billboard_tooltip: Масштабирует текстуру частицы относительно масштаба цели.
+            object_velocity_title: Объект
+            linear_velocity: Скорость
+            linear_velocity_tooltip: Позволяет объекту придавать частице начальную скорость. Скорость рассчитывается изменением позиции морфа snowstorm morph, умноженного на заданный фактор. Добавляется к скорости частицы в момент появления.
+            angular_velocity: Угловая скорость
+            angular_velocity_tooltip: Угловая скорость рассчитывается изменением вращения морфа snowstorm morph, умноженного на заданный фактор. Добавляется к скорости частицы в момент появления. Радиусом является перемещение части тела морфа snowstorm
 
         initialization:
             title: Выражения инициализации
 
+            emitter_expression_title: Выражения эмиттера (Bedrock Edition)
             create: Выражение создания, выполняется при запуске эмиттера
             update: Выражения обновления, выполняется каждый тик
+
+            particle_expression_title: Выражения частиц (Блокбастер)
+            particle_update_expression: Выражения частиц, которые выполняются для каждой частицы. Относительны по отношению к каждой частице.
 
         rate:
             title: Частота появления
@@ -458,6 +488,12 @@ blockbuster.gui:
 
             position: Позиция
             position_speed: Изначальная скорость
+            speed: Скорость
+            acceleration_title: Ускорение
+            acceleration_x: Ускорение X
+            acceleration_y: Ускорение Y
+            acceleration_z: Ускорение Z
+            position_drag_title: Сопротивление воздуха
             position_drag: Замедление движения
 
             rotation: Вращение
@@ -487,7 +523,7 @@ blockbuster.gui:
             animated: Анимированная
 
             camera_facing:
-                label: Facing mode
+                label: Режим направления
                 
                 direction_x: Направление X
                 direction_y: Направление Y
@@ -496,6 +532,9 @@ blockbuster.gui:
                 lookat_y: Смотреть по Y
                 rotate_xyz: Вращать по XYZ
                 rotate_y: Вращать по Y
+                emitter_xy: Эмиттер Плокскость-XY
+                emitter_xz: Эмиттер Плоскость-XZ
+                emitter_yz: Эмиттер Плоскость0YZ
 
             size: Размер частицы
             width: Ширина
@@ -519,24 +558,36 @@ blockbuster.gui:
             title: Цвет и свет
 
             lighting: Свечение
+            lighting_tooltip: Использовать ли тень Майнкрафта для отображения. При отключении опции, частицы будут светиться.
 
-            solid: Сплошное
+            solid: Сплошной
             expression: Выражение
+            gradient: Градиент
+
+            interpolant_tooltip: Интерполяция цветового градиента
+            range_tooltip: Диапазон цветового градиента
 
             red: Красный
             green: Зелёный
             blue: Синий
             alpha: Альфа
 
+            context:
+                add_stop: Добавить цвет-градиент
+                remove_stop: Удалить цвет-градиент
+
         collision:
             title: Столкновения
 
             enabled: Включены
+            condition_tooltip: Включает коллизию при условии true / больше/меньше нуля или отсутствии значения
             realistic_collision: Реалистичные столкновения
             preserve_energy: Сохранять энергию
             preserve_energy_tooltip: Параметр сохранения энергии позволяет сберечь ускорение частиц после столкновения
             entity_collision: Столкновения с существами
             momentum: Импульс для столкновений с существами
+            realistic_collision_drag: Реалистичное сопротивление столкновению
+            realistic_collision_drag_tooltip: Сопротивление столкновению будет сброшено, когда частица перестанет сталкиваться. Включение этой опции также исправит баг, при котором частицы с высоким значением сопротивления столкновению могли ускоряться слишком быстро.
             drag: Параметр столкновения накладывает на частицы замедление после столкновения с блоками в мире
             bounciness: Параметр упругости увеличивает ускорение частиц после столкновения
             random_direction: Случайное Направление - сделать вектор направления случайным. Не оказывает эффект на ускорение.
@@ -562,6 +613,23 @@ blockbuster.gui:
     
     record_morph:
         random_skip: Случайный пропуск
+
+    structure_morph:
+        lighting: Освещение
+        anchor: Якорная точка
+
+    tracker_morph:
+        name: Трекер
+        label:
+            title: Название
+        type:
+            title: Тип
+            aperture_tracker: Морф-трекер Aperture
+        hidden: Спрятать курсор
+
+        aperture_tracker:
+            combine_tracking: Комбинировать разные трекеры
+            combine_tracking_tooltip: При включении этой опции, данные о трекинге с трекеров, имеющих одно и то же имя, будут объединены. Используйте эту опцию, если у вас есть трекеры, имеющие одно и то же имя, появляющиеся в разных морфах но в разное время.
 
     texture:
         title: Менеджер текстур
@@ -591,7 +659,10 @@ blockbuster.gui:
         delay: Задержка
         projectiles: Снаряды
         scatter: Разброс
+        scatter_x: Горизонтальный разброс
+        scatter_y: Вертикальный разброс
         launch: Запустить игрока
+        ammo_stack: Эта опция позволяет обозначить предмет, который будет потрачен при выстреле. Если в режиме выживания при выстреле в инвентаре нет предметов заданного типа и в заданном количестве, то снаряд не будет выпущен.\n\nМожно сказать, что это реализация механики боеприпасов.
 
         projectile_morph: Морф снаряда
         tick_command: Команда при тике
@@ -600,67 +671,95 @@ blockbuster.gui:
         yaw: Рыскание
         pitch: Тангаж
         sequencer: Секвенсер
-        random: Случайно
+        random: Случайный порядок
         hitbox_x: Хитбокс X
         hitbox_y: Хитбокс Y
         speed: Скорость
         friction: Трение
         gravity: Гравитация
-        fade_in: Переход (Старт)
+        fade_in: Переход (Начало)
         fade_out: Переход (Конец)
 
-        pick_hands: Pick hands
-        enable_overlay: Enable zoom overlay
-        hide_zoom: Hide gun on zoom
-        pick_overlay: Pick zoom overlay
-        pick_gui: Pick gui morph
-        zoom: Change zoom value
-        hand_bow: Hand as bow
-        hand_bow_always: Hand as bow always
-        input_time_between_shoot: Time between shoot
-        input_ammo: Ammo
-        input_reloading_time: Reloading time
-        enable_custom_gui_morph: Use gui morph
-        hide_aim_on_zoom: Hide aim on zoom
-        need_to_be_reloaded: Need to be reloaded
-        pick_aim_morph: Aim morph
-        pick_reload_morph: Reloading morp
-        accept_pressed: Shoot when press hold
-        reset_timer_button_rel: Reset when dont hold button
-        reload_command: Reload command #cumzone_from_русский
-        zoom_on_command: Zoom on command
-        zoom_off_command: Zoom off command
-        src_shoot_x: Shift X source
-        src_shoot_y: Shift Y source
-        src_shoot_z: Shift Z source
-        fire_src: Fire source
-        recoil_simple: recoil simple (without random)
-        recoil_x_min: recoil x min
-        recoil_x_max: recoil x max
-        recoil_y_min: recoil y min
-        recoil_y_max: recoil y max
-        aim_options: Pro options
-        mouse_zoom: Mouse Intensivnosty on zoom
-        melee_damage: Melee uron
-        durability: Dolgovechnost
-        off_click: Blocks break block
-        int_click: Interaction break block
-        ent_clock: Entity damage block
-        melee_command: Command on melee attack
-        destrCommand: Command on destroyd gun
-        aim_options_second: Pro setting +
+        aim_options: Продвинутые настройки
+        static_recoil: Статичная отдача
+        static_recoil_tooltip:
+            |
+                Если включено, минимальные значения отдачи X и Y будут добавляться в направление взгляда игрока при каждом выстреле.
+
+                В остальынх случаях (если отключено), число между полями минимума и максимума будет сгенерировано случайно и добавлено к направлению взгляда игрока.
+        recoil_x: Отдача X
+        recoil_y: Отдача Y
+        recoil_min: Минимальный фактор отдачи
+        recoil_max: Максимальный фактор отдачи
+
+        arm_pose: Поза стрельбы из лука
+        arm_shooting_pose: Включить во время стрельбы
+        arm_shooting_pose_tooltip: Если включена, то при стрельбе из ББ-Оружия, руки персонажа будут находиться в позе стрельбы из лука
+        arm_shooting_pose_always: Оставить позу
+        arm_shooting_pose_always_tooltip: Если включено, руки персонажа всегда будут находиться в позе стрельбы из лука
+
+        shooting_offset: Смещение стрельбы
+        shooting_offset_tooltip: Зачения XYZ относительно вращения головы которые позволят вам настроить откуда будет выстрелен снаряд.
+        shooting_offset_x: Смещение стрельбы X
+        shooting_offset_y: Смещение стрельбы Y
+        shooting_offset_z: Смещение стрельбы Z
+
+        inventory_morph: Морф в инвентаре
+        crosshair_morph: Морф прицела
+        hands_morph: Морф рук
+        reload_morph: Морф перезарядки
+        overlay_morph: Морф оверлея прицеливания
+
+        hide_crosshair_on_zoom: Прятать при прицеливании
+        use_inventory_morph: Включить морф
+        hide_hands_on_zoom: Прятать при прицеливании
+        use_zoom_overlay_morph: Включить морф
+
+        zoom_factor: Фактор прицеливания
+        zoom_factor_tooltip: Необязательный фактор прицеливания; чем выше число, тем ближе поле зрения будет к {7}0{r}; фактор прицеливания {7}0.5{r} сократит ваше поле зрения на {7}50%%{r} от текущего поля зрения.
+        ammo: Боеприпасы
+        ammo_tooltip: Сколько раз оружие может выстрелить перед тем, как ему потребуется перезаряка (если перезарядка включена)
+        reloading: Перезарядка
+        use_reloading: Включает перезарядку
+        reloading_time_tooltip: Сколько тиков потребуется на перезарядку оружия
+        shooting: Стрельба
+        shoot_when_held: Выстрел при удерживании
+        shot_delay_tooltip: Задержка между выстрелами во время автоматической стрельбы (в тиках)
+
+        aim_options_second: Продвинутые настройки (страница 2)
+        destroyed_command: Команда при уничтожении оружия #Evanechecssss: cumанда #Andruxioid: бля ты бы знал как я всё это в 6 утра читаю
+        melee_command: Команда при рукопашной атаке
+        reload_command: Команда при перезарядке
+        zoom_on_command: Команда при прицеливании
+        zoom_off_command: Команда при отмене прицеливания
+
+        melee_damage: Рукопашный урон
+        mouse_zoom: Интенсивность движения мышью при прицеливании
+        durability: Прочность
+        prevent_left_click: Запретить разрушение блоков
+        prevent_right_click: Запретить взаимодействие
+        prevent_entity_attack: Запретить нанесение урона сущности
 
         impact_morph: Морф воздействия
         impact_delay: Задержка воздействия
         impact_command: Команда при воздействии
+        impact_entity_command: Команда при взаимодействии с сущностью
         vanish: Исчезать #бляебать
         bounce: Отскакивать
         sticks: Прилипать
         hits: Отскоки
         damage: Урон
+        knockback_horizontal: Фактор горизонтального откидывания; 0 = отсутствие откидывания, чем выше число, тем дальше откинет сущность
+        knockback_vertical: Фактор вертикального откидывания; 0 = отсутствие откидывания, чем выше число, тем выше откинет сущность. Опция не будет работать если горизонтальное откидывание будет равно нулю
         bounce_factor: Фактор отскока
+        vanish_command: Команда при исчезновении
         vanish_delay: Задержка исчезновения
         penetration: Фактор проникновения - насколько снаряд будет проникать в блок (эта опция работает только если включён параметр "Прилипает")
+        collision: Столкновение
+        ignore_blocks: Игнорировать блоки
+        ignore_blocks_tooltip: С включением этой опции, снаряды будут проходить через блоки вместо отскакивания, скольжения или прилипания
+        ignore_entities: Игнорировать сущностей
+        ignore_entities_tooltip: С включением этой опции, снаряды будут проходить через сущности вместо нанесения урона, отдачи или выполнения команды при взаимодействии с сущностью
         
         gun_transforms: Трансформация оружия
         projectile_transforms: Трансформация снаряда
@@ -677,15 +776,15 @@ blockbuster.gui:
     
     interpolations:
         linear: Линейная
-        quad_in: Квадратическое Ускорение
-        quad_out: Квадратическое Замедление
-        quad_inout: Квадратическое Торможение
-        cubic_in: Кубическое Ускорение
-        cubic_out: Кубическое Замедление
-        cubic_inout: Кубичесое Торможение
-        exp_in: Экспоненциальное Ускорение
-        exp_out: Экспоненциальное Замедление
-        exp_inout: Экспоненциальное Торможение
+        quad_in: Квадратическая In
+        quad_out: Квадратическая Out
+        quad_inout: Квадратическая In/Out
+        cubic_in: Кубическая In
+        cubic_out: Кубическая Out
+        cubic_inout: Кубическая In/Out
+        exp_in: Экспоненциальная In
+        exp_out: Экспоненциальная Out
+        exp_inout: Экспоненциальная In/Out
 
     aperture:
         config:
