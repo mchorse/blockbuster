@@ -863,7 +863,8 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         @Override
         protected String elementToString(SequenceEntry element)
         {
-            String title = element.duration + " " + ticks.get();
+            int index = getIndexByElement(element);
+            String title = String.format("%3d | ", new Object[] { Integer.valueOf(index + 1) }) + element.duration + " " + ticks.get();
 
             if (element.morph == null)
             {
@@ -871,6 +872,15 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             }
 
             return title;
+        }
+
+        private int getIndexByElement(SequencerMorph.SequenceEntry element)
+        {
+            for (int i = 0; i < this.list.size(); i++)
+            {
+                if (this.list.get(i) == element) return i;
+            }
+            return this.list.indexOf(element);
         }
     }
 
