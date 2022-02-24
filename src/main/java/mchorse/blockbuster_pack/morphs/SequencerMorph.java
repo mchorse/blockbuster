@@ -242,6 +242,9 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         if (!this.isPaused())
         {
             this.updateClient(entity, progress);
+
+            partialTicks = progress - this.lastDuration;
+            partialTicks -= (int) partialTicks;
         }
         else
         {
