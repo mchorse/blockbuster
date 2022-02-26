@@ -13,6 +13,8 @@ blockbuster.config.comments:
     model_block:
         model_block_disable_rendering: 是否渲染模型方塊
         model_block_disable_item_rendering: 是否關閉模型方塊的物品渲染（有人想要關掉嗎？）
+        model_block_missing_name_rendering: 在丟失模型的情況下渲染這些模型的路徑。它們始終會在 F3 模式下渲染。
+        model_block_debug_rendering_f1: 在同時打開 F3 和 F1 模式的情況下，渲染模型方塊的調試效果方塊。
         restore: 該選項可恢復舊版的一個 BUG，從而能夠恢復不小心被拆掉的模型方塊。
         reset_on_playback: 啟用後，當場景開始播放所有回放時，所有的模型方塊就會自動復位
 
@@ -57,3 +59,4 @@ blockbuster.config.comments:
         waveform_height: 音頻條的高度，單位為像素
         waveform_filename: 音頻中播放的音頻的文件名是否顯示
         waveform_time: 音軌的播放時間是否顯示。需要注意的是，音軌的播放時間不一定代表場景的當前播放時間！
+        audio_sync: 音頻是否始終會嘗試在服務器與客戶端之間同步。它不會在你播放音頻的同時重進服務器後，影響到播放和同步功能。該選項用於在進入服務器時播放音頻。該配置是一個服務器端的選項。
