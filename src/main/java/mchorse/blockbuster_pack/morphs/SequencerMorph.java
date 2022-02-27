@@ -574,7 +574,21 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             return;
         }
 
-        this.timer++;
+        if (target.isServerWorld())
+        {
+            this.updateCycle();
+
+            AbstractMorph morph = this.currentMorph.get();
+
+            if (morph != null)
+            {
+                morph.update(target);
+            }
+        }
+        else
+        {
+            this.timer++;
+        }
     }
 
     /**
