@@ -546,6 +546,8 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.offsetY.setValue(morph.offset[1]);
             this.offsetZ.setValue(morph.offset[2]);
             this.offsetCount.setValue(morph.offsetCount);
+
+            this.updatePreviewBar();
         }
 
         @Override
