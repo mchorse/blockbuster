@@ -196,7 +196,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.dirty();
         });
         this.specular.picker.editAlpha();
-        this.color.tooltip(IKey.lang("blockbuster.gui.me.limbs.specular"));
+        this.specular.tooltip(IKey.lang("blockbuster.gui.me.limbs.specular"));
         this.mirror = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.mirror"), false, (b) ->
         {
             this.panel.limb.mirror = b.isToggled();
