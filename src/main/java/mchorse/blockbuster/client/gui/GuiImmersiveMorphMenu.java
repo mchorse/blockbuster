@@ -29,6 +29,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FOVModifier;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -245,6 +246,15 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
         if (this.isImmersionMode())
         {
             event.setFOV(this.editor.delegate.renderer.fov);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onCameraOrient(EntityViewRenderEvent.CameraSetup event)
+    {
+        if (this.isImmersionMode())
+        {
+            event.setRoll(0F);
         }
     }
 
