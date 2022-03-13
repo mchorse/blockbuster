@@ -191,6 +191,11 @@ public class Frame
             {
                 mount.rotationYaw = this.mountYaw;
                 mount.rotationPitch = this.mountPitch;
+
+                if (actor == mount)
+                {
+                    actor.setPosition(this.x, this.y, this.z);
+                }
             }
 
             actor.rotationYaw = this.yaw;
