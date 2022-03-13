@@ -268,6 +268,12 @@ public class Scene
             {
                 ((EntityPlayerMP) player.actor).onUpdateEntity();
             }
+            else if (!player.actorUpdated)
+            {
+                player.next();
+            }
+
+            player.actorUpdated = false;
         }
 
         if (this.playing && !this.paused)
