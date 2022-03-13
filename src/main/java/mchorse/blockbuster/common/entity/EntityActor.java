@@ -807,25 +807,29 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
                 return;
             }
 
-            this.width = actor.width;
-            this.height = actor.height;
-            this.eyeHeight = actor.getEyeHeight();
-            this.setEntityBoundingBox(actor.getEntityBoundingBox());
+            this.width = this.actor.width;
+            this.height = this.actor.height;
+            this.eyeHeight = this.actor.getEyeHeight();
+            this.setEntityBoundingBox(this.actor.getEntityBoundingBox());
 
-            this.posX = actor.posX;
-            this.posY = actor.posY;
-            this.posZ = actor.posZ;
-            this.rotationYaw = actor.rotationYaw;
-            this.rotationPitch = actor.rotationPitch;
-
-            if (!Objects.equals(this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND), actor.getHeldItemMainhand()))
+            if (this.actor.getRidingEntity() != this)
             {
-                this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, actor.getHeldItemMainhand());
+                this.posX = this.actor.posX;
+                this.posY = this.actor.posY;
+                this.posZ = this.actor.posZ;
             }
 
-            if (!Objects.equals(this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND), actor.getHeldItemOffhand()))
+            this.rotationYaw = this.actor.rotationYaw;
+            this.rotationPitch = this.actor.rotationPitch;
+
+            if (!Objects.equals(this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND), this.actor.getHeldItemMainhand()))
             {
-                this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, actor.getHeldItemOffhand());
+                this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, this.actor.getHeldItemMainhand());
+            }
+
+            if (!Objects.equals(this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND), this.actor.getHeldItemOffhand()))
+            {
+                this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, this.actor.getHeldItemOffhand());
             }
         }
 
