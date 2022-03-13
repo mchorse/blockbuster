@@ -77,6 +77,8 @@ public class RecordPlayer
 
     public Queue<IMessage> unsentPackets = Queues.<IMessage>newArrayDeque();
 
+    public boolean actorUpdated;
+
     public RecordPlayer(Record record, Mode mode, EntityLivingBase actor)
     {
         this.record = record;
@@ -177,6 +179,7 @@ public class RecordPlayer
         }
 
         this.tick++;
+        this.actorUpdated = true;
     }
 
     /**
