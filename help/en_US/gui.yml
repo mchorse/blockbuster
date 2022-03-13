@@ -84,6 +84,7 @@ blockbuster.gui:
         target_tooltip: Here you can specify which player should be used to playback this replay.\n\nAdditional target selectors can be used to pick players beside by their username. @r - random player, @{n}team{r} - where {n}team{r} is the name of the scoreboard team.
         invincible: Invincible
         invisible: Invisible
+        enable_burning: Allow burning
         enabled: Enabled
         fake_player: Fake player
         tp_back: Teleport back
