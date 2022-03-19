@@ -182,7 +182,7 @@ public class GuiModelList extends GuiModelEditorTab
 
     private void openFolder()
     {
-        GuiUtils.openWebLink(new File(ClientProxy.configFile, "models/" + this.panel.modelName).toURI());
+        GuiUtils.openFolder(new File(ClientProxy.configFile, "models/" + this.panel.modelName).getAbsolutePath());
     }
 
     @Override
