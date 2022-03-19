@@ -156,7 +156,7 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
                 GuiButtonElement open = new GuiButtonElement(this.mc, IKey.lang("blockbuster.gui.texture.open_folder"), (b) ->
                 {
                     modal.removeFromParent();
-                    GuiUtils.openWebLink(new File(ClientProxy.configFile, "export").toURI());
+                    GuiUtils.openFolder(new File(ClientProxy.configFile, "export").getAbsolutePath());
                 });
 
                 modal.bar.add(open);

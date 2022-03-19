@@ -32,8 +32,8 @@ public class ValueMainButtons extends ValueGUI
         GuiButtonElement wiki = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.wiki"), (button) -> GuiUtils.openWebLink(Blockbuster.WIKI_URL()));
         GuiButtonElement discord = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.discord"), (button) -> GuiUtils.openWebLink(Blockbuster.DISCORD_URL()));
         GuiButtonElement tutorial = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.tutorial"), (button) -> GuiUtils.openWebLink(Blockbuster.TUTORIAL_URL()));
-        GuiButtonElement models = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.models"), (button) -> GuiUtils.openWebLink(new File(ClientProxy.configFile, "models").toURI()));
-        GuiButtonElement skins = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.skins"), (button) -> GuiUtils.openWebLink(ClientProxy.skinsFolder.toURI()));
+        GuiButtonElement models = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.models"), (button) -> GuiUtils.openFolder(new File(ClientProxy.configFile, "models").getAbsolutePath()));
+        GuiButtonElement skins = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.skins"), (button) -> GuiUtils.openFolder(ClientProxy.skinsFolder.getAbsolutePath()));
         GuiIconElement youtube = new GuiIconElement(mc, BBIcons.YOUTUBE, (button) -> GuiUtils.openWebLink(Blockbuster.CHANNEL_URL()));
         GuiIconElement twitter = new GuiIconElement(mc, BBIcons.TWITTER, (button) -> GuiUtils.openWebLink(Blockbuster.TWITTER_URL()));
 

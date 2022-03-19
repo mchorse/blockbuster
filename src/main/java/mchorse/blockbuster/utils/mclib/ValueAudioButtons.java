@@ -27,7 +27,7 @@ public class ValueAudioButtons extends ValueGUI
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel config)
     {
         GuiButtonElement resetAudio = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.reset_audio"), (button) -> ClientProxy.audio.reset());
-        GuiButtonElement openAudio = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.open_audio"), (button) -> GuiUtils.openWebLink(ClientProxy.audio.folder.toURI()));
+        GuiButtonElement openAudio = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.open_audio"), (button) -> GuiUtils.openFolder(ClientProxy.audio.folder.getAbsolutePath()));
 
         return Arrays.asList(Elements.row(mc, 5, 0, 20, resetAudio, openAudio));
     }
