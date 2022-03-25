@@ -1,6 +1,6 @@
 blockbuster.info:
     actor:
-        playing: "{f}i like tea!"
+        playing: "{f}This actor already plays!"
 
     scene:
         looped: "{f}Given scene is looped now!"
