@@ -305,6 +305,9 @@ public class GuiImmersiveMorphMenu extends GuiCreativeMorphsMenu
 
             if (renderer instanceof GuiSequencerMorphRenderer)
             {
+                GuiContext context = GuiBase.getCurrent();
+
+                context.partialTicks = GuiImmersiveMorphMenu.this.mc.getRenderPartialTicks();
                 ((GuiSequencerMorphRenderer) renderer).doRender(GuiBase.getCurrent(), entity, x, y, z);
 
                 morph = null;

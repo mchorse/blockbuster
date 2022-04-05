@@ -403,6 +403,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         {
             i = this.getRandomIndex(duration);
         }
+
         float lastDuration = 0;
         float prevLastDuration = 0;
 
@@ -411,7 +412,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         boolean isFirstMorph = false;
         boolean lastIsFirstMorph = false;
 
-        while (duration <= tick)
+        do
         {
             prevLastDuration = lastDuration;
             lastDuration = duration;
@@ -462,6 +463,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
             duration += entry.getDuration(this.getRandomSeed(duration));
         }
+        while (duration < tick);
 
         return entry == null ? null : new FoundMorph(lastIndex, entry, lastEntry, duration, lastDuration, prevLastDuration, lastLoopCount, lastIsFirstMorph);
     }
@@ -867,7 +869,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
                 this.current = -1;
                 this.duration = 0;
-                this.currentMorph.copy(sequencer.currentMorph);
 
                 if (!sequencer.keepProgress)
                 {
