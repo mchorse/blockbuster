@@ -467,6 +467,9 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         private void togglePlay()
         {
             this.previewRenderer.playing = !this.previewRenderer.playing;
+
+            
+
             this.updatePlauseButton();
             this.updatePreviewMorph();
         }
@@ -897,7 +900,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
         public int tick;
         public float partialTicks;
-        public long lastTick;
+        public float lastTicks;
 
         public GuiSequencerMorphRenderer(Minecraft mc)
         {
@@ -919,13 +922,23 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
             if (this.morph == PREVIEWER && this.playing)
             {
-                long delta = MathUtils.clamp(context.tick - this.lastTick, 0, 10);
+                float ticks = this.tick + this.partialTicks;
+                float delta = MathUtils.clamp(context.tick + this.mc.getRenderPartialTicks() - this.lastTicks, 0.0F, 10.0F);
+
+                System.out.println("P:" + (context.tick + this.mc.getRenderPartialTicks()));
+                System.out.println("D:" + delta);
+
+                ticks += delta;
+                delta = (int) ticks - this.tick;
+
+                System.out.println("T:" + ticks);
+                System.out.println("==========");
+
+                this.tick = (int) ticks;
+                this.partialTicks = ticks - this.tick;
 
                 if (delta > 0)
                 {
-                    this.tick += delta;
-                    this.partialTicks = context.partialTicks;
-
                     PREVIEWER.pause(null, this.tick);
                     PREVIEWER.resume();
                 }
@@ -933,7 +946,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
             MorphUtils.render(this.morph, entity, x, y, z, this.yaw, this.partialTicks);
 
-            this.lastTick = context.tick;
+            this.lastTicks = context.tick + this.mc.getRenderPartialTicks();
         }
     }
 }

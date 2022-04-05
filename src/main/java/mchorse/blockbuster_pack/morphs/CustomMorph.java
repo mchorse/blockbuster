@@ -187,7 +187,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     {
         this.animation.pause(offset);
 
-        if (previous instanceof IMorphProvider)
+        while (previous instanceof IMorphProvider)
         {
             previous = ((IMorphProvider) previous).getMorph();
         }
@@ -769,21 +769,19 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     {
         super.afterMerge(morph);
 
-        if (!(morph instanceof IMorphProvider))
+        while (morph instanceof IMorphProvider)
         {
-            return;
+            morph = ((IMorphProvider) morph).getMorph();
         }
 
-        AbstractMorph destination = ((IMorphProvider) morph).getMorph();
-
-        if (destination instanceof IBodyPartProvider)
+        if (morph instanceof IBodyPartProvider)
         {
-            this.recursiveAfterMerge(this, (IBodyPartProvider) destination);
+            this.recursiveAfterMerge(this, (IBodyPartProvider) morph);
         }
 
-        if (destination instanceof CustomMorph)
+        if (morph instanceof CustomMorph)
         {
-            this.copyPoseForAnimation(this, (CustomMorph) destination);
+            this.copyPoseForAnimation(this, (CustomMorph) morph);
         }
     }
 
@@ -799,14 +797,9 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             AbstractMorph a = target.getBodyPart().parts.get(i).morph.get();
             AbstractMorph b = destination.getBodyPart().parts.get(i).morph.get();
 
-            if (a instanceof IBodyPartProvider && b instanceof IBodyPartProvider)
+            if (a != null)
             {
-                this.recursiveAfterMerge((IBodyPartProvider) a, (IBodyPartProvider) b);
-            }
-
-            if (a instanceof CustomMorph && b instanceof CustomMorph)
-            {
-                this.copyPoseForAnimation((CustomMorph) a, (CustomMorph) b);
+                a.afterMerge(b);
             }
         }
     }
