@@ -920,19 +920,15 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                 return;
             }
 
+            float current = context.tick + context.partialTicks;
+
             if (this.morph == PREVIEWER && this.playing)
             {
                 float ticks = this.tick + this.partialTicks;
-                float delta = MathUtils.clamp(context.tick + this.mc.getRenderPartialTicks() - this.lastTicks, 0.0F, 10.0F);
-
-                System.out.println("P:" + (context.tick + this.mc.getRenderPartialTicks()));
-                System.out.println("D:" + delta);
+                float delta = MathUtils.clamp(current - this.lastTicks, 0.0F, 10.0F);
 
                 ticks += delta;
                 delta = (int) ticks - this.tick;
-
-                System.out.println("T:" + ticks);
-                System.out.println("==========");
 
                 this.tick = (int) ticks;
                 this.partialTicks = ticks - this.tick;
@@ -946,7 +942,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
             MorphUtils.render(this.morph, entity, x, y, z, this.yaw, this.partialTicks);
 
-            this.lastTicks = context.tick + this.mc.getRenderPartialTicks();
+            this.lastTicks = current;
         }
     }
 }
