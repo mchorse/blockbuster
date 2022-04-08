@@ -1,4 +1,5 @@
-**ATTENTION**: This mod is **no longer being developed nor maintained by McHorse**. If you wish to continue the mod, feel free to check out the [source code](https://github.com/mchorse/blockbuster).  
+**ATTENTION**: This mod is **no longer being maintained by McHorse. It is now maintained by Chryfi.**
+ There are **still going to be official updates by Chryfi and other contributors** and there have been task forces that are investigating on porting it. **If you also want to contribute to official updates**, or to the porting effort, please **join the official [McHorse's Discord server](https://discord.gg/qfxrqUF), so we can communicate with you.** Check out the [source code](https://github.com/mchorse/blockbuster). 
 
 ![Blockbuster](https://i.imgur.com/fkRVMIw.png)
 
@@ -63,4 +64,4 @@ If the versions of the mod are correct, then you can report a bug or a crash to 
 
 ## License
 
-Blockbuster mod's code is licensed under MIT license. See [LICENSE.md](./LICENSE.md) file for more information about the license.
+Blockbuster mod's code is licensed under GNU GPL v3.0 license. See [LICENSE](./LICENSE) file for more information about the license.
