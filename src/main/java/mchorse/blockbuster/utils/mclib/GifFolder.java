@@ -66,6 +66,11 @@ public class GifFolder extends File
         return super.getPath() + ">";
     }
 
+    public String getFilePath()
+    {
+        return super.getPath();
+    }
+
     @Override
     public boolean isDirectory()
     {

@@ -53,16 +53,11 @@ public class GifTexture extends AbstractTexture
         globalTick += 1;
     }
 
-    public GifTexture(ResourceLocation texture, int[] delays)
+    public GifTexture(ResourceLocation texture, int[] delays, ResourceLocation[] frames)
     {
         this.base = texture;
         this.delays = Arrays.copyOf(delays, delays.length);
-        this.frames = new ResourceLocation[delays.length];
-
-        for (int i = 0; i < delays.length; i++)
-        {
-            this.frames[i] = RLUtils.create(texture.getResourceDomain(), texture.getResourcePath() + ">/frame" + i + ".png");
-        }
+        this.frames = frames;
     }
 
     public void calculateDuration()
