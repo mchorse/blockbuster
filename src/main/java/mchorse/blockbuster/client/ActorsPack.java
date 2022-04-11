@@ -24,6 +24,7 @@ import mchorse.blockbuster.client.textures.GifProcessThread;
 import mchorse.blockbuster.client.textures.URLDownloadThread;
 import mchorse.blockbuster.utils.mclib.GifFolder;
 import mchorse.blockbuster.utils.mclib.GifFrameFile;
+import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
@@ -126,11 +127,16 @@ public class ActorsPack implements IResourcePack
                 GifFrameFile frame = (GifFrameFile) fileFile;
                 GifFolder image = frame.parent;
 
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                if (image.exists())
+                {
+                    String gifPath = location.getResourcePath();
 
-                ImageIO.write(image.gif.getFrame(frame.index), "png", bos);
+                    gifPath = gifPath.substring(0, gifPath.lastIndexOf('>'));
 
-                return new ByteArrayInputStream(bos.toByteArray());
+                    this.handleGif(RLUtils.create(location.getResourceDomain(), gifPath), image);
+                }
+
+                return new FileInputStream(new File(image.getFilePath()));
             }
             else
             {
@@ -140,7 +146,7 @@ public class ActorsPack implements IResourcePack
 
                     if (gifFile.exists())
                     {
-                        this.handleGif(location, new GifFolder(fileFile.getPath()));
+                        this.handleGif(location, gifFile);
                     }
                 }
 
