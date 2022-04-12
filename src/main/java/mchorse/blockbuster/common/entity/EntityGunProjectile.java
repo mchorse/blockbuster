@@ -384,25 +384,31 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
         if (!this.world.isRemote)
         {
-            if (!this.props.impactCommand.isEmpty() && result.typeOfHit == Type.BLOCK && !this.props.ignoreBlocks)
+            if (result.typeOfHit == Type.BLOCK && !this.props.ignoreBlocks)
             {
-                String command = this.props.impactCommand;
-                int x = Math.round((float) this.posX);
-                int y = Math.round((float) this.posY);
-                int z = Math.round((float) this.posZ);
-
-                if (result.typeOfHit == Type.BLOCK)
+                if (!this.props.impactCommand.isEmpty())
                 {
-                    x = result.getBlockPos().getX();
-                    y = result.getBlockPos().getY();
-                    z = result.getBlockPos().getZ();
+                    String command = this.props.impactCommand;
+                    int x = Math.round((float) this.posX);
+                    int y = Math.round((float) this.posY);
+                    int z = Math.round((float) this.posZ);
+
+                    if (result.typeOfHit == Type.BLOCK)
+                    {
+                        x = result.getBlockPos().getX();
+                        y = result.getBlockPos().getY();
+                        z = result.getBlockPos().getZ();
+                    }
+
+                    command = command.replaceAll("\\$\\{x\\}", String.valueOf(x));
+                    command = command.replaceAll("\\$\\{y\\}", String.valueOf(y));
+                    command = command.replaceAll("\\$\\{z\\}", String.valueOf(z));
+
+                    if (this.getServer() != null)
+                    {
+                        this.getServer().commandManager.executeCommand(this, command);
+                    }
                 }
-
-                command = command.replaceAll("\\$\\{x\\}", String.valueOf(x));
-                command = command.replaceAll("\\$\\{y\\}", String.valueOf(y));
-                command = command.replaceAll("\\$\\{z\\}", String.valueOf(z));
-
-                this.getServer().commandManager.executeCommand(this, command);
 
                 impactMorph = true;
             }
