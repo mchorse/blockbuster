@@ -11,6 +11,7 @@ import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
+import mchorse.metamorph.api.morphs.utils.IMorphGenerator;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
@@ -37,7 +38,7 @@ import java.util.Random;
  * Next big thing since S&B, allows creating animated morphs with 
  * variable delays between changes
  */
-public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISyncableMorph
+public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISyncableMorph, IMorphGenerator
 {
     /**
      * List of sequence entries (morph and their delay) 
@@ -197,6 +198,36 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     public AbstractMorph getMorph()
     {
         return this.currentMorph.get();
+    }
+
+    @Override
+    public boolean canGenerate()
+    {
+        AbstractMorph morph = this.currentMorph.get();
+
+        if (morph instanceof IMorphGenerator)
+        {
+            return ((IMorphGenerator) morph).canGenerate();
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    @Override
+    public AbstractMorph genCurrentMorph(float partialTicks)
+    {
+        AbstractMorph morph = this.currentMorph.get();
+
+        if (morph instanceof IMorphGenerator)
+        {
+            return ((IMorphGenerator) morph).genCurrentMorph(partialTicks);
+        }
+        else
+        {
+            return null;
+        }
     }
 
     @Override
