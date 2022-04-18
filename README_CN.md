@@ -1,4 +1,6 @@
-**注意**：本 Mod **已不再由 McHorse 开发或维护**。如果您想继续开发本模组，欢迎查看 [源代码](https://github.com/mchorse/blockbuster).  
+**注意**：本 Mod **已不再由 McHorse 开发或维护，现由 Chryfi 维护**。
+
+目前该项目 **将由 Chryfi 以及其他贡献者提供官方更新**，且已有小组正在研究移植至高版本的相关事宜。**如果您想为官方更新贡献代码**，或为移植计划添砖加瓦，请 **加入 [McHorse's Discord server](https://discord.gg/qfxrqUF) 官方服务器，以便与您交流。** 欢迎查看 [源代码](https://github.com/mchorse/blockbuster).  
 
 ![Blockbuster](https://i.imgur.com/fkRVMIw.png)
 
@@ -63,7 +65,7 @@ Blockbuster Mod 提供了大量的功能来提升你的视频效果：
 
 ## 许可证
 
-Blockbuster mod 的代码根据 MIT 许可协议授权, 详情请参阅 [LICENSE.md](./LICENSE.md) 文件。
+Blockbuster mod 的代码根据 GNU GPL v3.0 许可协议授权, 详情请参阅 [LICENSE](./LICENSE) 文件。
 
 ## 开发者请看
 
