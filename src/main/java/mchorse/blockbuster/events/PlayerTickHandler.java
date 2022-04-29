@@ -14,6 +14,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 import java.util.function.Function;
 
@@ -93,6 +94,11 @@ public class PlayerTickHandler
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerTick(TickEvent.PlayerTickEvent event)
     {
+        if (event.phase == Phase.END)
+        {
+            return;
+        }
+
         EntityPlayer player = event.player;
         ItemStack stack = player.getHeldItemMainhand();
 
@@ -101,6 +107,7 @@ public class PlayerTickHandler
             ItemGun.decreaseReload(stack, player);
             ItemGun.decreaseTime(stack, player);
             ItemGun.checkGunState(stack, player);
+            ItemGun.checkGunReload(stack, player);
         }
     }
 }

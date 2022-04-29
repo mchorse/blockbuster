@@ -141,7 +141,6 @@ public class GunProps
     private Morph currentHands = new Morph();
     private Morph currentInventory = new Morph();
     private Morph currentZoomOverlay = new Morph();
-    private Morph currentReload = new Morph();
     public Morph currentCrosshair = new Morph();
     private boolean renderLock;
 
@@ -180,11 +179,6 @@ public class GunProps
     public void setInventoryMorph(AbstractMorph morph)
     {
         this.currentInventory.setDirect(morph);
-    }
-
-    public void setReloadMorph(AbstractMorph morph)
-    {
-        this.currentReload.setDirect(morph);
     }
 
     public void shot()
@@ -242,9 +236,30 @@ public class GunProps
             this.target.ticksExisted++;
 
             AbstractMorph morph = this.current.get();
+
             if (morph != null)
             {
                 morph.update(this.target);
+            }
+
+            if (!this.currentCrosshair.isEmpty())
+            {
+                this.currentCrosshair.get().update(this.target);
+            }
+
+            if (!this.currentHands.isEmpty())
+            {
+                this.currentHands.get().update(this.target);
+            }
+
+            if (!this.currentInventory.isEmpty())
+            {
+                this.currentInventory.get().update(this.target);
+            }
+
+            if (!this.currentZoomOverlay.isEmpty())
+            {
+                this.currentZoomOverlay.get().update(this.target);
             }
         }
 
@@ -342,16 +357,8 @@ public class GunProps
 
             this.setupEntity();
 
-            if (this.state == ItemGun.GunState.RELOADING)
-            {
-                AbstractMorph reloadMorph = this.currentReload.get();
+            MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
 
-                MorphUtils.render(reloadMorph == null ? morph : reloadMorph, entity, 0, 0, 0, 0, partialTicks);
-            }
-            else
-            {
-                MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
-            }
             GL11.glPopMatrix();
 
             entity.renderYawOffset = rotationYaw;
@@ -696,11 +703,22 @@ public class GunProps
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
-            this.current.set(MorphUtils.copy(this.defaultMorph));
+            if (this.state == ItemGun.GunState.RELOADING)
+            {
+                /*
+                 * Minecraft has been replacing the client's itemstack, so reloadMorph is never updated, 
+                 * and I think BBGun needs a big rewrite to counter Minecraft's own mechanism
+                 */
+                this.current.set(MorphUtils.copy(this.reloadMorph));
+            }
+            else
+            {
+                this.current.set(MorphUtils.copy(this.defaultMorph));
+            }
+
             this.currentHands.set(MorphUtils.copy(this.handsMorph));
             this.currentZoomOverlay.set(MorphUtils.copy(this.zoomOverlayMorph));
             this.currentInventory.set(MorphUtils.copy(this.inventoryMorph));
-            this.currentReload.set(MorphUtils.copy(this.reloadMorph));
             this.currentCrosshair.set(MorphUtils.copy(this.crosshairMorph));
         }
     }
