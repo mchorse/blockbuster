@@ -201,7 +201,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         float progress = this.timer;
         float duration = this.duration - this.lastDuration;
 
-        if (this.morphSetDuration && duration > 0)
+        if (this.morphSetDuration)
         {
             if (duration > 0)
             {
@@ -215,6 +215,10 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             {
                 this.updateSetDuration(morph, 1, 1);
             }
+        }
+        else
+        {
+            this.updateProgress(morph, 1);
         }
 
         return morph;

@@ -721,7 +721,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
                 if (this.animation.isInProgress() && pose != null)
                 {
-                    this.animation.last = this.convertProp(this.animation.calculatePose(pose, 1).copy());
+                    this.animation.last = this.convertProp(this.animation.calculatePose(pose, 0).copy());
                 }
                 else
                 {
@@ -814,7 +814,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
         if (destination.animation.isInProgress() && pose != null)
         {
-            target.animation.last = this.convertProp(destination.animation.calculatePose(pose, 1));
+            target.animation.last = this.convertProp(destination.animation.calculatePose(pose, 0).copy());
         }
         else
         {
