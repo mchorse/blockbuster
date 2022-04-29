@@ -63,6 +63,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     private GuiToggleElement shadow;
     private GuiToggleElement global;
     private GuiToggleElement enabled;
+    private GuiToggleElement renderLast;
     private GuiTrackpadElement lightLevel;
 
     private GuiModelBlockList list;
@@ -154,10 +155,15 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         });
 
         this.shadow = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.shadow"), false, (button) -> this.model.shadow = button.isToggled());
+
         this.global = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.global"), false, (button) -> this.model.global = button.isToggled());
         this.global.tooltip(IKey.lang("blockbuster.gui.model_block.global_tooltip"), Direction.BOTTOM);
+
         this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.enabled"), false, (button) -> this.model.enabled = button.isToggled());
         this.enabled.tooltip(IKey.lang("blockbuster.gui.model_block.enabled_tooltip"), Direction.BOTTOM);
+
+        this.renderLast = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.render_last"), false, (button) -> this.model.renderLast = button.isToggled());
+        this.renderLast.tooltip(IKey.lang("blockbuster.gui.model_block.enabled_tooltip"));
 
         this.lightLevel = new GuiTrackpadElement(mc, (value) ->
         {
@@ -168,7 +174,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.lightLevel.integer().limit(0, 15);
         this.lightLevel.tooltip(IKey.lang("blockbuster.gui.model_block.light_level_tooltip"));
 
-        column.add(this.pickMorph, look, this.shadow, this.global, this.enabled, Elements.label(IKey.lang("blockbuster.gui.model_block.light_level")), this.lightLevel);
+        column.add(this.pickMorph, look, this.shadow, this.global, this.enabled, this.renderLast, Elements.label(IKey.lang("blockbuster.gui.model_block.light_level")), this.lightLevel);
         this.subChildren.add(column);
 
         /* Model blocks */
@@ -400,6 +406,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
             this.model.lightValue = lightValue;
 
             this.lightLevel.setValue(lightValue);
+            this.renderLast.toggled(this.model.renderLast);
         }
     }
 

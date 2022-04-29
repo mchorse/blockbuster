@@ -9,11 +9,13 @@ import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
+import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.OrientedBB;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemGun;
+import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordRecorder;
 import mchorse.blockbuster.recording.data.Frame;
@@ -32,6 +34,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -78,6 +81,12 @@ public class RenderingHandler
     private static EntityLivingBase lastItemHolder;
     public static Set<Record> recordsToRender = new HashSet<Record>();
     public static Set<OrientedBB> obbsToRender = new HashSet<OrientedBB>();
+
+    /**
+     * This List stores model blocks that should be rendered last.
+     * The object array is in the following structure:
+     */
+    public static List<Object[]> modelBlocksRenderLast = new ArrayList<>();
 
     private boolean wasPaused;
 
@@ -437,13 +446,15 @@ public class RenderingHandler
             this.wasPaused = isPaused;
         }
 
+        /* render actor paths */
         if (mc.gameSettings.showDebugInfo && !recordsToRender.isEmpty())
         {
             renderPaths(event, recordsToRender);
         }
 
         recordsToRender.clear();
-        
+
+        /* render OBB outlines (move this code to limb renderer or so, later)*/
         if (mc.gameSettings.showDebugInfo && !obbsToRender.isEmpty())
         {
             for (OrientedBB obb : this.obbsToRender)
@@ -452,6 +463,35 @@ public class RenderingHandler
             }
         }
         obbsToRender.clear();
+
+
+        /* render model blocks */
+        Entity camera = mc.getRenderViewEntity();
+
+        modelBlocksRenderLast.sort((a, b) ->
+        {
+            double dist1 = camera.getDistanceSq(((TileEntityModel) a[0]).getPos());
+            double dist2 = camera.getDistanceSq(((TileEntityModel) b[0]).getPos());
+
+            return dist1 == dist2 ? 0 : (dist2 - dist1 > 0 ? 1 : -1);
+        });
+
+        for (Object[] teRenderer : modelBlocksRenderLast)
+        {
+            RenderHelper.enableStandardItemLighting();
+
+            int i = mc.world.getCombinedLight(((TileEntityModel) teRenderer[0]).getPos(), 0);
+            int j = i % 65536;
+            int k = i / 65536;
+
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
+
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+            ClientProxy.modelRenderer.render((TileEntityModel) teRenderer[0], (double) teRenderer[1], (double) teRenderer[2], (double) teRenderer[3], (float) teRenderer[4], (int) teRenderer[5], (float) teRenderer[6], false);
+        }
+
+        modelBlocksRenderLast.clear();
     }
 
     private void renderPaths(RenderWorldLastEvent event, Set<Record> recordsToRender)

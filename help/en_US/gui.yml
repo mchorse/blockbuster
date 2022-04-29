@@ -164,6 +164,8 @@ blockbuster.gui:
         global_tooltip: Enables surpassing of chunk culling
         enabled: Enabled
         enabled_tooltip: Enables model block rendering
+        render_last: Render last
+        render_last_tooltip: Makes a model block to be rendered last. Use this on semi transparent model blocks. This should fix in most of the cases model blocks not being rendered behind semi transparent model blocks.
         light_level: Light value
         light_level_tooltip: Emits light with the given level, Minecraft's maximum light value is 15.
         look: Rotate at you
