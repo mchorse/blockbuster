@@ -55,7 +55,32 @@ public class ItemGun extends Item
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack from, ItemStack to, boolean changed)
     {
-        return false; // what animation to use when the player holds the "use" button
+        if (!changed && to.getItem() instanceof ItemGun)
+        {
+            GunEntry entry = TileEntityGunItemStackRenderer.models.get(from);
+
+            if (entry != null)
+            {
+                GunProps props = NBTUtils.getGunProps(to);
+                boolean same = true;
+
+                same &= Objects.equals(entry.props.defaultMorph, props.defaultMorph);
+                same &= Objects.equals(entry.props.firingMorph, props.firingMorph);
+                same &= Objects.equals(entry.props.crosshairMorph, props.crosshairMorph);
+                same &= Objects.equals(entry.props.handsMorph, props.handsMorph);
+                same &= Objects.equals(entry.props.reloadMorph, props.reloadMorph);
+                same &= Objects.equals(entry.props.zoomOverlayMorph, props.zoomOverlayMorph);
+
+                if (same)
+                {
+                    TileEntityGunItemStackRenderer.models.put(to, TileEntityGunItemStackRenderer.models.remove(from));
+                }
+
+                return !same;
+            };
+        }
+
+        return true; // what animation to use when the player holds the "use" button
     }
 
     @Override

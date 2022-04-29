@@ -145,6 +145,7 @@ public class GunProps
     private boolean renderLock;
 
     public EntityLivingBase target;
+    public ItemGun.GunState lastState = ItemGun.GunState.READY_TO_SHOOT;
 
     public GunProps()
     {
@@ -235,6 +236,23 @@ public class GunProps
         {
             this.target.ticksExisted++;
 
+            boolean lastReload = this.lastState == ItemGun.GunState.RELOADING;
+            boolean currentReload = this.state == ItemGun.GunState.RELOADING;
+
+            if (currentReload != lastReload)
+            {
+                if (currentReload)
+                {
+                    this.current.set(this.reloadMorph);
+                }
+                else
+                {
+                    this.current.set(this.defaultMorph);
+                }
+            }
+
+            this.lastState = this.state;
+
             AbstractMorph morph = this.current.get();
 
             if (morph != null)
@@ -263,15 +281,15 @@ public class GunProps
             }
         }
 
-        if (this.shoot >= 0)
+        if (this.shoot > 0)
         {
+            this.shoot--;
+
             if (this.shoot == 0)
             {
                 this.current.set(MorphUtils.copy(this.defaultMorph));
 
             }
-
-            this.shoot--;
         }
 
     }
