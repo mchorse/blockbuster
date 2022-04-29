@@ -197,7 +197,27 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     @Override
     public AbstractMorph getMorph()
     {
-        return this.currentMorph.get();
+        AbstractMorph morph = this.currentMorph.get();
+        float progress = this.timer;
+        float duration = this.duration - this.lastDuration;
+
+        if (this.morphSetDuration && duration > 0)
+        {
+            if (duration > 0)
+            {
+                float setDuration = (float) Math.ceil(duration);
+                float ticks = (progress - this.lastDuration) * setDuration / duration;
+                int tick = (int) ticks * 10000;
+
+                this.updateSetDuration(morph, tick, (int) setDuration * 10000);
+            }
+            else
+            {
+                this.updateSetDuration(morph, 1, 1);
+            }
+        }
+
+        return morph;
     }
 
     @Override
@@ -222,6 +242,21 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
         if (morph instanceof IMorphGenerator)
         {
+            float progress = this.timer + partialTicks;
+            float duration = this.duration - this.lastDuration;
+
+            if (this.morphSetDuration && duration > 0)
+            {
+                float setDuration = (float) Math.ceil(duration);
+                float ticks = (progress - this.lastDuration) * setDuration / duration;
+                int tick = (int) ticks;
+
+                if (this.updateSetDuration(morph, tick, (int) setDuration))
+                {
+                    partialTicks = ticks - tick;
+                }
+            }
+
             return ((IMorphGenerator) morph).genCurrentMorph(partialTicks);
         }
         else
