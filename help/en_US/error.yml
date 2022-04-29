@@ -69,6 +69,7 @@ blockbuster.error:
         read: "{f}A recording file by the name %s{f} isn't suitable for playback ({7}old version{f}, {7}corrupted{f}, or not a {7}recording file{f})."
         logout: "{f}Stopped recording %s{f}, because the player is logged out!"
         not_found: "{f}Can't find %s{f} recording file!"
+        not_recorded: "{f}The player recording %s{f} wasn't recorded yet!"
         fill_filename: "{f}Please fill the {7}Recording ID{f} field!"
         empty_filename: "{f}Cannot record a player recording with empty {7}Recording ID{f}."
         empty_record: "{f}Cannot playback record %s{f}, because it's empty!"
