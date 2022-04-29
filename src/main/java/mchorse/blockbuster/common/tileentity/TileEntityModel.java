@@ -41,6 +41,8 @@ public class TileEntityModel extends TileEntity implements ITickable
 
     public int lightValue;
 
+    public boolean renderLast;
+
     public Morph morph = new Morph();
     public EntityLivingBase entity;
     public ItemStack[] slots = new ItemStack[] {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY};
@@ -194,6 +196,7 @@ public class TileEntityModel extends TileEntity implements ITickable
     public void copyData(TileEntityModel model, boolean merge)
     {
         this.lightValue = model.lightValue;
+        this.renderLast = model.renderLast;
         this.order = model.order;
         this.rotateYawHead = model.rotateYawHead;
         this.rotatePitch = model.rotatePitch;
@@ -278,6 +281,7 @@ public class TileEntityModel extends TileEntity implements ITickable
         if (this.order != RotationOrder.ZYX) compound.setByte("Order", (byte) this.order.ordinal());
 
         if (this.lightValue != 0) compound.setInteger("LightValue", this.lightValue);
+        if (this.renderLast) compound.setBoolean("RenderLast", this.renderLast);
         if (this.rotateYawHead != 0) compound.setFloat("Yaw", this.rotateYawHead);
         if (this.rotatePitch != 0) compound.setFloat("Pitch", this.rotatePitch);
         if (this.rotateBody != 0) compound.setFloat("Body", this.rotateBody);
@@ -341,6 +345,7 @@ public class TileEntityModel extends TileEntity implements ITickable
         }
 
         if (compound.hasKey("LightValue")) this.lightValue = compound.getInteger("LightValue");
+        if (compound.hasKey("RenderLast")) this.renderLast = compound.getBoolean("RenderLast");
         if (compound.hasKey("Yaw")) this.rotateYawHead = compound.getFloat("Yaw");
         if (compound.hasKey("Pitch")) this.rotatePitch = compound.getFloat("Pitch");
         if (compound.hasKey("Body")) this.rotateBody = compound.getFloat("Body");
@@ -384,6 +389,7 @@ public class TileEntityModel extends TileEntity implements ITickable
         this.order = RotationOrder.values()[buf.readByte()];
 
         this.lightValue = buf.readInt();
+        this.renderLast = buf.readBoolean();
         this.rotateYawHead = buf.readFloat();
         this.rotatePitch = buf.readFloat();
         this.rotateBody = buf.readFloat();
@@ -416,6 +422,7 @@ public class TileEntityModel extends TileEntity implements ITickable
         buf.writeByte(this.order.ordinal());
 
         buf.writeInt(this.lightValue);
+        buf.writeBoolean(this.renderLast);
         buf.writeFloat(this.rotateYawHead);
         buf.writeFloat(this.rotatePitch);
         buf.writeFloat(this.rotateBody);

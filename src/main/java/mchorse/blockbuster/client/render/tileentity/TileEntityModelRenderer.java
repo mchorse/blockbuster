@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.render.tileentity;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.mclib.client.Draw;
@@ -47,6 +48,22 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
     @Override
     public void render(TileEntityModel te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
+        this.render(te, x, y, z, partialTicks, destroyStage, alpha, true);
+    }
+
+    /**
+     * @param queueRenderLast if this is true and tile entity has renderLast activated,
+     *                        this method wont be executed and tileEntity and the passed arguments will be queued for the renderLast Minecraft event
+     */
+    public void render(TileEntityModel te, double x, double y, double z, float partialTicks, int destroyStage, float alpha, boolean queueRenderLast)
+    {
+        if (queueRenderLast && te.renderLast)
+        {
+            RenderingHandler.modelBlocksRenderLast.add(new Object[]{te, x, y, z, partialTicks, destroyStage, alpha});
+
+            return;
+        }
+
         Minecraft mc = Minecraft.getMinecraft();
 
         if (!te.morph.isEmpty() && !Blockbuster.modelBlockDisableRendering.get() && te.enabled)
