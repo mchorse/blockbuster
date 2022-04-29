@@ -724,8 +724,8 @@ blockbuster.gui:
                 啟用該選項時，每次都會將最小 X 和 Y 後坐力的值加在玩家所看的方向上。
 
                 否則（禁用時）將隨機產生一個介於最小和最大值之間的數字並加在玩家所看的方向上。
-        recoil_x: X 後坐力
-        recoil_y: Y 後坐力
+        recoil_x: 垂直後坐力
+        recoil_y: 水平後坐力
         recoil_min: 最小後坐力係數
         recoil_max: 最大後坐力係數
 
@@ -735,7 +735,7 @@ blockbuster.gui:
         arm_shooting_pose_always: 保持擡手姿勢
         arm_shooting_pose_always_tooltip: 啟用後，手臂將始終保持射箭的姿勢
 
-        shooting_offset: 
+        shooting_offset: 射擊偏移
         shooting_offset_tooltip: 相對於頭部旋轉的 XYZ 值，用於調整炮彈發射的位置。
         shooting_offset_x: X 射擊偏移
         shooting_offset_y: Y 射擊偏移
@@ -760,8 +760,8 @@ blockbuster.gui:
         use_reloading: 啟用換彈
         reloading_time_tooltip: 給槍換彈需要消耗多少 Tick
         shooting: 射擊
-        shoot_when_held: 拿起時射擊
-        shot_delay_tooltip: 自動射擊時每發子彈的時間間隔（單位為 Tick）
+        shoot_when_held: 全自動連發模式
+        shot_delay_tooltip: 每次開火的最小時間間隔（單位為 Tick）
 
         aim_options_second: 高級選項（第 2 頁）
         destroyed_command: 槍毀壞時的命令 # Evanechecssss: cummands

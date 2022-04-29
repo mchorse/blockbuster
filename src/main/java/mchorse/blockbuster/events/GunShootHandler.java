@@ -1,5 +1,7 @@
 package mchorse.blockbuster.events;
 
+import java.lang.reflect.Field;
+
 import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.item.ItemGun;
@@ -8,10 +10,12 @@ import mchorse.blockbuster.network.common.guns.PacketGunInteract;
 import mchorse.blockbuster.network.common.guns.PacketGunReloading;
 import mchorse.blockbuster.utils.NBTUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,7 +29,7 @@ public class GunShootHandler
 {
     private boolean canBeShotPress = true;
     private boolean canBeReloaded = true;
-    private boolean canBeShotDown = true;
+    private Field leftClickCounter = null;
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -47,18 +51,18 @@ public class GunShootHandler
 
         if (stack.getItem() instanceof ItemGun)
         {
-            this.handleShootKeyPress(mc, stack);
-            this.handleShootKeyDown(mc, stack);
+            this.blockLeftClick(mc);
+            this.handleShootKey(mc, stack);
             this.handleReloading(mc, stack);
         }
     }
 
     @SideOnly(Side.CLIENT)
-    private void handleShootKeyPress(Minecraft mc, ItemStack stack)
+    private void handleShootKey(Minecraft mc, ItemStack stack)
     {
         GunProps props = NBTUtils.getGunProps(stack);
 
-        if (KeyboardHandler.gunShoot.isPressed() && !props.shootWhenHeld)
+        if (KeyboardHandler.gunShoot.isKeyDown())
         {
             if (canBeShotPress && props.storedShotDelay == 0 && props.state == ItemGun.GunState.READY_TO_SHOOT)
             {
@@ -69,7 +73,7 @@ public class GunShootHandler
                 return;
             }
 
-            if (props.storedShotDelay == 0)
+            if (props.storedShotDelay == 0 && props.shootWhenHeld)
             {
                 canBeShotPress = true;
             }
@@ -83,7 +87,9 @@ public class GunShootHandler
     @SideOnly(Side.CLIENT)
     private void handleReloading(Minecraft mc, ItemStack stack)
     {
-        if (KeyboardHandler.gunReload.isKeyDown() && canBeReloaded)
+        GunProps props = NBTUtils.getGunProps(stack);
+
+        if (KeyboardHandler.gunReload.isKeyDown() && canBeReloaded && props.state == ItemGun.GunState.READY_TO_SHOOT)
         {
             Dispatcher.sendToServer(new PacketGunReloading(stack, mc.player.getEntityId()));
 
@@ -96,29 +102,35 @@ public class GunShootHandler
     }
 
     @SideOnly(Side.CLIENT)
-    private void handleShootKeyDown(Minecraft mc, ItemStack stack)
+    private void blockLeftClick(Minecraft mc)
     {
-        GunProps props = NBTUtils.getGunProps(stack);
-
-        if (KeyboardHandler.gunShoot.isKeyDown() && props.shootWhenHeld)
+        if (KeyboardHandler.gunShoot.conflicts(mc.gameSettings.keyBindAttack))
         {
-            if (canBeShotDown && props.storedShotDelay == 0 && props.state == ItemGun.GunState.READY_TO_SHOOT)
+            if (leftClickCounter == null)
             {
-                Dispatcher.sendToServer(new PacketGunInteract(stack, mc.player.getEntityId()));
-
-                canBeShotDown = false;
-
-                return;
+                try
+                {
+                    leftClickCounter = Minecraft.class.getDeclaredField("field_71429_W");
+                    leftClickCounter.setAccessible(true);
+                }
+                catch (NoSuchFieldException | SecurityException e)
+                {
+                    try
+                    {
+                        leftClickCounter = Minecraft.class.getDeclaredField("leftClickCounter");
+                        leftClickCounter.setAccessible(true);
+                    }
+                    catch (NoSuchFieldException | SecurityException e1)
+                    {}
+                }
             }
 
-            if (props.storedShotDelay == 0)
+            try
             {
-                canBeShotDown = true;
+                this.leftClickCounter.setInt(mc, 10000);
             }
-        }
-        else
-        {
-            canBeShotDown = true;
+            catch (IllegalArgumentException | IllegalAccessException e)
+            {}
         }
     }
 }
