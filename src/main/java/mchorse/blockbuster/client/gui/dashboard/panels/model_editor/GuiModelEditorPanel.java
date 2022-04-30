@@ -37,7 +37,7 @@ import org.apache.commons.io.FileUtils;
 import org.lwjgl.input.Keyboard;
 
 import java.io.File;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 public class GuiModelEditorPanel extends GuiBlockbusterPanel
@@ -91,7 +91,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.picker.flex().relative(this).wh(1F, 1F);
 
         this.poseEditor = new GuiModelPoseTransformations(mc, this);
-        this.poseEditor.flex().relative(this).set(0, 0, 190, 70).x(0.5F, -95).y(1, -80);
+        this.poseEditor.flex().relative(this).set(0, 0, 256, 70).x(0.5F, -128).y(1, -80);
 
         this.limbs = new GuiModelLimbs(mc, this);
         this.limbs.flex().relative(this).x(1F).w(200).h(1F).anchorX(1F);
@@ -269,7 +269,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
         try
         {
-            FileUtils.write(file, output, Charset.defaultCharset());
+            FileUtils.write(file, output, StandardCharsets.UTF_8);
 
             IModelLazyLoader previous = Blockbuster.proxy.pack.models.get(this.modelName);
 
@@ -309,6 +309,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         {
             this.renderModel.pose = oldPose;
             this.modelRenderer.setPose(oldPose);
+            this.poseEditor.set(this.transform);
         }
 
         this.dirty();

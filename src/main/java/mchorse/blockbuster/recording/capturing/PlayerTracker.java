@@ -3,9 +3,11 @@ package mchorse.blockbuster.recording.capturing;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.recording.RecordRecorder;
 import mchorse.blockbuster.recording.actions.AttackAction;
+import mchorse.blockbuster.recording.actions.CloseContainerAction;
 import mchorse.blockbuster.recording.actions.EquipAction;
 import mchorse.blockbuster.recording.actions.SwipeAction;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -23,6 +25,8 @@ public class PlayerTracker
 
     /* Items to track */
     private ItemStack[] items = new ItemStack[6];
+    
+    private Container container;
 
     public PlayerTracker(RecordRecorder recorder)
     {
@@ -37,6 +41,7 @@ public class PlayerTracker
         this.trackSwing(player);
         this.trackHeldItem(player);
         this.trackArmor(player);
+        this.trackContainerClose(player);
     }
 
     /**
@@ -114,5 +119,17 @@ public class PlayerTracker
                 this.recorder.actions.add(new AttackAction());
             }
         }
+    }
+
+    /**
+     * Track whether player has closed a container
+     */
+    private void trackContainerClose(EntityPlayer player)
+    {
+        if (container != null && player.openContainer == player.inventoryContainer && container != player.openContainer)
+        {
+            this.recorder.actions.add(new CloseContainerAction());
+        }
+        this.container = player.openContainer;
     }
 }

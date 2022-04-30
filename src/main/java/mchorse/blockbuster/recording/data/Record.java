@@ -225,43 +225,40 @@ public class Record
             actor.posY = frame.y;
         }
 
-        if (tick != 0)
+        Frame prev = this.frames.get(Math.max(0, tick - 1));
+
+        if (realPlayer || !actor.world.isRemote)
         {
-            Frame prev = this.frames.get(tick - 1);
+            actor.lastTickPosX = prev.x;
+            actor.lastTickPosY = prev.y;
+            actor.lastTickPosZ = prev.z;
+            actor.prevPosX = prev.x;
+            actor.prevPosY = prev.y;
+            actor.prevPosZ = prev.z;
 
-            if (realPlayer)
+            actor.prevRotationYaw = prev.yaw;
+            actor.prevRotationPitch = prev.pitch;
+            actor.prevRotationYawHead = prev.yawHead;
+
+            if (prev.hasBodyYaw)
             {
-                actor.lastTickPosX = prev.x;
-                actor.lastTickPosY = prev.y;
-                actor.lastTickPosZ = prev.z;
-                actor.prevPosX = prev.x;
-                actor.prevPosY = prev.y;
-                actor.prevPosZ = prev.z;
-
-                actor.prevRotationYaw = prev.yaw;
-                actor.prevRotationPitch = prev.pitch;
-                actor.prevRotationYawHead = prev.yawHead;
-
-                if (prev.hasBodyYaw)
-                {
-                    actor.prevRenderYawOffset = prev.bodyYaw;
-                }
-
-                if (actor.world.isRemote)
-                {
-                    this.applyFrameClient(actor, prev, frame);
-                }
-            }
-            else if (actor instanceof EntityActor)
-            {
-                ((EntityActor) actor).prevRoll = prev.roll;
+                actor.prevRenderYawOffset = prev.bodyYaw;
             }
 
-            /* Override fall distance, apparently fallDistance gets reset
-             * faster than RecordRecorder can record both onGround and
-             * fallDistance being correct for player, so we just hack */
-            actor.fallDistance = prev.fallDistance;
+            if (actor.world.isRemote)
+            {
+                this.applyFrameClient(actor, prev, frame);
+            }
         }
+        else if (actor instanceof EntityActor)
+        {
+            ((EntityActor) actor).prevRoll = prev.roll;
+        }
+
+        /* Override fall distance, apparently fallDistance gets reset
+         * faster than RecordRecorder can record both onGround and
+         * fallDistance being correct for player, so we just hack */
+        actor.fallDistance = prev.fallDistance;
 
         if (tick < this.frames.size() - 1)
         {
@@ -358,10 +355,12 @@ public class Record
     /**
      * Seek the nearest morph action
      */
-    public FoundAction seekMorphAction(int tick)
+    public FoundAction seekMorphAction(int tick, MorphAction last)
     {
         /* I hope it won't cause a lag...  */
         int threshold = 0;
+
+        boolean canRet = last == null;
 
         while (tick >= threshold)
         {
@@ -374,9 +373,15 @@ public class Record
                 continue;
             }
 
-            for (Action action : actions)
+            for (int i = actions.size() - 1; i >= 0; i--)
             {
-                if (action instanceof MorphAction)
+                Action action = actions.get(i);
+
+                if (!canRet && action == last)
+                {
+                    canRet = true;
+                }
+                else if (canRet && action instanceof MorphAction)
                 {
                     ACTION.set(tick, (MorphAction) action);
 
@@ -395,14 +400,14 @@ public class Record
      */
     public void applyPreviousMorph(EntityLivingBase actor, Replay replay, int tick, MorphType type)
     {
-        if (tick >= this.actions.size())
-        {
-            return;
-        }
-
-        boolean pause = type == MorphType.PAUSE && Blockbuster.recordPausePreview.get();
+        boolean pause = type != MorphType.REGULAR && Blockbuster.recordPausePreview.get();
         AbstractMorph replayMorph = replay == null ? null : replay.morph;
-        FoundAction found = this.seekMorphAction(tick);
+        FoundAction found = null;
+        
+        if (tick < this.actions.size())
+        {
+            found = this.seekMorphAction(tick, null);
+        }
 
         if (found != null)
         {
@@ -415,15 +420,11 @@ public class Record
                     int foundTick = found.tick;
                     int offset = tick - foundTick;
 
-                    found = this.seekMorphAction(foundTick - 1);
+                    found = this.seekMorphAction(foundTick, action);
                     AbstractMorph previous = found == null ? replayMorph : found.action.morph;
                     int previousOffset = foundTick - (found == null ? 0 : found.tick);
 
-                    action.applyWithOffset(actor, offset, previous, previousOffset);
-                }
-                else if (type == MorphType.FORCE)
-                {
-                    action.applyWithForce(actor);
+                    action.applyWithOffset(actor, offset, previous, previousOffset, type == MorphType.FORCE);
                 }
                 else
                 {
@@ -440,7 +441,7 @@ public class Record
             if (pause && replay.morph != null)
             {
                 MORPH.morph = replay.morph;
-                MORPH.applyWithOffset(actor, tick, null, 0);
+                MORPH.applyWithOffset(actor, tick, null, 0, type == MorphType.FORCE);
             }
             else if (type == MorphType.FORCE && replay.morph != null)
             {

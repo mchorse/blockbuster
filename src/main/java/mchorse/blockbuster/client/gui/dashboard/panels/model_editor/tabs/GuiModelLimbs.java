@@ -1,13 +1,18 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 
+import javax.vecmath.Matrix4f;
+
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelLimb.ArmorSlot;
 import mchorse.blockbuster.api.ModelLimb.Holding;
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTextureCanvas;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
+import mchorse.blockbuster.client.model.ModelOBJRenderer;
+import mchorse.blockbuster.client.model.ModelVoxRenderer;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
@@ -53,12 +58,15 @@ public class GuiModelLimbs extends GuiModelEditorTab
     private GuiTextureCanvas textureEditor;
 
     /* Second category */
-    private GuiColorElement color;
     private GuiToggleElement mirror;
     private GuiToggleElement lighting;
     private GuiToggleElement shading;
     private GuiToggleElement smooth;
     private GuiToggleElement is3D;
+
+    private GuiElement colors;
+    private GuiColorElement color;
+    private GuiColorElement specular;
 
     private GuiCirculateElement holding;
     private GuiCirculateElement slot;
@@ -73,6 +81,13 @@ public class GuiModelLimbs extends GuiModelEditorTab
     private GuiToggleElement wing;
     private GuiToggleElement roll;
     private GuiToggleElement cape;
+    
+    private GuiElement vanillaPanel;
+    private GuiElement objPanel;
+    
+    private float lastAnchorX;
+    private float lastAnchorY;
+    private float lastAnchorZ;
 
     public GuiModelLimbs(Minecraft mc, GuiModelEditorPanel panel)
     {
@@ -116,16 +131,18 @@ public class GuiModelLimbs extends GuiModelEditorTab
         });
         this.anchor = new GuiThreeElement(mc, (values) ->
         {
-            this.panel.limb.anchor[0] = values[0].floatValue();
-            this.panel.limb.anchor[1] = values[1].floatValue();
-            this.panel.limb.anchor[2] = values[2].floatValue();
+            this.fixLimbPosition(values[0].floatValue(), values[1].floatValue(), values[2].floatValue());
+            this.lastAnchorX = this.panel.limb.anchor[0] = values[0].floatValue();
+            this.lastAnchorY = this.panel.limb.anchor[1] = values[1].floatValue();
+            this.lastAnchorZ = this.panel.limb.anchor[2] = values[2].floatValue();
             this.panel.rebuildModel();
         });
         this.origin = new GuiThreeElement(mc, (values) ->
         {
-            this.panel.limb.origin[0] = values[0].floatValue();
-            this.panel.limb.origin[1] = values[1].floatValue();
-            this.panel.limb.origin[2] = values[2].floatValue();
+            this.fixLimbPosition(values[0].floatValue(), values[1].floatValue(), values[2].floatValue());
+            this.lastAnchorX = this.panel.limb.origin[0] = values[0].floatValue();
+            this.lastAnchorY = this.panel.limb.origin[1] = values[1].floatValue();
+            this.lastAnchorZ = this.panel.limb.origin[2] = values[2].floatValue();
             this.panel.rebuildModel();
         });
         this.origin.context(() ->
@@ -170,6 +187,16 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.dirty();
         });
         this.color.picker.editAlpha();
+        this.color.tooltip(IKey.lang("blockbuster.gui.me.limbs.color"));
+        this.specular = new GuiColorElement(mc, (eh) ->
+        {
+            Color color = this.specular.picker.color;
+
+            this.panel.limb.specular = color.getRGBAColor();
+            this.panel.dirty();
+        });
+        this.specular.picker.editAlpha();
+        this.specular.tooltip(IKey.lang("blockbuster.gui.me.limbs.specular"));
         this.mirror = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.mirror"), false, (b) ->
         {
             this.panel.limb.mirror = b.isToggled();
@@ -258,18 +285,26 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.dirty();
         });
 
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size")).background(), this.size);
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size_offset")).background(), this.sizeOffset);
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.item_scale")).background(), this.itemScale);
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.texture")).background().marginTop(12), Elements.row(mc, 5, 0, 20, this.texture, this.mirror));
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.anchor")).background().marginTop(12), this.anchor);
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.origin")).background(), this.origin);
+        this.vanillaPanel = Elements.column(mc, 5);
+        this.vanillaPanel.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size")).background(), this.size);
+        this.vanillaPanel.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size_offset")).background(), this.sizeOffset);
+        this.vanillaPanel.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.item_scale")).background(), this.itemScale);
+        this.vanillaPanel.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.texture")).background().marginTop(12), Elements.row(mc, 5, 0, 20, this.texture, this.mirror));
+        this.vanillaPanel.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.anchor")).background().marginTop(12), this.anchor);
+        
+        this.objPanel = Elements.column(mc, 5);
+        this.objPanel.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.origin")).background(), this.origin);
 
         GuiElement appearance = new GuiElement(mc);
 
         appearance.flex().grid(5).items(2).resizes(true);
         appearance.add(this.lighting, this.shading);
         appearance.add(this.smooth, this.is3D);
+
+        this.colors = new GuiElement(mc);
+
+        this.colors.flex().grid(5).items(1).resizes(true);
+        this.colors.add(this.color);
 
         GuiElement animation = new GuiElement(mc);
 
@@ -282,7 +317,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         animation.add(this.cape);
 
         this.scroll.add(Elements.row(mc, 5, this.slot, this.holding));
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.appearance")).background().marginTop(12), appearance, this.color);
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.appearance")).background().marginTop(12), appearance, this.colors);
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.animation")).background().marginTop(12), animation);
 
         /* Buttons */
@@ -342,15 +377,21 @@ public class GuiModelLimbs extends GuiModelEditorTab
         if (!this.panel.model.limbs.containsKey(text))
         {
             this.panel.model.addLimb(text);
-            this.panel.setLimb(text);
             this.limbs.add(text);
             this.limbs.setCurrent(text);
             this.panel.rebuildModel();
+            this.panel.setLimb(text);
         }
     }
 
     private void dupeLimb()
     {
+        if (this.getLimbClass(this.panel.limb) != ModelCustomRenderer.class)
+        {
+            GuiModal.addFullModal(this, () -> new GuiMessageModal(this.mc, IKey.lang("blockbuster.gui.me.limbs.obj_limb")));
+            return;
+        }
+        
         ModelLimb limb = this.panel.limb.clone();
 
         /* It must be unique name */
@@ -360,17 +401,21 @@ public class GuiModelLimbs extends GuiModelEditorTab
         }
 
         this.panel.model.addLimb(limb);
-        this.panel.setLimb(limb.name);
         this.limbs.add(limb.name);
         this.limbs.setCurrent(limb.name);
         this.panel.rebuildModel();
+        this.panel.setLimb(limb.name);
     }
 
     private void removeLimb()
     {
         int size = this.panel.model.limbs.size();
 
-        if (size == this.panel.model.getLimbCount(this.panel.limb))
+        if (this.getLimbClass(this.panel.limb) != ModelCustomRenderer.class)
+        {
+            GuiModal.addFullModal(this, () -> new GuiMessageModal(this.mc, IKey.lang("blockbuster.gui.me.limbs.obj_limb")));
+        }
+        else if (size == this.panel.model.getLimbCount(this.panel.limb))
         {
             GuiModal.addFullModal(this, () -> new GuiMessageModal(this.mc, IKey.lang("blockbuster.gui.me.limbs.last_limb")));
         }
@@ -381,14 +426,21 @@ public class GuiModelLimbs extends GuiModelEditorTab
             String newLimb = this.panel.model.limbs.keySet().iterator().next();
 
             this.fillData(this.panel.model);
-            this.setLimb(newLimb);
             this.panel.rebuildModel();
+            this.panel.setLimb(newLimb);
         }
     }
 
     private void renameLimb()
     {
-        GuiModal.addFullModal(this, () -> new GuiPromptModal(mc, IKey.lang("blockbuster.gui.me.limbs.rename_limb"), this::renameLimb).setValue(this.panel.limb.name));
+        if (this.getLimbClass(this.panel.limb) != ModelCustomRenderer.class)
+        {
+            GuiModal.addFullModal(this, () -> new GuiMessageModal(this.mc, IKey.lang("blockbuster.gui.me.limbs.obj_limb")));
+        }
+        else
+        {
+            GuiModal.addFullModal(this, () -> new GuiPromptModal(mc, IKey.lang("blockbuster.gui.me.limbs.rename_limb"), this::renameLimb).setValue(this.panel.limb.name));
+        }
     }
 
     private void renameLimb(String text)
@@ -470,5 +522,120 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.wing.toggled(limb.wing);
         this.roll.toggled(limb.roll);
         this.cape.toggled(limb.cape);
+
+        boolean isObj = this.getLimbClass(limb) != ModelCustomRenderer.class;
+        boolean isVOX = this.getLimbClass(limb) == ModelVoxRenderer.class;
+        this.vanillaPanel.removeFromParent();
+        this.objPanel.removeFromParent();
+        this.is3D.setVisible(!isObj);
+
+        if (isObj)
+        {
+            this.lastAnchorX = limb.origin[0];
+            this.lastAnchorY = limb.origin[1];
+            this.lastAnchorZ = limb.origin[2];
+            this.scroll.prepend(this.objPanel);
+        }
+        else
+        {
+            this.lastAnchorX = limb.anchor[0];
+            this.lastAnchorY = limb.anchor[1];
+            this.lastAnchorZ = limb.anchor[2];
+            this.scroll.prepend(this.vanillaPanel);
+        }
+
+        if (isVOX)
+        {
+            if (!this.specular.hasParent())
+            {
+                this.colors.flex().grid(5).items(2).resizes(true);
+                this.colors.add(this.specular);
+            }
+
+            this.specular.picker.setColor(limb.specular);
+        }
+        else
+        {
+            this.specular.removeFromParent();
+            this.colors.flex().grid(5).items(1).resizes(true);
+        }
+
+        this.scroll.resize();
+    }
+
+    private void fixLimbPosition(float x, float y, float z)
+    {
+        Model model = this.panel.model;
+        ModelLimb limb = this.panel.limb;
+        ModelTransform transform = this.panel.transform;
+        Class<? extends ModelCustomRenderer> clazz = this.getLimbClass(limb);
+        
+        Matrix4f mat = new Matrix4f();
+        mat.setIdentity();
+        mat.m03 = transform.translate[0];
+        mat.m13 = transform.translate[1];
+        mat.m23 = transform.translate[2];
+        
+        Matrix4f mat2 = new Matrix4f();
+        mat2.rotZ((float) Math.toRadians(transform.rotate[2]));
+        mat.mul(mat2);
+        mat2.rotY((float) Math.toRadians(transform.rotate[1]));
+        mat.mul(mat2);
+        mat2.rotX((float) Math.toRadians(transform.rotate[0]));
+        mat.mul(mat2);
+        
+        mat2.setIdentity();
+        mat2.m00 = transform.scale[0];
+        mat2.m11 = transform.scale[1];
+        mat2.m22 = transform.scale[2];
+        mat.mul(mat2);
+        
+        if (clazz != ModelCustomRenderer.class)
+        {
+            if (clazz == ModelOBJRenderer.class)
+            {
+                mat2.setIdentity();
+                mat2.m00 = model.legacyObj || this.getLimbClass(this.panel.limb) == ModelVoxRenderer.class ? 16 : -16;
+                mat2.m11 = 16;
+                mat2.m22 = 16;
+                mat.mul(mat2);
+            }
+            
+            mat2.setIdentity();
+            mat2.m03 = x - this.lastAnchorX;
+            mat2.m13 = y - this.lastAnchorY;
+            mat2.m23 = this.lastAnchorZ - z;
+            mat.mul(mat2);
+        }
+        else
+        {
+            mat2.setIdentity();
+            mat2.m00 = limb.size[0];
+            mat2.m11 = limb.size[1];
+            mat2.m22 = limb.size[2];
+            mat.mul(mat2);
+            
+            mat2.setIdentity();
+            mat2.m03 = this.lastAnchorX - x;
+            mat2.m13 = this.lastAnchorY - y;
+            mat2.m23 = this.lastAnchorZ - z;
+            mat.mul(mat2);
+        }
+
+        transform.translate[0] = mat.m03;
+        transform.translate[1] = mat.m13;
+        transform.translate[2] = mat.m23;
+    }
+    
+    private Class<? extends ModelCustomRenderer> getLimbClass(ModelLimb limb)
+    {
+        for (ModelCustomRenderer limbRenderer : this.panel.renderModel.limbs)
+        {
+            if (limbRenderer.limb.name.equals(limb.name))
+            {
+                return limbRenderer.getClass();
+            }
+        }
+        return null;
     }
 }

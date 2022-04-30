@@ -77,6 +77,6 @@ public class BedrockComponentLocalSpace extends BedrockComponentBase implements 
     @Override
     public int getSortingIndex()
     {
-        return 1000;
+        return 6;
     }
 }

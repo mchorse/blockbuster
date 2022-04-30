@@ -1,5 +1,6 @@
 package mchorse.blockbuster;
 
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.commands.CommandAction;
 import mchorse.blockbuster.commands.CommandDamage;
 import mchorse.blockbuster.commands.CommandModelBlock;
@@ -12,6 +13,7 @@ import mchorse.blockbuster.utils.mclib.ValueAudioButtons;
 import mchorse.blockbuster.utils.mclib.ValueMainButtons;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.McLib;
+import mchorse.mclib.client.gui.utils.ValueColors;
 import mchorse.mclib.commands.utils.L10n;
 import mchorse.mclib.config.ConfigBuilder;
 import mchorse.mclib.config.values.ValueBoolean;
@@ -185,6 +187,7 @@ public class Blockbuster
 
     public static ValueBoolean damageControl;
     public static ValueInt damageControlDistance;
+    public static ValueBoolean damageControlMessage;
 
     public static ValueString modelFolderPath;
 
@@ -197,6 +200,16 @@ public class Blockbuster
     public static ValueBoolean audioWaveformFilename;
     public static ValueBoolean audioWaveformTime;
     public static ValueBoolean audioSync;
+
+    public static ValueInt morphActionOnionSkinColor;
+    public static ValueInt seqOnionSkinPrev;
+    public static ValueInt seqOnionSkinPrevColor;
+    public static ValueInt seqOnionSkinNext;
+    public static ValueInt seqOnionSkinNextColor;
+    public static ValueInt seqOnionSkinLoopColor;
+
+    public static ValueBoolean immersiveModelBlock;
+    public static ValueBoolean immersiveRecordEditor;
 
     /**
      * "Macro" for getting resource location for Blockbuster mod items,
@@ -280,6 +293,7 @@ public class Blockbuster
         /* Damage control */
         damageControl = builder.category("damage_control").getBoolean("damage_control", true);
         damageControlDistance = builder.getInt("damage_control_distance", 64, 1, 1024);
+        damageControlMessage = builder.getBoolean("damage_control_message", true);
 
         /* Model Folder */
         modelFolderPath = builder.category("model_folders").getString("path", "");
@@ -311,6 +325,28 @@ public class Blockbuster
         audioWaveformTime.clientSide();
 
         audioSync = builder.getBoolean("audio_sync", true);
+
+        /* Onion skin */
+        builder.category("onion_skin");
+
+        morphActionOnionSkinColor = builder.getInt("morph_action_color", 0x7FFFFF00).colorAlpha();
+        seqOnionSkinPrev = builder.getInt("seq_prev", 0);
+        seqOnionSkinPrevColor = builder.getInt("seq_prev_color", 0xCCFF0000).colorAlpha();
+        seqOnionSkinNext = builder.getInt("seq_next", 0);
+        seqOnionSkinNextColor = builder.getInt("seq_next_color", 0xCC00FF00).colorAlpha();
+        seqOnionSkinLoopColor = builder.getInt("seq_loop_color", 0xC07F7FFF).colorAlpha();
+
+        builder.getCategory().invisible().markClientSide();
+
+        /* Immersive editor */
+        builder.category("immersive_editor");
+
+        immersiveModelBlock = builder.getBoolean("model_block", true);
+        immersiveRecordEditor = builder.getBoolean("record_editor", true);
+
+        builder.getCategory().markClientSide();
+
+        CameraHandler.registerConfig(builder);
     }
 
     @EventHandler

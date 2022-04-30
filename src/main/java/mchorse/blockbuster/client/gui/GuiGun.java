@@ -322,15 +322,15 @@ public class GuiGun extends GuiBase
         this.useZoomOverlayMorph = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.use_zoom_overlay_morph"), false, (b) -> this.props.useZoomOverlayMorph = b.isToggled());
 
         this.zoomFactor = new GuiTrackpadElement(mc, (value) -> this.props.zoomFactor = value.floatValue());
-        this.zoomFactor.limit(0, 1).tooltip(IKey.lang("blockbuster.gui.gun.zoom_factor_tooltip"));
+        this.zoomFactor.limit(0, 1).increment(0.1).values(0.05, 0.01, 0.1).tooltip(IKey.lang("blockbuster.gui.gun.zoom_factor_tooltip"));
         this.ammo = new GuiTrackpadElement(mc, (value) -> this.props.ammo = value.intValue());
-        this.ammo.limit(0).tooltip(IKey.lang("blockbuster.gui.gun.ammo_tooltip"));
+        this.ammo.limit(1).integer().tooltip(IKey.lang("blockbuster.gui.gun.ammo_tooltip"));
         this.useReloading = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.use_reloading"), false, (b) -> this.props.useReloading = b.isToggled());
         this.reloadingTime = new GuiTrackpadElement(mc, (value) -> this.props.reloadingTime = value.intValue());
-        this.reloadingTime.limit(0).tooltip(IKey.lang("blockbuster.gui.gun.reloading_time_tooltip"));
+        this.reloadingTime.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.gun.reloading_time_tooltip"));
         this.shootWhenHeld = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.shoot_when_held"), false, (b) -> this.props.shootWhenHeld = b.isToggled());
         this.shotDelay = new GuiTrackpadElement(mc, (value) -> this.props.shotDelay = value.intValue());
-        this.shotDelay.limit(0).tooltip(IKey.lang("blockbuster.gui.gun.shot_delay_tooltip"));
+        this.shotDelay.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.gun.shot_delay_tooltip"));
 
         GuiScrollElement aimFields = new GuiScrollElement(mc, ScrollDirection.HORIZONTAL);
 
@@ -751,7 +751,6 @@ public class GuiGun extends GuiBase
         else if (this.index == 8)
         {
             this.props.reloadMorph = morph;
-            this.props.setReloadMorph(MorphUtils.copy(morph));
             this.pickReloadMorph.setMorph(morph);
 
         }

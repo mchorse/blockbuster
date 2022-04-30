@@ -2,7 +2,6 @@ package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
-import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
@@ -46,7 +45,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
         this.defaultPanel = this.general = new GuiImageMorphPanel(mc, this);
         this.registerPanel(this.general, IKey.lang("blockbuster.morph.image"), Icons.GEAR);
 
-        this.keys().register(IKey.lang("blockbuster.gui.builder.pick_texture"), Keyboard.KEY_P, () ->
+        this.keys().register(IKey.lang("blockbuster.gui.builder.pick_texture"), Keyboard.KEY_E, () ->
         {
             if (!this.general.picker.hasParent())
             {
@@ -117,7 +116,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             super(mc, editor);
 
             this.pose = new GuiPoseTransformations(mc);
-            this.pose.flex().relative(this.area).set(0, 0, 190, 70).x(0.5F, -95).y(1, -75);
+            this.pose.flex().relative(this.area).set(0, 0, 256, 70).x(0.5F, -128).y(1, -75);
             this.texture = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.builder.pick_texture"), (b) ->
             {
                 this.picker.refresh();
@@ -212,7 +211,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
         @Override
         public void draw(GuiContext context)
         {
-            GifTexture.bindTexture(this.morph.texture);
+            this.mc.renderEngine.bindTexture(this.morph.texture);
             int w = this.morph.getWidth();
             int h = this.morph.getHeight();
             String label = I18n.format("blockbuster.gui.image.dimensions", w, h);

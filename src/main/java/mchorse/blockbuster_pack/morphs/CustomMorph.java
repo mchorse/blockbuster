@@ -1,6 +1,7 @@
 package mchorse.blockbuster_pack.morphs;
 
 import com.google.common.base.Objects;
+
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.Model;
@@ -15,13 +16,18 @@ import mchorse.blockbuster.common.OrientedBB;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.mclib.utils.MatrixUtils;
+import mchorse.mclib.utils.Color;
+import mchorse.mclib.utils.Interpolation;
+import mchorse.mclib.utils.NBTUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
+import mchorse.metamorph.api.morphs.utils.IMorphGenerator;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
+import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.Minecraft;
@@ -39,6 +45,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -55,7 +62,7 @@ import java.util.Map;
  * This is a morph which allows players to use Blockbuster's custom 
  * models as morphs.
  */
-public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAnimationProvider, ISyncableMorph
+public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAnimationProvider, ISyncableMorph, IMorphGenerator
 {
     /**
      * OrientedBoundingBoxes List by limbs
@@ -90,7 +97,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     /**
      * Custom pose 
      */
-    public ModelPose customPose = null;
+    public ModelProperties customPose = null;
 
     /**
      * Map of textures designated to specific OBJ materials 
@@ -180,7 +187,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     {
         this.animation.pause(offset);
 
-        if (previous instanceof IMorphProvider)
+        while (previous instanceof IMorphProvider)
         {
             previous = ((IMorphProvider) previous).getMorph();
         }
@@ -194,11 +201,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             {
                 if (custom.animation.isInProgress() && pose != null)
                 {
-                    this.animation.last = custom.animation.calculatePose(pose, 1).copy();
+                    this.animation.last = this.convertProp(custom.animation.calculatePose(pose, 1).copy());
                 }
                 else
                 {
-                    this.animation.last = pose;
+                    this.animation.last = this.convertProp(pose);
                 }
             }
             else if (custom.customPose != null)
@@ -230,6 +237,36 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     public Animation getAnimation()
     {
         return this.animation;
+    }
+
+    @Override
+    public boolean canGenerate()
+    {
+        return this.animation.isInProgress();
+    }
+
+    @Override
+    public AbstractMorph genCurrentMorph(float partialTicks)
+    {
+        CustomMorph morph = (CustomMorph) this.copy();
+
+        if (this.getCurrentPose() != null)
+        {
+            morph.customPose = this.convertProp(this.animation.calculatePose(this.getCurrentPose(), partialTicks));
+            morph.customPose.shapes.clear();
+            morph.customPose.shapes.addAll(this.getShapesForRendering(partialTicks));
+        }
+
+        morph.animation.duration = this.animation.progress;
+
+        morph.parts.parts.clear();
+
+        for (BodyPart part : this.parts.parts)
+        {
+            morph.parts.parts.add(part.genCurrentBodyPart(this, partialTicks));
+        }
+
+        return morph;
     }
 
     public List<ShapeKey> getShapesForRendering(float partialTick)
@@ -271,6 +308,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         this.model = Blockbuster.proxy.models.models.get(model);
         
         fillObbs(true);
+
+        if (this.customPose != null)
+        {
+            this.customPose.updateLimbs(this.model, false);
+        }
     }
 
     @Override
@@ -350,6 +392,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             this.model = Blockbuster.proxy.models.models.get(this.getKey());
 
             fillObbs(true);
+
+            if (this.customPose != null)
+            {
+                this.customPose.updateLimbs(this.model, false);
+            }
         }
     }
 
@@ -674,13 +721,13 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
                 if (this.animation.isInProgress() && pose != null)
                 {
-                    this.animation.last = this.animation.calculatePose(pose, 1).copy();
+                    this.animation.last = this.convertProp(this.animation.calculatePose(pose, 0).copy());
                 }
                 else
                 {
-                    this.animation.last = pose;
+                    this.animation.last = this.convertProp(pose);
                 }
-
+                
                 this.currentPose = custom.currentPose;
                 this.customPose = custom.customPose == null ? null : custom.customPose.copy();
                 this.animation.merge(custom.animation);
@@ -722,21 +769,19 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     {
         super.afterMerge(morph);
 
-        if (!(morph instanceof IMorphProvider))
+        while (morph instanceof IMorphProvider)
         {
-            return;
+            morph = ((IMorphProvider) morph).getMorph();
         }
 
-        AbstractMorph destination = ((IMorphProvider) morph).getMorph();
-
-        if (destination instanceof IBodyPartProvider)
+        if (morph instanceof IBodyPartProvider)
         {
-            this.recursiveAfterMerge(this, (IBodyPartProvider) destination);
+            this.recursiveAfterMerge(this, (IBodyPartProvider) morph);
         }
 
-        if (destination instanceof CustomMorph)
+        if (morph instanceof CustomMorph)
         {
-            this.copyPoseForAnimation(this, (CustomMorph) destination);
+            this.copyPoseForAnimation(this, (CustomMorph) morph);
         }
     }
 
@@ -752,14 +797,9 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             AbstractMorph a = target.getBodyPart().parts.get(i).morph.get();
             AbstractMorph b = destination.getBodyPart().parts.get(i).morph.get();
 
-            if (a instanceof IBodyPartProvider && b instanceof IBodyPartProvider)
+            if (a != null)
             {
-                this.recursiveAfterMerge((IBodyPartProvider) a, (IBodyPartProvider) b);
-            }
-
-            if (a instanceof CustomMorph && b instanceof CustomMorph)
-            {
-                this.copyPoseForAnimation((CustomMorph) a, (CustomMorph) b);
+                a.afterMerge(b);
             }
         }
     }
@@ -774,11 +814,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
         if (destination.animation.isInProgress() && pose != null)
         {
-            target.animation.last = destination.animation.calculatePose(pose, 1).copy();
+            target.animation.last = this.convertProp(destination.animation.calculatePose(pose, 0).copy());
         }
         else
         {
-            target.animation.last = pose;
+            target.animation.last = this.convertProp(pose);
         }
     }
 
@@ -913,7 +953,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
         if (tag.hasKey("CustomPose", 10))
         {
-            this.customPose = new ModelPose();
+            this.customPose = new ModelProperties();
             this.customPose.fromNBT(tag.getCompoundTag("CustomPose"));
         }
 
@@ -940,14 +980,36 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
         }
     }
 
+    public ModelProperties convertProp(ModelPose pose)
+    {
+        if (pose == null || pose instanceof ModelProperties)
+        {
+            return (ModelProperties) pose;
+        }
+
+        NBTTagCompound tag = pose.toNBT(new NBTTagCompound());
+
+        ModelProperties props = new ModelProperties();
+
+        props.fromNBT(tag);
+
+        if (this.model != null)
+        {
+            props.updateLimbs(this.model, true);
+        }
+
+        return props;
+    }
+
     /**
      * Animation details 
      */
     public static class PoseAnimation extends Animation
     {
+        public Map<String, LimbProperties> lastProps;
         public List<ShapeKey> lastShapes = new ArrayList<ShapeKey>();
-        public ModelPose last;
-        public ModelPose pose = new ModelPose();
+        public ModelProperties last;
+        public ModelProperties pose = new ModelProperties();
 
         private List<ShapeKey> temporaryShapes = new ArrayList<ShapeKey>();
 
@@ -1033,7 +1095,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
                 if (trans == null)
                 {
-                    trans = new ModelTransform();
+                    trans = new LimbProperties();
                     this.pose.limbs.put(key, trans);
                 }
 
@@ -1046,6 +1108,275 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             }
 
             return this.pose;
+        }
+    }
+
+    public static class LimbProperties extends ModelTransform
+    {
+        public float fixed = 0F;
+        public float glow = 0F;
+        public Color color = new Color(1F, 1F, 1F, 1F);
+
+        public boolean absoluteBrightness = false;
+
+        @Override
+        public boolean isDefault()
+        {
+            return false;
+        }
+
+        @Override
+        public void copy(ModelTransform transform)
+        {
+            super.copy(transform);
+
+            if (transform instanceof LimbProperties)
+            {
+                LimbProperties prop = (LimbProperties) transform;
+
+                this.fixed = prop.fixed;
+                this.glow = prop.glow;
+                this.color.copy(prop.color);
+
+                this.absoluteBrightness = prop.absoluteBrightness;
+            }
+        }
+
+        @Override
+        public boolean equals(Object obj)
+        {
+            if (obj instanceof LimbProperties)
+            {
+                LimbProperties prop = (LimbProperties) obj;
+
+                return super.equals(obj) &&
+                        this.fixed == prop.fixed &&
+                        Math.abs(this.glow - prop.glow) < 0.0001f &&
+                        this.color.equals(prop.color) &&
+                        this.absoluteBrightness == prop.absoluteBrightness;
+            }
+
+            return false;
+        }
+
+        @Override
+        public LimbProperties clone()
+        {
+            LimbProperties b = new LimbProperties();
+
+            b.copy(this);
+
+            return b;
+        }
+
+        @Override
+        public void fromNBT(NBTTagCompound tag)
+        {
+            super.fromNBT(tag);
+
+            if (tag.hasKey("F", NBT.TAG_BYTE)) this.fixed = tag.getBoolean("F") ? 1F : 0F;
+            if (tag.hasKey("G", NBT.TAG_FLOAT)) this.glow = tag.getFloat("G");
+            if (tag.hasKey("C", NBT.TAG_INT)) this.color.set(tag.getInteger("C"));
+            if (tag.hasKey("AB", NBT.TAG_BYTE)) this.absoluteBrightness = tag.getBoolean("AB");
+        }
+
+        @Override
+        public NBTTagCompound toNBT()
+        {
+            NBTTagCompound tag = new NBTTagCompound();
+
+            if (!this.isDefault())
+            {
+                if (!equalFloatArray(DEFAULT.translate, this.translate)) tag.setTag("P", NBTUtils.writeFloatList(new NBTTagList(), this.translate));
+                if (!equalFloatArray(DEFAULT.scale, this.scale)) tag.setTag("S", NBTUtils.writeFloatList(new NBTTagList(), this.scale));
+                if (!equalFloatArray(DEFAULT.rotate, this.rotate)) tag.setTag("R", NBTUtils.writeFloatList(new NBTTagList(), this.rotate));
+                if (this.fixed != 0F) tag.setBoolean("F", true);
+                if (this.glow > 0.0001F) tag.setFloat("G", this.glow);
+                if (this.color.getRGBAColor() != 0xFFFFFFFF) tag.setInteger("C", this.color.getRGBAColor());
+                if (this.absoluteBrightness) tag.setBoolean("AB", this.absoluteBrightness);
+            }
+
+            return tag;
+        }
+
+        @Override
+        public void interpolate(ModelTransform a, ModelTransform b, float x, Interpolation interp)
+        {
+            super.interpolate(a, b, x, interp);
+
+            float fixed = 0F;
+            float glow = 0F;
+            float cr, cg, cb, ca;
+
+            cr = cg = cb = ca = 1F;
+
+            if (a instanceof LimbProperties)
+            {
+                LimbProperties l = (LimbProperties) a;
+
+                fixed = l.fixed;
+                glow = l.glow;
+                cr = l.color.r;
+                cg = l.color.g;
+                cb = l.color.b;
+                ca = l.color.a;
+            }
+
+            if (b instanceof LimbProperties)
+            {
+                LimbProperties l = (LimbProperties) b;
+
+                fixed = interp.interpolate(fixed, l.fixed, x);
+                glow = interp.interpolate(glow, l.glow, x);
+                cr = interp.interpolate(cr, l.color.r, x);
+                cg = interp.interpolate(cg, l.color.g, x);
+                cb = interp.interpolate(cb, l.color.b, x);
+                ca = interp.interpolate(ca, l.color.a, x);
+
+                this.absoluteBrightness = l.absoluteBrightness;
+            }
+            else
+            {
+                fixed = interp.interpolate(fixed, 0F, x);
+                glow = interp.interpolate(glow, 0F, x);
+                cr = interp.interpolate(cr, 1F, x);
+                cg = interp.interpolate(cg, 1F, x);
+                cb = interp.interpolate(cb, 1F, x);
+                ca = interp.interpolate(ca, 1F, x);
+
+                this.absoluteBrightness = false;
+            }
+
+            this.fixed = fixed;
+            this.glow = glow;
+            this.color.set(cr, cg, cb, ca);
+        }
+
+        public void applyGlow(float lastX, float lastY)
+        {
+            if (this.absoluteBrightness)
+            {
+                lastX = 0F;
+            }
+
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, Interpolation.LINEAR.interpolate(lastX, 240, this.glow), lastY);
+        }
+    }
+
+    public static class ModelProperties extends ModelPose
+    {
+        @Override
+        public ModelProperties copy()
+        {
+            ModelProperties b = new ModelProperties();
+
+            b.size = new float[] {this.size[0], this.size[1], this.size[2]};
+
+            for (Map.Entry<String, ModelTransform> entry : this.limbs.entrySet())
+            {
+                b.limbs.put(entry.getKey(), entry.getValue().clone());
+            }
+
+            for (ShapeKey key : this.shapes)
+            {
+                b.shapes.add(key.copy());
+            }
+
+            return b;
+        }
+
+        public void updateLimbs(Model model, boolean override)
+        {
+            if (model == null)
+            {
+                return;
+            }
+
+            for (Map.Entry<String, ModelLimb> entry : model.limbs.entrySet())
+            {
+                ModelLimb limb = entry.getValue();
+                LimbProperties prop = (LimbProperties) this.limbs.get(entry.getKey());
+                boolean newProp = false;
+
+                if (prop == null)
+                {
+                    prop = new LimbProperties();
+                    newProp = true;
+
+                    this.limbs.put(entry.getKey(), prop);
+                }
+
+                if (newProp || override)
+                {
+                    prop.color.set(limb.color[0], limb.color[1], limb.color[2], limb.opacity);
+                    prop.glow = limb.lighting ? 0.0f : 1.0f;
+                }
+            }
+        }
+
+        @Override
+        public void fillInMissing(ModelPose pose)
+        {
+            for (Map.Entry<String, ModelTransform> entry : pose.limbs.entrySet())
+            {
+                String key = entry.getKey();
+
+                if (!this.limbs.containsKey(key))
+                {
+                    LimbProperties limb = new LimbProperties();
+                    limb.copy(entry.getValue());
+                    this.limbs.put(key, limb);
+                }
+            }
+        }
+
+        @Override
+        public void fromNBT(NBTTagCompound tag)
+        {
+            if (tag.hasKey("Size", Constants.NBT.TAG_LIST))
+            {
+                NBTTagList list = tag.getTagList("Size", 5);
+
+                if (list.tagCount() >= 3)
+                {
+                    NBTUtils.readFloatList(list, this.size);
+                }
+            }
+
+            if (tag.hasKey("Poses", Constants.NBT.TAG_COMPOUND))
+            {
+                this.limbs.clear();
+
+                NBTTagCompound poses = tag.getCompoundTag("Poses");
+
+                for (String key : poses.getKeySet())
+                {
+                    ModelTransform trans = new LimbProperties();
+
+                    trans.fromNBT(poses.getCompoundTag(key));
+                    this.limbs.put(key, trans);
+                }
+            }
+
+            if (tag.hasKey("Shapes"))
+            {
+                NBTTagList shapes = tag.getTagList("Shapes", Constants.NBT.TAG_COMPOUND);
+
+                this.shapes.clear();
+
+                for (int i = 0; i < shapes.tagCount(); i++)
+                {
+                    NBTTagCompound key = shapes.getCompoundTagAt(i);
+
+                    if (key.hasKey("Name") && key.hasKey("Value"))
+                    {
+                        ShapeKey shapeKey = new ShapeKey();
+
+                        shapeKey.fromNBT(key);
+                        this.shapes.add(shapeKey);
+                    }
+                }
+            }
         }
     }
 }

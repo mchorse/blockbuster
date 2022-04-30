@@ -22,6 +22,7 @@ blockbuster:
             flip: "{r}This command flips frames and actions of {7}<filename>{r} player recording across given {7}<axis>{r} at given {7}<coordinate>{r}. Set {7}[center]{r} to {7}false{r} (by default it's {7}true{r}) if you're mirroring across even number of blocks thick wall."
             get: "{r}Outputs data tag of action found at {7}<tick>{r} in player recording by filename {7}<filename>{r}."
             info: "{r}Outputs information about player recording by filename {7}<filename>{r}, such as saved version of record format, length of the record, etc."
+            merge: "{r}Merge actions from {7}<source>{r} into {7}<destination>{r}. When you set {7}[morph_only]{r} to {7}true{r}, the command will only merge morph actions."
             origin: "{r}This command changes the origin (the first frame) of the player recording according to {7}[x] [y] [z]{r} (if all three were specified) or player's current position. You might also rotate the player recording across Y axis relative to its first frame."
             process:
                 |

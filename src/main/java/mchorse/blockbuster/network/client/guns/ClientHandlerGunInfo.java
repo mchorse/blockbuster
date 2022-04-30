@@ -1,5 +1,8 @@
 package mchorse.blockbuster.network.client.guns;
 
+import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
+import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer.GunEntry;
+import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.mclib.network.ClientMessageHandler;
@@ -26,6 +29,14 @@ public class ClientHandlerGunInfo extends ClientMessageHandler<PacketGunInfo>
             if (!stack.isEmpty())
             {
                 NBTUtils.saveGunProps(stack, message.tag);
+
+                if (TileEntityGunItemStackRenderer.models.containsKey(stack))
+                {
+                    GunEntry entry = TileEntityGunItemStackRenderer.models.get(stack);
+                    GunProps props = new GunProps(message.tag);
+
+                    entry.props.state = props.state;
+                }
             }
         }
     }

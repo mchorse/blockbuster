@@ -1,47 +1,33 @@
 package mchorse.blockbuster.client.textures;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 
-import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.mclib.math.functions.limit.Min;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
-
+import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.client.renderer.texture.ITickableTextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GifTexture extends AbstractTexture implements ITickableTextureObject
+public class GifTexture extends AbstractTexture
 {
-    public static int globalTick;
+    public static int globalTick = 0;
+    public static int entityTick = -1;
 
-    public ResourceLocation texture;
-    public List<GifElement> elements = new ArrayList<GifElement>();
-    public int index;
+    public static boolean tried = false;
+    public static Field fieldMultiTex = null;
+
+    public ResourceLocation base;
+    public ResourceLocation[] frames;
+    public int[] delays;
+
     public int duration;
-
-    public int width;
-    public int height;
-
-    public static void bindTexture(ResourceLocation location)
-    {
-        bindTexture(location, -1, 0);
-    }
-
-    public static void bindTexture(ResourceLocation location, int ticks)
-    {
-        bindTexture(location, ticks, Minecraft.getMinecraft().getRenderPartialTicks());
-    }
 
     public static void bindTexture(ResourceLocation location, int ticks, float partialTicks)
     {
@@ -54,21 +40,8 @@ public class GifTexture extends AbstractTexture implements ITickableTextureObjec
             if (object instanceof GifTexture)
             {
                 GifTexture texture = (GifTexture) object;
-                int lastIndex = texture.index;
 
-                if (ticks >= 0)
-                {
-                    texture.calculateIndex(ticks, partialTicks);
-                }
-
-                GlStateManager.bindTexture(object.getGlTextureId());
-
-                if (ticks >= 0)
-                {
-                    texture.index = lastIndex;
-                }
-
-                return;
+                location = texture.getFrame(ticks, partialTicks);
             }
         }
 
@@ -80,23 +53,20 @@ public class GifTexture extends AbstractTexture implements ITickableTextureObjec
         globalTick += 1;
     }
 
-    public GifTexture(ResourceLocation texture)
+    public GifTexture(ResourceLocation texture, int[] delays, ResourceLocation[] frames)
     {
-        this.texture = texture;
-    }
-
-    public void add(int delay, ByteBuffer buffer)
-    {
-        this.elements.add(new GifElement(delay, this.width, this.height, buffer));
+        this.base = texture;
+        this.delays = Arrays.copyOf(delays, delays.length);
+        this.frames = frames;
     }
 
     public void calculateDuration()
     {
         this.duration = 0;
 
-        for (GifElement element : this.elements)
+        for (int delay : this.delays)
         {
-            this.duration += element.delay;
+            this.duration += delay;
         }
     }
 
@@ -105,79 +75,73 @@ public class GifTexture extends AbstractTexture implements ITickableTextureObjec
     {}
 
     @Override
-    public void tick()
+    public int getGlTextureId()
     {
         Minecraft mc = Minecraft.getMinecraft();
+        TextureManager textures = mc.renderEngine;
+        ResourceLocation rl = this.getFrame(entityTick > -1 ? entityTick : globalTick, mc.getRenderPartialTicks());
 
-        /* No point to cause NPE xD */
-        if (mc.player == null)
-        {
-            return;
-        }
+        textures.bindTexture(rl);
 
-        this.calculateIndex(globalTick, 0);
+        ITextureObject texture = textures.getTexture(rl);
+
+        this.updateMultiTex(texture);
+
+        return texture.getGlTextureId();
     }
 
-    public void calculateIndex(int ticks, float partial)
+    @Override
+    public void deleteGlTexture()
+    {}
+
+    public ResourceLocation getFrame(int ticks, float partialTicks)
     {
-        int tick = (int) ((ticks + partial) * 5 % this.duration);
+        int tick = (int) ((ticks + partialTicks) * 5 % this.duration);
 
         int duration = 0;
         int index = 0;
 
-        this.index = 0;
-
-        for (GifElement element : this.elements)
+        for (int delay : this.delays)
         {
-            duration += element.delay;
+            duration += delay;
 
             if (tick < duration)
             {
-                this.index = index == 0 ? 0 : index - 1;
-
                 break;
             }
 
             index++;
         }
+
+        return this.frames[index];
     }
 
-    @Override
-    public int getGlTextureId()
+    private void updateMultiTex(ITextureObject texture)
     {
-        if (this.index < 0 || this.index >= this.elements.size())
+        if (!tried)
         {
-            return -1;
+            try
+            {
+                fieldMultiTex = AbstractTexture.class.getField("multiTex");
+            }
+            catch (NoSuchFieldException | SecurityException e)
+            {
+                fieldMultiTex = null;
+            }
+
+            tried = true;
         }
 
-        return this.elements.get(this.index).id;
-    }
-
-    @Override
-    public void deleteGlTexture()
-    {
-        for (GifElement element : this.elements)
+        if (texture instanceof AbstractTexture && fieldMultiTex != null)
         {
-            GL11.glDeleteTextures(element.id);
-            element.id = -1;
-        }
-    }
+            try
+            {
+                Object obj = fieldMultiTex.get(texture);
 
-    public static class GifElement
-    {
-        public int delay;
-        public int id;
-
-        public GifElement(int delay, int w, int h, ByteBuffer buffer)
-        {
-            this.delay = delay;
-            this.id = GL11.glGenTextures();
-
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.id);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-
-            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, w, h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+                fieldMultiTex.set(this, obj);
+            }
+            catch (IllegalArgumentException | IllegalAccessException e)
+            {}
         }
     }
 }

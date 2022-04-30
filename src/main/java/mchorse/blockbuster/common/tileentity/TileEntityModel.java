@@ -124,6 +124,10 @@ public class TileEntityModel extends TileEntity implements ITickable
         {
             this.entity.setItemStackToSlot(EntityEquipmentSlot.values()[i], this.slots[i]);
         }
+
+        this.entity.posX = this.pos.getX() + this.x + 0.5;
+        this.entity.posY = this.pos.getY() + this.y;
+        this.entity.posZ = this.pos.getZ() + this.z + 0.5;
     }
 
     @Override

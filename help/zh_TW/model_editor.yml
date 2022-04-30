@@ -17,6 +17,7 @@ blockbuster.gui.me:
 
         color: 顏色
         opacity: 不透明度
+        specular: 高光顏色（光影）
         mirror: 鏡像
         lighting: 發光
         shading: 陰影
@@ -48,7 +49,8 @@ blockbuster.gui.me:
         last_limb: 您不能移除最後一個肢體...
         rename_limb: "重命名當前肢體："
         parent_limb: "為當前所選的肢體選擇一個父級肢體..."
-
+        obj_limb: 您不能對 OBJ/VOX 檔案提供的肢體執行此操作...
+        
         slots:
             none: 無
             head: 頭盔

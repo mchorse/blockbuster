@@ -1,5 +1,6 @@
 package mchorse.blockbuster;
 
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.capabilities.CapabilityHandler;
@@ -32,7 +33,9 @@ import mchorse.blockbuster.recording.scene.SceneManager;
 import mchorse.blockbuster.utils.mclib.BlockbusterResourceTransformer;
 import mchorse.blockbuster_pack.BlockbusterFactory;
 import mchorse.blockbuster_pack.MetamorphHandler;
+import mchorse.blockbuster_pack.trackers.ApertureCamera;
 import mchorse.blockbuster_pack.trackers.ApertureTracker;
+import mchorse.blockbuster_pack.trackers.MinemaTracker;
 import mchorse.blockbuster_pack.trackers.TrackerRegistry;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.MorphManager;
@@ -165,9 +168,14 @@ public class CommonProxy
 
         MorphManager.INSTANCE.factories.add(this.factory);
         RLUtils.register(new BlockbusterResourceTransformer());
+        
+        /* Aperture Modifiers */
+        CameraHandler.register();
 
         /* Trackers */
         TrackerRegistry.registerTracker("aperture_tracker", ApertureTracker.class);
+        TrackerRegistry.registerTracker("apcam", ApertureCamera.class);
+        TrackerRegistry.registerTracker("minema", MinemaTracker.class);
     }
 
     /**

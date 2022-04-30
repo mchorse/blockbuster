@@ -39,6 +39,9 @@ blockbuster.gui:
         reset: 重置姿勢
         create: 創建姿勢
 
+        keys:
+            toggle_gui_model: 切換編輯器內模型渲染
+
     dashboard:
         main: 儀表盤
         director: 場景
@@ -85,8 +88,8 @@ blockbuster.gui:
         open_audio_folder: 打開包含音軌的文件夾
 
         id: 回放 ID
-        name: 名稱標籤
-        name_tooltip: 演員的名稱標籤。你可以通過這一參數，並結合命令（比如 @e[name]=Test）來鎖定該演員，或知識單純讓演員顯示名稱。\n\n你可以使用 [ 作為顯示名稱的格式化代碼。如 [cR[aG[1B[r 會變成 {c}R{a}G{1}B{r}.
+        name: 名稱標簽
+        name_tooltip: 演員的名稱標簽。你可以通過這一參數，並結合命令（比如 @e[name=Test]）來鎖定該演員，或只是單純讓演員顯示名稱。\n\n你可以使用 [ 作為顯示名稱的格式化代碼。如 [cR[aG[1B[r 會變成 {c}R{a}G{1}B{r}.
         target: 目標
         target_tooltip: 你可以在此指定需要哪個玩家來播放這段回放。\n\n額外的目標選擇器可以用來選擇玩家的用戶名. @r - 隨機玩家, @{n}team{r} - 其中 {n}team{r} 是計分板中的隊伍名稱.
         invincible: 無敵
@@ -187,6 +190,8 @@ blockbuster.gui:
         capture: 從光標處開始錄製
         teleport: 從光標處進行傳送
 
+        unselect: 取消選擇
+
         drop: 掉落方塊
         damage: 傷害
         progress: 進度
@@ -265,6 +270,9 @@ blockbuster.gui:
             interact_entity:
                 title: 與實體交互 Interact with entity
                 desc: 與當前演員所看向的實體進行交互（使用如命名牌、物品展示框或模型實體進行交互）
+            close_container:
+                title: 關閉箱子 Close Container
+                desc: 關閉演員所開啓的容器，這通常可以關閉演員之前所打開的箱子。（僅適用於假玩家）
 
     # Playback GUI
     playback:
@@ -305,6 +313,13 @@ blockbuster.gui:
             add: 添加形態鍵...
             add_to: "添加形態鍵 \"%s\""
             remove: 移除該形態鍵
+            children: 應用至子肢體
+        
+        limb:
+            absolute_brighness: 絕對亮度
+            glow: 肢體發光
+            color: 肢體顔色
+            fixed: 固定動作
 
     image:
         crop: 裁剪
@@ -326,15 +341,26 @@ blockbuster.gui:
         duration: 持續長度
         random: 隨機
         set_duration: 設置持續時間
-        set_duration_tooltip: "啟用後，該選項會獲取計算後的持續時間，並將其分配給你選取的那些支持\"動畫\"屬性的偽裝"
+        set_duration_tooltip: "啟用後，該選項會獲取計算後的持續時間，並將其分配給你選取的那些支持\"動畫\"屬性的偽裝，實際持續時間將會被設為 \"1\""
         reverse: 反轉
         no_morph: （沒有偽裝）
         morphs: 偽裝
         random_order: 隨機順序
         truly_random_order: 完全隨機
+        keep_progress: 繼承動畫進度
         ticks: Ticks
+        add_part_tooltip: 添加一個偽裝至清單，新偽裝通常會被添加至清單末尾。按住 Ctrl 鍵則會將其添加為所選偽裝的下一個偽裝
+        loop: 迴圈
+        loop_tooltip: 設定迴圈次數，設為 0 則為無限迴圈
+        loop_offset: 迴圈後位移
+        loop_offset_count: 迴圈位移次數
+        end_point: 結束點
+        end_point_tooltip: 將當前偽裝設為序列發生器的結束點，若此序列發生器為隨機序列，結束點將用於記錄迴圈次數
 
         preview_tick: 該序列偽裝的預覽 Tick 數
+
+        generate_morph: 生成偽裝
+        generate_morph_tooltip: 從當前預覽生成一個偽裝
 
         keys:
             toggle: 播放/暫停播放序列
@@ -634,6 +660,8 @@ blockbuster.gui:
         type:
             title: 類型
             aperture_tracker: Aperture 偽裝追蹤器
+            minema: Minema 偽裝追踪器
+            apcam: Aperture 調整器
         hidden: 隱藏追蹤器標誌
 
         aperture_tracker:
@@ -696,8 +724,8 @@ blockbuster.gui:
                 啟用該選項時，每次都會將最小 X 和 Y 後坐力的值加在玩家所看的方向上。
 
                 否則（禁用時）將隨機產生一個介於最小和最大值之間的數字並加在玩家所看的方向上。
-        recoil_x: X 後坐力
-        recoil_y: Y 後坐力
+        recoil_x: 垂直後坐力
+        recoil_y: 水平後坐力
         recoil_min: 最小後坐力係數
         recoil_max: 最大後坐力係數
 
@@ -707,7 +735,7 @@ blockbuster.gui:
         arm_shooting_pose_always: 保持擡手姿勢
         arm_shooting_pose_always_tooltip: 啟用後，手臂將始終保持射箭的姿勢
 
-        shooting_offset: 
+        shooting_offset: 射擊偏移
         shooting_offset_tooltip: 相對於頭部旋轉的 XYZ 值，用於調整炮彈發射的位置。
         shooting_offset_x: X 射擊偏移
         shooting_offset_y: Y 射擊偏移
@@ -732,8 +760,8 @@ blockbuster.gui:
         use_reloading: 啟用換彈
         reloading_time_tooltip: 給槍換彈需要消耗多少 Tick
         shooting: 射擊
-        shoot_when_held: 拿起時射擊
-        shot_delay_tooltip: 自動射擊時每發子彈的時間間隔（單位為 Tick）
+        shoot_when_held: 全自動連發模式
+        shot_delay_tooltip: 每次開火的最小時間間隔（單位為 Tick）
 
         aim_options_second: 高級選項（第 2 頁）
         destroyed_command: 槍毀壞時的命令 # Evanechecssss: cummands
@@ -784,6 +812,13 @@ blockbuster.gui:
         keys:
             cycle: 在面板間循環切換
 
+    immersive_editor:
+        hide_outer_panel: 按下 F1 隱藏外部介面
+
+        keys:
+            category: 沉浸式編輯器
+            toggle_outer_panel: 切換外部介面
+
     interpolations:
         linear: 線性
         quad_in: 二次方緩入
@@ -803,6 +838,7 @@ blockbuster.gui:
             detach: 解綁場景
             reload: 重載演員
             actions: 預覽動作
+            stop_scene: 退出後結束場景
             reload_scene: 重載場景
 
         keys:
@@ -813,3 +849,12 @@ blockbuster.gui:
             reload_scene: 重載當前場景
 
             add_morph_action: 添加偽裝動作
+        
+        modifiers:
+            tracker: 追蹤器
+            tracker_description: 將相機綁定於場景中的一個 “Aperture調整器”追踪器偽裝 之上
+
+            panels:
+                tracker_tooltip: 輸入追踪器偽裝的名稱（類型必須為“Aperture調整器”）
+                main_cam: 作為主要相機
+                main_cam_tooltip: 開啟此選項後，此調整器之前的所有相機變換將在此追踪器空間進行重新計算，否則，調整器將只修改座標數據

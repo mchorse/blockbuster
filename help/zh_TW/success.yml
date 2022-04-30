@@ -42,3 +42,4 @@ blockbuster.success:
         renamed: "{f}玩家回放 %s{f} 已成功重命名為 %s{f}！"
         camera: "{f}玩家回放 %s{f} 已成功生成相機配置文件 %s{f}！"
         apply: "{f}玩家回放 %s{f} 的 %s{f} 屬性已成功應用了來自玩家回放 %s{f} 的屬性，應用範圍為 %s{f} 至 %s{f}！"
+        merge: "{f}玩家回放 %s{f} 中的動作已成功合併至 %s{f}！"

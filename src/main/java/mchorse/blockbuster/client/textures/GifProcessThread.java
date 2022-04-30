@@ -1,19 +1,17 @@
 package mchorse.blockbuster.client.textures;
 
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import at.dhyan.open_imaging.GifDecoder;
 import at.dhyan.open_imaging.GifDecoder.GifImage;
 import mchorse.blockbuster.client.RenderingHandler;
+import mchorse.blockbuster.utils.mclib.GifFolder;
 import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.mclib.utils.resources.MultiResourceLocation;
+import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -29,10 +27,12 @@ public class GifProcessThread implements Runnable
     public static final Map<ResourceLocation, GifProcessThread> THREADS = new HashMap<ResourceLocation, GifProcessThread>();
 
     public ResourceLocation texture;
+    public GifFolder gifFile;
 
-    public GifProcessThread(ResourceLocation texture)
+    public GifProcessThread(ResourceLocation texture, GifFolder gif)
     {
         this.texture = texture;
+        this.gifFile = gif;
     }
 
     @Override
@@ -46,17 +46,31 @@ public class GifProcessThread implements Runnable
         try
         {
             Minecraft mc = Minecraft.getMinecraft();
-            IResourceManager manager = mc.getResourceManager();
-            InputStream stream = manager.getResource(this.texture).getInputStream();
 
-            GifImage image = GifDecoder.read(stream);
-            GifTexture texture = new GifTexture(this.texture);
-
-            texture.width = image.getWidth();
-            texture.height = image.getHeight();
-            int frames = image.getFrameCount();
-
+            GifImage image = this.gifFile.gif;
+            int[] delays = new int[image.getFrameCount()];
+            ResourceLocation[] frames = new ResourceLocation[delays.length];
             Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(mc.renderEngine);
+            
+            for (int i = 0; i < delays.length; i++)
+            {
+                delays[i] = image.getDelay(i);
+                frames[i] = RLUtils.create(this.texture.getResourceDomain(), this.texture.getResourcePath() + ">/frame" + i + ".png");
+
+                ITextureObject old = map.remove(frames[i]);
+
+                if (old != null)
+                {
+                    if (old instanceof AbstractTexture)
+                    {
+                        ((AbstractTexture) old).deleteGlTexture();
+                    }
+                }
+
+                mc.renderEngine.loadTexture(frames[i], new GifFrameTexture(this.gifFile, i));
+            }
+
+            GifTexture texture = new GifTexture(this.texture, delays, frames);
             ITextureObject old = map.remove(this.texture);
 
             if (old != null)
@@ -68,15 +82,6 @@ public class GifProcessThread implements Runnable
             }
 
             map.put(this.texture, texture);
-            RenderingHandler.registerGif(this.texture, texture);
-
-            for (int i = 0; i < frames; i++)
-            {
-                BufferedImage buffer = image.getFrame(i);
-                int delay = image.getDelay(i);
-
-                texture.add(delay, MipmapTexture.bytesFromBuffer(buffer));
-            }
 
             texture.calculateDuration();
         }
@@ -86,9 +91,9 @@ public class GifProcessThread implements Runnable
         }
     }
 
-    public static void create(ResourceLocation location)
+    public static void create(ResourceLocation location, GifFolder gif)
     {
-        GifProcessThread thread = new GifProcessThread(location);
+        GifProcessThread thread = new GifProcessThread(location, gif);
 
         THREADS.put(location, thread);
         thread.run();

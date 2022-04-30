@@ -2,6 +2,7 @@ package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.textures.GifTexture;
+import mchorse.mclib.client.render.VertexBuilder;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.ReflectionUtils;
@@ -9,6 +10,7 @@ import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
+import mchorse.metamorph.api.morphs.utils.IMorphGenerator;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -38,7 +40,7 @@ import java.util.Objects;
  * 
  * This bad boy is basically replacement for Imaginary
  */
-public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISyncableMorph
+public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISyncableMorph, IMorphGenerator
 {
     public static final Matrix4f matrix = new Matrix4f();
 
@@ -150,6 +152,32 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
     public Animation getAnimation()
     {
         return this.animation;
+    }
+
+    @Override
+    public boolean canGenerate()
+    {
+        return this.animation.isInProgress();
+    }
+
+    @Override
+    public AbstractMorph genCurrentMorph(float partialTicks)
+    {
+        ImageMorph morph = (ImageMorph) this.copy();
+
+        morph.image.from(this);
+        this.animation.apply(morph.image, partialTicks);
+
+        morph.color = morph.image.color.getRGBAColor();
+        morph.crop.set(morph.image.crop);
+        morph.pose.copy(morph.image.pose);
+        morph.offsetX = morph.image.x;
+        morph.offsetY = morph.image.y;
+        morph.rotation = morph.image.rotation;
+
+        morph.animation.duration = this.animation.progress;
+
+        return morph;
     }
 
     @Override
@@ -316,10 +344,20 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         pos.set(-(finalUv.x - 0.5) * ratioY, -(finalUv.y - 0.5) * ratioY, (finalUv.z - 0.5) * ratioX, (finalUv.w - 0.5) * ratioX);
         pos.scale(scale);
 
+        boolean isCulling = GL11.glIsEnabled(GL11.GL_CULL_FACE);
+
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
-        GlStateManager.disableCull();
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
+
+        if (ReflectionUtils.isOptifineShadowPass())
+        {
+            GlStateManager.disableCull();
+        }
+        else
+        {
+            GlStateManager.enableCull();
+        }
 
         if (this.keying)
         {
@@ -348,14 +386,23 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
             GlStateManager.matrixMode(GL11.GL_MODELVIEW);
         }
 
-        buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+        buffer.begin(GL11.GL_QUADS, VertexBuilder.getFormat(true, true, false, true));
 
         Color color = this.image.color;
 
-        buffer.pos(pos.x, pos.z, 0).tex(uv.x, uv.z).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.y, pos.z, 0).tex(uv.y, uv.z).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.y, pos.w, 0).tex(uv.y, uv.w).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(pos.x, pos.w, 0).tex(uv.x, uv.w).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        /* By default the pos is (0.5, -0.5, -0.5, 0.5)  */
+
+        /* Frontface */
+        buffer.pos(pos.x, pos.z, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.x, pos.w, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.y, pos.w, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.w).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.y, pos.z, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.z).normal(0.0F, 0.0F, 1.0F).endVertex();
+
+        /* Backface */
+        buffer.pos(pos.x, pos.z, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.z).normal(0.0F, 0.0F, -1.0F).endVertex();
+        buffer.pos(pos.y, pos.z, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.z).normal(0.0F, 0.0F, -1.0F).endVertex();
+        buffer.pos(pos.y, pos.w, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.y, uv.w).normal(0.0F, 0.0F, -1.0F).endVertex();
+        buffer.pos(pos.x, pos.w, 0.0F).color(color.r, color.g, color.b, color.a).tex(uv.x, uv.w).normal(0.0F, 0.0F, -1.0F).endVertex();
 
         tessellator.draw();
 
@@ -372,9 +419,17 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         }
 
+        if (isCulling)
+        {
+            GlStateManager.enableCull();
+        }
+        else
+        {
+            GlStateManager.disableCull();
+        }
+
         GlStateManager.disableBlend();
         GlStateManager.disableAlpha();
-        GlStateManager.enableCull();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
     }
 

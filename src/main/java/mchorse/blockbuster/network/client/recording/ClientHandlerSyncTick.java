@@ -1,5 +1,6 @@
 package mchorse.blockbuster.network.client.recording;
 
+
 import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.utils.EntityUtils;
@@ -29,7 +30,7 @@ public class ClientHandlerSyncTick extends ClientMessageHandler<PacketSyncTick>
 
             if (!playback.playing)
             {
-                playback.applyFrame(message.tick, actor, false);
+                playback.applyFrame(message.tick - 1, actor, false);
             }
         }
     }

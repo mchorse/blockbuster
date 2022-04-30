@@ -67,6 +67,8 @@ public class MipmapTexture extends SimpleTexture
     @Override
     public void loadTexture(IResourceManager resourceManager) throws IOException
     {
+        super.loadTexture(resourceManager);
+
         IResource resource = null;
 
         try

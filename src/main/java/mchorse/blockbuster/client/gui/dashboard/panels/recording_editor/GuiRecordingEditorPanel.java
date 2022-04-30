@@ -149,6 +149,10 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
             .held(Keyboard.KEY_LCONTROL).category(category);
         this.selector.keys().register(IKey.lang("blockbuster.gui.record_editor.teleport"), Keyboard.KEY_T, this::teleport)
             .held(Keyboard.KEY_LCONTROL).category(category);
+        this.selector.keys().register(IKey.lang("blockbuster.gui.record_editor.unselect"), Keyboard.KEY_ESCAPE, () -> this.selectAction(null))
+            .category(category).active(() -> this.editor.delegate != null);
+        this.keys().register(IKey.lang("blockbuster.gui.aperture.keys.toggle_list"), Keyboard.KEY_L, () -> this.open.clickItself(GuiBase.getCurrent()))
+            .held(Keyboard.KEY_LCONTROL).category(category);
     }
 
     private void cutAction()
@@ -279,12 +283,12 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         if (this.selector.index == 0)
         {
             this.selector.index = -1;
-            this.editor.setDelegate(null);
+            this.setDelegate(null);
         }
         else
         {
             this.selector.index--;
-            this.editor.setDelegate(this.getPanel(this.record.getAction(this.selector.tick, this.selector.index)));
+            this.setDelegate(this.getPanel(this.record.getAction(this.selector.tick, this.selector.index)));
         }
 
         this.selector.recalculateVertical();
@@ -359,6 +363,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.prepend(this.records);
         this.add(this.editor, this.selector);
 
+        this.updateEditorWidth();
+
         if (this.record != null && this.record != ClientProxy.manager.records.get(this.record.filename))
         {
             this.selectRecord(this.record.filename);
@@ -419,6 +425,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
             Action old = this.editor.delegate.action;
 
             Dispatcher.sendToServer(new PacketAction(this.record.filename, this.selector.tick, this.selector.index, old));
+
+            this.editor.delegate = null;
         }
     }
 
@@ -443,12 +451,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
     {
         this.save();
 
-        if (this.editor.delegate != null)
-        {
-            this.editor.delegate.disappear();
-        }
-
-        this.editor.setDelegate(getPanel(action));
+        this.setDelegate(getPanel(action));
     }
 
     public void selectRecord(Record record)
@@ -456,7 +459,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.record = record;
         this.selector.setVisible(record != null);
         this.selector.update();
-        this.editor.setDelegate(null);
+        this.setDelegate(null);
         this.list.setVisible(false);
     }
 
@@ -483,8 +486,33 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.selector.recalculateVertical();
         this.selector.tick = tick;
         this.selector.index = this.record.actions.get(tick).size() - 1;
-        this.editor.setDelegate(getPanel(action));
+
+        this.setDelegate(getPanel(action));
         Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, -1, action, true));
+    }
+
+    public void updateEditorWidth()
+    {
+        if (this.records.isVisible())
+        {
+            this.editor.flex().wTo(this.records.area);
+        }
+        else
+        {
+            this.editor.flex().w(1F);
+        }
+
+        this.editor.resize();
+    }
+
+    public void setDelegate(GuiActionPanel<? extends Action> panel)
+    {
+        if (this.editor.delegate != null)
+        {
+            this.editor.delegate.disappear();
+        }
+
+        this.editor.setDelegate(panel);
     }
 
     @Override

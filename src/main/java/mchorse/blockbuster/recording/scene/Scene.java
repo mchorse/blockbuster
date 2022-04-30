@@ -268,6 +268,12 @@ public class Scene
             {
                 ((EntityPlayerMP) player.actor).onUpdateEntity();
             }
+            else if (!player.actorUpdated)
+            {
+                player.next();
+            }
+
+            player.actorUpdated = false;
         }
 
         if (this.playing && !this.paused)
@@ -278,6 +284,22 @@ public class Scene
             }
 
             this.tick++;
+        }
+    }
+
+    public void worldTick(World world)
+    {
+        for (RecordPlayer player : this.actors.values())
+        {
+            if (player.actor.world == world)
+            {
+                if (this.playing)
+                {
+                    player.checkAndSpawn();
+                }
+
+                player.playActions();
+            }
         }
     }
 

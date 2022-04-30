@@ -68,6 +68,22 @@ public class GuiRecordList extends GuiElement
     }
 
     @Override
+    public void toggleVisible()
+    {
+        super.toggleVisible();
+
+        this.panel.updateEditorWidth();
+    }
+
+    @Override
+    public void setVisible(boolean visible)
+    {
+        super.setVisible(visible);
+
+        this.panel.updateEditorWidth();
+    }
+
+    @Override
     public void draw(GuiContext context)
     {
         this.area.draw(0xff222222);
