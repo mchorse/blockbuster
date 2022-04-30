@@ -69,6 +69,7 @@ blockbuster.error:
         read: "{f}名為 %s{f} 的回放文件不適合播放（{7}舊版文件{f}，{7}已損壞{f}，或不是{7}回放文件{f}）。"
         logout: "{f}已停止錄製 %s{f}，因為已玩家登出！"
         not_found: "{f}無法找到 %s{f} 回放文件！"
+        not_recorded: "{f}玩家回放 %s{f} 尚未錄製！"
         fill_filename: "{f}請填寫{7}回放 ID{f}框！"
         empty_filename: "{f}無法在{7}回放 ID{f}為空的情況下錄製玩家回放."
         empty_record: "{f}無法播放回放 %s{f}，因為是空的！"
