@@ -45,7 +45,11 @@ public class MorphAction extends Action
             EntityActor act = (EntityActor) actor;
 
             act.morph(morph, false);
-            act.notifyPlayers();
+
+            if (!act.world.isRemote)
+            {
+                act.notifyPlayers();
+            }
         }
     }
 
@@ -63,11 +67,15 @@ public class MorphAction extends Action
             EntityActor act = (EntityActor) actor;
 
             act.morph(morph, true);
-            act.notifyPlayers();
+
+            if (!act.world.isRemote)
+            {
+                act.notifyPlayers();
+            }
         }
     }
 
-    public void applyWithOffset(EntityLivingBase actor, int offset, AbstractMorph previous, int previousOffset)
+    public void applyWithOffset(EntityLivingBase actor, int offset, AbstractMorph previous, int previousOffset, boolean resume)
     {
         AbstractMorph morph = MorphUtils.copy(this.morph);
 
@@ -82,11 +90,11 @@ public class MorphAction extends Action
 
             if (act.world.isRemote)
             {
-                act.applyPause(MorphUtils.copy(morph), offset, MorphUtils.copy(previous), previousOffset);
+                act.applyPause(MorphUtils.copy(morph), offset, MorphUtils.copy(previous), previousOffset, resume);
             }
             else
             {
-                act.morphPause(morph, offset, previous, previousOffset);
+                act.morphPause(morph, offset, previous, previousOffset, resume);
                 act.notifyPlayers();
             }
         }

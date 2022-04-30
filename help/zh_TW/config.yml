@@ -22,6 +22,8 @@ blockbuster.config:
 
         model_block_disable_rendering: 禁用模型方塊渲染
         model_block_disable_item_rendering: 禁用物品欄渲染
+        model_block_missing_name_rendering: 渲染丟失模型的路徑
+        model_block_debug_rendering_f1: 在 F1 模式下渲染模型方塊調試效果
         restore: 恢復模型方塊
         reset_on_playback: 回放時重置
 
@@ -64,6 +66,7 @@ blockbuster.config:
 
         damage_control: 破壞控制
         damage_control_distance: 破壞距離
+        damage_control_message: 破壞控制訊息
 
     model_folders:
         title: 模型文件夾
@@ -87,3 +90,20 @@ blockbuster.config:
         waveform_height: 音頻條高度
         waveform_filename: 顯示音頻條的文件名
         waveform_time: 顯示音頻條的播放時間
+        audio_sync: 在服務器與客戶端之間同步音頻
+
+    onion_skin:
+        title: 洋葱皮
+
+        seq_prev: 先前的偽裝
+        seq_prev_color: 先前的偽裝顏色
+        seq_next: 後續的偽裝
+        seq_next_color: 後續的偽裝顏色
+        seq_loop_color: 迴圈位移標記
+
+    immersive_editor:
+        title: 沉浸式編輯器
+        tooltip: 沉浸式編輯器開關
+
+        model_block: 模型方塊
+        record_editor: 回放編輯器

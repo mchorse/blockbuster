@@ -5,6 +5,8 @@ import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.mclib.client.Draw;
 import mchorse.mclib.utils.MatrixUtils;
+import mchorse.metamorph.api.EntityUtils;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -63,6 +65,11 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             EntityLivingBase entity = te.entity;
 
+            if (EntityUtils.getMorph(entity) != null)
+            {
+                morph = EntityUtils.getMorph(entity);
+            }
+
             /* Apply entity rotations */
             BlockPos pos = te.getPos();
 
@@ -85,29 +92,9 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             boolean wasSet = MatrixUtils.captureMatrix();
 
-            if (te.order == RotationOrder.ZYX)
-            {
-                GlStateManager.rotate(te.rx, 1, 0, 0);
-                GlStateManager.rotate(te.ry, 0, 1, 0);
-                GlStateManager.rotate(te.rz, 0, 0, 1);
-            }
-            else
-            {
-                GlStateManager.rotate(te.rz, 0, 0, 1);
-                GlStateManager.rotate(te.ry, 0, 1, 0);
-                GlStateManager.rotate(te.rx, 1, 0, 0);
-            }
+            this.transform(te);
 
-            if (te.one)
-            {
-                GlStateManager.scale(te.sx, te.sx, te.sx);
-            }
-            else
-            {
-                GlStateManager.scale(te.sx, te.sy, te.sz);
-            }
-
-            morph.render(entity, 0, 0, 0, 0, partialTicks);
+            MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
             GlStateManager.popMatrix();
 
             if (te.shadow)
@@ -139,7 +126,17 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
-            Draw.cube(buffer, x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, (te.enabled ? 0 : 1), (te.enabled ? 0.5F : 0.85F), (te.enabled ? 1 : 0), 0.35F);
+            float r = te.enabled ? 0 : 1;
+            float g = te.enabled ? 0.5F : 0.85F;
+            float b = te.enabled ? 1 : 0;
+
+            if (!te.morph.isEmpty() && te.morph.get().errorRendering)
+            {
+                r = 1;
+                g = b = 0;
+            }
+
+            Draw.cube(buffer, x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, r, g, b, 0.35F);
             Draw.cube(buffer, x + 0.45F + te.x, y + te.y, z + 0.45F + te.z, x + 0.55F + te.x, y + 0.1F + te.y, z + 0.55F + te.z, 1, 1, 1, 0.85F);
 
             double distance = MathHelper.sqrt(Vec3d.ZERO.squareDistanceTo(te.x, te.y, te.z));
@@ -184,6 +181,31 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
     public boolean isGlobalRenderer(TileEntityModel te)
     {
         return te.global;
+    }
+
+    public void transform(TileEntityModel te)
+    {
+        if (te.order == RotationOrder.ZYX)
+        {
+            GlStateManager.rotate(te.rx, 1, 0, 0);
+            GlStateManager.rotate(te.ry, 0, 1, 0);
+            GlStateManager.rotate(te.rz, 0, 0, 1);
+        }
+        else
+        {
+            GlStateManager.rotate(te.rz, 0, 0, 1);
+            GlStateManager.rotate(te.ry, 0, 1, 0);
+            GlStateManager.rotate(te.rx, 1, 0, 0);
+        }
+
+        if (te.one)
+        {
+            GlStateManager.scale(te.sx, te.sx, te.sx);
+        }
+        else
+        {
+            GlStateManager.scale(te.sx, te.sy, te.sz);
+        }
     }
 
     /**

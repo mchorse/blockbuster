@@ -47,6 +47,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -81,11 +82,6 @@ public class RenderingHandler
     private boolean wasPaused;
 
     /**
-     * GIFs which should be updated 
-     */
-    public static Map<ResourceLocation, GifTexture> gifs = new HashMap<ResourceLocation, GifTexture>();
-
-    /**
      * Bedrock particle emitters
      */
     private static final List<BedrockEmitter> emitters = new ArrayList<BedrockEmitter>();
@@ -100,21 +96,6 @@ public class RenderingHandler
      *  ItemRender
      */
     public static ItemCameraTransforms.TransformType itemTransformType;
-
-    /**
-     * Register GIF 
-     */
-    public static void registerGif(ResourceLocation rl, GifTexture texture)
-    {
-        GifTexture old = gifs.remove(rl);
-
-        if (old != null)
-        {
-            old.deleteGlTexture();
-        }
-
-        gifs.put(rl, texture);
-    }
 
     /**
      * Render green sky, this is getting invoked from the ASM patched 
@@ -446,11 +427,6 @@ public class RenderingHandler
     {
         ModelExtrudedLayer.tickCache();
 
-        for (GifTexture texture : gifs.values())
-        {
-            texture.tick();
-        }
-
         Minecraft mc = Minecraft.getMinecraft();
         boolean isPaused = mc.isGamePaused();
 
@@ -582,5 +558,17 @@ public class RenderingHandler
             thePlayer.prevRotationYaw = yaw;
             thePlayer.prevRotationPitch = pitch;
         }
+    }
+
+    @SubscribeEvent
+    public void onPreRenderEntity(RenderLivingEvent.Pre event)
+    {
+        GifTexture.entityTick = event.getEntity().ticksExisted;
+    }
+
+    @SubscribeEvent
+    public void onPostRenderEntity(RenderLivingEvent.Post event)
+    {
+        GifTexture.entityTick = -1;
     }
 }

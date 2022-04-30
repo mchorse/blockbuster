@@ -45,3 +45,6 @@ blockbuster.info:
 
     action:
         cancel: "{f}Current recording was canceled."
+
+    damage_control:
+        message: "{f}The target block is managed by the damage control of the scene %s{f}."

@@ -291,7 +291,7 @@ public class RecordManager
         }
         catch (FileNotFoundException e)
         {
-            RecordUtils.broadcastError("recording.not_found", filename);
+            RecordUtils.broadcastError("recording.not_recorded", filename);
         }
         catch (Exception e)
         {

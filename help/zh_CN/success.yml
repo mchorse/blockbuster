@@ -42,3 +42,4 @@ blockbuster.success:
         renamed: "{f}玩家回放 %s{f} 已成功重命名为 %s{f}！"
         camera: "{f}玩家回放 %s{f} 已成功生成相机配置文件 %s{f}！"
         apply: "{f}玩家回放 %s{f} 的 %s{f} 属性已成功应用了来自玩家回放 %s{f} 的属性，应用范围为 %s{f} 至 %s{f}！"
+        merge: "{f}玩家回放 %s{f} 中的动作已成功合并至 %s{f}！"

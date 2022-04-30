@@ -66,6 +66,7 @@ blockbuster.config:
         
         damage_control: Damage control
         damage_control_distance: Damage distance
+        damage_control_message: Damage control message
 
     model_folders:
         title: Model Folders
@@ -90,3 +91,19 @@ blockbuster.config:
         waveform_filename: Show audio bar's filename
         waveform_time: Show audio bar's playback time
         audio_sync: Sync audio between server and client
+
+    onion_skin:
+        title: Onion skin
+
+        seq_prev: Previous morphs
+        seq_prev_color: Previous morph's color
+        seq_next: Next morphs
+        seq_next_color: Next morph's color
+        seq_loop_color: Offset marker
+
+    immersive_editor:
+        title: Immersive editor
+        tooltip: Options for immersive editor
+
+        model_block: Model block
+        record_editor: Record editor

@@ -44,4 +44,7 @@ blockbuster.info:
         clickhere: 點擊這裡
 
     action:
-        cancel: "{f}當前錄製進程已取消。"
+        cancel: "{f}當前錄制進程已取消。"
+
+    damage_control:
+        message: "{f}目標方塊由場景 %s{f} 的破壞控制管理。"

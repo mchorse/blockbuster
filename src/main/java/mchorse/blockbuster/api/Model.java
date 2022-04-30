@@ -355,6 +355,44 @@ public class Model
         return b;
     }
 
+    public List<String> getChildren(String limb)
+    {
+        Map<String, List<String>> tree = new HashMap<String, List<String>>();
+        
+        for (Map.Entry<String, ModelLimb> entry : this.limbs.entrySet())
+        {
+            String parent = entry.getValue().parent;
+
+            if (tree.get(parent) == null)
+            {
+                tree.put(parent, new ArrayList<String>());
+            }
+            
+            tree.get(parent).add(entry.getKey());
+        }
+        
+        List<String> children = new ArrayList<String>();
+        
+        this.getChildren(tree, limb, children);
+        
+        return children;
+    }
+    
+    private void getChildren(Map<String, List<String>> tree, String limb, List<String> out)
+    {
+        List<String> children = tree.get(limb);
+        
+        if (children != null)
+        {
+            out.addAll(children);
+            
+            for (String child : children)
+            {
+                getChildren(tree, child, out);
+            }
+        }
+    }
+
     @Override
     public String toString()
     {

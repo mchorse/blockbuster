@@ -11,6 +11,7 @@ import mchorse.mclib.utils.binary.BinaryReader;
 import javax.vecmath.Matrix3f;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -148,14 +149,7 @@ public class VoxReader extends BinaryReader
 
         if (stream.read(bytes) == size)
         {
-            char[] chars = new char[size];
-
-            for (int i = 0; i < size; i ++)
-            {
-                chars[i] = (char) bytes[i];
-            }
-
-            return new String(chars);
+            return new String(bytes, StandardCharsets.UTF_8);
         }
 
         throw new IOException("Not enough bytes for the string!");

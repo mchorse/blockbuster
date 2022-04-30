@@ -124,7 +124,7 @@ public class ParticleMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entityLivingBase, double x, double y, double z, float yaw, float partialTicks)
     {
-        if (GuiModelRenderer.isRendering())
+        if (GuiModelRenderer.isRendering() || MorphUtils.isRenderingOnScreen)
         {
             return;
         }

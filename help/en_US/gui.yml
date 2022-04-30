@@ -32,6 +32,9 @@ blockbuster.gui:
         sneak: Apply on sneak
         reset: Reset pose
         create: Create pose
+
+        keys:
+            toggle_gui_model: Toggle in-editor model rendering
     
     dashboard: 
         main: Dashboard
@@ -181,6 +184,8 @@ blockbuster.gui:
         capture: Record from cursor
         teleport: Teleport at cursor
 
+        unselect: Unselect action
+
         drop: Drop block
         damage: Damage
         progress: Progress
@@ -259,7 +264,10 @@ blockbuster.gui:
             interact_entity:
                 title: Interact with entity
                 desc: Interacts with entity at which currently the actor is looking (used with some items like name tags, item frames or modded entities)
-    
+            close_container:
+                title: Close Container
+                desc: Closes the container opened by the actor, which usually closes the chest the actor previously interacted with. (Available only if the actor is a fake player)
+
     # Playback GUI
     playback:
         title: Playback configuration
@@ -299,6 +307,13 @@ blockbuster.gui:
             add: Add a shape key...
             add_to: "Add \"%s\" shape key"
             remove: Remove this shape key
+            children: Apply to children
+        
+        limb:
+            absolute_brighness: Absolute Brightness
+            glow: Limb Glow
+            color: Limb Color
+            fixed: Fixate movement
 
     image:
         crop: Crop
@@ -320,15 +335,26 @@ blockbuster.gui:
         duration: Duration
         random: Random
         set_duration: Set duration
-        set_duration_tooltip: "When enabled, this option will take the calculated duration and assign it to picked morph that supports \"animates\" property"
+        set_duration_tooltip: "When enabled, this option will take the calculated duration and assign it to picked morph that supports \"animates\" property, the actual duration will be set to \"1\""
         reverse: Reverse
         no_morph: (no morph)
         morphs: Morphs
         random_order: Random order
         truly_random_order: Truly random
+        keep_progress: Keep progress
         ticks: ticks
+        add_part_tooltip: Add a morph to the list. If you hold down the Ctrl key, it will be the next morph, otherwise it will be the last one.
+        loop: Loop
+        loop_tooltip: Set loop counts, 0 for endless loop.
+        loop_offset: Loop offset
+        loop_offset_count: Offset count
+        end_point: End point
+        end_point_tooltip: Set the end point of this sequencer morph, if random is enabled, it also be used to count loops.
 
         preview_tick: Preview tick of this sequencer morph
+
+        generate_morph: Generate morph
+        generate_morph_tooltip: Generate a morph from current preview
 
         keys:
             toggle: Toggle sequencer playback
@@ -626,6 +652,8 @@ blockbuster.gui:
         type:
             title: Type
             aperture_tracker: Aperture Morph tracker
+            minema: Minema Morph tracker
+            apcam: Aperture Modifier
         hidden: Hide pointer
 
         aperture_tracker:
@@ -775,6 +803,13 @@ blockbuster.gui:
         keys:
             cycle: Cycle between panels
 
+    immersive_editor:
+        hide_outer_panel: Press F1 to hide the outer screen
+
+        keys:
+            category: Immersive editor
+            toggle_outer_panel: Toggle outer screen
+
     interpolations:
         linear: Linear
         quad_in: Quadratic In
@@ -794,6 +829,7 @@ blockbuster.gui:
             detach: Detach scene
             reload: Reload actors
             actions: Preview actions
+            stop_scene: Stop scene after close
             reload_scene: Reload scene
 
         keys:
@@ -804,3 +840,12 @@ blockbuster.gui:
             reload_scene: Reload current scene
 
             add_morph_action: Add morph action
+        
+        modifiers:
+            tracker: Tracker
+            tracker_description: Attaches the camera to a tracker morph of type "Aperture Modifier" in current scene
+
+            panels:
+                tracker_tooltip: Enter the name of the tracker morph (type must be "Aperture Modifier")
+                main_cam: As the main camera
+                main_cam_tooltip: When this option is turned on, all camera transformations prior to this modifier will be recalculated in this tracker space; otherwise, the modifier will only modify the coordinate data

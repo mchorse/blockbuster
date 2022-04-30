@@ -26,6 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -85,7 +86,6 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
     public void pause(AbstractMorph previous, int offset)
     {
         this.animation.pause(offset);
-        this.replay.morph = this.initial;
     }
 
     @Override
@@ -94,11 +94,18 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
         return this.animation.paused;
 }
 
+    @Override
+    public void resume()
+    {
+        this.animation.paused = false;
+    }
+
     @SideOnly(Side.CLIENT)
     private void previewActor(Record record)
     {
         int tick = this.animation.progress % record.getLength();
-        Frame frame = record.getFrame(tick);
+
+        Frame frame = record.getFrame(Math.max(tick - 1, 0));
 
         if (frame == null)
         {
@@ -109,7 +116,7 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
 
         if (frame.hasBodyYaw)
         {
-            this.actor.renderYawOffset = frame.bodyYaw;
+            this.actor.prevRenderYawOffset = this.actor.renderYawOffset = frame.bodyYaw;
         }
 
         this.actor.prevPosX = this.actor.posX;
@@ -122,6 +129,25 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
         this.actor.prevRenderYawOffset = this.actor.renderYawOffset;
         this.actor.playback.tick = tick;
         this.actor.playback.playing = false;
+
+        if (!this.isPaused())
+        {
+            frame = record.getFrame(tick);
+
+            if (frame == null)
+            {
+                return;
+            }
+
+            frame.apply(this.actor, true);
+
+            if (frame.hasBodyYaw)
+            {
+                this.actor.renderYawOffset = frame.bodyYaw;
+            }
+        }
+
+        this.initiate = true;
     }
 
     @Override
@@ -212,10 +238,21 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
             {
                 Dispatcher.sendToServer(new PacketRequestRecording(this.record));
             }
-            else if (this.isPaused() && record != null)
+            else if (this.animation.progress != 0 && record != null)
             {
+                if (record.actions.isEmpty())
+                {
+                    /* Just to prevent it from spamming messages */
+                    record.actions.add(new ArrayList<Action>());
+                    Dispatcher.sendToServer(new PacketRequestAction(this.record, false));
+                }
+
+                this.actor.playback.record = record;
+
+                this.replay.morph = this.initial;
                 this.previewActor(record);
-                record.applyPreviousMorph(this.actor, this.replay, this.animation.progress, Record.MorphType.PAUSE);
+
+                record.applyPreviousMorph(this.actor, this.replay, this.animation.progress, this.isPaused() ? Record.MorphType.PAUSE : Record.MorphType.FORCE);
             }
         }
     }
@@ -263,6 +300,14 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
                 }
                 else
                 {
+                    if (this.animation.progress != 0)
+                    {
+                        this.actor.playback.playing = true;
+                        this.actor.playback.tick = this.animation.progress + 1;
+
+                        this.animation.progress = 0;
+                    }
+
                     this.actor.onUpdate();
                 }
 
@@ -274,6 +319,8 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
                     this.actor.morph.setDirect(MorphUtils.copy(this.initial));
                 }
             }
+        } else {
+            this.animation.progress++;
         }
     }
 

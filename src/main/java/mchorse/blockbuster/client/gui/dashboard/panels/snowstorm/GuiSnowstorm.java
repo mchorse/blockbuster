@@ -104,7 +104,7 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
         this.dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.dupeEffect());
         this.dupe.tooltip(IKey.lang("blockbuster.gui.snowstorm.dupe_tooltip"));
         this.remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeEffect());
-        this.folder = new GuiIconElement(mc, Icons.FOLDER, (b) -> GuiUtils.openWebLink(this.library.folder.toURI()));
+        this.folder = new GuiIconElement(mc, Icons.FOLDER, (b) -> GuiUtils.openFolder(this.library.folder.getAbsolutePath()));
         this.folder.tooltip(IKey.lang("blockbuster.gui.snowstorm.folder_tooltip"));
 
         this.particles = new GuiStringSearchListElement(mc, (list) -> this.setScheme(list.get(0)));

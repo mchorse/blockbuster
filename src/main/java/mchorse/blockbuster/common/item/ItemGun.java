@@ -2,6 +2,8 @@ package mchorse.blockbuster.common.item;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
+import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
+import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer.GunEntry;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.entity.EntityActor.EntityFakePlayer;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
@@ -20,6 +22,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,7 +33,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3f;
+
 import java.util.List;
+import java.util.Objects;
 
 public class ItemGun extends Item
 {
@@ -48,9 +53,34 @@ public class ItemGun extends Item
     }
 
     @Override
-    public boolean shouldCauseReequipAnimation(ItemStack stack, ItemStack stack1, boolean should)
+    public boolean shouldCauseReequipAnimation(ItemStack from, ItemStack to, boolean changed)
     {
-        return false; // what animation to use when the player holds the "use" button
+        if (!changed && to.getItem() instanceof ItemGun)
+        {
+            GunEntry entry = TileEntityGunItemStackRenderer.models.get(from);
+
+            if (entry != null)
+            {
+                GunProps props = NBTUtils.getGunProps(to);
+                boolean same = true;
+
+                same &= Objects.equals(entry.props.defaultMorph, props.defaultMorph);
+                same &= Objects.equals(entry.props.firingMorph, props.firingMorph);
+                same &= Objects.equals(entry.props.crosshairMorph, props.crosshairMorph);
+                same &= Objects.equals(entry.props.handsMorph, props.handsMorph);
+                same &= Objects.equals(entry.props.reloadMorph, props.reloadMorph);
+                same &= Objects.equals(entry.props.zoomOverlayMorph, props.zoomOverlayMorph);
+
+                if (same)
+                {
+                    TileEntityGunItemStackRenderer.models.put(to, TileEntityGunItemStackRenderer.models.remove(from));
+                }
+
+                return !same;
+            };
+        }
+
+        return true; // what animation to use when the player holds the "use" button
     }
 
     @Override
@@ -150,10 +180,15 @@ public class ItemGun extends Item
             {
                 props.storedReloadingTime = 0;
                 props.state = GunState.READY_TO_SHOOT;
-                props.storedAmmo = props.ammo;
             }
 
             NBTUtils.saveGunProps(stack, props.toNBT());
+
+            if (!player.world.isRemote)
+            {
+                Dispatcher.sendTo(new PacketGunInfo(props.toNBT(), player.getEntityId()), (EntityPlayerMP) player);
+                Dispatcher.sendToTracked(player, new PacketGunInfo(props.toNBT(), player.getEntityId()));
+            }
         }
     }
 
@@ -387,6 +422,27 @@ public class ItemGun extends Item
         }
 
         NBTUtils.saveGunProps(player.getHeldItemMainhand(), props.toNBT());
+
+        if (!player.world.isRemote)
+        {
+            Dispatcher.sendTo(new PacketGunInfo(props.toNBT(), player.getEntityId()), (EntityPlayerMP) player);
+            Dispatcher.sendToTracked(player, new PacketGunInfo(props.toNBT(), player.getEntityId()));
+        }
+    }
+
+    public static void checkGunReload(ItemStack stack, EntityPlayer player)
+    {
+        if (!player.world.isRemote)
+        {
+            GunProps props = NBTUtils.getGunProps(stack);
+
+            if (props.state == ItemGun.GunState.NEED_TO_BE_RELOAD && props.storedShotDelay == 0)
+            {
+                ItemGun gun = (ItemGun) stack.getItem();
+                
+                gun.reload(player, stack);
+            }
+        }
     }
 
     private boolean consumeInnerAmmo(ItemStack stack, EntityPlayer player)
@@ -414,7 +470,7 @@ public class ItemGun extends Item
 
                 if (!player.capabilities.isCreativeMode && !props.ammoStack.isEmpty())
                 {
-                    return this.consumeAmmoStack(player, props.ammoStack);
+                    return this.consumeAmmoStack(player, props.ammoStack, props.ammoStack.getCount()) >= 0;
                 }
                 else
                 {
@@ -443,31 +499,9 @@ public class ItemGun extends Item
 
     }
 
-    public boolean consumeAmmoStack(EntityPlayer player, ItemStack ammo)
+    public int consumeAmmoStack(EntityPlayer player, ItemStack ammo, int count)
     {
-        int total = 0;
-
-        for (int i = 0, c = player.inventory.getSizeInventory(); i < c; i++)
-        {
-            ItemStack stack = player.inventory.getStackInSlot(i);
-
-            if (stack.isItemEqual(ammo))
-            {
-                total += stack.getCount();
-
-                if (total >= ammo.getCount())
-                {
-                    break;
-                }
-            }
-        }
-
-        if (total < ammo.getCount())
-        {
-            return false;
-        }
-
-        return player.inventory.clearMatchingItems(ammo.getItem(), -1, ammo.getCount(), null) >= 0;
+        return player.inventory.clearMatchingItems(ammo.getItem(), -1, count, ammo.getTagCompound());
     }
 
     private void setThrowableHeading(EntityLivingBase entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity)
@@ -486,6 +520,109 @@ public class ItemGun extends Item
         entity.motionX = x / distance * velocity;
         entity.motionY = y / distance * velocity;
         entity.motionZ = z / distance * velocity;
+    }
+
+    public void reload(EntityPlayer player, ItemStack stack)
+    {
+        GunProps props = NBTUtils.getGunProps(stack);
+
+        if (props == null)
+        {
+            return;
+        }
+
+        int count = 0;
+
+        if (!player.capabilities.isCreativeMode && !props.ammoStack.isEmpty())
+        {
+            ItemStack ammo = props.ammoStack;
+
+            count = this.consumeAmmoStack(player, ammo, props.ammo - props.storedAmmo);
+        }
+        else
+        {
+            count = props.ammo - props.storedAmmo;
+        }
+
+        if (count > 0)
+        {
+            props.state = ItemGun.GunState.RELOADING;
+            props.storedAmmo += count;
+            props.storedReloadingTime = props.reloadingTime;
+
+            if (!props.reloadCommand.isEmpty())
+            {
+                player.getServer().commandManager.executeCommand(player, props.reloadCommand);
+            }
+
+            NBTUtils.saveGunProps(stack, props.toNBT());
+            Dispatcher.sendTo(new PacketGunInfo(props.toNBT(), player.getEntityId()), (EntityPlayerMP) player);
+            Dispatcher.sendToTracked(player, new PacketGunInfo(props.toNBT(), player.getEntityId()));
+        }
+    }
+
+    @Override
+    public boolean showDurabilityBar(ItemStack stack)
+    {
+        GunProps props = NBTUtils.getGunProps(stack);
+
+        if (props != null)
+        {
+            return props.state == GunState.RELOADING || props.ammo > 1 || props.durability > 0;
+        }
+
+        return super.showDurabilityBar(stack);
+    }
+
+    @Override
+    public double getDurabilityForDisplay(ItemStack stack)
+    {
+        GunProps props = NBTUtils.getGunProps(stack);
+
+        if (props != null)
+        {
+            if (props.state != GunState.READY_TO_SHOOT)
+            {
+                if (props.state == GunState.RELOADING && props.reloadingTime > 0)
+                {
+                    return ((double) props.storedReloadingTime / props.reloadingTime);
+                }
+                else
+                {
+                    return 1.0;
+                }
+            }
+            else if (props.ammo > 1)
+            {
+                return 1.0 - ((double) props.storedAmmo / props.ammo);
+            }
+            else if (props.durability > 0)
+            {
+                return 1.0 - ((double) props.storedDurability / props.durability);
+            }
+        }
+
+        return super.getDurabilityForDisplay(stack);
+    }
+
+    @Override
+    public int getRGBDurabilityForDisplay(ItemStack stack)
+    {
+        GunProps props = NBTUtils.getGunProps(stack);
+
+        if (props != null)
+        {
+            if (props.state != GunState.READY_TO_SHOOT)
+            {
+                return 0xFFFF0000;
+            }
+            else if (props.ammo > 1)
+            {
+                return 0xFF2FC0FF;
+            }
+        }
+
+        return super.getRGBDurabilityForDisplay(stack);
     }
 
     public enum GunState

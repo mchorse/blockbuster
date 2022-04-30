@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
@@ -37,10 +38,11 @@ import java.util.Map.Entry;
 public class StructureRenderer
 {
     public static int renderTimes = 0;
-    
+
     public StructureStatus status = StructureStatus.UNLOADED;
-    public Map<Biome, int[]> buffers = new HashMap<Biome, int[]>();
-    public int count = 0;
+    public Map<Biome, int[]> solidBuffers = new HashMap<Biome, int[]>();
+    public Map<Biome, int[]> cutoutBuffers = new HashMap<Biome, int[]>();
+    public Map<Biome, int[]> translucentBuffers = new HashMap<Biome, int[]>();
     public BlockPos size;
     public ClientHandlerStructure.FakeWorld world;
     public VertexFormat worldLighting;
@@ -64,7 +66,7 @@ public class StructureRenderer
         /* Check if optifine changed format. */
         if (!DefaultVertexFormats.BLOCK.equals(this.structureLighting))
         {
-            this.buffers.clear();
+            this.solidBuffers.clear();
             this.structureLighting = DefaultVertexFormats.BLOCK;
             this.worldLighting = new VertexFormat();
 
@@ -84,21 +86,18 @@ public class StructureRenderer
 
     public void rebuild(Biome biome)
     {
-        Tessellator tess = Tessellator.getInstance();
-        BufferBuilder buffer = tess.getBuffer();
-
         this.world.biome = biome;
-        buffer.begin(GL11.GL_QUADS, this.structureLighting);
-        this.render(buffer);
-        buffer.finishDrawing();
 
-        int count = buffer.getVertexCount();
-        int[] vertexData = new int[count * this.structureLighting.getIntegerSize()];
-        buffer.getByteBuffer().asIntBuffer().get(vertexData);
+        int ao = Minecraft.getMinecraft().gameSettings.ambientOcclusion;
 
-        this.buffers.put(biome, vertexData);
-        this.count = count;
-        
+        Minecraft.getMinecraft().gameSettings.ambientOcclusion = 0;
+
+        this.solidBuffers.put(biome, this.render(0));
+        this.cutoutBuffers.put(biome, this.render(1));
+        this.translucentBuffers.put(biome, this.render(2));
+
+        Minecraft.getMinecraft().gameSettings.ambientOcclusion = ao;
+
         if (this.tileEntityLighting.isEmpty())
         {
             for (TileEntity te : this.world.loadedTileEntityList)
@@ -111,27 +110,54 @@ public class StructureRenderer
     public void render(StructureMorph morph)
     {
         GL11.glNormal3f(0, 0.6F, 0);
-        
+
         Biome biome = morph.getBiome();
-        
-        if (this.buffers.get(biome) == null)
+
+        if (this.solidBuffers.get(biome) == null)
         {
             this.setupFormat();
             this.rebuild(biome);
         }
-        
-        if (this.buffers.get(biome) != null)
+
+        Tessellator tess = Tessellator.getInstance();
+        BufferBuilder buffer = tess.getBuffer();
+
+        GlStateManager.disableAlpha();
+        GlStateManager.disableBlend();
+
+        if (this.solidBuffers.get(biome) != null && this.solidBuffers.get(biome).length > 0)
         {
-            Tessellator tess = Tessellator.getInstance();
-            BufferBuilder buffer = tess.getBuffer();
             buffer.begin(GL11.GL_QUADS, morph.lighting ? this.worldLighting : this.structureLighting);
-            buffer.addVertexData(this.buffers.get(biome));
+            buffer.addVertexData(this.solidBuffers.get(biome));
+            tess.draw();
+        }
+
+        GlStateManager.enableAlpha();
+
+        if (this.cutoutBuffers.get(biome) != null && this.cutoutBuffers.get(biome).length > 0)
+        {
+            buffer.begin(GL11.GL_QUADS, morph.lighting ? this.worldLighting : this.structureLighting);
+            buffer.addVertexData(this.cutoutBuffers.get(biome));
+            tess.draw();
+        }
+
+        GlStateManager.enableBlend();
+
+        if (this.translucentBuffers.get(biome) != null && this.translucentBuffers.get(biome).length > 0)
+        {
+            buffer.begin(GL11.GL_QUADS, morph.lighting ? this.worldLighting : this.structureLighting);
+            buffer.addVertexData(this.translucentBuffers.get(biome));
             tess.draw();
         }
     }
 
-    public void render(BufferBuilder buffer)
+    public int[] render(int type)
     {
+        Tessellator tess = Tessellator.getInstance();
+        BufferBuilder buffer = tess.getBuffer();
+
+        buffer.begin(GL11.GL_QUADS, this.structureLighting);
+
         BlockPos origin = new BlockPos(1, 1, 1);
         int w = this.size.getX();
         int h = this.size.getY();
@@ -149,11 +175,23 @@ public class StructureRenderer
 
             if (block.getDefaultState().getRenderType() != EnumBlockRenderType.INVISIBLE)
             {
-                dispatcher.renderBlock(state, pos, this.world, buffer);
+                if (type == 0 && block.getBlockLayer() == BlockRenderLayer.SOLID
+                    || type == 1 && (block.getBlockLayer() == BlockRenderLayer.CUTOUT || block.getBlockLayer() == BlockRenderLayer.CUTOUT_MIPPED)
+                    || type == 2 && block.getBlockLayer() == BlockRenderLayer.TRANSLUCENT)
+                {
+                    dispatcher.renderBlock(state, pos, this.world, buffer);
+                }
             }
         }
 
         buffer.setTranslation(0, 0, 0);
+        buffer.finishDrawing();
+
+        int count = buffer.getVertexCount();
+        int[] vertexData = new int[count * this.structureLighting.getIntegerSize()];
+        buffer.getByteBuffer().asIntBuffer().get(vertexData);
+
+        return vertexData;
     }
 
     public void renderTEs(StructureMorph morph)
@@ -192,11 +230,10 @@ public class StructureRenderer
 
     public void delete()
     {
-        if (!this.buffers.isEmpty())
+        if (!this.solidBuffers.isEmpty())
         {
-            this.buffers.clear();
+            this.solidBuffers.clear();
             this.tileEntityLighting.clear();
-            this.count = 0;
             this.status = StructureStatus.UNLOADED;
         }
     }

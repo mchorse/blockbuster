@@ -8,6 +8,6 @@ key:
         record_director: Записать воспроизведение в сцену
         pause_director: Остановить воспроизведение в сцене
         open_gun: Настроить оружие
-        zoom: Zoom
-        gun_reload: Reload
-        gun_shoot: Shoot
+        zoom: Прицелиться
+        gun_reload: Перезарядиться
+        gun_shoot: Выстрелить

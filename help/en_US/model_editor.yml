@@ -17,6 +17,7 @@ blockbuster.gui.me:
         
         color: Color
         opacity: Opacity
+        specular: Specular color (used for shaders)
         mirror: Mirror
         lighting: Lighting
         shading: Shading
@@ -48,6 +49,7 @@ blockbuster.gui.me:
         last_limb: You can't remove the last limb...
         rename_limb: "Rename current limb by typing in a new name:"
         parent_limb: "Choose the parent limb for currently selected limb..."
+        obj_limb: You can't do this operation to a limb provided by OBJ/VOX file...
         
         slots:
             none: None

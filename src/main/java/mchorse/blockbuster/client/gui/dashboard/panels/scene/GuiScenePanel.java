@@ -142,7 +142,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.audio.background().tooltip(IKey.lang("blockbuster.gui.director.audio_tooltip"), Direction.RIGHT);
         this.audioShift = new GuiTrackpadElement(mc, (value) -> this.location.getScene().audioShift = value.intValue());
         this.audioShift.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.director.audio_shift_tooltip"));
-        this.openAudioFolder = new GuiIconElement(mc, Icons.FOLDER, (b) -> GuiUtils.openWebLink(ClientProxy.audio.folder.toURI()));
+        this.openAudioFolder = new GuiIconElement(mc, Icons.FOLDER, (b) -> GuiUtils.openFolder(ClientProxy.audio.folder.getAbsolutePath()));
         this.openAudioFolder.tooltip(IKey.lang("blockbuster.gui.director.open_audio_folder"));
 
         this.title.flex().set(120, 50, 0, 20).relative(this.area).w(1, -130);

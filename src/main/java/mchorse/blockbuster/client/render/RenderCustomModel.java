@@ -12,7 +12,6 @@ import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
-import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.common.OrientedBB;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.SnowstormMorph;
@@ -38,14 +37,13 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
      */
     public static ResourceLocation lastTexture;
 
-    public static int tick;
-
     /**
      * Currently used morph 
      */
     public CustomMorph current;
 
     private int captured;
+    private boolean capturedByMe;
 
     public static void bindLastTexture(ResourceLocation location)
     {
@@ -57,7 +55,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     {
         if (lastTexture != null)
         {
-            GifTexture.bindTexture(lastTexture, tick);
+            Minecraft.getMinecraft().renderEngine.bindTexture(lastTexture);
         }
     }
 
@@ -99,7 +97,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     {
         lastTexture = location;
 
-        GifTexture.bindTexture(location, tick);
+        super.bindTexture(location);
     }
 
     /**
@@ -114,8 +112,6 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     @Override
     public void doRender(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        tick = entity.ticksExisted;
-
         this.setupModel(entity, partialTicks);
 
         if (this.mainModel != null)
@@ -123,12 +119,16 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
             super.doRender(entity, x, y, z, entityYaw, partialTicks);
         }
 
-        this.captured --;
-
-        if (this.captured <= 0)
+        if (this.captured > 0)
         {
-            this.captured = 0;
-            MatrixUtils.releaseMatrix();
+            this.captured --;
+
+            if (this.captured == 0 && this.capturedByMe)
+            {
+                MatrixUtils.releaseMatrix();
+
+                this.capturedByMe = false;
+            }
         }
     }
 
@@ -139,7 +139,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 
         if (this.captured == 0)
         {
-            MatrixUtils.captureMatrix();
+            this.capturedByMe = MatrixUtils.captureMatrix();
         }
 
         this.captured ++;
@@ -245,7 +245,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 
         if (texture != null)
         {
-            GifTexture.bindTexture(texture, player.ticksExisted);
+            this.bindTexture(texture);
         }
 
         this.mainModel.swingProgress = 0.0F;
@@ -275,7 +275,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 
         if (texture != null)
         {
-            GifTexture.bindTexture(texture, player.ticksExisted);
+            this.bindTexture(texture);
         }
 
         this.mainModel.swingProgress = 0.0F;

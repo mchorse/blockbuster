@@ -42,3 +42,4 @@ blockbuster.success:
         renamed: "{f}Player recording %s{f} was successfully renamed to %s{f}!"
         camera: "{f}Player recording %s{f} was successfully generated out of camera profile %s{f}!"
         apply: "{f}Player recording %s{f}'s %s{f} property was successfully applied with %s{f} properties from player recording %s{f} from %s{f} to %s{f}!"
+        merge: "{f}Successfully merged actions from %s{f} into %s{f}!"

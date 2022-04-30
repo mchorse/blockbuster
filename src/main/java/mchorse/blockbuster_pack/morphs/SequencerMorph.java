@@ -1,7 +1,9 @@
 package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.utils.mclib.BBIcons;
+import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MathUtils;
+import mchorse.mclib.utils.NBTUtils;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -9,7 +11,9 @@ import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
+import mchorse.metamorph.api.morphs.utils.IMorphGenerator;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
+import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -18,6 +22,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -33,7 +38,7 @@ import java.util.Random;
  * Next big thing since S&B, allows creating animated morphs with 
  * variable delays between changes
  */
-public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISyncableMorph
+public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISyncableMorph, IMorphGenerator
 {
     /**
      * List of sequence entries (morph and their delay) 
@@ -56,9 +61,40 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     public int timer;
 
     /**
+     * Timer for renderOnScreen
+     */
+    @SideOnly(Side.CLIENT)
+    public int screenTimer;
+
+    /**
      * Duration of the current  
      */
     public float duration;
+    
+    /**
+     * Duration of the last
+     */
+    public float lastDuration;
+
+    /**
+     * Is current morph enabled set duration
+     */
+    public boolean morphSetDuration;
+
+    /**
+     * Record loop count
+     */
+    public int loopCount;
+
+    /**
+     * Is current morph the first morph of a loop
+     */
+    public boolean isFirstMorph = false;
+
+    /**
+     * Last update tick
+     */
+    public float lastUpdate;
 
     /**
      * Reverse playback 
@@ -74,6 +110,26 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
      * Whether it's random, and truly random
      */
     public boolean isTrulyRandom;
+
+    /**
+     * Times of loop.
+     */
+    public int loop;
+
+    /**
+     * Move the model after each repetition
+     */
+    public float[] offset = new float[3];
+
+    /**
+     * How many times to repeat the offset.
+     */
+    public int offsetCount;
+
+    /**
+     * Keep the progress after merge.
+     */
+    public boolean keepProgress;
 
     private Animation animation = new Animation();
     private Random random = new Random();
@@ -110,9 +166,19 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         }
 
         MorphUtils.pause(morph, previous, (int) (offset - found.lastDuration));
+        MorphUtils.resume(morph);
 
         found.applyCurrent(morph);
         this.currentMorph.setDirect(morph);
+
+        this.timer = offset;
+        this.duration = found.totalDuration;
+        this.current = found.index;
+        this.loopCount = found.loopCount;
+        this.isFirstMorph = found.isFirstMorph;
+        this.lastDuration = found.lastDuration;
+        this.morphSetDuration = found.current.setDuration;
+        this.lastUpdate = offset;
     }
 
     @Override
@@ -122,9 +188,85 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     }
 
     @Override
+    public void resume()
+    {
+        this.animation.paused = false;
+        MorphUtils.resume(this.currentMorph.get());
+    }
+
+    @Override
     public AbstractMorph getMorph()
     {
-        return this.currentMorph.get();
+        AbstractMorph morph = this.currentMorph.get();
+        float progress = this.timer;
+        float duration = this.duration - this.lastDuration;
+
+        if (this.morphSetDuration)
+        {
+            if (duration > 0)
+            {
+                float setDuration = (float) Math.ceil(duration);
+                float ticks = (progress - this.lastDuration) * setDuration / duration;
+                int tick = (int) ticks * 10000;
+
+                this.updateSetDuration(morph, tick, (int) setDuration * 10000);
+            }
+            else
+            {
+                this.updateSetDuration(morph, 1, 1);
+            }
+        }
+        else
+        {
+            this.updateProgress(morph, 1);
+        }
+
+        return morph;
+    }
+
+    @Override
+    public boolean canGenerate()
+    {
+        AbstractMorph morph = this.currentMorph.get();
+
+        if (morph instanceof IMorphGenerator)
+        {
+            return ((IMorphGenerator) morph).canGenerate();
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    @Override
+    public AbstractMorph genCurrentMorph(float partialTicks)
+    {
+        AbstractMorph morph = this.currentMorph.get();
+
+        if (morph instanceof IMorphGenerator)
+        {
+            float progress = this.timer + partialTicks;
+            float duration = this.duration - this.lastDuration;
+
+            if (this.morphSetDuration && duration > 0)
+            {
+                float setDuration = (float) Math.ceil(duration);
+                float ticks = (progress - this.lastDuration) * setDuration / duration;
+                int tick = (int) ticks;
+
+                if (this.updateSetDuration(morph, tick, (int) setDuration))
+                {
+                    partialTicks = ticks - tick;
+                }
+            }
+
+            return ((IMorphGenerator) morph).genCurrentMorph(partialTicks);
+        }
+        else
+        {
+            return null;
+        }
     }
 
     @Override
@@ -138,19 +280,26 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     @SideOnly(Side.CLIENT)
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)
     {
-        this.updateCycle();
-
         if (this.morphs.isEmpty())
         {
             GlStateManager.color(1, 1, 1);
             BBIcons.CHICKEN.render(x - 8, y - 20);
+
+            return;
         }
 
-        AbstractMorph morph = this.currentMorph.get();
+        this.screenTimer++;
+        this.screenTimer %= 2000;
+
+        FoundMorph found = this.getMorphAt(this.screenTimer);
+        AbstractMorph morph = MorphUtils.copy(found.getCurrentMorph());
+        AbstractMorph prevMorph = MorphUtils.copy(found.getPreviousMorph());
+
+        MorphUtils.pause(morph, prevMorph, (int) (this.screenTimer - found.lastDuration));
 
         if (morph != null)
         {
-            morph.renderOnScreen(player, x, y, scale, alpha);
+            MorphUtils.renderOnScreen(morph, player, x, y, scale, alpha);
         }
     }
 
@@ -158,16 +307,81 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        float progress = this.timer + partialTicks;
+
         if (!this.isPaused())
         {
-            this.updateMorph(this.timer + partialTicks);
+            this.updateClient(entity, progress);
+
+            partialTicks = progress - this.lastDuration;
+            partialTicks -= (int) partialTicks;
+        }
+        else
+        {
+            partialTicks = 0;
+            progress = this.timer;
         }
 
         AbstractMorph morph = this.currentMorph.get();
 
         if (morph != null)
         {
-            morph.render(entity, x, y, z, entityYaw, partialTicks);
+            if (this.offsetCount > -1)
+            {
+                int times = this.loopCount % (this.offsetCount + 1);
+                double baseMul = 0.0625 * (this.reverse ? -1 : 1);
+                double offsetMul = baseMul * times;
+                Vec3d offset = new Vec3d(this.offset[0] * offsetMul, this.offset[1] * offsetMul, this.offset[2] * offsetMul);
+
+                if (this.isFirstMorph && !this.currentMorph.isEmpty())
+                {
+                    if (this.currentMorph.get() instanceof IAnimationProvider)
+                    {
+                        Animation anim = ((IAnimationProvider) this.currentMorph.get()).getAnimation();
+
+                        if (anim.isInProgress())
+                        {
+                            double lastMul = baseMul * (times - 1);
+
+                            double lerpX = anim.interp.interpolate(this.offset[0] * lastMul, this.offset[0] * offsetMul, anim.getFactor(partialTicks));
+                            double lerpY = anim.interp.interpolate(this.offset[1] * lastMul, this.offset[1] * offsetMul, anim.getFactor(partialTicks));
+                            double lerpZ = anim.interp.interpolate(this.offset[2] * lastMul, this.offset[2] * offsetMul, anim.getFactor(partialTicks));
+                            
+                            offset = new Vec3d(lerpX, lerpY, lerpZ);
+                        }
+                    }
+                }
+
+                float yaw = Interpolations.lerpYaw(entity.prevRenderYawOffset, entity.renderYawOffset, partialTicks);
+                offset = offset.rotateYaw((float) Math.toRadians(-yaw));
+
+                x += offset.x;
+                y += offset.y;
+                z += offset.z;
+            }
+
+            float duration = this.duration - this.lastDuration;
+
+            if (this.morphSetDuration)
+            {
+                if (duration > 0)
+                {
+                    float setDuration = (float) Math.ceil(duration);
+                    float ticks = (progress - this.lastDuration) * setDuration / duration;
+                    int tick = (int) ticks;
+
+                    if (this.updateSetDuration(morph, tick, (int) setDuration))
+                    {
+                        partialTicks = ticks - tick;
+                    }
+                }
+                else
+                {
+                    this.updateSetDuration(morph, 1, 1);
+                }
+            }
+
+            MorphUtils.render(morph, entity, x, y, z, entityYaw, partialTicks);
         }
     }
 
@@ -238,19 +452,20 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             return null;
         }
 
-        float duration = this.getDuration();
+        float duration = this.getMaxDuration();
         int size = this.morphs.size();
 
         /* A shortcut in case the durations of every sequence is zero */
         if (duration <= 0)
         {
-            return new FoundMorph(this.morphs.get(size - 1), size == 1 ? null : this.morphs.get(size - 2), 0, 0, 0);
+            return new FoundMorph(size - 1, this.morphs.get(size - 1), size == 1 ? null : this.morphs.get(size - 2), 0, 0, 0, 0, false);
         }
 
         /* Now the main fun part */
         SequenceEntry entry = null;
         SequenceEntry lastEntry = null;
         int i = this.reverse ? size - 1 : 0;
+        int lastIndex = i;
 
         duration = 0;
 
@@ -262,27 +477,135 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         float lastDuration = 0;
         float prevLastDuration = 0;
 
-        while (duration <= tick)
+        int loopCount = 0;
+        int lastLoopCount = 0;
+        boolean isFirstMorph = false;
+        boolean lastIsFirstMorph = false;
+
+        do
         {
             prevLastDuration = lastDuration;
             lastDuration = duration;
             lastEntry = entry;
+            lastLoopCount = loopCount;
+            lastIsFirstMorph = isFirstMorph;
 
             entry = this.morphs.get(i);
+            lastIndex = i;
+
+            if (entry != null && entry.endPoint && this.loop > 0 && loopCount >= this.loop - 1)
+            {
+                break;
+            }
+
+            isFirstMorph = false;
 
             if (this.isRandom)
             {
+                if (entry != null && entry.endPoint)
+                {
+                    loopCount++;
+                    isFirstMorph = true;
+                }
+                
                 i = this.getRandomIndex(duration);
             }
             else
             {
-                i = MathUtils.cycler(i + (this.reverse ? -1 : 1), 0, size - 1);
+                int next = i + (this.reverse ? -1 : 1);
+                int current = MathUtils.cycler(next, 0, size - 1);
+
+                if (current != next)
+                {
+                    if (this.loop > 0 && loopCount >= this.loop - 1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        loopCount++;
+                        isFirstMorph = true;
+                    }
+                }
+
+                i = current;
             }
 
             duration += entry.getDuration(this.getRandomSeed(duration));
         }
+        while (duration < tick);
 
-        return entry == null ? null : new FoundMorph(entry, lastEntry, duration, lastDuration, prevLastDuration);
+        return entry == null ? null : new FoundMorph(lastIndex, entry, lastEntry, duration, lastDuration, prevLastDuration, lastLoopCount, lastIsFirstMorph);
+    }
+
+    public int getTickAt(int index)
+    {
+        if (this.morphs.isEmpty() || index < 0 || this.getMaxDuration() < 0.0001F || this.isRandom && this.isTrulyRandom)
+        {
+            return (int) this.getDuration();
+        }
+
+        int size = this.morphs.size();
+
+        int i = -1;
+        float duration = 0;
+
+        int loopCount = 0;
+
+        while (i != index)
+        {
+            SequenceEntry entry = null;
+            
+            if (i > 0 && i < size)
+            {
+                entry = this.morphs.get(i);
+            }
+
+            if (entry != null && entry.endPoint && this.loop > 0 && this.loopCount >= this.loop - 1)
+            {
+                break;
+            }
+
+            if (this.isRandom)
+            {
+                if (entry != null && entry.endPoint)
+                {
+                    loopCount++;
+                }
+
+                i = this.getRandomIndex(duration);
+            }
+            else
+            {
+                int next = i + (this.reverse ? -1 : 1);
+                int current = MathUtils.cycler(next, 0, size - 1);
+
+                if (current != next)
+                {
+                    if (this.loop > 0 && loopCount >= this.loop - 1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        if (i == -1)
+                        {
+                            this.loopCount = 0;
+                        }
+                        else
+                        {
+                            this.loopCount++;
+                        }
+                    }
+                }
+
+                i = current;
+            }
+
+            duration += this.morphs.get(i).getDuration(this.getRandomSeed(duration));
+        }
+
+        return (int) duration;
     }
 
     /**
@@ -299,17 +622,65 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
         return duration;
     }
+    
+    /**
+     * Get maxium duration
+     */
+    public float getMaxDuration()
+    {
+        float duration = 0F;
+
+        for (SequenceEntry entry : this.morphs)
+        {
+            duration += entry.duration + Math.max(entry.random, 0);
+        }
+
+        return duration;
+    }
 
     @Override
     public void update(EntityLivingBase target)
     {
-        this.updateCycle();
-
-        AbstractMorph morph = this.currentMorph.get();
-
-        if (morph != null)
+        if (this.isPaused())
         {
-            morph.update(target);
+            return;
+        }
+
+        if (target.isServerWorld())
+        {
+            this.updateCycle();
+
+            AbstractMorph morph = this.currentMorph.get();
+
+            if (morph != null)
+            {
+                morph.update(target);
+            }
+        }
+        else
+        {
+            this.timer++;
+        }
+    }
+
+    /**
+     * Update timer and morph for render
+     */
+    @SideOnly(Side.CLIENT)
+    protected void updateClient(EntityLivingBase entity, float progress)
+    {
+        this.updateMorph(progress);
+
+        if (!this.currentMorph.isEmpty())
+        {
+            int delta = (int) (progress - this.lastDuration) - (int) Math.max(this.lastUpdate - this.lastDuration, 0);
+
+            while (delta-- > 0)
+            {
+                this.currentMorph.get().update(entity);
+
+                this.lastUpdate = progress;
+            }
         }
     }
 
@@ -333,42 +704,140 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
      */
     protected void updateMorph(float timer)
     {
-        if (timer >= this.duration)
+        while (!this.morphs.isEmpty() && timer >= this.duration)
         {
             int size = this.morphs.size();
+            SequenceEntry entry = null;
+
+            if (this.current >= 0 && this.current < size)
+            {
+                entry = this.morphs.get(this.current);
+            }
+
+            if (entry != null && entry.endPoint && this.loop > 0 && this.loopCount >= this.loop - 1)
+            {
+                break;
+            }
+
+            this.isFirstMorph = false;
 
             if (this.isRandom)
             {
+                if (entry != null && entry.endPoint)
+                {
+                    this.loopCount++;
+                    this.isFirstMorph = true;
+                }
+
                 this.current = this.getRandomIndex(this.duration);
             }
             else
             {
-                this.current = MathUtils.cycler(this.current + (this.reverse ? -1 : 1), 0, size - 1);
+                int next = this.current + (this.reverse ? -1 : 1);
+                int current = MathUtils.cycler(next, 0, size - 1);
+
+                if (current != next)
+                {
+                    if (this.loop > 0 && this.loopCount >= this.loop - 1)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        if (this.current == -1)
+                        {
+                            this.loopCount = 0;
+                        }
+                        else
+                        {
+                            this.loopCount++;
+                        }
+
+                        this.isFirstMorph = true;
+                    }
+                }
+                
+                this.current = current;
             }
 
             if (this.current >= 0 && this.current < size)
             {
-                SequenceEntry entry = this.morphs.get(this.current);
+                entry = this.morphs.get(this.current);
                 AbstractMorph morph = MorphUtils.copy(entry.morph);
                 float duration = entry.getDuration(this.getRandomSeed(this.duration));
 
-                if (entry.setDuration && morph instanceof IAnimationProvider)
+                this.updateProgress(this.currentMorph.get(), (int) (this.duration - this.lastDuration) - (int) Math.max(this.lastUpdate - this.lastDuration, 0));
+
+                if (this.morphSetDuration)
                 {
-                    ((IAnimationProvider) morph).getAnimation().duration = (int) duration;
+                    this.updateSetDuration(this.currentMorph.get(), 1, 1);
                 }
 
                 this.currentMorph.set(morph);
+                this.lastDuration = this.duration;
                 this.duration += duration;
+                this.morphSetDuration = entry.setDuration;
             }
 
-            if (!this.morphs.isEmpty())
+            if (this.duration - this.lastDuration < 0.0001 && this.getMaxDuration() < 0.0001)
             {
-                boolean durationZero = this.morphs.get(this.current).duration == 0;
+                break;
+            }
+        }
+    }
 
-                if (this.timer >= this.duration && !durationZero)
-                {
-                    this.updateMorph(this.timer);
-                }
+    /**
+     * Set animation's duration to 1
+     */
+    protected boolean updateSetDuration(AbstractMorph morph, int progress, int duration)
+    {
+        boolean result = false;
+
+        if (!(morph instanceof SequencerMorph) && morph instanceof IMorphProvider)
+        {
+            result |= updateSetDuration(((IMorphProvider) morph).getMorph(), progress, duration);
+        }
+
+        if (morph instanceof IAnimationProvider)
+        {
+            ((IAnimationProvider) morph).getAnimation().duration = duration;
+            ((IAnimationProvider) morph).getAnimation().progress = progress;
+
+            result = true;
+        }
+
+        if (morph instanceof IBodyPartProvider)
+        {
+            for (BodyPart part : ((IBodyPartProvider) morph).getBodyPart().parts)
+            {
+                result |= this.updateSetDuration(part.morph.get(), progress, duration);
+            }
+        }
+
+        return result;
+    }
+
+    protected void updateProgress(AbstractMorph morph, int progress)
+    {
+        if (morph instanceof SequencerMorph)
+        {
+            ((SequencerMorph) morph).timer += progress;
+        }
+        else if (morph instanceof IMorphProvider)
+        {
+            updateProgress(((IMorphProvider) morph).getMorph(), progress);
+        }
+
+        if (morph instanceof IAnimationProvider)
+        {
+            ((IAnimationProvider) morph).getAnimation().progress += progress;
+        }
+
+        if (morph instanceof IBodyPartProvider)
+        {
+            for (BodyPart part : ((IBodyPartProvider) morph).getBodyPart().parts)
+            {
+                this.updateProgress(part.morph.get(), progress);
             }
         }
     }
@@ -402,6 +871,14 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             this.timer = morph.timer;
             this.current = morph.current;
             this.duration = morph.duration;
+            
+            this.loop = morph.loop;
+            this.offset[0] = morph.offset[0];
+            this.offset[1] = morph.offset[1];
+            this.offset[2] = morph.offset[2];
+            this.offsetCount = morph.offsetCount;
+
+            this.keepProgress = morph.keepProgress;
         }
     }
 
@@ -434,6 +911,10 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             result = result && this.reverse == seq.reverse;
             result = result && this.isRandom == seq.isRandom;
             result = result && this.isTrulyRandom == seq.isTrulyRandom;
+            result = result && this.loop == seq.loop;
+            result = result && Objects.deepEquals(this.offset, seq.offset);
+            result = result && this.offsetCount == seq.offsetCount;
+            result = result && this.keepProgress == seq.keepProgress;
         }
 
         return result;
@@ -457,12 +938,26 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
                 }
 
                 this.current = -1;
-                this.timer = 0;
-                this.duration = this.morphs.isEmpty() ? 0 : this.morphs.get(0).duration;
-                this.currentMorph.copy(sequencer.currentMorph);
+                this.duration = 0;
+
+                if (!sequencer.keepProgress)
+                {
+                    this.timer = 0;
+                }
 
                 this.reverse = sequencer.reverse;
                 this.isRandom = sequencer.isRandom;
+
+                this.loopCount = 0;
+                this.isFirstMorph = false;
+                this.loop = sequencer.loop;
+                this.offset[0] = sequencer.offset[0];
+                this.offset[1] = sequencer.offset[1];
+                this.offset[2] = sequencer.offset[2];
+                this.offsetCount = sequencer.offsetCount;
+
+                this.lastDuration = 0;
+                this.lastUpdate = 0;
 
                 return true;
             }
@@ -475,10 +970,25 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     public void afterMerge(AbstractMorph morph)
     {
         super.afterMerge(morph);
+
         this.currentMorph.setDirect(morph);
         this.current = -1;
         this.duration = 0;
         this.timer = 0;
+        this.loopCount = 0;
+        this.isFirstMorph = false;
+        this.lastDuration = 0;
+        this.lastUpdate = 0;
+
+        if (morph instanceof SequencerMorph)
+        {
+            SequencerMorph sequencer = (SequencerMorph) morph;
+
+            if (this.keepProgress)
+            {
+                this.timer = sequencer.timer;
+            }
+        }
     }
 
     @Override
@@ -486,11 +996,18 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     {
         super.reset();
 
-        this.timer = this.current = 0;
+        this.current = -1;
+        this.timer = 0;
         this.duration = 0;
+        this.loopCount = 0;
         this.reverse = false;
         this.currentMorph.setDirect(null);
         this.morphs.clear();
+        this.loop = 0;
+        this.offset[0] = this.offset[1] = this.offset[2] = 0;
+        this.offsetCount = 0;
+        this.lastUpdate = 0;
+        this.keepProgress = false;
     }
 
     @Override
@@ -501,6 +1018,10 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         if (this.reverse) tag.setBoolean("Reverse", this.reverse);
         if (this.isRandom) tag.setBoolean("Random", this.isRandom);
         if (this.isTrulyRandom) tag.setBoolean("TrulyRandom", this.isTrulyRandom);
+        if (this.loop > 0) tag.setInteger("Loop", this.loop);
+        tag.setTag("Offset", NBTUtils.writeFloatList(new NBTTagList(), this.offset));
+        if (this.offsetCount > 0) tag.setInteger("OffsetCount", this.offsetCount);
+        if (this.keepProgress) tag.setBoolean("KeepProgress", this.keepProgress);
 
         if (!this.morphs.isEmpty())
         {
@@ -523,6 +1044,10 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         if (tag.hasKey("Reverse")) this.reverse = tag.getBoolean("Reverse");
         if (tag.hasKey("Random")) this.isRandom = tag.getBoolean("Random");
         if (tag.hasKey("TrulyRandom")) this.isTrulyRandom = tag.getBoolean("TrulyRandom");
+        if (tag.hasKey("Loop")) this.loop = tag.getInteger("Loop");
+        if (tag.hasKey("Offset")) NBTUtils.readFloatList(tag.getTagList("Offset", 5), this.offset);
+        if (tag.hasKey("OffsetCount")) this.offsetCount = tag.getInteger("OffsetCount");
+        if (tag.hasKey("KeepProgress")) this.keepProgress = tag.getBoolean("KeepProgress");
 
         if (tag.hasKey("List", NBT.TAG_LIST))
         {
@@ -539,7 +1064,8 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             this.current = -1;
             this.duration = 0;
             this.timer = 0;
-            this.updateMorph(0);
+            this.loopCount = 0;
+            this.lastUpdate = 0;
         }
     }
 
@@ -555,6 +1081,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         public float duration = 10;
         public float random = 0;
         public boolean setDuration;
+        public boolean endPoint;
 
         public SequenceEntry()
         {}
@@ -573,13 +1100,19 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         {
             this(morph, duration, random, true);
         }
-
+        
         public SequenceEntry(AbstractMorph morph, float duration, float random, boolean setDuration)
+        {
+            this(morph, duration, random, setDuration, false);
+        }
+
+        public SequenceEntry(AbstractMorph morph, float duration, float random, boolean setDuration, boolean endPoint)
         {
             this.morph = morph;
             this.duration = duration;
             this.random = random;
             this.setDuration = setDuration;
+            this.endPoint = endPoint;
         }
 
         public float getDuration(Random random)
@@ -590,7 +1123,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         @Override
         public SequenceEntry clone()
         {
-            return new SequenceEntry(MorphUtils.copy(this.morph), this.duration, this.random, this.setDuration);
+            return new SequenceEntry(MorphUtils.copy(this.morph), this.duration, this.random, this.setDuration, this.endPoint);
         }
 
         @Override
@@ -603,7 +1136,8 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
                 return Objects.equals(this.morph, entry.morph)
                     && this.duration == entry.duration
                     && this.random == entry.random
-                    && this.setDuration == entry.setDuration;
+                    && this.setDuration == entry.setDuration
+                    && this.endPoint == entry.endPoint;
             }
 
             return super.equals(obj);
@@ -621,6 +1155,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             entryTag.setFloat("Duration", this.duration);
             entryTag.setFloat("Random", this.random);
             entryTag.setBoolean("SetDuration", this.setDuration);
+            entryTag.setBoolean("EndPoint", this.endPoint);
 
             return entryTag;
         }
@@ -643,6 +1178,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             }
 
             this.setDuration = tag.hasKey("SetDuration") && tag.getBoolean("SetDuration");
+            this.endPoint = tag.hasKey("EndPoint") && tag.getBoolean("EndPoint");
         }
     }
 
@@ -652,19 +1188,25 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
      */
     public static class FoundMorph
     {
+        public int index;
         public SequenceEntry current;
         public SequenceEntry previous;
         public float totalDuration;
         public float lastDuration;
         public float prevLastDuration;
+        public int loopCount;
+        public boolean isFirstMorph;
 
-        public FoundMorph(SequenceEntry current, SequenceEntry previous, float totalDuration, float lastDuration, float prevLastDuration)
+        public FoundMorph(int index, SequenceEntry current, SequenceEntry previous, float totalDuration, float lastDuration, float prevLastDuration, int loopCount, boolean isFirstMorph)
         {
+            this.index = index;
             this.current = current;
             this.previous = previous;
             this.totalDuration = totalDuration;
             this.lastDuration = lastDuration;
             this.prevLastDuration = prevLastDuration;
+            this.loopCount = loopCount;
+            this.isFirstMorph = isFirstMorph;
         }
 
         public AbstractMorph getCurrentMorph()

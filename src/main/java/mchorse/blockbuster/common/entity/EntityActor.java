@@ -1,5 +1,6 @@
 package mchorse.blockbuster.common.entity;
 
+import com.google.common.collect.Queues;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
@@ -10,10 +11,13 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
 import mchorse.blockbuster.network.common.recording.PacketSyncTick;
+import mchorse.blockbuster.network.common.recording.actions.PacketRequestAction;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.blockbuster.recording.data.Record.MorphType;
+import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -28,6 +32,9 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -35,11 +42,18 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Queue;
+import java.util.Stack;
 
 import javax.annotation.Nullable;
 
@@ -112,6 +126,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     public boolean renderLast;
 
     public boolean enableBurning;
+    
+    public Queue<PacketModifyActor> modify = Queues.<PacketModifyActor>newArrayDeque();
 
     public EntityActor(World worldIn)
     {
@@ -211,6 +227,44 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     }
 
     /**
+     * Apply first frame for new actor.
+     */
+    @Override
+    public void onEntityUpdate()
+    {
+        boolean spawn = this.world.isRemote && this.ticksExisted < 2;
+        Record record = this.playback == null ? null : this.playback.record;
+
+        spawn &= record != null && record.getFrame(0) != null;
+
+        if (spawn)
+        {
+            this.playback.applyFrame(this.playback.tick - 1, this, true);
+
+            Frame frame = record.getFrameSafe(this.playback.tick - record.preDelay - 1);
+
+            if (frame.hasBodyYaw)
+            {
+                this.renderYawOffset = frame.bodyYaw;
+            }
+        }
+
+        super.onEntityUpdate();
+
+        if (spawn && this.playback.playing)
+        {
+            playback.applyFrame(this.playback.tick, this, true);
+
+            Frame frame = record.getFrameSafe(this.playback.tick - record.preDelay);
+
+            if (frame.hasBodyYaw)
+            {
+                this.renderYawOffset = frame.bodyYaw;
+            }
+        }
+    }
+
+    /**
      * Adjust the movement, limb swinging, and process action stuff.
      *
      * See process actions method for more information.
@@ -218,6 +272,20 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     public void onLivingUpdate()
     {
+        if (!this.world.isRemote && this.playback != null && this.playback.playing && !this.manual)
+        {
+            int tick = this.playback.tick;
+
+            if (this.playback.isFinished() && !this.noClip)
+            {
+                this.playback.stopPlaying();
+            }
+            else if (tick != 0 && tick % Blockbuster.recordSyncRate.get() == 0)
+            {
+                Dispatcher.sendToTracked(this, new PacketSyncTick(this.getEntityId(), tick));
+            }
+        }
+
         if (this.noClip && !this.world.isRemote)
         {
             if (this.playback != null)
@@ -241,20 +309,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             else
             {
                 this.playback.next();
-            }
-        }
-
-        if (!this.world.isRemote && this.playback != null && this.playback.playing && !this.manual)
-        {
-            int tick = this.playback.tick;
-
-            if (this.playback.isFinished() && !this.noClip)
-            {
-                this.playback.stopPlaying();
-            }
-            else if (tick != 0 && tick % Blockbuster.recordSyncRate.get() == 0)
-            {
-                Dispatcher.sendToTracked(this, new PacketSyncTick(this.getEntityId(), tick));
             }
         }
 
@@ -432,6 +486,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             morph.update(this);
         }
 
+        while (!this.modify.isEmpty())
+        {
+            this.applyModifyPacket(this.modify.poll());
+        }
+
         return distance;
     }
 
@@ -480,7 +539,15 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         if (message.offset >= 0)
         {
             this.invisible = message.invisible;
-            this.applyPause(message.morph, message.offset, message.previous, message.previousOffset);
+            this.applyPause(message.morph, message.offset, message.previous, message.previousOffset, this.forceMorph);
+
+            if (this.forceMorph)
+            {
+                this.pauseOffset = -1;
+                this.pausePreviousMorph = null;
+                this.pausePreviousOffset = -1;
+                this.forceMorph = false;
+            }
         }
         else
         {
@@ -529,12 +596,12 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     /**
      * Stores the data for paused morph
      */
-    public void morphPause(AbstractMorph morph, int offset, AbstractMorph previous, int previousOffset)
+    public void morphPause(AbstractMorph morph, int offset, AbstractMorph previous, int previousOffset, boolean resume)
     {
         this.pauseOffset = offset;
         this.pausePreviousMorph = previous;
         this.pausePreviousOffset = previousOffset;
-        this.forceMorph = false;
+        this.forceMorph = resume;
 
         this.morph.setDirect(morph);
     }
@@ -542,12 +609,17 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     /**
      * Apply pause on the morph
      */
-    public void applyPause(AbstractMorph morph, int offset, AbstractMorph previous, int previousOffset)
+    public void applyPause(AbstractMorph morph, int offset, AbstractMorph previous, int previousOffset, boolean resume)
     {
-        this.morphPause(morph, offset, previous, previousOffset);
+        this.morphPause(morph, offset, previous, previousOffset, resume);
 
         MorphUtils.pause(previous, null, previousOffset);
         MorphUtils.pause(morph, previous, offset);
+        
+        if (resume)
+        {
+            MorphUtils.resume(morph);
+        }
     }
 
     /**
@@ -557,7 +629,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         if (!this.manual)
         {
-            Dispatcher.sendToTracked(this, new PacketModifyActor(this));
+            this.playback.sendToTracked(new PacketModifyActor(this));
         }
     }
 
@@ -616,6 +688,13 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             buffer.writeBoolean(this.playback.playing);
             buffer.writeInt(this.playback.tick);
             ByteBufUtils.writeUTF8String(buffer, this.playback.record.filename);
+
+            buffer.writeBoolean(this.playback.replay != null && this.playback.replay.morph != null);
+
+            if (this.playback.replay != null && this.playback.replay.morph != null)
+            {
+                MorphUtils.morphToBuf(buffer, this.playback.replay.morph);
+            }
         }
 
         buffer.writeBoolean(this.isEntityInvulnerable(DamageSource.ANVIL));
@@ -635,6 +714,13 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             boolean playing = buffer.readBoolean();
             int tick = buffer.readInt();
             String filename = ByteBufUtils.readUTF8String(buffer);
+            Replay replay = null;
+
+            if (buffer.readBoolean())
+            {
+                replay = new Replay();
+                replay.morph = MorphUtils.morphFromBuf(buffer);
+            }
 
             if (this.playback == null)
             {
@@ -643,11 +729,14 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
                 if (record != null)
                 {
                     this.playback = new RecordPlayer(record, Mode.FRAMES, this);
+
+                    record.applyPreviousMorph(this, replay, tick - record.preDelay, playing ? MorphType.FORCE : MorphType.PAUSE);
                 }
                 else
                 {
                     this.playback = new RecordPlayer(null, Mode.FRAMES, this);
 
+                    Dispatcher.sendToServer(new PacketRequestAction(filename, false));
                     Dispatcher.sendToServer(new PacketRequestFrames(this.getEntityId(), filename));
                 }
             }
@@ -718,6 +807,80 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         public boolean isCreative()
         {
             return false;
+        }
+
+        @Override
+        public void onUpdate()
+        {
+            if (this.actor.isDead)
+            {
+                this.setDead();
+
+                return;
+            }
+
+            this.width = this.actor.width;
+            this.height = this.actor.height;
+            this.eyeHeight = this.actor.getEyeHeight();
+            this.setEntityBoundingBox(this.actor.getEntityBoundingBox());
+
+            if (this.actor.getRidingEntity() != this)
+            {
+                this.posX = this.actor.posX;
+                this.posY = this.actor.posY;
+                this.posZ = this.actor.posZ;
+            }
+
+            this.rotationYaw = this.actor.rotationYaw;
+            this.rotationPitch = this.actor.rotationPitch;
+
+            if (!Objects.equals(this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND), this.actor.getHeldItemMainhand()))
+            {
+                this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, this.actor.getHeldItemMainhand());
+            }
+
+            if (!Objects.equals(this.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND), this.actor.getHeldItemOffhand()))
+            {
+                this.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, this.actor.getHeldItemOffhand());
+            }
+        }
+
+        @Override
+        public void displayGUIChest(IInventory chestInventory)
+        {
+            if (this.openContainer != this.inventoryContainer)
+            {
+                this.closeScreen();
+            }
+
+            if (chestInventory instanceof IInteractionObject)
+            {
+                this.openContainer = ((IInteractionObject)chestInventory).createContainer(this.inventory, this);
+            }
+            else
+            {
+                this.openContainer = new ContainerChest(this.inventory, chestInventory, this);
+            }
+        }
+
+        @Override
+        public void closeScreen()
+        {
+            this.openContainer.onContainerClosed(this);
+
+            super.closeScreen();
+        }
+
+        @Override
+        public void readFromNBT(NBTTagCompound compound)
+        {
+            this.setDead();
+        }
+
+        @Override
+        public NBTTagCompound writeToNBT(NBTTagCompound compound)
+        {
+            return compound;
         }
     }
 }

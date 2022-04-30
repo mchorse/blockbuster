@@ -58,7 +58,15 @@ public abstract class BaseTracker implements INBTSerializable
         return super.equals(obj);
     }
 
-    public abstract boolean canMerge(AbstractMorph morph);
+    public boolean canMerge(BaseTracker morph)
+    {
+        if (morph != null)
+        {
+            return this.name.equals(morph.name);
+        }
+
+        return false;
+    }
 
     @Override
     public void fromNBT(NBTTagCompound tag)

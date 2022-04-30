@@ -57,6 +57,9 @@ public class ModelLimb
     /* OBJ */
     public float[] origin = new float[] {0F, 0F, 0F};
 
+    /* VOX */
+    public int specular = 0x00000000;
+
     public ModelLimb()
     {}
 
@@ -112,6 +115,7 @@ public class ModelLimb
         b.cape = this.cape;
 
         b.origin = new float[] {this.origin[0], this.origin[1], this.origin[2]};
+        b.specular = this.specular;
 
         return b;
     }

@@ -1,5 +1,8 @@
 package mchorse.blockbuster_pack.client.gui;
 
+import java.util.List;
+import java.util.function.BiConsumer;
+
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
@@ -7,14 +10,18 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiMode
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
 import mchorse.blockbuster.client.gui.utils.GuiShapeKeysEditor;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
+import mchorse.blockbuster_pack.morphs.CustomMorph.LimbProperties;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiContextMenu;
+import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
+import mchorse.mclib.client.gui.framework.elements.input.GuiColorElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.Direction;
 import mchorse.metamorph.client.gui.editor.GuiAnimation;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
@@ -31,6 +38,10 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
     public GuiButtonElement reset;
     public GuiButtonElement create;
     public GuiStringListElement list;
+    public GuiToggleElement absoluteBrightness;
+    public GuiTrackpadElement glow;
+    public GuiColorElement color;
+    public GuiToggleElement fixed;
     public GuiToggleElement poseOnSneak;
     public GuiPoseTransformations transforms;
 
@@ -42,6 +53,8 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
     public GuiButtonElement model;
     public GuiTrackpadElement scale;
     public GuiTrackpadElement scaleGui;
+    
+    public LimbProperties currentLimbProp;
 
     public GuiPosePanel(Minecraft mc, GuiCustomMorph editor)
     {
@@ -71,7 +84,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         {
             if (this.morph.customPose == null)
             {
-                this.morph.customPose = this.morph.getPose(this.mc.player, 0).copy();
+                this.morph.customPose = this.morph.convertProp(this.morph.getPose(this.mc.player, 0).copy());
             }
 
             this.updateList();
@@ -104,7 +117,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.list.context(this::limbContextMenu);
 
         this.transforms = new GuiPoseTransformations(mc);
-        this.transforms.flex().relative(this.area).set(0, 0, 190, 70).x(0.5F, -95).y(1, -75);
+        this.transforms.flex().relative(this.area).set(0, 0, 256, 70).x(0.5F, -128).y(1, -75);
 
         this.animation = new GuiAnimation(mc, true);
         this.animation.flex().relative(this).x(1F, -130).w(130);
@@ -138,10 +151,52 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         options.flex().relative(this).x(1F, -130).y(1F).w(130).anchorY(1F).column(5).vertical().stretch().height(20).padding(10);
         options.add(this.model, this.scale, this.scaleGui);
 
+        this.fixed = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.builder.limb.fixed"), (b) ->
+        {
+            this.currentLimbProp.fixed = this.fixed.isToggled() ? 1F : 0F;
+        });
+        this.fixed.flex().relative(this.model).x(0F).y(0F, -20).w(1F);
+
+        this.color = new GuiColorElement(mc, (color) ->
+        {
+            this.currentLimbProp.color.set(color);
+        }).direction(Direction.LEFT);
+        this.color.flex().relative(this.fixed).x(0F).y(0F, -25).w(1F).h(20);
+        this.color.picker.editAlpha();
+        this.color.tooltip(IKey.lang("blockbuster.gui.builder.limb.color"));
+
+        this.glow = new GuiTrackpadElement(mc, (value) ->
+        {
+            this.currentLimbProp.glow = value.floatValue();
+        }).limit(0, 1).values(0.01, 0.001, 0.1);
+        this.glow.flex().relative(this.color).x(0F).y(0F, -30).w(1F);
+        this.glow.tooltip(IKey.lang("blockbuster.gui.builder.limb.glow"));
+
+        this.absoluteBrightness = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.builder.limb.absolute_brighness"), (b) ->
+        {
+            this.currentLimbProp.absoluteBrightness = this.absoluteBrightness.isToggled();
+        });
+        this.absoluteBrightness.flex().relative(this.glow).x(0F).y(0F, -30).w(1F);
+
+        GuiSimpleContextMenu abMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
+        GuiSimpleContextMenu glowMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
+        GuiSimpleContextMenu colorMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
+        GuiSimpleContextMenu fixateMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
+
+        abMenu.action(IKey.lang("blockbuster.gui.builder.context.children"), this.applyToChildren((p, c) -> c.absoluteBrightness = p.absoluteBrightness));
+        glowMenu.action(IKey.lang("blockbuster.gui.builder.context.children"), this.applyToChildren((p, c) -> c.glow = p.glow));
+        colorMenu.action(IKey.lang("blockbuster.gui.builder.context.children"), this.applyToChildren((p, c) -> c.color.copy(p.color)));
+        fixateMenu.action(IKey.lang("blockbuster.gui.builder.context.children"), this.applyToChildren((p, c) -> c.fixed = p.fixed));
+
+        this.absoluteBrightness.context(() -> abMenu);
+        this.glow.context(() -> glowMenu);
+        this.color.context(() -> colorMenu);
+        this.fixed.context(() -> fixateMenu);
+
         this.shapeKeys = new GuiShapeKeysEditor(mc, () -> this.morph.model);
         this.shapeKeys.flex().relative(this.poseOnSneak).y(-125).w(1F).h(120);
 
-        this.add(this.reset, this.create, this.poseOnSneak, this.shapeKeys, this.list, this.animation, options, this.transforms, this.models, this.animation.interpolations);
+        this.add(this.reset, this.create, this.poseOnSneak, this.shapeKeys, this.list, this.animation, options, this.fixed, this.color, this.glow, this.absoluteBrightness, this.transforms, this.models, this.animation.interpolations);
     }
 
     private GuiContextMenu limbContextMenu()
@@ -166,6 +221,23 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.morph.customPose.copy(pose);
         this.transforms.set(this.transforms.trans, currentPose == null ? null : currentPose.limbs.get(this.list.getCurrentFirst()));
         this.updateShapeKeys();
+    }
+
+    private Runnable applyToChildren(BiConsumer<LimbProperties, LimbProperties> apply)
+    {
+        return () ->
+        {
+            String bone = this.list.getCurrentFirst();
+            LimbProperties anim = (LimbProperties) this.morph.customPose.limbs.get(bone);
+            List<String> children = this.morph.model.getChildren(bone);
+
+            for (String child : children)
+            {
+                LimbProperties childAnim = (LimbProperties) this.morph.customPose.limbs.get(child);
+
+                apply.accept(anim, childAnim);
+            }
+        };
     }
 
     private void updateShapeKeys()
@@ -198,7 +270,12 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
 
         this.editor.bbRenderer.limb = limb;
         this.list.setCurrent(limbName);
-        this.transforms.set(this.morph.customPose.limbs.get(limbName), pose == null ? null : pose.limbs.get(limbName));
+        this.currentLimbProp = (LimbProperties) this.morph.customPose.limbs.get(limbName);
+        this.transforms.set(this.currentLimbProp, pose == null ? null : pose.limbs.get(limbName));
+        this.absoluteBrightness.toggled(this.currentLimbProp.absoluteBrightness);
+        this.glow.setValue(this.currentLimbProp.glow);
+        this.color.picker.setColor(this.currentLimbProp.color.getRGBAColor());
+        this.fixed.toggled(this.currentLimbProp.fixed != 0F);
     }
 
     @Override
@@ -237,6 +314,10 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.transforms.setVisible(this.morph.customPose != null);
         this.list.flex().relative(this.morph.customPose == null ? this.create : this.reset);
         this.list.resize();
+        this.absoluteBrightness.setVisible(this.morph.customPose != null);
+        this.glow.setVisible(this.morph.customPose != null);
+        this.color.setVisible(this.morph.customPose != null);
+        this.fixed.setVisible(this.morph.customPose != null);
 
         this.updateShapeKeys();
     }

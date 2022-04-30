@@ -45,6 +45,7 @@ blockbuster.config.comments:
     damage_control:
         damage_control: Whether damage control is enabled
         damage_control_distance: Radius of effect for damage control
+        damage_control_message: Displays a warning if the currently pointed block has been managed by damage control
 
     model_folders:
         path: Absolute path to additional model Folder (on windows add the drive letter)
@@ -60,3 +61,10 @@ blockbuster.config.comments:
         waveform_filename: Whether filename of the played audio in the audio should be shown
         waveform_time: Whether audio track's playback time should be displayed. Keep in mind that audio track's playback time doesn't necessarily represent scene's current playback time!
         audio_sync: Whether the audio should always try to sync between server and client. This does not affect the playback and syncing when rejoining on a server with running audio. This option is for starting audio playback while being on the server. This configuration is a server side option.
+
+    onion_skin:
+        morph_action_color: Display the previous morph during editing
+
+    immersive_editor:
+        model_block: Whether to use the immersive editor for model block
+        record_editor: Whether to use the immersive editor for the record editor when using the Aperture camera editor

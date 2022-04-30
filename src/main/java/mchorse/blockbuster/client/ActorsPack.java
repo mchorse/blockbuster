@@ -1,12 +1,18 @@
 package mchorse.blockbuster.client;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.imageio.ImageIO;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -16,6 +22,9 @@ import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.client.textures.GifProcessThread;
 import mchorse.blockbuster.client.textures.URLDownloadThread;
+import mchorse.blockbuster.utils.mclib.GifFolder;
+import mchorse.blockbuster.utils.mclib.GifFrameFile;
+import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
@@ -36,6 +45,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ActorsPack implements IResourcePack
 {
+    private static final Pattern GifFrameNSPattern = Pattern.compile("^(.*)\\.gif>\\/frame(\\d+)(_n|_s)\\.png$");
     /**
      * Cached last file from {@link #resourceExists(ResourceLocation)} 
      * method
@@ -53,11 +63,6 @@ public class ActorsPack implements IResourcePack
         String domain = location.getResourceDomain();
         String path = location.getResourcePath();
 
-        if (path.toLowerCase().endsWith(".gif"))
-        {
-            this.handleGif(location);
-        }
-
         if ((domain.equals("http") || domain.equals("https")) && path.startsWith("//") && !path.endsWith(".mcmeta"))
         {
             return this.hanldeURLSkins(location);
@@ -71,7 +76,39 @@ public class ActorsPack implements IResourcePack
         {
             for (File file : Blockbuster.proxy.pack.folders)
             {
-                File packFile = new File(file, path);
+                File packFile = null;
+
+                if (path.contains(".gif>/"))
+                {
+                    Matcher matcher = GifFrameNSPattern.matcher(path);
+
+                    if (matcher.find())
+                    {
+                        String pathPart = matcher.group(1);
+                        String index = matcher.group(2);
+                        String type = matcher.group(3);
+
+                        File gifNS = new File(file, pathPart + type + ".gif");
+
+                        if (gifNS.exists())
+                        {
+                            packFile = new GifFrameFile(file, pathPart + type + ".gif>/frame" + index + ".png");
+                        }
+                        else
+                        {
+                            /* This is what Optifine will to do without this mod. */
+                            packFile = new File(file, pathPart + ".gif" + type + ".png");
+                        }
+                    }
+                    else
+                    {
+                        packFile = new GifFrameFile(file, path);
+                    }
+                }
+                else
+                {
+                    packFile = new File(file, path);
+                }
 
                 if (packFile.exists())
                 {
@@ -85,7 +122,36 @@ public class ActorsPack implements IResourcePack
         {
             this.lastFile = null;
 
-            return new FileInputStream(fileFile);
+            if (fileFile instanceof GifFrameFile)
+            {
+                GifFrameFile frame = (GifFrameFile) fileFile;
+                GifFolder image = frame.parent;
+
+                if (image.exists())
+                {
+                    String gifPath = location.getResourcePath();
+
+                    gifPath = gifPath.substring(0, gifPath.lastIndexOf('>'));
+
+                    this.handleGif(RLUtils.create(location.getResourceDomain(), gifPath), image);
+                }
+
+                return new FileInputStream(new File(image.getFilePath()));
+            }
+            else
+            {
+                if (path.toLowerCase().endsWith(".gif"))
+                {
+                    GifFolder gifFile = new GifFolder(fileFile.getPath());
+
+                    if (gifFile.exists())
+                    {
+                        this.handleGif(location, gifFile);
+                    }
+                }
+
+                return new FileInputStream(fileFile);
+            }
         }
 
         throw new FileNotFoundException(location.toString());
@@ -94,7 +160,7 @@ public class ActorsPack implements IResourcePack
     /**
      * Handle creation of GIF texture 
      */
-    private void handleGif(ResourceLocation location)
+    private void handleGif(ResourceLocation location, GifFolder gif)
     {
         if (GifProcessThread.THREADS.containsKey(location))
         {
@@ -103,7 +169,7 @@ public class ActorsPack implements IResourcePack
 
         new Thread(() ->
         {
-            Minecraft.getMinecraft().addScheduledTask(() -> GifProcessThread.create(location));
+            Minecraft.getMinecraft().addScheduledTask(() -> GifProcessThread.create(location, gif));
         }).start();
     }
 
@@ -157,7 +223,36 @@ public class ActorsPack implements IResourcePack
         /* Handle models path */
         for (File file : Blockbuster.proxy.pack.folders)
         {
-            this.lastFile = new File(file, path);
+            if (path.contains(".gif>/"))
+            {
+                Matcher matcher = GifFrameNSPattern.matcher(path);
+
+                if (matcher.find())
+                {
+                    String pathPart = matcher.group(1);
+                    String index = matcher.group(2);
+                    String type = matcher.group(3);
+
+                    File gifNS = new File(file, pathPart + type + ".gif");
+
+                    if (gifNS.exists())
+                    {
+                        this.lastFile = new GifFrameFile(file, pathPart + type + ".gif>/frame" + index + ".png");
+                    }
+                    else
+                    {
+                        this.lastFile = new File(file, pathPart + ".gif" + type + ".png");
+                    }
+                }
+                else
+                {
+                    this.lastFile = new GifFrameFile(file, path);
+                }
+            }
+            else
+            {
+                this.lastFile = new File(file, path);
+            }
 
             if (this.lastFile.exists())
             {

@@ -82,6 +82,17 @@ public class ModelLazyLoaderJSON implements IModelLazyLoader
         Minecraft.getMinecraft().addScheduledTask(() -> ModelExtrudedLayer.clearByModel(modelCustom));
 
         Map<String, IMeshes> meshes = this.getMeshes(key, model);
+        
+        if (meshes != null)
+        {
+            for (String limb : meshes.keySet())
+            {
+                if (!model.limbs.containsKey(limb))
+                {
+                    model.addLimb(limb);
+                }
+            }
+        }
 
         if (!model.model.isEmpty())
         {

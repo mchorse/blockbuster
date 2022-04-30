@@ -83,80 +83,80 @@ public class VoxBuilder
         {
             Vector3f normal = this.top;
 
-            this.add(mesh, vox, x, y + 1, z, voxel, normal);
-            this.add(mesh, vox, x + 1, y + 1, z, voxel, normal);
-            this.add(mesh, vox, x, y + 1, z + 1, voxel, normal);
-            this.add(mesh, vox, x, y + 1, z + 1, voxel, normal);
-            this.add(mesh, vox, x + 1, y + 1, z, voxel, normal);
-            this.add(mesh, vox, x + 1, y + 1, z + 1, voxel, normal);
+            this.add(mesh, vox, x, y + 1, z, voxel, -0.5F, -0.5F, normal);
+            this.add(mesh, vox, x + 1, y + 1, z, voxel, 0.5F, -0.5F, normal);
+            this.add(mesh, vox, x, y + 1, z + 1, voxel, -0.5F, 0.5F, normal);
+            this.add(mesh, vox, x, y + 1, z + 1, voxel, -0.5F, 0.5F, normal);
+            this.add(mesh, vox, x + 1, y + 1, z, voxel, 0.5F, -0.5F, normal);
+            this.add(mesh, vox, x + 1, y + 1, z + 1, voxel, 0.5F, 0.5F, normal);
         }
 
         if (!bottom)
         {
             Vector3f normal = this.bottom;
 
-            this.add(mesh, vox, x, y, z, voxel, normal);
-            this.add(mesh, vox, x, y, z + 1, voxel, normal);
-            this.add(mesh, vox, x + 1, y, z, voxel, normal);
-            this.add(mesh, vox, x, y, z + 1, voxel, normal);
-            this.add(mesh, vox, x + 1, y, z + 1, voxel, normal);
-            this.add(mesh, vox, x + 1, y, z, voxel, normal);
+            this.add(mesh, vox, x, y, z, voxel, -0.5F, -0.5F, normal);
+            this.add(mesh, vox, x, y, z + 1, voxel, -0.5F, 0.5F, normal);
+            this.add(mesh, vox, x + 1, y, z, voxel, 0.5F, -0.5F, normal);
+            this.add(mesh, vox, x, y, z + 1, voxel, -0.5F, 0.5F, normal);
+            this.add(mesh, vox, x + 1, y, z + 1, voxel, 0.5F, 0.5F, normal);
+            this.add(mesh, vox, x + 1, y, z, voxel, 0.5F, -0.5F, normal);
         }
 
         if (!left)
         {
             Vector3f normal = this.left;
 
-            this.add(mesh, vox, x + 1, y, z, voxel, normal);
-            this.add(mesh, vox, x + 1, y, z + 1, voxel, normal);
-            this.add(mesh, vox, x + 1, y + 1, z, voxel, normal);
-            this.add(mesh, vox, x + 1, y + 1, z, voxel, normal);
-            this.add(mesh, vox, x + 1, y, z + 1, voxel, normal);
-            this.add(mesh, vox, x + 1, y + 1, z + 1, voxel, normal);
+            this.add(mesh, vox, x + 1, y, z, voxel, -0.5F, -0.5F, normal);
+            this.add(mesh, vox, x + 1, y, z + 1, voxel, -0.5F, 0.5F, normal);
+            this.add(mesh, vox, x + 1, y + 1, z, voxel, 0.5F, -0.5F, normal);
+            this.add(mesh, vox, x + 1, y + 1, z, voxel, 0.5F, -0.5F, normal);
+            this.add(mesh, vox, x + 1, y, z + 1, voxel, -0.5F, 0.5F, normal);
+            this.add(mesh, vox, x + 1, y + 1, z + 1, voxel, 0.5F, 0.5F, normal);
         }
 
         if (!right)
         {
             Vector3f normal = this.right;
 
-            this.add(mesh, vox, x, y, z, voxel, normal);
-            this.add(mesh, vox, x, y + 1, z, voxel, normal);
-            this.add(mesh, vox, x, y, z + 1, voxel, normal);
-            this.add(mesh, vox, x, y + 1, z, voxel, normal);
-            this.add(mesh, vox, x, y + 1, z + 1, voxel, normal);
-            this.add(mesh, vox, x, y, z + 1, voxel, normal);
+            this.add(mesh, vox, x, y, z, voxel, -0.5F, -0.5F, normal);
+            this.add(mesh, vox, x, y + 1, z, voxel, 0.5F, -0.5F, normal);
+            this.add(mesh, vox, x, y, z + 1, voxel, -0.5F, 0.5F, normal);
+            this.add(mesh, vox, x, y + 1, z, voxel, 0.5F, -0.5F, normal);
+            this.add(mesh, vox, x, y + 1, z + 1, voxel, 0.5F, 0.5F, normal);
+            this.add(mesh, vox, x, y, z + 1, voxel, -0.5F, 0.5F, normal);
         }
 
         if (!front)
         {
             Vector3f normal = this.front;
 
-            this.add(mesh, vox, x, y, z + 1, voxel, normal);
-            this.add(mesh, vox, x, y  + 1, z + 1, voxel, normal);
-            this.add(mesh, vox, x + 1, y, z + 1, voxel, normal);
-            this.add(mesh, vox, x, y + 1, z + 1, voxel, normal);
-            this.add(mesh, vox, x + 1, y + 1, z + 1, voxel, normal);
-            this.add(mesh, vox, x + 1, y, z + 1, voxel, normal);
+            this.add(mesh, vox, x, y, z + 1, voxel, -0.5F, -0.5F, normal);
+            this.add(mesh, vox, x, y + 1, z + 1, voxel, -0.5F, 0.5F, normal);
+            this.add(mesh, vox, x + 1, y, z + 1, voxel, 0.5F, -0.5F, normal);
+            this.add(mesh, vox, x, y + 1, z + 1, voxel, -0.5F, 0.5F, normal);
+            this.add(mesh, vox, x + 1, y + 1, z + 1, voxel, 0.5F, 0.5F, normal);
+            this.add(mesh, vox, x + 1, y, z + 1, voxel, 0.5F, -0.5F, normal);
         }
 
         if (!back)
         {
             Vector3f normal = this.back;
 
-            this.add(mesh, vox, x, y, z, voxel, normal);
-            this.add(mesh, vox, x + 1, y, z, voxel, normal);
-            this.add(mesh, vox, x, y + 1, z, voxel, normal);
-            this.add(mesh, vox, x, y + 1, z, voxel, normal);
-            this.add(mesh, vox, x + 1, y, z, voxel, normal);
-            this.add(mesh, vox, x + 1, y + 1, z, voxel, normal);
+            this.add(mesh, vox, x, y, z, voxel, -0.5F, -0.5F, normal);
+            this.add(mesh, vox, x + 1, y, z, voxel, 0.5F, -0.5F, normal);
+            this.add(mesh, vox, x, y + 1, z, voxel, -0.5F, 0.5F, normal);
+            this.add(mesh, vox, x, y + 1, z, voxel, -0.5F, 0.5F, normal);
+            this.add(mesh, vox, x + 1, y, z, voxel, 0.5F, -0.5F, normal);
+            this.add(mesh, vox, x + 1, y + 1, z, voxel, 0.5F, 0.5F, normal);
         }
     }
 
-    private void add(Mesh mesh, Vox vox, int x, int y, int z, int voxel, Vector3f normal)
+    private void add(Mesh mesh, Vox vox, int x, int y, int z, int voxel, float offsetU, float offsetV, Vector3f normal)
     {
         int tris = mesh.triangles;
-        float u = (voxel + 0.5F) / 256F;
-        float v = 0.5F;
+        float u = (voxel + 0.5F + offsetU) / 256F;
+        float v = 0.5F + offsetV;
 
         Vector3f vertex = this.process(x, y, z, vox);
         mesh.posData[tris * 3] = vertex.x;

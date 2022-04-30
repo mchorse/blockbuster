@@ -2,6 +2,8 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_block;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.client.gui.GuiImmersiveEditor;
+import mchorse.blockbuster.client.gui.GuiImmersiveMorphMenu;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
@@ -21,19 +23,26 @@ import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Direction;
+import mchorse.mclib.utils.MatrixUtils.Transformation;
 import mchorse.mclib.utils.OpHelper;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
 public class GuiModelBlockPanel extends GuiBlockbusterPanel
 {
@@ -59,6 +68,8 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     private GuiSlotElement[] slots = new GuiSlotElement[6];
 
     private Map<BlockPos, TileEntityModel> old = new HashMap<BlockPos, TileEntityModel>();
+
+    private AbstractMorph morph;
 
     /**
      * Try adding a block position, if it doesn't exist in list already 
@@ -112,7 +123,26 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
         column.flex().relative(this).w(120).column(5).vertical().stretch().height(20).padding(10);
 
-        this.pickMorph = new GuiNestedEdit(mc, (editing) -> ClientProxy.panels.addMorphs(this, editing, this.model.morph.get()));
+        this.pickMorph = new GuiNestedEdit(mc, (editing) -> 
+        {
+            if (Blockbuster.immersiveModelBlock.get())
+            {
+                GuiImmersiveEditor editor = ClientProxy.panels.showImmersiveEditor(editing, this.model.morph.get());
+
+                editor.morphs.updateCallback = this::updateMorphEditor;
+                editor.morphs.beforeRender = this::beforeEditorRender;
+                editor.morphs.afterRender = this::afterEditorRender;
+                editor.onClose = this::afterEditorClose;
+
+                /* Avoid update. */
+                this.morph = this.model.morph.get();
+                this.model.morph.setDirect(MorphUtils.copy(this.morph));
+            }
+            else
+            {
+                ClientProxy.panels.addMorphs(this, editing, this.model.morph.get());
+            }
+        });
 
         GuiButtonElement look = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.model_block.look"), (button) ->
         {
@@ -173,10 +203,54 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     {
         if (this.model != null)
         {
-            this.model.morph.setDirect(morph);
+            if (Blockbuster.immersiveModelBlock.get())
+            {
+                this.morph = morph;
+            }
+            else
+            {
+                this.model.morph.setDirect(morph);
+            }
         }
 
         this.pickMorph.setMorph(morph);
+    }
+
+    private void updateMorphEditor(GuiImmersiveMorphMenu menu)
+    {
+        if (this.model == null)
+        {
+            return;
+        }
+
+        TileEntity te = this.model.getWorld().getTileEntity(this.model.getPos());
+
+        if (te != this.model)
+        {
+            if (te instanceof TileEntityModel)
+            {
+                this.setModelBlock((TileEntityModel) te);
+            }
+        }
+
+        menu.target = this.model.entity;
+    }
+
+    private void beforeEditorRender(GuiContext context)
+    {
+        GlStateManager.pushMatrix();
+
+        ClientProxy.modelRenderer.transform(this.model);
+    }
+
+    private void afterEditorRender(GuiContext context)
+    {
+        GlStateManager.popMatrix();
+    }
+
+    private void afterEditorClose(GuiImmersiveEditor editor)
+    {
+        this.model.morph.setDirect(this.morph);
     }
 
     @Override
@@ -399,6 +473,30 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
             this.model.rx = (float) x;
             this.model.ry = (float) y;
             this.model.rz = (float) z;
+        }
+
+        @Override
+        protected void prepareRotation(Matrix4f mat)
+        {
+            Transformation.RotationOrder order = Transformation.RotationOrder.valueOf(model.order.toString());
+            float[] rot = new float[] {(float) this.rx.value, (float) this.ry.value, (float) this.rz.value};
+            Matrix4f trans = new Matrix4f();
+            trans.setIdentity();
+            trans.set(Transformation.getRotationMatrix(order.thirdIndex, rot[order.thirdIndex]));
+            mat.mul(trans);
+            trans.set(Transformation.getRotationMatrix(order.secondIndex, rot[order.secondIndex]));
+            mat.mul(trans);
+            trans.set(Transformation.getRotationMatrix(order.firstIndex, rot[order.firstIndex]));
+            mat.mul(trans);
+        }
+
+        @Override
+        protected void postRotation(Transformation transform)
+        {
+            Vector3f result = transform.getRotation(Transformation.RotationOrder.valueOf(model.order.toString()), new Vector3f((float) this.rx.value, (float) this.ry.value, (float) this.rz.value));
+            this.rx.setValueAndNotify(result.x);
+            this.ry.setValueAndNotify(result.y);
+            this.rz.setValueAndNotify(result.z);
         }
     }
 }
