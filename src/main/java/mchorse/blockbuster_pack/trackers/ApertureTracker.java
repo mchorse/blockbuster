@@ -4,7 +4,6 @@ import mchorse.aperture.Aperture;
 import mchorse.aperture.camera.CameraExporter;
 import mchorse.aperture.camera.minema.MinemaIntegration;
 import mchorse.aperture.client.gui.GuiMinemaPanel;
-import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster_pack.morphs.TrackerMorph;
 import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -16,40 +15,44 @@ public class ApertureTracker extends BaseTracker
 {
     private CameraExporter.TrackingPacket trackingPacket = null;
 
-    public boolean combineTracking;
+    private boolean combineTracking;
+
+    public void setCombineTracking(boolean combineTracking)
+    {
+        this.combineTracking = combineTracking;
+    }
+
+    public boolean getCombineTracking()
+    {
+        return this.combineTracking;
+    }
 
     @Override
     @Optional.Method(modid = Aperture.MOD_ID)
     public void track(EntityLivingBase target, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        if (this.trackingPacket != null && this.trackingPacket.isReset())
+        {
+            this.trackingPacket = null;
+
+            return;
+        }
+
         if(!ReflectionUtils.isOptifineShadowPass() && !this.name.equals(""))
         {
-            if(CameraHandler.isApertureAndMinemaLoaded())
+            if (GuiMinemaPanel.trackingExporter.isTracking())
             {
-                if (MinemaIntegration.isRecording() && this.trackingPacket == null)
+                if (this.trackingPacket == null)
                 {
                     CameraExporter.TrackingPacket packet = new CameraExporter.TrackingPacket(this.name, this.combineTracking);
 
                     if (GuiMinemaPanel.trackingExporter.addTracker(packet))
                     {
                         this.trackingPacket = packet;
-
-                        //dont rename - when actors are present it can result in canMerge not being called before render
-                        //this.name = packet.getName();
-                    }
-                }
-                else if (!MinemaIntegration.isRecording() && this.trackingPacket != null)
-                {
-                    if(this.trackingPacket.isReset())
-                    {
-                        this.trackingPacket = null;
                     }
                 }
 
-                if (MinemaIntegration.isRecording() && this.trackingPacket != null)
-                {
-                    GuiMinemaPanel.trackingExporter.track(this.trackingPacket, target, partialTicks);
-                }
+                GuiMinemaPanel.trackingExporter.track(this.trackingPacket, target, partialTicks);
             }
         }
     }

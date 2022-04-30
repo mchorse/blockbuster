@@ -15,7 +15,7 @@ public class GuiApertureTracker extends GuiBaseTracker<ApertureTracker>
 
         this.combineTracking = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.tracker_morph.aperture_tracker.combine_tracking"), (toggle) ->
         {
-            this.tracker.combineTracking = toggle.isToggled();
+            this.tracker.setCombineTracking(toggle.isToggled());
         });
         this.combineTracking.flex().relative(name).w(150).x(0F).y(1F, 5).anchor(0F, 0F);
         this.combineTracking.tooltip(IKey.lang("blockbuster.gui.tracker_morph.aperture_tracker.combine_tracking_tooltip"));
@@ -28,6 +28,6 @@ public class GuiApertureTracker extends GuiBaseTracker<ApertureTracker>
     {
         super.fill(tracker);
 
-        this.combineTracking.toggled(tracker.combineTracking);
+        this.combineTracking.toggled(tracker.getCombineTracking());
     }
 }

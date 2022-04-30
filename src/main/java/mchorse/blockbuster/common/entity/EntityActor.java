@@ -125,6 +125,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
     public boolean renderLast;
 
+    public boolean enableBurning;
+    
     public Queue<PacketModifyActor> modify = Queues.<PacketModifyActor>newArrayDeque();
 
     public EntityActor(World worldIn)
@@ -139,6 +141,12 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     public AbstractMorph getMorph()
     {
         return this.morph.get();
+    }
+
+    @Override
+    public boolean isBurning()
+    {
+        return this.enableBurning && super.isBurning();
     }
 
     /**
@@ -634,6 +642,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         this.morph.setDirect(MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("Morph")));
         this.invisible = tag.getBoolean("Invisible");
+        this.enableBurning = tag.getBoolean("EnableBurning");
         this.wasAttached = tag.getBoolean("WasAttached");
 
         if (!this.world.isRemote)
@@ -653,6 +662,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         }
 
         tag.setBoolean("Invisible", this.invisible);
+        tag.setBoolean("EnableBurning", this.enableBurning);
         tag.setBoolean("WasAttached", this.wasAttached);
     }
 
@@ -669,6 +679,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         MorphUtils.morphToBuf(buffer, this.morph.get());
 
         buffer.writeBoolean(this.invisible);
+        buffer.writeBoolean(this.enableBurning);
         buffer.writeBoolean(this.noClip);
         buffer.writeBoolean(this.playback != null);
 
@@ -695,6 +706,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         this.morph.setDirect(MorphUtils.morphFromBuf(buffer));
         this.invisible = buffer.readBoolean();
+        this.enableBurning = buffer.readBoolean();
         this.noClip = buffer.readBoolean();
 
         if (buffer.readBoolean())

@@ -28,6 +28,7 @@ public class Replay
     public String name = "";
     public String target = "";
     public boolean invincible = false;
+    public boolean enableBurning = true;
     public boolean teleportBack = true;
 
     /* Visual data */
@@ -75,6 +76,7 @@ public class Replay
         actor.setEntityInvulnerable(this.invincible);
         actor.morph(mchorse.metamorph.api.MorphUtils.copy(this.morph), false);
         actor.invisible = this.invisible;
+        actor.enableBurning = this.enableBurning;
 
         if (this.health > 20)
         {
@@ -110,6 +112,7 @@ public class Replay
 
         tag.setBoolean("Invincible", this.invincible);
         tag.setBoolean("Invisible", this.invisible);
+        tag.setBoolean("EnableBurning", this.enableBurning);
         tag.setBoolean("Enabled", this.enabled);
         tag.setBoolean("Fake", this.fake);
         if (!this.teleportBack) tag.setBoolean("TP", this.teleportBack);
@@ -125,6 +128,7 @@ public class Replay
         this.morph = MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("Morph"));
         this.invincible = tag.getBoolean("Invincible");
         this.invisible = tag.getBoolean("Invisible");
+        this.enableBurning = tag.getBoolean("EnableBurning");
         this.fake = tag.getBoolean("Fake");
 
         if (tag.hasKey("Enabled")) this.enabled = tag.getBoolean("Enabled");
@@ -144,6 +148,7 @@ public class Replay
 
         buf.writeBoolean(this.invincible);
         buf.writeBoolean(this.invisible);
+        buf.writeBoolean(this.enableBurning);
         buf.writeBoolean(this.enabled);
         buf.writeBoolean(this.fake);
         buf.writeBoolean(this.teleportBack);
@@ -160,6 +165,7 @@ public class Replay
 
         this.invincible = buf.readBoolean();
         this.invisible = buf.readBoolean();
+        this.enableBurning = buf.readBoolean();
         this.enabled = buf.readBoolean();
         this.fake = buf.readBoolean();
         this.teleportBack = buf.readBoolean();
@@ -179,6 +185,7 @@ public class Replay
                 && Objects.equal(replay.target, this.target)
                 && replay.invincible == this.invincible
                 && replay.invisible == this.invisible
+                && replay.enableBurning == this.enableBurning
                 && replay.renderLast == this.renderLast
                 && Objects.equal(replay.morph, this.morph);
         }
@@ -197,6 +204,7 @@ public class Replay
 
         replay.invincible = this.invincible;
         replay.invisible = this.invisible;
+        replay.enableBurning = this.enableBurning;
         replay.enabled = this.enabled;
         replay.fake = this.fake;
         replay.teleportBack = this.teleportBack;

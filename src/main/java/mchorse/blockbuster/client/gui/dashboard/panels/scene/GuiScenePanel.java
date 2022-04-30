@@ -83,6 +83,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
     public GuiTextElement target;
     public GuiToggleElement invincible;
     public GuiToggleElement invisible;
+    public GuiToggleElement enableBurning;
     public GuiToggleElement enabled;
     public GuiToggleElement fake;
     public GuiToggleElement teleportBack;
@@ -172,6 +173,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.target.tooltip(IKey.lang("blockbuster.gui.director.target_tooltip"), Direction.LEFT);
         this.invincible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invincible"), false, (b) -> this.replay.invincible = b.isToggled());
         this.invisible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invisible"), false, (b) -> this.replay.invisible = b.isToggled());
+        this.enableBurning = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.enable_burning"), true, (b) -> this.replay.enableBurning = b.isToggled());
         this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.enabled"), false, (b) -> this.replay.enabled = b.isToggled());
         this.fake = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.fake_player"), false, (b) -> this.replay.fake = b.isToggled());
         this.teleportBack = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.tp_back"), false, (b) -> this.replay.teleportBack = b.isToggled());
@@ -184,7 +186,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
 
         left.add(this.recordingId, this.id);
         left.add(Elements.label(IKey.lang("blockbuster.gui.director.name")).color(0xcccccc), this.name);
-        left.add(Elements.label(IKey.lang("blockbuster.gui.director.health")).color(0xcccccc), this.health, this.invincible, this.invisible, this.enabled, this.fake, this.teleportBack, this.renderLast);
+        left.add(Elements.label(IKey.lang("blockbuster.gui.director.health")).color(0xcccccc), this.health, this.invincible, this.invisible, this.enableBurning, this.enabled, this.fake, this.teleportBack, this.renderLast);
         this.replays.add(this.selector, this.replayEditor);
 
         /* Toggle view button */
@@ -432,6 +434,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.target.setText(this.replay.target);
         this.invincible.toggled(this.replay.invincible);
         this.invisible.toggled(this.replay.invisible);
+        this.enableBurning.toggled(this.replay.enableBurning);
         this.enabled.toggled(this.replay.enabled);
         this.fake.toggled(this.replay.fake);
         this.teleportBack.toggled(this.replay.teleportBack);
