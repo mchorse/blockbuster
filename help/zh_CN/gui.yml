@@ -94,6 +94,7 @@ blockbuster.gui:
         target_tooltip: 你可以在此指定需要哪个玩家来播放这段回放。\n\n额外的目标选择器可以用来选择玩家的用户名. @r - 随机玩家, @{n}team{r} - 其中 {n}team{r} 是计分板中的队伍名称.
         invincible: 无敌
         invisible: 隐身
+        enable_burning: 允许燃烧
         enabled: 启用
         fake_player: 假玩家
         tp_back: 传送回来
@@ -665,8 +666,9 @@ blockbuster.gui:
         hidden: 隐藏追踪器标志
 
         aperture_tracker:
-            combine_tracking: 合并同名追踪器
-            combine_tracking_tooltip: 合并具有相同名称的追踪器数据。当您在多个不会同时出现的伪装上设置有相同名称的追踪器时，可以开启此选项。
+            combine_tracking: 自动追加
+            combine_tracking_tooltip: 若追踪器的名称已被追踪，本选项将检查该追踪器是否会在原追踪器停止的下一帧开始。若追踪器在下一帧仍然存在，那么它就会将追踪数据附加到原来的数据上。
+
 
     texture:
         title: 材质管理器
