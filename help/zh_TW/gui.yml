@@ -88,12 +88,13 @@ blockbuster.gui:
         open_audio_folder: 打開包含音軌的文件夾
 
         id: 回放 ID
-        name: 名稱標簽
-        name_tooltip: 演員的名稱標簽。你可以通過這一參數，並結合命令（比如 @e[name=Test]）來鎖定該演員，或只是單純讓演員顯示名稱。\n\n你可以使用 [ 作為顯示名稱的格式化代碼。如 [cR[aG[1B[r 會變成 {c}R{a}G{1}B{r}.
+        name: 名稱標籤
+        name_tooltip: 演員的名稱標籤。你可以通過這一參數，並結合命令（比如 @e[name=Test]）來鎖定該演員，或只是單純讓演員顯示名稱。\n\n你可以使用 [ 作為顯示名稱的格式化代碼。如 [cR[aG[1B[r 會變成 {c}R{a}G{1}B{r}.
         target: 目標
         target_tooltip: 你可以在此指定需要哪個玩家來播放這段回放。\n\n額外的目標選擇器可以用來選擇玩家的用戶名. @r - 隨機玩家, @{n}team{r} - 其中 {n}team{r} 是計分板中的隊伍名稱.
         invincible: 無敵
         invisible: 隱身
+        enable_burning: 允許燃燒
         enabled: 啟用
         fake_player: 假玩家
         tp_back: 傳送回來
@@ -272,7 +273,7 @@ blockbuster.gui:
                 desc: 與當前演員所看向的實體進行交互（使用如命名牌、物品展示框或模型實體進行交互）
             close_container:
                 title: 關閉箱子 Close Container
-                desc: 關閉演員所開啓的容器，這通常可以關閉演員之前所打開的箱子。（僅適用於假玩家）
+                desc: 關閉演員所打開的容器，這通常可以關閉演員先前所交互的箱子。（僅適用於假玩家）
 
     # Playback GUI
     playback:
@@ -318,7 +319,7 @@ blockbuster.gui:
         limb:
             absolute_brighness: 絕對亮度
             glow: 肢體發光
-            color: 肢體顔色
+            color: 肢體顏色
             fixed: 固定動作
 
     image:
@@ -349,13 +350,13 @@ blockbuster.gui:
         truly_random_order: 完全隨機
         keep_progress: 繼承動畫進度
         ticks: Ticks
-        add_part_tooltip: 添加一個偽裝至清單，新偽裝通常會被添加至清單末尾。按住 Ctrl 鍵則會將其添加為所選偽裝的下一個偽裝
-        loop: 迴圈
-        loop_tooltip: 設定迴圈次數，設為 0 則為無限迴圈
-        loop_offset: 迴圈後位移
-        loop_offset_count: 迴圈位移次數
+        add_part_tooltip: 添加一個偽裝至列表，新偽裝通常會被添加至列表末尾。按住 Ctrl 鍵則會將其添加為所選偽裝的下一個偽裝
+        loop: 循環
+        loop_tooltip: 設置循環次數，設為 0 則為無限循環
+        loop_offset: 循環後位移
+        loop_offset_count: 循環位移次數
         end_point: 結束點
-        end_point_tooltip: 將當前偽裝設為序列發生器的結束點，若此序列發生器為隨機序列，結束點將用於記錄迴圈次數
+        end_point_tooltip: 將當前偽裝設為序列發生器的結束點，若此序列發生器為隨機序列，結束點將用於記錄循環次數
 
         preview_tick: 該序列偽裝的預覽 Tick 數
 
@@ -660,13 +661,14 @@ blockbuster.gui:
         type:
             title: 類型
             aperture_tracker: Aperture 偽裝追蹤器
-            minema: Minema 偽裝追踪器
+            minema: Minema 偽裝追蹤器
             apcam: Aperture 調整器
         hidden: 隱藏追蹤器標誌
 
         aperture_tracker:
-            combine_tracking: 合併同名追蹤器
-            combine_tracking_tooltip: 合併具有相同名稱的追蹤器數據。當您在多個不會同時出現的偽裝上設置有相同名稱的追蹤器時，可以開啟此選項。
+            combine_tracking: 自動追加
+            combine_tracking_tooltip: 若追蹤器的名稱已被追蹤，本選項將檢查該追蹤器是否會在原追蹤器停止的下一幀開始。若追蹤器在下一幀仍然存在，那麼它就會將追蹤數據附加到原來的數據上。
+
 
     texture:
         title: 材質管理器
@@ -813,11 +815,11 @@ blockbuster.gui:
             cycle: 在面板間循環切換
 
     immersive_editor:
-        hide_outer_panel: 按下 F1 隱藏外部介面
+        hide_outer_panel: 按下 F1 隱藏外部界面
 
         keys:
             category: 沉浸式編輯器
-            toggle_outer_panel: 切換外部介面
+            toggle_outer_panel: 切換外部界面
 
     interpolations:
         linear: 線性
@@ -852,9 +854,9 @@ blockbuster.gui:
         
         modifiers:
             tracker: 追蹤器
-            tracker_description: 將相機綁定於場景中的一個 “Aperture調整器”追踪器偽裝 之上
+            tracker_description: 將相機綁定於場景中的一個 “Aperture調整器”追蹤器偽裝 之上
 
             panels:
-                tracker_tooltip: 輸入追踪器偽裝的名稱（類型必須為“Aperture調整器”）
+                tracker_tooltip: 輸入追蹤器偽裝的名稱（類型必須為“Aperture調整器”）
                 main_cam: 作為主要相機
-                main_cam_tooltip: 開啟此選項後，此調整器之前的所有相機變換將在此追踪器空間進行重新計算，否則，調整器將只修改座標數據
+                main_cam_tooltip: 開啟此選項後，此調整器之前的所有相機變換將在此追蹤器空間進行重新計算，否則，調整器將只修改座標數據
