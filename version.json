@@ -59,8 +59,8 @@
         "1.4.10": "Patch 1.4.10 adds few nice misc. features (model block and OBJ loading without JSON model) which generally should improve UX a bit and simplify decorating set with Blockbuster models/Metamorph morphs, and lay down a foundation for future new features (which involves removing old useless code)."
     },
     "promos": {
-        "1.12.2-latest": "2.4.1",
-        "1.12.2-recommended": "2.4.1",
+        "1.12.2-latest": "2.5",
+        "1.12.2-recommended": "2.5",
         "1.11.2-latest": "1.6.6",
         "1.11.2-recommended": "1.6.6",
         "1.10.2-latest": "1.6.6",
