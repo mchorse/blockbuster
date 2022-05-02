@@ -1,3 +1,63 @@
+## Version 2.5
+
+This huge update was made by MiaoNLI, exceptions are mentioned at the respective items.
+
+**Compatible** with McLib `2.4`, Metamorph `1.3` and Aperture `1.8`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+* GUI
+    * Added Immersive Editor for Model Block and Record Editor (when using Aperture)
+    * Added keybind F1 to show Record Editor in Immersive Editor for Record Editor
+    * Added keybind F3 to toggle in-GUI rendering in Immersive Editor (Automatically enabled when rendering onion skins)
+    * Added Onion skin for Sequencer Morph and Record Editor (when using Aperture)
+    * Adjusted the width of GuiTransformations
+    * Added damage control tips
+* GIF
+    * Compatible with OptiFine shaders (*_n.gif & *_s.gif)
+    * Added the function to select a frame of gif
+* Model Editor
+    * OBJ/VOX limb highlighting
+    * OBJ/VOX limbs cannot be deleted now, and new limbs are automatically added after modifying the model file
+    * Only the anchor panel supported by the currently selected limb is displayed
+    * Changes to anchor points no longer affect the model itself
+* Custom Morph
+    * Fixed bug of OBJ parser
+    * Add limb glow and color animation (suggested by ORDM)
+    * Optimized animation
+* Sequencer Morph
+    * Added float point tick animations support (unstable)
+    * Added loop count and end point
+    * Added loop offsets
+    * Added a property to keep the previous progress after merge (used for bodypart)
+    * Added function of morph generation in editor (suggested by MichaelCreeper_)
+    * Added serial numbers to the morph list (suggested by Yancie)
+    * Holding down the Ctrl key and clicking the Add button will not add the new morph to the end of the morph list
+* Tracker Morph
+    * Added Aperture Camera and Aperture Modifier
+    * Added Minema Tracker
+* Chroma blocks
+    * No longer propagate block brightness
+* Scene & Recording
+    * Added the ability of opening chest to normal actor
+    * Added a action to close chest
+    * Optimized synchronization
+    * Added /record merge command to copy actions from a record to another (suggested by Chunk7)
+    * Added an option in Aperture to automatically stop scene playback by exiting the camera editor
+    * Fixed the bug that the scene doesn't play the record when actor is out of loading/rendering distance
+    * Added option to disable actor burn effect (by Chryfi - suggested by KingOfTheCosmos)
+    * Improved recording not found message when recording was not recorded yet (by Chryfi)
+* Rendering
+    * Compatible with OptiFine shaders
+* BB Gun
+    * Added ammo and durability display
+    * Allow reloading if ammo is not zero (suggested by Po_er)
+    * Try to fix the problem that some morphs do not support sequencer morph
+    * Try to fix the problem that firing morph does not work
+    * Fixed impact morph not working when impact command is empty (by Chryfi)
+* File Encoding
+    * UTF-8 file encoding is used by default
+* Refactored Aperture tracker morph - the combine trackers option is now the automatic append option - referr to tooltip for explanation (by Chryfi)
+
+
 ## Version 2.4.1
 
 This patch with QoL improvements was made by Chryfi.
