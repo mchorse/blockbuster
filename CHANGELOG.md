@@ -57,7 +57,6 @@ This huge update was made by MiaoNLI, exceptions are mentioned at the respective
     * UTF-8 file encoding is used by default
 * Refactored Aperture tracker morph - the combine trackers option is now the automatic append option - referr to tooltip for explanation (by Chryfi)
 
-
 ## Version 2.4.1
 
 This patch with QoL improvements was made by Chryfi.
