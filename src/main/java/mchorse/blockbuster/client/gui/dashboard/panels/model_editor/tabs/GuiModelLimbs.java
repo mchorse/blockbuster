@@ -131,10 +131,20 @@ public class GuiModelLimbs extends GuiModelEditorTab
         });
         this.anchor = new GuiThreeElement(mc, (values) ->
         {
-            this.fixLimbPosition(values[0].floatValue(), values[1].floatValue(), values[2].floatValue());
-            this.lastAnchorX = this.panel.limb.anchor[0] = values[0].floatValue();
-            this.lastAnchorY = this.panel.limb.anchor[1] = values[1].floatValue();
-            this.lastAnchorZ = this.panel.limb.anchor[2] = values[2].floatValue();
+            if (this.is3D.isVisible())
+            {
+                this.fixLimbPosition(values[0].floatValue(), values[1].floatValue(), values[2].floatValue());
+                this.lastAnchorX = this.panel.limb.anchor[0] = values[0].floatValue();
+                this.lastAnchorY = this.panel.limb.anchor[1] = values[1].floatValue();
+                this.lastAnchorZ = this.panel.limb.anchor[2] = values[2].floatValue();
+            }
+            else
+            {
+                this.panel.limb.anchor[0] = values[0].floatValue();
+                this.panel.limb.anchor[1] = values[1].floatValue();
+                this.panel.limb.anchor[2] = values[2].floatValue();
+            }
+
             this.panel.rebuildModel();
         });
         this.origin = new GuiThreeElement(mc, (values) ->
@@ -288,10 +298,8 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.vanillaPanel = Elements.column(mc, 5);
         this.vanillaPanel.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size")).background(), this.size);
         this.vanillaPanel.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size_offset")).background(), this.sizeOffset);
-        this.vanillaPanel.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.item_scale")).background(), this.itemScale);
         this.vanillaPanel.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.texture")).background().marginTop(12), Elements.row(mc, 5, 0, 20, this.texture, this.mirror));
-        this.vanillaPanel.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.anchor")).background().marginTop(12), this.anchor);
-        
+
         this.objPanel = Elements.column(mc, 5);
         this.objPanel.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.origin")).background(), this.origin);
 
@@ -316,7 +324,9 @@ public class GuiModelLimbs extends GuiModelEditorTab
         animation.add(this.wing, this.roll);
         animation.add(this.cape);
 
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.anchor")).background().marginTop(12), this.anchor);
         this.scroll.add(Elements.row(mc, 5, this.slot, this.holding));
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.item_scale")).background(), this.itemScale);
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.appearance")).background().marginTop(12), appearance, this.colors);
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.animation")).background().marginTop(12), animation);
 
