@@ -646,7 +646,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             return;
         }
 
-        if (target.isServerWorld())
+        if (!target.world.isRemote)
         {
             this.updateCycle();
 
