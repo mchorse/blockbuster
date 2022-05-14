@@ -355,15 +355,18 @@ public class RecordPlayer
         {
             if (this.actor instanceof EntityActor)
             {
-                this.actor.world.spawnEntity(this.actor);
+                if (!this.actor.isDead)
+                {
+                    this.actor.world.spawnEntity(this.actor);
 
-                EntityPlayer player = ((EntityActor) this.actor).fakePlayer;
+                    EntityPlayer player = ((EntityActor) this.actor).fakePlayer;
 
-                player.posX = this.actor.posX;
-                player.posY = this.actor.posY;
-                player.posZ = this.actor.posZ;
+                    player.posX = this.actor.posX;
+                    player.posY = this.actor.posY;
+                    player.posZ = this.actor.posZ;
 
-                this.actor.world.loadedEntityList.add(((EntityActor) this.actor).fakePlayer);
+                    this.actor.world.loadedEntityList.add(((EntityActor) this.actor).fakePlayer);
+                }
             }
             else if (this.actor instanceof EntityPlayer)
             {
