@@ -267,6 +267,9 @@ blockbuster.gui:
             close_container:
                 title: Close Container
                 desc: Closes the container opened by the actor, which usually closes the chest the actor previously interacted with. (Available only if the actor is a fake player)
+            use_gun:
+                title: Shoot gun
+                desc: Shoots a BB gun that was held by the actor during recording (even if the actor doesn't hold it anymore)
 
     # Playback GUI
     playback:

@@ -4,13 +4,13 @@ import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.guns.PacketGunInteract;
+import mchorse.blockbuster.network.server.gun.ServerHandlerGunInteract;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.blockbuster.utils.NBTUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -47,11 +47,24 @@ public class ShootGunAction extends Action
 
         if (player != null)
         {
-            GunProps props = NBTUtils.getGunProps(stack);
+            GunProps props = NBTUtils.getGunProps(this.stack);
 
             if (props != null)
             {
-                Dispatcher.sendToServer(new PacketGunInteract(stack, actor.getEntityId()));
+                player.width = actor.width;
+                player.height = actor.height;
+                player.eyeHeight = actor.getEyeHeight();
+                player.setEntityBoundingBox(actor.getEntityBoundingBox());
+
+                player.posX = actor.posX;
+                player.posY = actor.posY;
+                player.posZ = actor.posZ;
+                player.rotationYaw = frame.yaw;
+                player.rotationPitch = frame.pitch;
+                player.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, actor.getHeldItemMainhand());
+                player.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, actor.getHeldItemOffhand());
+
+                ServerHandlerGunInteract.interactWithGun(null, actor, this.stack);
             }
             else
             {

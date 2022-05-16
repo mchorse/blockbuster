@@ -10,6 +10,7 @@ import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 
 /**
  * \* User: Evanechecssss
@@ -21,35 +22,34 @@ public class ServerHandlerGunInteract extends ServerMessageHandler<PacketGunInte
     @Override
     public void run(EntityPlayerMP player, PacketGunInteract packet)
     {
-        if (!(packet.stack.getItem() instanceof ItemGun))
+        interactWithGun(player, player.world.getEntityByID(packet.id), packet.stack);
+    }
+
+    public static void interactWithGun(EntityPlayerMP player, Entity entity, ItemStack stack)
+    {
+        if (!(stack.getItem() instanceof ItemGun))
         {
             return;
         }
 
-        ItemGun gun = (ItemGun) packet.stack.getItem();
-        Entity entity = player.world.getEntityByID(packet.id);
-        GunProps props = NBTUtils.getGunProps(packet.stack);
+        ItemGun gun = (ItemGun) stack.getItem();
+        GunProps props = NBTUtils.getGunProps(stack);
 
         if (props == null)
         {
             return;
         }
 
-        if (entity instanceof EntityPlayer)
+        EntityPlayer entityPlayer = entity instanceof EntityPlayer ? (EntityPlayer) entity : ((EntityActor) entity).fakePlayer;
+
+        if (props.state == ItemGun.GunState.READY_TO_SHOOT && (entity instanceof EntityActor || props.storedShotDelay == 0))
         {
-            if (props.state == ItemGun.GunState.READY_TO_SHOOT && props.storedShotDelay == 0)
+            if (player != null)
             {
-                Dispatcher.sendTo(new PacketGunInteract(packet.stack, packet.id), player);
-                gun.shootIt(packet.stack, (EntityPlayer) entity, player.world);
+                Dispatcher.sendTo(new PacketGunInteract(stack, entity.getEntityId()), player);
             }
-        }
-        else if (entity instanceof EntityActor)
-        {
-            if (props.state == ItemGun.GunState.READY_TO_SHOOT)
-            {
-                Dispatcher.sendTo(new PacketGunInteract(packet.stack, packet.id), player);
-                gun.shootIt(packet.stack, ((EntityActor) entity).fakePlayer, player.world);
-            }
+
+            gun.shootIt(stack, entityPlayer, entityPlayer.world);
         }
     }
 }
