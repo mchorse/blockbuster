@@ -1,5 +1,6 @@
 package mchorse.blockbuster_pack.morphs;
 
+import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.structure.PacketStructure;
@@ -434,8 +435,13 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
 
             if (!structure.animation.ignored)
             {
-                this.animation.merge(this, structure);
+                ModelTransform pose = new ModelTransform();
+
+                pose.copy(this.pose);
+
                 this.copy(structure);
+                this.animation.merge(this, structure);
+                this.animation.last = pose;
                 this.animation.progress = 0;
             }
 
