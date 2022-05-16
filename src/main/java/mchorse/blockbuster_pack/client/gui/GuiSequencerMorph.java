@@ -570,7 +570,12 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
         private void updateLogic(GuiContext context)
         {
-            this.preview.setValue(this.previewRenderer.tick + this.previewRenderer.partialTicks);
+            double tick = this.previewRenderer.tick + this.previewRenderer.partialTicks;
+
+            if (Math.abs(this.preview.value - tick) > 0.01D)
+            {
+                this.preview.setValue(tick);
+            }
 
             boolean canGenerate = false;
 
