@@ -3,7 +3,7 @@ package mchorse.blockbuster.core.transformers;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.utils.mclib.coremod.ClassMethodTransformer;
 import mchorse.blockbuster.utils.mclib.coremod.CoreClassTransformer;
-import mchorse.mclib.utils.coremod.ClassTransformer;
+import mchorse.blockbuster.utils.mclib.coremod.ClassTransformer;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
