@@ -84,7 +84,7 @@ public class RenderingHandler
 
     /**
      * This List stores model blocks that should be rendered last.
-     * The object array is in the following structure:
+     * The object array is in the following structure: {TileEntityModel, double, double, double, float, int, float}
      */
     public static List<Object[]> modelBlocksRenderLast = new ArrayList<>();
 
@@ -478,17 +478,19 @@ public class RenderingHandler
 
         for (Object[] teRenderer : modelBlocksRenderLast)
         {
+            TileEntityModel teModel = (TileEntityModel) teRenderer[0];
+
             RenderHelper.enableStandardItemLighting();
 
-            int i = mc.world.getCombinedLight(((TileEntityModel) teRenderer[0]).getPos(), 0);
+            int i = mc.world.getCombinedLight(teModel.getPos(), 0);
             int j = i % 65536;
             int k = i / 65536;
 
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);
 
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-            ClientProxy.modelRenderer.render((TileEntityModel) teRenderer[0], (double) teRenderer[1], (double) teRenderer[2], (double) teRenderer[3], (float) teRenderer[4], (int) teRenderer[5], (float) teRenderer[6], false);
+            ClientProxy.modelRenderer.render(teModel, (double) teRenderer[1], (double) teRenderer[2], (double) teRenderer[3], (float) teRenderer[4], (int) teRenderer[5], (float) teRenderer[6], false);
         }
 
         modelBlocksRenderLast.clear();
