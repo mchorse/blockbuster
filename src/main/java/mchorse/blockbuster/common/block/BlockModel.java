@@ -76,7 +76,7 @@ public class BlockModel extends Block implements ITileEntityProvider
     @Override
     public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos)
     {
-        return world.getBlockState(pos).getValue(LIGHT);
+        return state.getValue(LIGHT);
     }
 
     @Override
