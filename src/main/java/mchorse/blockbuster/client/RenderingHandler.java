@@ -476,11 +476,15 @@ public class RenderingHandler
             return dist1 == dist2 ? 0 : (dist2 - dist1 > 0 ? 1 : -1);
         });
 
+        float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+        float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+
+        Minecraft.getMinecraft().entityRenderer.enableLightmap();
+        RenderHelper.enableStandardItemLighting();
+
         for (Object[] teRenderer : modelBlocksRenderLast)
         {
             TileEntityModel teModel = (TileEntityModel) teRenderer[0];
-
-            RenderHelper.enableStandardItemLighting();
 
             int i = mc.world.getCombinedLight(teModel.getPos(), 0);
             int j = i % 65536;
@@ -492,6 +496,10 @@ public class RenderingHandler
 
             ClientProxy.modelRenderer.render(teModel, (double) teRenderer[1], (double) teRenderer[2], (double) teRenderer[3], (float) teRenderer[4], (int) teRenderer[5], (float) teRenderer[6], false);
         }
+
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+        Minecraft.getMinecraft().entityRenderer.disableLightmap();
+        RenderHelper.disableStandardItemLighting();
 
         modelBlocksRenderLast.clear();
     }
