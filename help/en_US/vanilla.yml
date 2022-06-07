@@ -27,7 +27,7 @@ itemGroup.blockbuster: Blockbuster
 tile.blockbuster:
     director.name: Director block
     model.name: Model block
-    green.name: Chroma blockA
+    green.name: Chroma block
     dim_green.name: Dim chroma block
 
 # Item names

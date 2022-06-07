@@ -667,6 +667,11 @@ blockbuster.gui:
             combine_tracking: Automatic append
             combine_tracking_tooltip: If the tracker's name already was tracked, it will check if this tracker starts at the next frame where the original tracker has stopped. If it is continuing at the next frame, it then appends this tracking data to the original one.
 
+    light_morph:
+        name: Light
+        light_value: Light value
+        light_value_tooltip: You need to have Optifine installed and dynamic lights set to fancy for this to work. This slider allows to choose the strength of the light.
+
     texture:
         title: Texture manager
         subtitle: This GUI allows you to view and manage textures loaded by Minecraft during runtime
