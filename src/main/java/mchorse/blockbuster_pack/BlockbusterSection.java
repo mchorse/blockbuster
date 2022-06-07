@@ -7,6 +7,7 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.structure.PacketStructureListRequest;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
+import mchorse.blockbuster_pack.morphs.LightMorph;
 import mchorse.blockbuster_pack.morphs.ParticleMorph;
 import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
@@ -78,6 +79,7 @@ public class BlockbusterSection extends MorphSection
         this.addFromNBT("{DisplayName:\"McHorse\",Skin:\"blockbuster:textures/entity/mchorse/skin.png\",BodyParts:[{Limb:\"head\",Morph:{Name:\"blockbuster.mchorse/head\"}}],Name:\"blockbuster.fred_3d\"}");
         
         this.extra.add(new TrackerMorph());
+        this.extra.add(new LightMorph());
     }
 
     private void addFromNBT(String nbt)

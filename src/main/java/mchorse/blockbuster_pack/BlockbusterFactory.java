@@ -3,6 +3,7 @@ package mchorse.blockbuster_pack;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
 import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
+import mchorse.blockbuster_pack.client.gui.GuiLightMorph;
 import mchorse.blockbuster_pack.client.gui.GuiParticleMorph;
 import mchorse.blockbuster_pack.client.gui.GuiRecordMorph;
 import mchorse.blockbuster_pack.client.gui.GuiSequencerMorph;
@@ -11,6 +12,7 @@ import mchorse.blockbuster_pack.client.gui.GuiStructureMorph;
 import mchorse.blockbuster_pack.client.gui.GuiTrackerMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
+import mchorse.blockbuster_pack.morphs.LightMorph;
 import mchorse.blockbuster_pack.morphs.ParticleMorph;
 import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
@@ -55,6 +57,7 @@ public class BlockbusterFactory implements IMorphFactory
         editors.add(new GuiParticleMorph(mc));
         editors.add(new GuiSnowstormMorph(mc));
         editors.add(new GuiTrackerMorph(mc));
+        editors.add(new GuiLightMorph(mc));
     }
 
     @Override
@@ -93,6 +96,10 @@ public class BlockbusterFactory implements IMorphFactory
         {
             morph = new TrackerMorph();
         }
+        else if (name.equals("light"))
+        {
+            morph = new LightMorph();
+        }
         else
         {
             /* Custom model morphs */
@@ -110,6 +117,6 @@ public class BlockbusterFactory implements IMorphFactory
     @Override
     public boolean hasMorph(String morph)
     {
-        return morph.startsWith("blockbuster.") || morph.equals("sequencer") || morph.equals("structure") || morph.equals("particle") || morph.equals("snowstorm") || morph.equals("tracker");
+        return morph.startsWith("blockbuster.") || morph.equals("sequencer") || morph.equals("structure") || morph.equals("particle") || morph.equals("snowstorm") || morph.equals("tracker") || morph.equals("light");
     }
 }
