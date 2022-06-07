@@ -337,6 +337,8 @@ blockbuster.gui:
         keying_tooltip: This option clears the color data on the screen (in framebuffer) where this morph was rendered, which can be used for Minema's 'Use alpha' option to record keyed footage without external video editing plugins
         shadow: Shadow
         shadow_tooltip: Whether this image morph should cast shadow with Optifine's shaders (this can fix image morph shading itself when too big), without Optifine it's useless
+        remove_parent_space_effects: Remove parent space
+        remove_parent_space_effects_tooltip: Remove the rotation and scale of the parent space on this image. If deactivated, it could result in weird deformations together with "Look at player" option.
 
     sequencer:
         duration: Duration

@@ -1,22 +1,27 @@
 package mchorse.blockbuster_pack.client.gui;
 
+import mchorse.aperture.client.gui.GuiMinemaPanel;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
+import mchorse.blockbuster.client.particles.components.appearance.CameraFacing;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiColorElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.Label;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
+import mchorse.mclib.utils.RenderingUtils;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiMorphRenderer;
@@ -28,6 +33,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
@@ -87,6 +93,8 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
 
     public static class GuiImageMorphPanel extends GuiMorphPanel<ImageMorph, GuiImageMorph>
     {
+        public static final RenderingUtils.Facing[] SORTED_FACING_MODES = {RenderingUtils.Facing.ROTATE_XYZ, RenderingUtils.Facing.ROTATE_Y, RenderingUtils.Facing.LOOKAT_XYZ, RenderingUtils.Facing.LOOKAT_Y};
+
         public GuiPoseTransformations pose;
 
         public GuiTexturePicker picker;
@@ -95,6 +103,9 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
         public GuiToggleElement shaded;
         public GuiToggleElement lighting;
         public GuiToggleElement billboard;
+        public GuiToggleElement removeParentScaleRotation;
+        public GuiLabel facingModeLabel;
+        public GuiCirculateElement facingMode;
 
         public GuiTrackpadElement left;
         public GuiTrackpadElement right;
@@ -130,6 +141,18 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.lighting"), false, (b) -> this.morph.lighting = b.isToggled());
             this.billboard = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.billboard"), false, (b) -> this.morph.billboard = b.isToggled());
             this.picker = new GuiTexturePicker(mc, (rl) -> this.morph.texture = rl);
+            this.removeParentScaleRotation = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.image.remove_parent_space_effects"), false, (b) -> this.morph.removeParentScaleRotation = b.isToggled());
+            this.removeParentScaleRotation.tooltip(IKey.lang("blockbuster.gui.image.remove_parent_space_effects_tooltip"));
+
+            this.facingMode = new GuiCirculateElement(mc, (b) ->
+            {
+                this.morph.facing = SORTED_FACING_MODES[this.facingMode.getValue()];
+            });
+            this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.rotate_xyz"));
+            this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.rotate_y"));
+            this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.lookat_xyz"));
+            this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.lookat_y"));
+            this.facingModeLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.label"), 20).anchor(0, 0.5F);
 
             this.left = new GuiTrackpadElement(mc, (value) -> this.morph.crop.x = value.intValue());
             this.left.tooltip(IKey.lang("blockbuster.gui.image.left"));
@@ -163,8 +186,8 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             GuiScrollElement column = new GuiScrollElement(mc);
 
             column.scroll.opposite = true;
-            column.flex().relative(this).w(130).h(1F).column(5).vertical().stretch().scroll().height(20).padding(10);
-            column.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, Elements.label(IKey.lang("blockbuster.gui.image.crop")));
+            column.flex().relative(this).w(150).h(1F).column(5).vertical().stretch().scroll().height(20).padding(10);
+            column.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, this.removeParentScaleRotation, this.facingModeLabel, this.facingMode, Elements.label(IKey.lang("blockbuster.gui.image.crop")));
             column.add(this.left, this.right, this.top, this.bottom, this.resizeCrop, this.color, this.offsetX, this.offsetY, this.rotation, this.keying, this.shadow);
 
             this.animation = new GuiAnimation(mc, true);
@@ -184,6 +207,8 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.shaded.toggled(morph.shaded);
             this.lighting.toggled(morph.lighting);
             this.billboard.toggled(morph.billboard);
+            this.removeParentScaleRotation.toggled(morph.removeParentScaleRotation);
+            this.facingMode.setValue(ArrayUtils.indexOf(SORTED_FACING_MODES, this.morph.facing));
 
             this.left.setValue(morph.crop.x);
             this.right.setValue(morph.crop.z);
