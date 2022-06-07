@@ -2,10 +2,12 @@ package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.textures.GifTexture;
+import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
 import mchorse.mclib.client.render.VertexBuilder;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.ReflectionUtils;
+import mchorse.mclib.utils.RenderingUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
@@ -26,9 +28,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
+import javax.vecmath.Matrix4d;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4d;
@@ -67,6 +71,13 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
      * Whether an image morph should be always look at the player
      */
     public boolean billboard = false;
+
+    /**
+     * Whether to remove the scale and rotation of the parent space
+     */
+    public boolean removeParentScaleRotation = false;
+
+    public RenderingUtils.Facing facing = RenderingUtils.Facing.ROTATE_XYZ;
 
     /**
      * Area to crop (x = left, z = right, y = top, w = bottom)
@@ -247,26 +258,29 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         if (!defaultPose)
         {
             this.image.pose.applyTranslate();
-            this.image.pose.applyRotate();
+        }
+
+        Matrix4d[] transformation = MatrixUtils.getTransformation();
+        Matrix4d translation = transformation[0];
+
+        if (this.removeParentScaleRotation)
+        {
+            RenderingUtils.glRevertRotationScale();
         }
 
         if (this.billboard)
         {
-            /* Get matrix */
-            Matrix4f matrix4f = MatrixUtils.readModelView(matrix);
-            Vector4f zero = new Vector4f(0, 0, 0, 1);
+            RenderingUtils.glFacingRotation(this.facing, new Vector3f((float) translation.m03, (float) translation.m13, (float) translation.m23));
 
-            matrix4f.transform(zero);
-            matrix4f.setIdentity();
-            matrix4f.setTranslation(new Vector3f(zero.x, zero.y, zero.z));
-            matrix4f.transpose();
-
-            MatrixUtils.loadModelView(matrix4f);
-
-            GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
         }
-        else
+
+        if (!defaultPose)
+        {
+            this.image.pose.applyRotate();
+        }
+
+        if (!this.billboard)
         {
             float entityPitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
 
@@ -470,6 +484,8 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
             this.shaded = morph.shaded;
             this.lighting = morph.lighting;
             this.billboard = morph.billboard;
+            this.removeParentScaleRotation = morph.removeParentScaleRotation;
+            this.facing = morph.facing;
             this.crop.set(morph.crop);
             this.resizeCrop = morph.resizeCrop;
             this.color = morph.color;
@@ -497,6 +513,8 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
             result = result && image.shaded == this.shaded;
             result = result && image.lighting == this.lighting;
             result = result && image.billboard == this.billboard;
+            result = result && image.removeParentScaleRotation == this.removeParentScaleRotation;
+            result = result && image.facing == this.facing;
             result = result && image.crop.equals(this.crop);
             result = result && image.resizeCrop == this.resizeCrop;
             result = result && image.color == this.color;
@@ -563,6 +581,8 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         if (this.shaded == false) tag.setBoolean("Shaded", this.shaded);
         if (this.lighting == false) tag.setBoolean("Lighting", this.lighting);
         if (this.billboard == true) tag.setBoolean("Billboard", this.billboard);
+        if (this.removeParentScaleRotation == true) tag.setBoolean("RemoveParentSpace", this.removeParentScaleRotation);
+        if (this.facing != RenderingUtils.Facing.ROTATE_XYZ) tag.setInteger("FacingMode", ArrayUtils.indexOf(GuiImageMorph.GuiImageMorphPanel.SORTED_FACING_MODES, this.facing));
         if (this.crop.x != 0) tag.setInteger("Left", (int) this.crop.x);
         if (this.crop.z != 0) tag.setInteger("Right", (int) this.crop.z);
         if (this.crop.y != 0) tag.setInteger("Top", (int) this.crop.y);
@@ -593,6 +613,8 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         if (tag.hasKey("Shaded")) this.shaded = tag.getBoolean("Shaded");
         if (tag.hasKey("Lighting")) this.lighting = tag.getBoolean("Lighting");
         if (tag.hasKey("Billboard")) this.billboard = tag.getBoolean("Billboard");
+        if (tag.hasKey("RemoveParentSpace")) this.removeParentScaleRotation = tag.getBoolean("RemoveParentSpace");
+        if (tag.hasKey("FacingMode")) this.facing = GuiImageMorph.GuiImageMorphPanel.SORTED_FACING_MODES[tag.getInteger("FacingMode")];
         if (tag.hasKey("Left")) this.crop.x = tag.getInteger("Left");
         if (tag.hasKey("Right")) this.crop.z = tag.getInteger("Right");
         if (tag.hasKey("Top")) this.crop.y = tag.getInteger("Top");
