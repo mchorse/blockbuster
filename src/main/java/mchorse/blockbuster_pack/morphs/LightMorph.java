@@ -134,7 +134,7 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
     {
         if (this.dummy == null || this.dummy.isDead)
         {
-            this.dummy = new ExpirableDummyEntity(Minecraft.getMinecraft().world, 1,1,1);
+            this.dummy = new ExpirableDummyEntity(Minecraft.getMinecraft().world, 1);
 
             this.updateDummyEntityPosition();
 
@@ -279,6 +279,8 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
+
+        GlStateManager.color(1, 1, 1, 1);
 
         buffer.begin(GL11.GL_QUADS, VertexBuilder.getFormat(false, true, false, true));
 
