@@ -144,6 +144,7 @@ public class CommonProxy
         ForgeRegistries.ITEMS.register(new ItemBlock(director).setRegistryName(director.getRegistryName()));
 
         ForgeRegistries.BLOCKS.register(Blockbuster.modelBlock = model);
+
         for (int i = 0; i < Blockbuster.modelBlockItems.length; i++)
         {
             ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItems[i] = new ItemBlockModel(model, i));

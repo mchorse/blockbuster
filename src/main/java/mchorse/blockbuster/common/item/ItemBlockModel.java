@@ -1,5 +1,6 @@
 package mchorse.blockbuster.common.item;
 
+import mchorse.blockbuster.Blockbuster;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -28,7 +29,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Item for Model Block. It cant extend ItemBlock because it seems like Optifine does not recognise ItemBlock subclasses for dynamic_lighting.properties
+ * Item for Model Block.
+ * It cant extend ItemBlock because it seems like Optifine does not
+ * recognise ItemBlock subclasses for dynamic_lighting.properties
  */
 public class ItemBlockModel extends Item
 {
@@ -44,6 +47,11 @@ public class ItemBlockModel extends Item
 
         this.setRegistryName(name);
         this.setUnlocalizedName("blockbuster." + name);
+
+        if (lightValue < 2)
+        {
+            this.setCreativeTab(Blockbuster.blockbusterTab);
+        }
     }
 
     @Override

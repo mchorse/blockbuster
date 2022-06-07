@@ -117,7 +117,7 @@ public class ClientProxy extends CommonProxy
         ItemMeshDefinition meshDefinition = (stack) -> Blockbuster.modelBlockDisableItemRendering.get() ? modelStatic : model;
         TileEntityModelItemStackRenderer teModelItemSR = new TileEntityModelItemStackRenderer();
 
-        for (int i = 0; i <= 15; i++)
+        for (int i = 0; i < Blockbuster.modelBlockItems.length; i++)
         {
             Item modelBlockItem = BlockModel.getItemFromMeta(i);
 

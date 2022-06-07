@@ -32,6 +32,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -90,6 +91,12 @@ public class BlockModel extends Block implements ITileEntityProvider
         this.setTENBTtoStack(stack, model);
 
         return stack;
+    }
+
+    @Override
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
+    {
+        return this.getItem(world, pos, state);
     }
 
     private ItemStack getItemStack(IBlockState state)
