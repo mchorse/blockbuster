@@ -64,6 +64,7 @@ import java.util.Map;
  */
 public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAnimationProvider, ISyncableMorph, IMorphGenerator
 {
+    private static boolean renderingOnScreen;
     /**
      * OrientedBoundingBoxes List by limbs
      */
@@ -153,6 +154,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
 
         this.settings = this.settings.copy();
         this.settings.hands = true;
+    }
+
+    public static boolean isRenderingOnScreen()
+    {
+        return renderingOnScreen;
     }
     
     /**
@@ -410,6 +416,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     @SideOnly(Side.CLIENT)
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)
     {
+        renderingOnScreen = true;
+
         if(this.model != null)
         {
             fillObbs(false);
@@ -446,6 +454,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             font.drawStringWithShadow(error, x - font.getStringWidth(error) / 2, y - (int) (font.FONT_HEIGHT * 2.5), 0xff2222);
             font.drawStringWithShadow(this.name, x - width / 2, y - font.FONT_HEIGHT, 0xffffff);
         }
+
+        renderingOnScreen = false;
     }
 
     /**
