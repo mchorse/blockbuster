@@ -29,7 +29,7 @@ public class ServerHandlerModifyModelBlock extends ServerMessageHandler<PacketMo
         {
             ((TileEntityModel) tile).copyData(message.model, false);
 
-            //it has to be tested whether this is necessary - this is also called in gui of model block
+            //set the blockstate in the world - important for servers
             tile.getWorld().setBlockState(message.pos, tile.getWorld().getBlockState(message.pos).withProperty(BlockModel.LIGHT, message.model.lightValue) , 2);
 
             Dispatcher.DISPATCHER.get().sendToAllAround(message, new TargetPoint(player.dimension, pos.getX(), pos.getY(), pos.getZ(), 64));

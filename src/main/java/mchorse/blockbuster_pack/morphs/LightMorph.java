@@ -1,6 +1,7 @@
 package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.ExpirableDummyEntity;
@@ -124,7 +125,7 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
 
         this.updateDummyEntityPosition();
 
-        this.dummy.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(BlockModel.getItemFromMeta(this.lightProperties.lightValue)));
+        this.dummy.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, BlockModel.getItemStack(this.lightProperties.lightValue));
 
         this.prevPosition.set(this.position);
     }
@@ -399,9 +400,19 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
 
             if (!lightMorph.animation.ignored)
             {
+                if (this.animation.isInProgress())
+                {
+                    LightProperties newLast = new LightProperties();
+
+                    newLast.from(this);
+
+                    this.animation.apply(newLast, 0);
+
+                    this.animation.last = newLast;
+                }
+
                 this.animation.merge(this, lightMorph);
-                this.copy(lightMorph);
-                this.animation.progress = 0;
+                this.light = lightMorph.light;
             }
             else
             {
@@ -512,7 +523,6 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
 
             properties.lightValue = MathUtils.clamp(Math.round(this.interp.interpolate(this.last.lightValue, properties.lightValue, factor)), 0, 15);
         }
-
     }
 
     public static class LightProperties

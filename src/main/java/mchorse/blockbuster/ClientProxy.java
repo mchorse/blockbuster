@@ -119,7 +119,7 @@ public class ClientProxy extends CommonProxy
 
         for (int i = 0; i < Blockbuster.modelBlockItems.length; i++)
         {
-            Item modelBlockItem = BlockModel.getItemFromMeta(i);
+            Item modelBlockItem = Blockbuster.modelBlockItems[i];
 
             ModelBakery.registerItemVariants(modelBlockItem, model, modelStatic);
             ModelLoader.setCustomMeshDefinition(modelBlockItem, meshDefinition);

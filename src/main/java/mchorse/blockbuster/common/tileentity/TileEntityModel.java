@@ -235,10 +235,18 @@ public class TileEntityModel extends TileEntity implements ITickable
         this.markDirty();
     }
 
+    /**
+     * Dont refresh tile entity when blockstate changes - only when block changes
+     * @param world
+     * @param pos
+     * @param oldState
+     * @param newSate
+     * @return
+     */
     @Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
     {
-        return (oldState.getBlock() != newSate.getBlock());// || oldState.getValue(BlockModel.LIGHT) != newSate.getValue(BlockModel.LIGHT);
+        return (oldState.getBlock() != newSate.getBlock());
     }
 
     /* NBT methods */
@@ -269,10 +277,6 @@ public class TileEntityModel extends TileEntity implements ITickable
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
     {
         this.readFromNBT(pkt.getNbtCompound());
-
-        IBlockState currentState = this.getWorld().getBlockState(this.pos).getActualState(this.getWorld(), this.pos);
-
-        this.getWorld().notifyBlockUpdate(this.pos, currentState, currentState, 2);
     }
 
     @Override

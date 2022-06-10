@@ -19,6 +19,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -64,14 +65,28 @@ public class BlockModel extends Block implements ITileEntityProvider
         this.setDefaultState(this.getDefaultState().withProperty(LIGHT, 0));
     }
 
-    public static Item getItemFromMeta(int meta)
+    public static ItemStack getItemStack(int meta)
     {
+        Item modelBlockItem = Blockbuster.modelBlockItems[0];
+
         if (meta >= 0 && meta <= 15)
         {
-            return Blockbuster.modelBlockItems[meta];
+            modelBlockItem = Blockbuster.modelBlockItems[meta];
         }
 
-        return Blockbuster.modelBlockItems[0];
+        return new ItemStack(modelBlockItem, 1);
+    }
+
+    /**
+     * Get the itemstack containing one item of this block according to the blockstate
+     * @param state
+     * @return itemstack with no metadata and containing one item
+     */
+    public ItemStack getItemStack(IBlockState state)
+    {
+        int meta = this.damageDropped(state);
+
+        return getItemStack(meta);
     }
 
     @Override
@@ -99,13 +114,11 @@ public class BlockModel extends Block implements ITileEntityProvider
         return this.getItem(world, pos, state);
     }
 
-    private ItemStack getItemStack(IBlockState state)
-    {
-        int meta = this.damageDropped(state);
-
-        return new ItemStack(this.getItemFromMeta(meta), 1, meta);
-    }
-
+    /**
+     * Gets the metadata of the item this Block can drop.
+     * This method is called when the block gets destroyed.
+     * It returns the metadata of the dropped item based on the old metadata of the block.
+     */
     @Override
     public int damageDropped(IBlockState state)
     {
@@ -153,6 +166,12 @@ public class BlockModel extends Block implements ITileEntityProvider
         drops.add(stack);
     }
 
+    /**
+     * Set the NBT tag of the provided TileEntityModel to the given stack.
+     * @param stack
+     * @param teModel
+     * @return
+     */
     public ItemStack setTENBTtoStack(ItemStack stack, TileEntityModel teModel)
     {
         NBTTagCompound tag = teModel.writeToNBT(new NBTTagCompound());
