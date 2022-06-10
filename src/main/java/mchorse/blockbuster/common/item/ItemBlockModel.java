@@ -48,13 +48,16 @@ public class ItemBlockModel extends Item
         this.setRegistryName(name);
         this.setUnlocalizedName("blockbuster." + name);
 
-        if (lightValue < 2)
+        if (lightValue == 0)
         {
             this.setCreativeTab(Blockbuster.blockbusterTab);
         }
     }
 
     @Override
+    /**
+     * Copied from ItemBlock class
+     */
     public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         IBlockState iblockstate = worldIn.getBlockState(pos);
@@ -89,6 +92,9 @@ public class ItemBlockModel extends Item
         }
     }
 
+    /**
+     * Copied from ItemBlock class
+     */
     public static boolean setTileEntityNBT(World worldIn, @Nullable EntityPlayer player, BlockPos pos, ItemStack stackIn)
     {
         MinecraftServer minecraftserver = worldIn.getMinecraftServer();
@@ -130,17 +136,6 @@ public class ItemBlockModel extends Item
             }
 
             return false;
-        }
-    }
-
-    /**
-     * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
-     */
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)
-    {
-        if (this.isInCreativeTab(tab))
-        {
-            this.block.getSubBlocks(tab, items);
         }
     }
 
