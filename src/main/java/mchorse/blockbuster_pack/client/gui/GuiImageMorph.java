@@ -139,7 +139,15 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
 
             this.shaded = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.shading"), false, (b) -> this.morph.shaded = b.isToggled());
             this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.lighting"), false, (b) -> this.morph.lighting = b.isToggled());
-            this.billboard = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.billboard"), false, (b) -> this.morph.billboard = b.isToggled());
+            this.billboard = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.billboard"), false, (b) ->
+            {
+                this.morph.billboard = b.isToggled();
+
+                if (b.isToggled())
+                {
+                    this.removeParentScaleRotation.toggled(true);
+                }
+            });
             this.picker = new GuiTexturePicker(mc, (rl) -> this.morph.texture = rl);
             this.removeParentScaleRotation = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.image.remove_parent_space_effects"), false, (b) -> this.morph.removeParentScaleRotation = b.isToggled());
             this.removeParentScaleRotation.tooltip(IKey.lang("blockbuster.gui.image.remove_parent_space_effects_tooltip"));
