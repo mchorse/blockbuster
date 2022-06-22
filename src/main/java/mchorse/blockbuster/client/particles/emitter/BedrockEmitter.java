@@ -306,6 +306,11 @@ public class BedrockEmitter
 
         this.spawnedParticles = 0;
         this.playing = false;
+
+        this.random1 = (float) Math.random();
+        this.random2 = (float) Math.random();
+        this.random3 = (float) Math.random();
+        this.random4 = (float) Math.random();
     }
 
     /**
