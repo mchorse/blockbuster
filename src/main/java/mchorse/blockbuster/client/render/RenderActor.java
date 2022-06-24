@@ -53,7 +53,7 @@ public class RenderActor extends RenderLiving<EntityActor>
     @Override
     public boolean shouldRender(EntityActor livingEntity, ICamera camera, double camX, double camY, double camZ)
     {
-        if (livingEntity.renderLast && Blockbuster.actorAlwaysRender.get())
+        if (livingEntity.renderLast && Blockbuster.actorAlwaysRender.get() && RenderingHandler.addRenderLast(livingEntity))
         {
             return false;
         }

@@ -2,6 +2,8 @@ package mchorse.blockbuster.common.tileentity;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.client.RenderingHandler;
+import mchorse.blockbuster.client.render.IRenderLast;
 import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
@@ -29,13 +31,15 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.vecmath.Vector3d;
+
 /**
  * Model tile entity
  * 
  * This little guy is responsible for storing visual data about model's 
  * rendering.
  */
-public class TileEntityModel extends TileEntity implements ITickable
+public class TileEntityModel extends TileEntity implements ITickable, IRenderLast
 {
     private static AbstractMorph DEFAULT_MORPH;
 
@@ -99,6 +103,20 @@ public class TileEntityModel extends TileEntity implements ITickable
     {
         this();
         this.ry = yaw;
+    }
+
+    @Override
+    public Vector3d getRenderLastPos()
+    {
+        BlockPos blockPos = this.getPos();
+
+        return new Vector3d(blockPos.getX() + this.x, blockPos.getY() + this.y, blockPos.getZ() + this.z);
+    }
+
+    @Override
+    public boolean shouldRenderInPass(int pass)
+    {
+        return super.shouldRenderInPass(pass) && !(this.renderLast && RenderingHandler.addRenderLast(this));
     }
 
     public void setMorph(AbstractMorph morph)

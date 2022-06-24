@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.client.render.IRenderLast;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.item.ItemActorConfig;
 import mchorse.blockbuster.network.Dispatcher;
@@ -18,12 +19,14 @@ import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.recording.data.Record.MorphType;
 import mchorse.blockbuster.recording.scene.Replay;
+import mchorse.mclib.utils.Interpolations;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityCreature;
@@ -56,6 +59,7 @@ import java.util.Queue;
 import java.util.Stack;
 
 import javax.annotation.Nullable;
+import javax.vecmath.Vector3d;
 
 /**
  * Actor entity class
@@ -69,7 +73,7 @@ import javax.annotation.Nullable;
  * scenes (like one from Van Helsing in beginning with big crowd with torches,
  * fire and stuff).
  */
-public class EntityActor extends EntityCreature implements IEntityAdditionalSpawnData, IMorphProvider
+public class EntityActor extends EntityCreature implements IEntityAdditionalSpawnData, IMorphProvider, IRenderLast
 {
     /**
      * This field is needed to make actors invisible. This is helpful for
@@ -141,6 +145,14 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     public AbstractMorph getMorph()
     {
         return this.morph.get();
+    }
+
+    @Override
+    public Vector3d getRenderLastPos()
+    {
+        float partialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
+
+        return new Vector3d(Interpolations.lerp(this.prevPosX, this.posX, partialTicks), Interpolations.lerp(this.prevPosY, this.posY, partialTicks), Interpolations.lerp(this.prevPosZ, this.posZ, partialTicks));
     }
 
     @Override

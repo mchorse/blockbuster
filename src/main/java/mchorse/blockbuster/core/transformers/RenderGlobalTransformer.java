@@ -85,84 +85,29 @@ public class RenderGlobalTransformer extends ClassTransformer
 
     private void processRenderEntities(MethodNode method)
     {
-        LabelNode releaseLabel = null;
-        LabelNode renderEntityLabel = null;
-        LabelNode lastLabel = null;
         Iterator<AbstractInsnNode> it = method.instructions.iterator();
-        boolean captureNext = false;
-        int renderCounter = 0;
 
         while (it.hasNext())
         {
             AbstractInsnNode node = it.next();
 
-            if (node instanceof LabelNode)
+            if (node instanceof MethodInsnNode)
             {
-                lastLabel = (LabelNode) node;
+                MethodInsnNode methodInsnNode = (MethodInsnNode) node;
 
-                if (captureNext && renderEntityLabel == null)
+                /* this should indicate the end of the method (3rd method before end) */
+                if (CoreClassTransformer.checkName(methodInsnNode.owner, "buy", "net/minecraft/client/renderer/RenderGlobal")
+                    && CoreClassTransformer.checkName(methodInsnNode.name, "v", "postRenderDamagedBlocks")
+                    && CoreClassTransformer.checkName(methodInsnNode.desc, "()V", "()V"))
                 {
-                    renderEntityLabel = lastLabel;
-                    captureNext = false;
+                    /* Render last entities */
+                    method.instructions.insert(methodInsnNode, new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/blockbuster/client/RenderingHandler", "renderLastEntities", "()V", false));
+
+                    System.out.println("BBCoreMod: successfully patched renderEntities!");
+
+                    return;
                 }
             }
-            else if (node instanceof MethodInsnNode)
-            {
-                MethodInsnNode invoke = (MethodInsnNode) node;
-
-                if (
-                    CoreClassTransformer.checkName(invoke.owner, "bzf", "net/minecraft/client/renderer/entity/RenderManager") &&
-                    CoreClassTransformer.checkName(invoke.name, "a", "renderEntityStatic") &&
-                    CoreClassTransformer.checkName(invoke.desc, "(Lvg;FZ)V", "(Lnet/minecraft/entity/Entity;FZ)V")
-                ) {
-                    if (renderCounter == 1)
-                    {
-                        captureNext = true;
-                    }
-
-                    renderCounter += 1;
-                }
-
-                if (
-                    CoreClassTransformer.checkName(invoke.owner, "et$b", "net/minecraft/util/math/BlockPos$PooledMutableBlockPos") &&
-                    CoreClassTransformer.checkName(invoke.name, "t", "release") &&
-                    invoke.desc.equals("()V")
-                ) {
-                    releaseLabel = lastLabel;
-
-                    break;
-                }
-            }
-        }
-
-        if (renderEntityLabel != null && releaseLabel != null)
-        {
-            /* In non-Optifine Minecraft, the index of the entity variable is 27,
-             * however due to Optifine modifications, it's another index, but it
-             * should be the last local variable... */
-            final String entity = CoreClassTransformer.obfuscated ? "Lvg;" : "Lnet/minecraft/entity/Entity;";
-            int localIndex = 0;
-
-            for (LocalVariableNode var : method.localVariables)
-            {
-                if (var.desc.equals(entity))
-                {
-                    localIndex = Math.max(localIndex, var.index);
-                }
-            }
-
-            /* Add render entity */
-            InsnList list = new InsnList();
-
-            list.add(new VarInsnNode(Opcodes.ALOAD, localIndex));
-            list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/blockbuster/client/RenderingHandler", "addRenderActor", CoreClassTransformer.obfuscated ? "(" + entity + ")V" : "(" + entity + ")V", false));
-
-            method.instructions.insert(renderEntityLabel, list);
-
-            /* Render entities */
-            method.instructions.insert(releaseLabel, new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/blockbuster/client/RenderingHandler", "renderActors", "()V", false));
-
-            System.out.println("BBCoreMod: successfully patched renderEntities!");
         }
     }
 }
