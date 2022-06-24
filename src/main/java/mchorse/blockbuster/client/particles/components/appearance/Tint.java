@@ -121,14 +121,10 @@ public abstract class Tint
         }
 
         float range = colorStops.get(colorStops.size() - 1).stop;
-        DecimalFormat floatPrecision = new DecimalFormat("#.######");
-
-        floatPrecision.setRoundingMode(RoundingMode.HALF_EVEN);
 
         for (Gradient.ColorStop stop : colorStops)
         {
             stop.stop /= range;
-            stop.stop = Float.valueOf(floatPrecision.format(stop.stop)); //prevent float precision mistakes when dividing
         }
 
         if (color.has("interpolant"))
