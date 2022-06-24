@@ -7,6 +7,7 @@ import mchorse.blockbuster.audio.AudioRenderer;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
+import mchorse.blockbuster.client.render.IRenderLast;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
@@ -37,6 +38,7 @@ import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -58,7 +60,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import scala.Int;
 
+import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,17 +80,16 @@ import java.util.Set;
 @SideOnly(Side.CLIENT)
 public class RenderingHandler
 {
-    private static TileEntityModelItemStackRenderer model = new TileEntityModelItemStackRenderer();
-    private static TileEntityGunItemStackRenderer gun = new TileEntityGunItemStackRenderer();
     private static EntityLivingBase lastItemHolder;
     public static Set<Record> recordsToRender = new HashSet<Record>();
     public static Set<OrientedBB> obbsToRender = new HashSet<OrientedBB>();
 
+    private static final List<IRenderLast> renderLasts = new ArrayList<>();
+
     /**
-     * This List stores model blocks that should be rendered last.
-     * The object array is in the following structure: {TileEntityModel, double, double, double, float, int, float}
+     * is true when renderLasts List is being iterated
      */
-    public static List<Object[]> modelBlocksRenderLast = new ArrayList<>();
+    private static boolean isRenderingLast;
 
     private boolean wasPaused;
 
@@ -97,14 +100,31 @@ public class RenderingHandler
     private static final List<BedrockEmitter> emittersAdd = new ArrayList<BedrockEmitter>();
     private static boolean emitterIsIterating;
 
-    private static final List<EntityActor> lastRenderedEntities = new ArrayList<EntityActor>();
-
     private GuiRecordingOverlay overlay;
 
     /**
      *  ItemRender
      */
     public static ItemCameraTransforms.TransformType itemTransformType;
+
+    /**
+     * Add a renderLast object to the renderLast List. They will be rendered after entities.
+     * This method only adds the given object if the renderLast List is not being iterated
+     * @param renderLast
+     * @return true if added to the list, false if not added, for example, when RenderingHandler is currently rendering last.
+     */
+    public static boolean addRenderLast(IRenderLast renderLast)
+    {
+        /* only add a render last object when the renderLasts List is not iterated */
+        if (!isRenderingLast)
+        {
+            renderLasts.add(renderLast);
+
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * Render green sky, this is getting invoked from the ASM patched 
@@ -206,7 +226,7 @@ public class RenderingHandler
 
             emitterIsIterating = true;
 
-            for(BedrockEmitter emitter : emitters)
+            for (BedrockEmitter emitter : emitters)
             {
                 emitter.render(partialTicks);
                 emitter.running = emitter.sanityTicks < 2;
@@ -279,49 +299,54 @@ public class RenderingHandler
     }
 
     /**
-     * Called by ASM
+     * Called by ASM @see {mchorse.blockbuster.core.transformers.RenderGlobalTransformer#processRenderEntities}
+     * to render the entities that should be depth sorted after tileentities and entities have been rendered
      */
-    public static void addRenderActor(Entity entity)
+    public static void renderLastEntities()
     {
-        if (entity instanceof EntityActor)
+        if (MinecraftForgeClient.getRenderPass() != 0)
         {
-            lastRenderedEntities.add((EntityActor) entity);
-        }
-    }
-
-    /**
-     * Called by ASM
-     */
-    public static void renderActors()
-    {
-        if (!Blockbuster.actorAlwaysRender.get() || MinecraftForgeClient.getRenderPass() != 0)
-        {
-            lastRenderedEntities.clear();
+            renderLasts.clear();
 
             return;
         }
 
         Minecraft mc = Minecraft.getMinecraft();
-        List<EntityActor> actors = mc.world.getEntities(EntityActor.class, EntitySelectors.IS_ALIVE);
         Entity camera = mc.getRenderViewEntity();
 
-        actors.sort((a, b) ->
+        renderLasts.sort((a, b) ->
         {
-            double dist1 = camera.getDistanceSq(a);
-            double dist2 = camera.getDistanceSq(b);
+            Vector3d aPos = a.getRenderLastPos();
+            Vector3d bPos = b.getRenderLastPos();
+
+            double dist1 = camera.getDistanceSq(aPos.x, aPos.y, aPos.z);
+            double dist2 = camera.getDistanceSq(bPos.x, bPos.y, bPos.z);
 
             return dist1 == dist2 ? 0 : (dist2 - dist1 > 0 ? 1 : -1);
         });
 
-        for (EntityActor actor : actors)
+        isRenderingLast = true;
+
+        /* copied from RenderGlobal.renderEntities() - I hope this does not fuck around when porting */
+        TileEntityRendererDispatcher.instance.preDrawBatch();
+
+        for (IRenderLast renderLast : renderLasts)
         {
-            if (!lastRenderedEntities.contains(actor))
+            if (renderLast instanceof EntityActor)
             {
-                mc.getRenderManager().renderEntityStatic(actor, mc.getRenderPartialTicks(), false);
+                mc.getRenderManager().renderEntityStatic((EntityActor) renderLast, mc.getRenderPartialTicks(), false);
+            }
+            else if (renderLast instanceof TileEntityModel)
+            {
+                TileEntityRendererDispatcher.instance.render((TileEntityModel) renderLast, mc.getRenderPartialTicks(), -1);
             }
         }
 
-        lastRenderedEntities.clear();
+        TileEntityRendererDispatcher.instance.drawBatch(0);
+
+        isRenderingLast = false;
+
+        renderLasts.clear();
     }
 
     /**
@@ -463,45 +488,6 @@ public class RenderingHandler
             }
         }
         obbsToRender.clear();
-
-
-        /* render model blocks */
-        Entity camera = mc.getRenderViewEntity();
-
-        modelBlocksRenderLast.sort((a, b) ->
-        {
-            double dist1 = camera.getDistanceSq(((TileEntityModel) a[0]).getPos());
-            double dist2 = camera.getDistanceSq(((TileEntityModel) b[0]).getPos());
-
-            return dist1 == dist2 ? 0 : (dist2 - dist1 > 0 ? 1 : -1);
-        });
-
-        float lastBrightnessX = OpenGlHelper.lastBrightnessX;
-        float lastBrightnessY = OpenGlHelper.lastBrightnessY;
-
-        Minecraft.getMinecraft().entityRenderer.enableLightmap();
-        RenderHelper.enableStandardItemLighting();
-
-        for (Object[] teRenderer : modelBlocksRenderLast)
-        {
-            TileEntityModel teModel = (TileEntityModel) teRenderer[0];
-
-            int i = mc.world.getCombinedLight(teModel.getPos(), 0);
-            int j = i % 65536;
-            int k = i / 65536;
-
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);
-
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-            ClientProxy.modelRenderer.render(teModel, (double) teRenderer[1], (double) teRenderer[2], (double) teRenderer[3], (float) teRenderer[4], (int) teRenderer[5], (float) teRenderer[6], false);
-        }
-
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
-        Minecraft.getMinecraft().entityRenderer.disableLightmap();
-        RenderHelper.disableStandardItemLighting();
-
-        modelBlocksRenderLast.clear();
     }
 
     private void renderPaths(RenderWorldLastEvent event, Set<Record> recordsToRender)

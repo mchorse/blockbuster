@@ -88,7 +88,7 @@ public class TileEntityModelItemStackRenderer extends TileEntityItemStackRendere
 
     public void renderModel(TileEntityModel model, float partialTicks)
     {
-        ClientProxy.modelRenderer.render(model, 0, 0, 0, partialTicks, 0, 0, false);
+        ClientProxy.modelRenderer.render(model, 0, 0, 0, partialTicks, 0, 0);
 
         Minecraft mc = Minecraft.getMinecraft();
         TextureManager manager = mc.getTextureManager();
