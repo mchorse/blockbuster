@@ -4,11 +4,11 @@ import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.render.IRenderLast;
-import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.blockbuster.recording.scene.Scene;
+import mchorse.mclib.network.IByteBufSerializable;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -39,11 +39,13 @@ import javax.vecmath.Vector3d;
  * This little guy is responsible for storing visual data about model's 
  * rendering.
  */
-public class TileEntityModel extends TileEntity implements ITickable, IRenderLast
+public class TileEntityModel extends TileEntity implements ITickable, IRenderLast, IByteBufSerializable
 {
     private static AbstractMorph DEFAULT_MORPH;
 
     public int lightValue;
+
+    public boolean excludeResetPlayback;
 
     public boolean renderLast;
 
@@ -175,7 +177,7 @@ public class TileEntityModel extends TileEntity implements ITickable, IRenderLas
             }
         }
 
-        if (this.lastModelUpdate < Scene.lastUpdate)
+        if (this.lastModelUpdate < Scene.lastUpdate && !this.excludeResetPlayback)
         {
             if (this.world != null && !this.world.isRemote)
             {
@@ -209,48 +211,6 @@ public class TileEntityModel extends TileEntity implements ITickable, IRenderLas
         float range = Blockbuster.actorRenderingRange.get();
 
         return range * range;
-    }
-
-    public void copyData(TileEntityModel model, boolean merge)
-    {
-        this.lightValue = model.lightValue;
-        this.renderLast = model.renderLast;
-        this.order = model.order;
-        this.rotateYawHead = model.rotateYawHead;
-        this.rotatePitch = model.rotatePitch;
-        this.rotateBody = model.rotateBody;
-        this.x = model.x;
-        this.y = model.y;
-        this.z = model.z;
-        this.rx = model.rx;
-        this.ry = model.ry;
-        this.rz = model.rz;
-        this.one = model.one;
-        this.sx = model.sx;
-        this.sy = model.sy;
-        this.sz = model.sz;
-        this.shadow = model.shadow;
-        this.global = model.global;
-        this.enabled = model.enabled;
-
-        if (merge)
-        {
-            this.morph.set(model.morph.get());
-        }
-        else
-        {
-            this.morph.setDirect(model.morph.get());
-        }
-
-        for (int i = 0; i < model.slots.length; i++)
-        {
-            ItemStack stack = model.slots[i];
-
-            this.slots[i] = stack.copy();
-        }
-
-        this.updateEntity();
-        this.markDirty();
     }
 
     /**
@@ -297,6 +257,49 @@ public class TileEntityModel extends TileEntity implements ITickable, IRenderLas
         this.readFromNBT(pkt.getNbtCompound());
     }
 
+    public void copyData(TileEntityModel model, boolean merge)
+    {
+        this.lightValue = model.lightValue;
+        this.renderLast = model.renderLast;
+        this.excludeResetPlayback = model.excludeResetPlayback;
+        this.order = model.order;
+        this.rotateYawHead = model.rotateYawHead;
+        this.rotatePitch = model.rotatePitch;
+        this.rotateBody = model.rotateBody;
+        this.x = model.x;
+        this.y = model.y;
+        this.z = model.z;
+        this.rx = model.rx;
+        this.ry = model.ry;
+        this.rz = model.rz;
+        this.one = model.one;
+        this.sx = model.sx;
+        this.sy = model.sy;
+        this.sz = model.sz;
+        this.shadow = model.shadow;
+        this.global = model.global;
+        this.enabled = model.enabled;
+
+        if (merge)
+        {
+            this.morph.set(model.morph.get());
+        }
+        else
+        {
+            this.morph.setDirect(model.morph.get());
+        }
+
+        for (int i = 0; i < model.slots.length; i++)
+        {
+            ItemStack stack = model.slots[i];
+
+            this.slots[i] = stack.copy();
+        }
+
+        this.updateEntity();
+        this.markDirty();
+    }
+
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
@@ -304,6 +307,7 @@ public class TileEntityModel extends TileEntity implements ITickable, IRenderLas
 
         if (this.lightValue != 0) compound.setInteger("LightValue", this.lightValue);
         if (this.renderLast) compound.setBoolean("RenderLast", this.renderLast);
+        if (this.excludeResetPlayback) compound.setBoolean("ExcludeResetPlayback", this.excludeResetPlayback);
         if (this.rotateYawHead != 0) compound.setFloat("Yaw", this.rotateYawHead);
         if (this.rotatePitch != 0) compound.setFloat("Pitch", this.rotatePitch);
         if (this.rotateBody != 0) compound.setFloat("Body", this.rotateBody);
@@ -368,6 +372,7 @@ public class TileEntityModel extends TileEntity implements ITickable, IRenderLas
 
         if (compound.hasKey("LightValue")) this.lightValue = compound.getInteger("LightValue");
         if (compound.hasKey("RenderLast")) this.renderLast = compound.getBoolean("RenderLast");
+        if (compound.hasKey("ExcludeResetPlayback")) this.excludeResetPlayback = compound.getBoolean("ExcludeResetPlayback");
         if (compound.hasKey("Yaw")) this.rotateYawHead = compound.getFloat("Yaw");
         if (compound.hasKey("Pitch")) this.rotatePitch = compound.getFloat("Pitch");
         if (compound.hasKey("Body")) this.rotateBody = compound.getFloat("Body");
@@ -412,6 +417,7 @@ public class TileEntityModel extends TileEntity implements ITickable, IRenderLas
 
         this.lightValue = buf.readInt();
         this.renderLast = buf.readBoolean();
+        this.excludeResetPlayback = buf.readBoolean();
         this.rotateYawHead = buf.readFloat();
         this.rotatePitch = buf.readFloat();
         this.rotateBody = buf.readFloat();
@@ -445,6 +451,7 @@ public class TileEntityModel extends TileEntity implements ITickable, IRenderLas
 
         buf.writeInt(this.lightValue);
         buf.writeBoolean(this.renderLast);
+        buf.writeBoolean(this.excludeResetPlayback);
         buf.writeFloat(this.rotateYawHead);
         buf.writeFloat(this.rotatePitch);
         buf.writeFloat(this.rotateBody);
