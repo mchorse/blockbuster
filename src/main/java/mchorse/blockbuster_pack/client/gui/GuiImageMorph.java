@@ -145,6 +145,8 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
 
                 if (b.isToggled())
                 {
+                    this.morph.removeParentScaleRotation = true;
+
                     this.removeParentScaleRotation.toggled(true);
                 }
             });
