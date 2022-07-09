@@ -7,7 +7,6 @@ import mchorse.blockbuster.client.gui.GuiImmersiveMorphMenu;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -25,6 +24,7 @@ import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Direction;
+import mchorse.mclib.utils.MatrixUtils.RotationOrder;
 import mchorse.mclib.utils.MatrixUtils.Transformation;
 import mchorse.mclib.utils.OpHelper;
 import mchorse.metamorph.api.MorphUtils;
@@ -107,18 +107,28 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.subChildren.add(this.trans);
 
         /* Entity angles */
-        this.subChildren.add(this.yaw = new GuiTrackpadElement(mc, (value) -> this.model.rotateYawHead = value.floatValue()));
+        this.subChildren.add(this.yaw = new GuiTrackpadElement(mc, (value) -> this.model.getSettings().setRotateYawHead(value.floatValue())));
         this.yaw.tooltip(IKey.lang("blockbuster.gui.model_block.yaw"));
-        this.subChildren.add(this.pitch = new GuiTrackpadElement(mc, (value) -> this.model.rotatePitch = value.floatValue()));
+        this.subChildren.add(this.pitch = new GuiTrackpadElement(mc, (value) -> this.model.getSettings().setRotatePitch(value.floatValue())));
         this.pitch.tooltip(IKey.lang("blockbuster.gui.model_block.pitch"));
-        this.subChildren.add(this.body = new GuiTrackpadElement(mc, (value) -> this.model.rotateBody = value.floatValue()));
+        this.subChildren.add(this.body = new GuiTrackpadElement(mc, (value) -> this.model.getSettings().setRotateBody(value.floatValue())));
         this.body.tooltip(IKey.lang("blockbuster.gui.model_block.body"));
 
         this.yaw.flex().set(-85, 0, 80, 20).relative(this.trans);
         this.pitch.flex().set(0, 25, 80, 20).relative(this.yaw.resizer());
         this.body.flex().set(0, 25, 80, 20).relative(this.pitch.resizer());
 
-        this.subChildren.add(this.order = new GuiCirculateElement(mc, (b) -> this.model.order = RotationOrder.values()[this.order.getValue()]));
+        this.subChildren.add(this.order = new GuiCirculateElement(mc, (b) ->
+        {
+            int index = 0;
+
+            if (this.order.getValue() == 0)
+            {
+                index = 5;
+            }
+
+            this.model.getSettings().setOrder(RotationOrder.values()[index]);
+        }));
         this.order.addLabel(IKey.str("ZYX"));
         this.order.addLabel(IKey.str("XYZ"));
         this.order.flex().relative(this.trans.rx).set(40, -22, 40, 20);
@@ -151,29 +161,29 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
         GuiButtonElement look = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.model_block.look"), (button) ->
         {
-            this.model.ry = 180 - this.mc.player.rotationYaw;
+            this.model.getSettings().setRy(180 - this.mc.player.rotationYaw);
             this.fillData();
         });
 
-        this.shadow = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.shadow"), false, (button) -> this.model.shadow = button.isToggled());
+        this.shadow = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.shadow"), false, (button) -> this.model.getSettings().setShadow(button.isToggled()));
 
-        this.global = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.global"), false, (button) -> this.model.global = button.isToggled());
+        this.global = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.global"), false, (button) -> this.model.getSettings().setGlobal(button.isToggled()));
         this.global.tooltip(IKey.lang("blockbuster.gui.model_block.global_tooltip"), Direction.BOTTOM);
 
-        this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.enabled"), false, (button) -> this.model.enabled = button.isToggled());
+        this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.enabled"), false, (button) -> this.model.getSettings().setEnabled(button.isToggled()));
         this.enabled.tooltip(IKey.lang("blockbuster.gui.model_block.enabled_tooltip"), Direction.BOTTOM);
 
-        this.excludeResetPlayback = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.exlude_reset_playback"), false, (button) -> this.model.excludeResetPlayback = button.isToggled());
+        this.excludeResetPlayback = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.exlude_reset_playback"), false, (button) -> this.model.getSettings().setExcludeResetPlayback(button.isToggled()));
         this.excludeResetPlayback.tooltip(IKey.lang("blockbuster.gui.model_block.exlude_reset_playback_tooltip"));
 
-        this.renderLast = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.render_last"), false, (button) -> this.model.renderLast = button.isToggled());
+        this.renderLast = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.render_last"), false, (button) -> this.model.getSettings().setRenderLast(button.isToggled()));
         this.renderLast.tooltip(IKey.lang("blockbuster.gui.model_block.enabled_tooltip"), Direction.BOTTOM);
 
         this.lightLevel = new GuiTrackpadElement(mc, (value) ->
         {
-            this.model.lightValue = value.intValue();
+            this.model.getSettings().setLightValue(value.intValue());
 
-            this.model.getWorld().setBlockState(this.model.getPos(), this.model.getWorld().getBlockState(this.model.getPos()).withProperty(BlockModel.LIGHT, this.model.lightValue) , 2);
+            this.model.getWorld().setBlockState(this.model.getPos(), this.model.getWorld().getBlockState(this.model.getPos()).withProperty(BlockModel.LIGHT, this.model.getSettings().getLightValue()) , 2);
         });
         this.lightLevel.integer().limit(0, 15);
         this.lightLevel.tooltip(IKey.lang("blockbuster.gui.model_block.light_level_tooltip"));
@@ -217,7 +227,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
     private void pickItem(ItemStack stack, int slot)
     {
-        this.model.slots[slot] = stack.copy();
+        this.model.getSettings().setSlot(stack, slot);
         this.model.updateEntity();
     }
 
@@ -389,28 +399,39 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     {
         if (this.model != null)
         {
-            this.yaw.setValue(this.model.rotateYawHead);
-            this.pitch.setValue(this.model.rotatePitch);
-            this.body.setValue(this.model.rotateBody);
+            this.yaw.setValue(this.model.getSettings().getRotateYawHead());
+            this.pitch.setValue(this.model.getSettings().getRotatePitch());
+            this.body.setValue(this.model.getSettings().getRotateBody());
 
             this.trans.set(this.model);
 
             this.pickMorph.setMorph(this.model.morph.get());
-            this.order.setValue(this.model.order.ordinal());
-            this.shadow.toggled(this.model.shadow);
-            this.global.toggled(this.model.global);
-            this.enabled.toggled(this.model.enabled);
-            this.excludeResetPlayback.toggled(this.model.excludeResetPlayback);
-            this.renderLast.toggled(this.model.renderLast);
+
+            int orderIndex = this.model.getSettings().getOrder().ordinal();
+
+            if (orderIndex == 5)
+            {
+                this.order.setValue(0);
+            }
+            else if (orderIndex == 0)
+            {
+                this.order.setValue(1);
+            }
+
+            this.shadow.toggled(this.model.getSettings().isShadow());
+            this.global.toggled(this.model.getSettings().isGlobal());
+            this.enabled.toggled(this.model.getSettings().isEnabled());
+            this.excludeResetPlayback.toggled(this.model.getSettings().isExcludeResetPlayback());
+            this.renderLast.toggled(this.model.getSettings().isRenderLast());
 
             int lightValue = this.model.getWorld().getBlockState(this.model.getPos()).getValue(BlockModel.LIGHT);
-            this.model.lightValue = lightValue;
+            this.model.getSettings().setLightValue(lightValue);
 
             this.lightLevel.setValue(lightValue);
 
             for (int i = 0; i < this.slots.length; i++)
             {
-                this.slots[i].setStack(this.model.slots[i]);
+                this.slots[i].setStack(this.model.getSettings().getSlots()[i]);
             }
         }
     }
@@ -459,10 +480,10 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
             this.sx.callback = (value) -> this.setS(value, this.sy.value, this.sz.value);
             this.one.callback = (toggle) ->
             {
-                this.model.one = toggle.isToggled();
+                this.model.getSettings().setUniform(toggle.isToggled());
 
-                this.sy.setVisible(!this.model.one);
-                this.sz.setVisible(!this.model.one);
+                this.sy.setVisible(!this.model.getSettings().isUniform());
+                this.sz.setVisible(!this.model.getSettings().isUniform());
             };
         }
 
@@ -472,10 +493,10 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
             if (model != null)
             {
-                this.fillT(model.x, model.y, model.z);
-                this.fillS(model.sx, model.sy, model.sz);
-                this.fillR(model.rx, model.ry, model.rz);
-                this.one.toggled(model.one);
+                this.fillT(model.getSettings().getX(), model.getSettings().getY(), model.getSettings().getZ());
+                this.fillS(model.getSettings().getSx(), model.getSettings().getSy(), model.getSettings().getSz());
+                this.fillR(model.getSettings().getRx(), model.getSettings().getRy(), model.getSettings().getRz());
+                this.one.toggled(model.getSettings().isUniform());
                 this.updateScaleFields();
             }
         }
@@ -483,31 +504,31 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         @Override
         public void setT(double x, double y, double z)
         {
-            this.model.x = (float) x;
-            this.model.y = (float) y;
-            this.model.z = (float) z;
+            this.model.getSettings().setX((float) x);
+            this.model.getSettings().setY((float) y);
+            this.model.getSettings().setZ((float) z);
         }
 
         @Override
         public void setS(double x, double y, double z)
         {
-            this.model.sx = (float) x;
-            this.model.sy = (float) y;
-            this.model.sz = (float) z;
+            this.model.getSettings().setSx((float) x);
+            this.model.getSettings().setSy((float) y);
+            this.model.getSettings().setSz((float) z);
         }
 
         @Override
         public void setR(double x, double y, double z)
         {
-            this.model.rx = (float) x;
-            this.model.ry = (float) y;
-            this.model.rz = (float) z;
+            this.model.getSettings().setRx((float) x);
+            this.model.getSettings().setRy((float) y);
+            this.model.getSettings().setRz((float) z);
         }
 
         @Override
         protected void prepareRotation(Matrix4f mat)
         {
-            Transformation.RotationOrder order = Transformation.RotationOrder.valueOf(model.order.toString());
+            RotationOrder order = RotationOrder.valueOf(this.model.getSettings().getOrder().toString());
             float[] rot = new float[] {(float) this.rx.value, (float) this.ry.value, (float) this.rz.value};
             Matrix4f trans = new Matrix4f();
             trans.setIdentity();
@@ -522,7 +543,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         @Override
         protected void postRotation(Transformation transform)
         {
-            Vector3f result = transform.getRotation(Transformation.RotationOrder.valueOf(model.order.toString()), new Vector3f((float) this.rx.value, (float) this.ry.value, (float) this.rz.value));
+            Vector3f result = transform.getRotation(RotationOrder.valueOf(this.model.getSettings().getOrder().toString()), new Vector3f((float) this.rx.value, (float) this.ry.value, (float) this.rz.value));
             this.rx.setValueAndNotify(result.x);
             this.ry.setValueAndNotify(result.y);
             this.rz.setValueAndNotify(result.z);

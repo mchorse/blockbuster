@@ -1,9 +1,9 @@
 package mchorse.blockbuster.client.render.tileentity;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
+import mchorse.mclib.utils.MatrixUtils.RotationOrder;
+import mchorse.blockbuster.common.tileentity.TileEntityModelSettings;
 import mchorse.mclib.client.Draw;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.metamorph.api.EntityUtils;
@@ -30,8 +30,6 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
-import javax.vecmath.Matrix4f;
-
 /**
  * Model tile entity renderer
  * 
@@ -49,8 +47,9 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
     public void render(TileEntityModel te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
         Minecraft mc = Minecraft.getMinecraft();
+        TileEntityModelSettings teSettings = te.getSettings();
 
-        if (!te.morph.isEmpty() && !Blockbuster.modelBlockDisableRendering.get() && te.enabled)
+        if (!te.morph.isEmpty() && !Blockbuster.modelBlockDisableRendering.get() && teSettings.isEnabled())
         {
             AbstractMorph morph = te.morph.get();
 
@@ -79,22 +78,22 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             /* Apply entity rotations */
             BlockPos pos = te.getPos();
 
-            entity.setPositionAndRotation(pos.getX() + 0.5F + te.x, pos.getY() + te.y, pos.getZ() + 0.5F + te.z, 0, 0);
-            entity.setLocationAndAngles(pos.getX() + 0.5F + te.x, pos.getY() + te.y, pos.getZ() + 0.5F + te.z, 0, 0);
-            entity.rotationYawHead = entity.prevRotationYawHead = te.rotateYawHead;
+            entity.setPositionAndRotation(pos.getX() + 0.5F + teSettings.getX(), pos.getY() + teSettings.getY(), pos.getZ() + 0.5F + teSettings.getZ(), 0, 0);
+            entity.setLocationAndAngles(pos.getX() + 0.5F + teSettings.getX(), pos.getY() + teSettings.getY(), pos.getZ() + 0.5F + teSettings.getZ(), 0, 0);
+            entity.rotationYawHead = entity.prevRotationYawHead = teSettings.getRotateYawHead();
             entity.rotationYaw = entity.prevRotationYaw = 0;
-            entity.rotationPitch = entity.prevRotationPitch = te.rotatePitch;
-            entity.renderYawOffset = entity.prevRenderYawOffset = te.rotateBody;
+            entity.rotationPitch = entity.prevRotationPitch = teSettings.getRotatePitch();
+            entity.renderYawOffset = entity.prevRenderYawOffset = teSettings.getRotateBody();
             entity.setVelocity(0, 0, 0);
 
-            float xx = (float) x + 0.5F + te.x;
-            float yy = (float) y + te.y;
-            float zz = (float) z + 0.5F + te.z;
+            float xx = (float) x + 0.5F + teSettings.getX();
+            float yy = (float) y + teSettings.getY();
+            float zz = (float) z + 0.5F + teSettings.getZ();
 
             /* Apply transformations */
             GlStateManager.pushMatrix();
             GlStateManager.translate(x + 0.5, y, z + 0.5);
-            GlStateManager.translate(te.x, te.y, te.z);
+            GlStateManager.translate(teSettings.getX(), teSettings.getY(), teSettings.getZ());
 
             boolean wasSet = MatrixUtils.captureMatrix();
 
@@ -103,7 +102,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
             GlStateManager.popMatrix();
 
-            if (te.shadow)
+            if (teSettings.isShadow())
             {
                 this.renderer.setShadowSize(morph.getWidth(entity) * 0.8F);
                 this.renderer.doRenderShadowAndFire(te.entity, xx, yy, zz, 0, partialTicks);
@@ -132,9 +131,9 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
-            float r = te.enabled ? 0 : 1;
-            float g = te.enabled ? 0.5F : 0.85F;
-            float b = te.enabled ? 1 : 0;
+            float r = teSettings.isEnabled() ? 0 : 1;
+            float g = teSettings.isEnabled() ? 0.5F : 0.85F;
+            float b = teSettings.isEnabled() ? 1 : 0;
 
             if (!te.morph.isEmpty() && te.morph.get().errorRendering)
             {
@@ -143,9 +142,9 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             }
 
             Draw.cube(buffer, x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, r, g, b, 0.35F);
-            Draw.cube(buffer, x + 0.45F + te.x, y + te.y, z + 0.45F + te.z, x + 0.55F + te.x, y + 0.1F + te.y, z + 0.55F + te.z, 1, 1, 1, 0.85F);
+            Draw.cube(buffer, x + 0.45F + teSettings.getX(), y + teSettings.getY(), z + 0.45F + teSettings.getZ(), x + 0.55F + teSettings.getX(), y + 0.1F + teSettings.getY(), z + 0.55F + teSettings.getZ(), 1, 1, 1, 0.85F);
 
-            double distance = MathHelper.sqrt(Vec3d.ZERO.squareDistanceTo(te.x, te.y, te.z));
+            double distance = MathHelper.sqrt(Vec3d.ZERO.squareDistanceTo(teSettings.getX(), teSettings.getY(), teSettings.getZ()));
 
             if (distance > 0.1)
             {
@@ -153,9 +152,9 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
                 tessellator.draw();
 
-                double horizontalDistance = MathHelper.sqrt(te.x * te.x + te.z * te.z);
-                double yaw = 180 - MathHelper.atan2(te.z, te.x) * 180 / Math.PI + 90;
-                double pitch = MathHelper.atan2(te.y, horizontalDistance) * 180 / Math.PI;
+                double horizontalDistance = MathHelper.sqrt(teSettings.getX() * teSettings.getX() + teSettings.getZ() * teSettings.getZ());
+                double yaw = 180 - MathHelper.atan2(teSettings.getZ(), teSettings.getX()) * 180 / Math.PI + 90;
+                double pitch = MathHelper.atan2(teSettings.getY(), horizontalDistance) * 180 / Math.PI;
 
                 GL11.glPushMatrix();
                 GL11.glTranslated(x + 0.5, y + 0.05F, z + 0.5);
@@ -171,10 +170,10 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
                 tessellator.draw();
             }
 
-            if (te.lightValue != 0)
+            if (teSettings.getLightValue() != 0)
             {
                 FontRenderer font = Minecraft.getMinecraft().fontRenderer;
-                String text = I18n.format("blockbuster.light", te.lightValue);
+                String text = I18n.format("blockbuster.light", teSettings.getLightValue());
                 RenderManager manager = mc.getRenderManager();
 
                 boolean isInventory = false;
@@ -201,31 +200,33 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
     @Override
     public boolean isGlobalRenderer(TileEntityModel te)
     {
-        return te.global;
+        return te.getSettings().isGlobal();
     }
 
     public void transform(TileEntityModel te)
     {
-        if (te.order == RotationOrder.ZYX)
+        TileEntityModelSettings teSettings = te.getSettings();
+
+        if (teSettings.getOrder() == RotationOrder.ZYX)
         {
-            GlStateManager.rotate(te.rx, 1, 0, 0);
-            GlStateManager.rotate(te.ry, 0, 1, 0);
-            GlStateManager.rotate(te.rz, 0, 0, 1);
+            GlStateManager.rotate(teSettings.getRx(), 1, 0, 0);
+            GlStateManager.rotate(teSettings.getRy(), 0, 1, 0);
+            GlStateManager.rotate(teSettings.getRz(), 0, 0, 1);
         }
         else
         {
-            GlStateManager.rotate(te.rz, 0, 0, 1);
-            GlStateManager.rotate(te.ry, 0, 1, 0);
-            GlStateManager.rotate(te.rx, 1, 0, 0);
+            GlStateManager.rotate(teSettings.getRz(), 0, 0, 1);
+            GlStateManager.rotate(teSettings.getRy(), 0, 1, 0);
+            GlStateManager.rotate(teSettings.getRx(), 1, 0, 0);
         }
 
-        if (te.one)
+        if (teSettings.isUniform())
         {
-            GlStateManager.scale(te.sx, te.sx, te.sx);
+            GlStateManager.scale(teSettings.getSx(), teSettings.getSx(), teSettings.getSx());
         }
         else
         {
-            GlStateManager.scale(te.sx, te.sy, te.sz);
+            GlStateManager.scale(teSettings.getSx(), teSettings.getSy(), teSettings.getSz());
         }
     }
 
