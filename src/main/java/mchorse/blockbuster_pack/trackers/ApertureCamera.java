@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import mchorse.aperture.Aperture;
 import mchorse.mclib.utils.MatrixUtils;
+import mchorse.mclib.utils.MatrixUtils.RotationOrder;
 import mchorse.mclib.utils.MatrixUtils.Transformation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.common.Optional.Method;
@@ -53,7 +54,7 @@ public class ApertureCamera extends BaseTracker
                 return;
             }
 
-            Vector3f rotation = transform.getRotation(Transformation.RotationOrder.YXZ, 1);
+            Vector3f rotation = transform.getRotation(RotationOrder.YXZ, 1);
             if (rotation != null)
             {
                 rot.set(rotation);

@@ -9,7 +9,6 @@ import mchorse.mclib.utils.OpHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class ServerHandlerModifyModelBlock extends ServerMessageHandler<PacketModifyModelBlock>
@@ -30,7 +29,7 @@ public class ServerHandlerModifyModelBlock extends ServerMessageHandler<PacketMo
             ((TileEntityModel) tile).copyData(message.model, false);
 
             //set the blockstate in the world - important for servers
-            tile.getWorld().setBlockState(message.pos, tile.getWorld().getBlockState(message.pos).withProperty(BlockModel.LIGHT, message.model.lightValue) , 2);
+            tile.getWorld().setBlockState(message.pos, tile.getWorld().getBlockState(message.pos).withProperty(BlockModel.LIGHT, message.model.getSettings().getLightValue()) , 2);
 
             Dispatcher.DISPATCHER.get().sendToAllAround(message, new TargetPoint(player.dimension, pos.getX(), pos.getY(), pos.getZ(), 64));
         }

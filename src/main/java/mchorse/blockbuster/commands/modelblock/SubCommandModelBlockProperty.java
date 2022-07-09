@@ -56,7 +56,7 @@ public class SubCommandModelBlockProperty extends SubCommandModelBlockBase
 
         if (property.equals("enabled"))
         {
-            model.enabled = CommandBase.parseBoolean(args[4]);
+            model.getSettings().setEnabled(CommandBase.parseBoolean(args[4]));
         }
 
         model.markDirty();

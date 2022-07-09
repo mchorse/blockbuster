@@ -1,7 +1,6 @@
 package mchorse.blockbuster.common.block;
 
 import java.util.List;
-import java.util.Random;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.GuiHandler;
@@ -19,7 +18,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -101,7 +99,7 @@ public class BlockModel extends Block implements ITileEntityProvider
         ItemStack stack = this.getItemStack(state);
         TileEntityModel model = new TileEntityModel();
 
-        model.lightValue = this.damageDropped(state);
+        model.getSettings().setLightValue(this.damageDropped(state));
 
         this.setTENBTtoStack(stack, model);
 
