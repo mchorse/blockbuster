@@ -19,6 +19,7 @@ import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.Interpolation;
 import mchorse.mclib.utils.NBTUtils;
+import mchorse.mclib.utils.RenderingUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
@@ -574,28 +575,9 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
             FontRenderer font = mc.fontRenderer;
             RenderManager manager = mc.getRenderManager();
 
-            /*TODO*/
             if (Blockbuster.modelBlockRenderMissingName.get() || mc.gameSettings.showDebugInfo)
             {
-                MatrixUtils.Transformation transformation = MatrixUtils.extractTransformations(MatrixUtils.matrix, MatrixUtils.readModelView(), MatrixUtils.MatrixMajor.COLUMN);
-
-                float invSx = (transformation.scale.m00 != 0) ? 1 / transformation.scale.m00 : 0;
-                float invSy = (transformation.scale.m11 != 0) ? 1 / transformation.scale.m11 : 0;
-                float invSz = (transformation.scale.m22 != 0) ? 1 / transformation.scale.m22 : 0;
-
-                try
-                {
-                    transformation.rotation.invert();
-                }
-                catch (Exception e)
-                { }
-
-                Vector3f rot = transformation.getRotation(MatrixUtils.RotationOrder.XYZ);
-
-                GlStateManager.scale(invSx, invSy, invSz);
-                GlStateManager.rotate(rot.z, 0, 0, 1);
-                GlStateManager.rotate(rot.y, 0, 1, 0);
-                GlStateManager.rotate(rot.x, 1, 0, 0);
+                RenderingUtils.glRevertRotationScale();
 
                 EntityRenderer.drawNameplate(font, this.getKey(), (float) x, (float) y + 1, (float) z, 0, manager.playerViewY, manager.playerViewX, mc.gameSettings.thirdPersonView == 2, entity.isSneaking());
             }
