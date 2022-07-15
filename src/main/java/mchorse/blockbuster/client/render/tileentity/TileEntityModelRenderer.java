@@ -1,11 +1,15 @@
 package mchorse.blockbuster.client.render.tileentity;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlockPanel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
+import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;
 import mchorse.mclib.utils.MatrixUtils.RotationOrder;
 import mchorse.blockbuster.common.tileentity.TileEntityModelSettings;
 import mchorse.mclib.client.Draw;
 import mchorse.mclib.utils.MatrixUtils;
+import mchorse.mclib.utils.RenderingUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -29,6 +33,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+
+import javax.vecmath.Vector3d;
 
 /**
  * Model tile entity renderer
@@ -100,6 +106,9 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             this.transform(te);
 
             MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
+
+            this.drawAxis(te);
+
             GlStateManager.popMatrix();
 
             if (teSettings.isShadow())
@@ -194,6 +203,43 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             {
                 OpenGlHelper.glUseProgram(shader);
             }
+        }
+    }
+
+    private void drawAxis(TileEntityModel te)
+    {
+        if (GuiModelBlockPanel.isOpened() && te == GuiModelBlockPanel.getCurrentTe())
+        {
+            GlStateManager.pushMatrix();
+            GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+            GlStateManager.disableTexture2D();
+            GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+            GlStateManager.disableTexture2D();
+
+            GlStateManager.disableDepth();
+            GlStateManager.disableLighting();
+
+            Draw.point(0, 0, 0);
+
+            if (GuiTransformations.GuiStaticTransformOrientation.getOrientation() == GuiTransformations.TransformOrientation.GLOBAL)
+            {
+                TileEntityModelSettings teSettings = te.getSettings();
+                Vector3d rotation = new Vector3d(Math.toRadians(teSettings.getRx()), Math.toRadians(teSettings.getRy()), Math.toRadians(teSettings.getRz()));
+                Vector3d scale = new Vector3d(teSettings.getSx(), teSettings.getSy(), teSettings.getSz());
+
+                RenderingUtils.glRevertRotationScale(rotation, scale, teSettings.getOrder());
+            }
+
+            Draw.axis(0.25F);
+
+            GlStateManager.enableLighting();
+            GlStateManager.enableDepth();
+
+            GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+            GlStateManager.enableTexture2D();
+            GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+            GlStateManager.enableTexture2D();
+            GlStateManager.popMatrix();
         }
     }
 

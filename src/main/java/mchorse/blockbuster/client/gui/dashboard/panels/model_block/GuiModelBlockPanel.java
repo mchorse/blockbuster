@@ -76,6 +76,9 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
     private AbstractMorph morph;
 
+    private static boolean opened;
+    private static TileEntityModel currentTE;
+
     /**
      * Try adding a block position, if it doesn't exist in list already 
      */
@@ -219,6 +222,16 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.slots[5].flex().x(0.5F + 0.125F).y(0.5F, -45);
     }
 
+    public static boolean isOpened()
+    {
+        return opened;
+    }
+
+    public static TileEntityModel getCurrentTe()
+    {
+        return currentTE;
+    }
+
     @Override
     public boolean needsBackground()
     {
@@ -301,6 +314,8 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
             return;
         }
 
+        opened = true;
+
         this.updateList();
 
         /* Resetting the current model block, if it was removed from the world */
@@ -314,6 +329,8 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     public void close()
     {
         this.save(null);
+
+        opened = false;
     }
 
     public void save(TileEntityModel model)
@@ -379,6 +396,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.subChildren.setVisible(model != null);
         this.model = model;
         this.fillData();
+        currentTE = model;
 
         return this;
     }
@@ -523,6 +541,14 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
             this.model.getSettings().setRx((float) x);
             this.model.getSettings().setRy((float) y);
             this.model.getSettings().setRz((float) z);
+        }
+
+        @Override
+        protected void localTranslate(double x, double y, double z)
+        {
+            this.model.getSettings().addTranslation(x, y, z, GuiStaticTransformOrientation.getOrientation());
+
+            this.fillT(this.model.getSettings().getX(), this.model.getSettings().getY(), this.model.getSettings().getZ());
         }
 
         @Override
