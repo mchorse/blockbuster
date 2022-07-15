@@ -1,6 +1,7 @@
 package mchorse.blockbuster.common.tileentity;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations.TransformOrientation;
 import mchorse.mclib.config.values.ValueBoolean;
 import mchorse.mclib.config.values.ValueFloat;
 import mchorse.mclib.config.values.ValueInt;
@@ -8,12 +9,16 @@ import mchorse.mclib.config.values.ValueItemSlots;
 import mchorse.mclib.config.values.ValueRotationOrder;
 import mchorse.mclib.network.IByteBufSerializable;
 import mchorse.mclib.network.INBTSerializable;
+import mchorse.mclib.utils.ITransformationObject;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.ValueSerializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class TileEntityModelSettings implements IByteBufSerializable, INBTSerializable
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector4f;
+
+public class TileEntityModelSettings implements IByteBufSerializable, INBTSerializable, ITransformationObject
 {
     private final ValueBoolean enabled = new ValueBoolean("enabled", true);
     private final ValueInt lightValue = new ValueInt("lightValue");
@@ -190,6 +195,31 @@ public class TileEntityModelSettings implements IByteBufSerializable, INBTSerial
     public void setZ(float z)
     {
         this.z.set(z);
+    }
+
+    /**
+     * Add a translation on top of this translation.
+     * @param x
+     * @param y
+     * @param z
+     */
+    @Override
+    public void addTranslation(double x, double y, double z, TransformOrientation orientation)
+    {
+        Vector4f trans = new Vector4f((float) x, (float) y, (float) z, 1F);
+
+        if (orientation == TransformOrientation.LOCAL)
+        {
+            float rotX = (float) Math.toRadians(this.getRx());
+            float rotY = (float) Math.toRadians(this.getRy());
+            float rotZ = (float) Math.toRadians(this.getRz());
+
+            MatrixUtils.getRotationMatrix(rotX, rotY, rotZ, this.order.get()).transform(trans);
+        }
+
+        this.x.set(this.x.get() + trans.x);
+        this.y.set(this.y.get() + trans.y);
+        this.z.set(this.z.get() + trans.z);
     }
 
     public float getRx()

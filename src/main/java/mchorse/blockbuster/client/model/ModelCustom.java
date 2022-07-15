@@ -90,6 +90,11 @@ public class ModelCustom extends ModelBiped
         this.textureHeight = model.texture[1];
     }
 
+    /**
+     * Get the {@link ModelCustomRenderer} for the provided limb name
+     * @param name
+     * @return the {@link ModelCustomRenderer} instance that has the limb with the same name as the provided String
+     */
     public ModelCustomRenderer get(String name)
     {
         for (ModelCustomRenderer renderer : this.limbs)

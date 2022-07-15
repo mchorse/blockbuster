@@ -1,5 +1,9 @@
 package mchorse.blockbuster.api;
 
+import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;
+import mchorse.mclib.utils.ITransformationObject;
+import mchorse.mclib.utils.MatrixUtils;
+import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.base.MoreObjects;
@@ -12,12 +16,16 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
+
 /**
  * Transform class
  *
  * This class simply holds basic transformation data for every limb.
  */
-public class ModelTransform
+public class ModelTransform implements ITransformationObject
 {
     /**
      * Default model transform. Please don't modify its values. 
@@ -27,6 +35,25 @@ public class ModelTransform
     public float[] translate = new float[] {0, 0, 0};
     public float[] scale = new float[] {1, 1, 1};
     public float[] rotate = new float[] {0, 0, 0};
+
+    @Override
+    public void addTranslation(double x, double y, double z, GuiTransformations.TransformOrientation orientation)
+    {
+        Vector4f trans = new Vector4f((float) x,(float) y,(float) z, 1);
+
+        if (orientation == GuiTransformations.TransformOrientation.LOCAL)
+        {
+            float rotX = (float) Math.toRadians(this.rotate[0]);
+            float rotY = (float) Math.toRadians(this.rotate[1]);
+            float rotZ = (float) Math.toRadians(this.rotate[2]);
+
+            MatrixUtils.getRotationMatrix(rotX, rotY, rotZ, MatrixUtils.RotationOrder.XYZ).transform(trans);
+        }
+
+        this.translate[0] += trans.x;
+        this.translate[1] += trans.y;
+        this.translate[2] += trans.z;
+    }
 
     public static boolean equalFloatArray(float[] a, float[] b)
     {

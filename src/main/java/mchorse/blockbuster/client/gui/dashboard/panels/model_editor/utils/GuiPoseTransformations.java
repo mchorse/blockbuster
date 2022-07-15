@@ -33,6 +33,14 @@ public class GuiPoseTransformations extends GuiTransformations
     }
 
     @Override
+    public void localTranslate(double x, double y, double z)
+    {
+        this.trans.addTranslation(x, y, z, GuiStaticTransformOrientation.getOrientation());
+
+        this.fillT(this.trans.translate[0], this.trans.translate[1], this.trans.translate[2]);
+    }
+
+    @Override
     public void setT(double x, double y, double z)
     {
         this.trans.translate[0] = (float) x;

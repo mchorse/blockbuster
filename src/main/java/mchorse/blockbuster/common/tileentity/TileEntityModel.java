@@ -294,12 +294,4 @@ public class TileEntityModel extends TileEntity implements ITickable, IRenderLas
 
         MorphUtils.morphToBuf(buf, this.morph.get());
     }
-
-    /**
-     * Rotation order
-     */
-    public static enum RotationOrder
-    {
-        ZYX, XYZ;
-    }
 }

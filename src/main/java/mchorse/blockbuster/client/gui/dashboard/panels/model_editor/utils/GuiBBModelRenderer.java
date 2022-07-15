@@ -3,6 +3,9 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils;
 import java.util.List;
 import java.util.Map;
 
+import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;
+import mchorse.mclib.utils.MatrixUtils;
+import mchorse.mclib.utils.RenderingUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
@@ -30,6 +33,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3d;
 
 /**
  * Model renderer which renders Blockbuster models 
@@ -211,7 +217,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
                     if (this.origin)
                     {
                         targetLimb.postRender(1F / 16F);
-                        Draw.axis(0.25F);
+                        this.drawAxis(targetLimb, 0.25F);
                     }
                 }
 
@@ -230,6 +236,21 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         {
             this.renderAABB();
         }
+    }
+
+    protected void drawAxis(ModelCustomRenderer target, float length)
+    {
+        GlStateManager.pushMatrix();
+
+        if (GuiTransformations.GuiStaticTransformOrientation.getOrientation() == GuiTransformations.TransformOrientation.GLOBAL)
+        {
+            RenderingUtils.glRevertRotationScale(new Vector3d(target.rotateAngleX, target.rotateAngleY, target.rotateAngleZ),
+                                                 new Vector3d(target.scaleX, target.scaleY, target.scaleZ),
+                                                 MatrixUtils.RotationOrder.XYZ);
+        }
+
+        Draw.axis(length);
+        GlStateManager.popMatrix();
     }
 
     protected void updateModel(float limbSwing, float headYaw, float headPitch, float factor, float partial)
@@ -301,7 +322,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
 
         if (this.origin)
         {
-            Draw.axis(0.25F);
+            this.drawAxis(this.model.get(limb.name), 0.25F);
         }
     }
     
@@ -365,7 +386,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
 
         if (this.origin)
         {
-            Draw.axis(0.25F);
+            this.drawAxis(renderer, 0.25F);
         }
     }
 
