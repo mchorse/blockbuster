@@ -329,7 +329,7 @@ public class RenderingHandler
         isRenderingLast = true;
 
         /* copied from RenderGlobal.renderEntities() - I hope this does not fuck around when porting */
-        TileEntityRendererDispatcher.instance.preDrawBatch();
+        //TileEntityRendererDispatcher.instance.preDrawBatch();
 
         for (IRenderLast renderLast : renderLasts)
         {
@@ -343,7 +343,7 @@ public class RenderingHandler
             }
         }
 
-        TileEntityRendererDispatcher.instance.drawBatch(0);
+        //TileEntityRendererDispatcher.instance.drawBatch(0);
 
         isRenderingLast = false;
 
