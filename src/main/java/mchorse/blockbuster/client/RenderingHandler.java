@@ -60,6 +60,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.objectweb.asm.tree.MethodNode;
 import scala.Int;
 
 import javax.vecmath.Vector3d;
@@ -299,7 +300,7 @@ public class RenderingHandler
     }
 
     /**
-     * Called by ASM @see {mchorse.blockbuster.core.transformers.RenderGlobalTransformer#processRenderEntities}
+     * Called by ASM {@link mchorse.blockbuster.core.transformers.RenderGlobalTransformer}
      * to render the entities that should be depth sorted after tileentities and entities have been rendered
      */
     public static void renderLastEntities()
