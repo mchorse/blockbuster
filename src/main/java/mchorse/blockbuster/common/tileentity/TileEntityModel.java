@@ -240,7 +240,7 @@ public class TileEntityModel extends TileEntity implements ITickable, IRenderLas
 
     public void copyData(TileEntityModel model, boolean merge)
     {
-        this.settings.copy(model.settings, merge);
+        this.settings.copy(model.settings);
 
         if (merge)
         {
