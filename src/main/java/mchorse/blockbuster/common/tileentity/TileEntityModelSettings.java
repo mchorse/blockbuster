@@ -9,6 +9,7 @@ import mchorse.mclib.config.values.ValueItemSlots;
 import mchorse.mclib.config.values.ValueRotationOrder;
 import mchorse.mclib.network.IByteBufSerializable;
 import mchorse.mclib.network.INBTSerializable;
+import mchorse.mclib.utils.ICopy;
 import mchorse.mclib.utils.ITransformationObject;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.ValueSerializer;
@@ -18,7 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector4f;
 
-public class TileEntityModelSettings implements IByteBufSerializable, INBTSerializable, ITransformationObject
+public class TileEntityModelSettings implements IByteBufSerializable, INBTSerializable, ITransformationObject, ICopy<TileEntityModelSettings>
 {
     private final ValueBoolean enabled = new ValueBoolean("enabled", true);
     private final ValueInt lightValue = new ValueInt("lightValue");
@@ -322,7 +323,17 @@ public class TileEntityModelSettings implements IByteBufSerializable, INBTSerial
         this.enabled.set(enabled);
     }
 
-    public void copy(TileEntityModelSettings settings, boolean merge)
+    @Override
+    public TileEntityModelSettings copy()
+    {
+        TileEntityModelSettings copy = new TileEntityModelSettings();
+
+        copy.copy(this);
+
+        return copy;
+    }
+
+    public void copy(TileEntityModelSettings settings)
     {
         this.lightValue.copy(settings.lightValue);
         this.renderLast.copy(settings.renderLast);

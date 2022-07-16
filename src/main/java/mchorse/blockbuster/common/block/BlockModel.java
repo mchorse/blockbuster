@@ -78,7 +78,7 @@ public class BlockModel extends Block implements ITileEntityProvider
     /**
      * Get the itemstack containing one item of this block according to the blockstate
      * @param state
-     * @return itemstack with no metadata and containing one item
+     * @return itemstack with the metadata returned by {@link #damageDropped(IBlockState)}
      */
     public ItemStack getItemStack(IBlockState state)
     {
@@ -104,12 +104,6 @@ public class BlockModel extends Block implements ITileEntityProvider
         this.setTENBTtoStack(stack, model);
 
         return stack;
-    }
-
-    @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
-    {
-        return this.getItem(world, pos, state);
     }
 
     /**
