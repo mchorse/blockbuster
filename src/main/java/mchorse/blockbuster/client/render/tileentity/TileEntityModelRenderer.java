@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.render.tileentity;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlockPanel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
+import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;
 import mchorse.mclib.utils.MatrixUtils.RotationOrder;
@@ -13,6 +14,7 @@ import mchorse.mclib.utils.RenderingUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.bodypart.GuiBodyPartEditor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -35,6 +37,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import javax.vecmath.Vector3d;
+import java.util.List;
 
 /**
  * Model tile entity renderer
@@ -208,7 +211,13 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
     private void drawAxis(TileEntityModel te)
     {
-        if (GuiModelBlockPanel.isOpened() && te == GuiModelBlockPanel.getCurrentTe())
+        List<GuiModelBlockPanel> childList = GuiBase.getCurrentChildren(GuiModelBlockPanel.class);
+
+        if (childList == null) return;
+
+        GuiModelBlockPanel modelBlockPanel = childList.get(0);
+
+        if (modelBlockPanel != null && modelBlockPanel.isOpened() && modelBlockPanel.isSelected(te))
         {
             GlStateManager.pushMatrix();
             GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);

@@ -76,8 +76,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
     private AbstractMorph morph;
 
-    private static boolean opened;
-    private static TileEntityModel currentTE;
+    private boolean opened;
 
     /**
      * Try adding a block position, if it doesn't exist in list already 
@@ -222,14 +221,18 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.slots[5].flex().x(0.5F + 0.125F).y(0.5F, -45);
     }
 
-    public static boolean isOpened()
+    public boolean isOpened()
     {
-        return opened;
+        return this.opened;
     }
 
-    public static TileEntityModel getCurrentTe()
+    /**
+     * @param tileEntityModel
+     * @return true if the provided tileEntityModel reference matches the reference of the selected model.
+     */
+    public boolean isSelected(TileEntityModel tileEntityModel)
     {
-        return currentTE;
+        return this.model == tileEntityModel;
     }
 
     @Override
@@ -396,7 +399,6 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.subChildren.setVisible(model != null);
         this.model = model;
         this.fillData();
-        currentTE = model;
 
         return this;
     }
