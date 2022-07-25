@@ -45,7 +45,9 @@ public class PacketAudio implements IMessage
 
         if (buf.readBoolean())
         {
-            this.delay = LatencyTimer.fromBytes(buf);
+            this.delay = new LatencyTimer();
+
+            this.delay.fromBytes(buf);
         }
     }
 
@@ -56,14 +58,11 @@ public class PacketAudio implements IMessage
         buf.writeInt(this.state.ordinal());
         buf.writeInt(this.shift);
 
+        buf.writeBoolean(this.delay != null);
+
         if (this.delay != null)
         {
-            buf.writeBoolean(true);
             this.delay.toBytes(buf);
-        }
-        else
-        {
-            buf.writeBoolean(false);
         }
     }
 }

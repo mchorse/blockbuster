@@ -87,7 +87,7 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
 
                 if (panel.getLocation().equals(location))
                 {
-                    panel.getLocation().getScene().audioShift = value.intValue();
+                    panel.getLocation().getScene().setAudioShift(value.intValue());
                 }
             }
         });
