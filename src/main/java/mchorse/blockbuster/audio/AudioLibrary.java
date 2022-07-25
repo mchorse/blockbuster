@@ -106,26 +106,18 @@ public class AudioLibrary
     /**
      *
      * @param audio name of the file (without .wav file ending)
-     * @param state
+     * @param state play, pause, resume etc. the audio
      * @param shift in ticks
      * @param delay for syncing purposes, if not used, pass null as value
      * @return false if the file is null or empty
      */
-    public boolean play(String audio, AudioState state, int shift, @Nullable LatencyTimer delay)
+    public boolean handleAudio(String audio, AudioState state, int shift, @Nullable LatencyTimer delay)
     {
         AudioFile file = this.files.get(audio);
-
-        float elapsed = 0;
 
         if (file == null || file.canBeUpdated())
         {
             file = this.load(audio, new File(this.folder, audio + ".wav"));
-
-            /* Account for networking and loading delays */
-            if (delay != null)
-            {
-                elapsed = delay.getElapsedTime() / 1000F;
-            }
         }
 
         if (file == null || file.isEmpty())
@@ -135,47 +127,64 @@ public class AudioLibrary
 
         WavePlayer player = file.player;
 
-        float seconds = shift / 20F + elapsed;
+        float seconds = shift / 20F;
+        float elapsedDelay = (delay != null) ? delay.getElapsedTime() / 1000F : 0F;
 
-        if (state == AudioState.REWIND)
-        {
-            player.stop();
-            player.play();
-            player.setPlaybackPosition(seconds);
-        }
-        else if (state == AudioState.PAUSE)
-        {
-            player.pause();
-        }
-        else if (state == AudioState.PAUSE_SET)
-        {
-            if (player.isStopped())
-            {
-                player.play();
-            }
+        System.out.println("Received audio latency of: " + elapsedDelay + " seconds");
 
-            player.pause();
-            player.setPlaybackPosition(seconds);
-        }
-        else if (state == AudioState.RESUME)
-        {
-            player.play();
-        }
-        else if (state == AudioState.RESUME_SET)
-        {
-            player.play();
-            player.setPlaybackPosition(seconds);
-        }
-        else if (state == AudioState.SET)
-        {
-            player.setPlaybackPosition(seconds);
-        }
-        else if (state == AudioState.STOP)
-        {
-            player.stop();
-        }
+        this.handleAudioState(state, player, seconds, elapsedDelay);
 
         return true;
+    }
+
+    private void handleAudioState(AudioState state, WavePlayer player, float seconds, float elapsedDelay)
+    {
+        switch (state)
+        {
+            case REWIND:
+                player.stop();
+                player.play();
+                player.setPlaybackPosition(seconds + elapsedDelay);
+
+                break;
+            case PAUSE:
+                elapsedDelay = (player.isPlaying()) ? elapsedDelay : 0;
+
+                player.pause();
+                player.setPlaybackPosition(((seconds == 0) ? player.getPlaybackPosition() : seconds) - elapsedDelay);
+
+                break;
+            case PAUSE_SET:
+                if (player.isStopped())
+                {
+                    player.play();
+                }
+
+                player.pause();
+                player.setPlaybackPosition(seconds);
+
+                break;
+            case RESUME:
+                player.play();
+                player.setPlaybackPosition(player.getPlaybackPosition() + elapsedDelay);
+
+                break;
+            case RESUME_SET:
+                player.play();
+                player.setPlaybackPosition(seconds + elapsedDelay);
+
+                break;
+            case SET:
+                elapsedDelay = (player.isPlaying()) ? elapsedDelay : 0;
+
+                player.setPlaybackPosition(seconds + elapsedDelay);
+
+                break;
+            case STOP:
+                player.stop();
+
+                break;
+        }
     }
 
     public void reset()

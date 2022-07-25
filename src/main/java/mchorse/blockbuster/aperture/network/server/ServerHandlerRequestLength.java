@@ -16,7 +16,7 @@ public class ServerHandlerRequestLength extends ServerMessageHandler<PacketReque
 
         if (scene != null)
         {
-            Dispatcher.sendTo(new PacketSceneLength(scene.getMaxLength(), scene.audioShift), player);
+            Dispatcher.sendTo(new PacketSceneLength(scene.getMaxLength(), scene.getAudioShift()), player);
         }
     }
 }

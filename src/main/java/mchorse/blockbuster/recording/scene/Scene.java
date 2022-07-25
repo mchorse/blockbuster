@@ -5,12 +5,11 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
+import mchorse.blockbuster.audio.AudioHandler;
 import mchorse.blockbuster.audio.AudioState;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.audio.PacketAudio;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Mode;
@@ -23,7 +22,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -36,7 +34,6 @@ import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
@@ -104,17 +101,7 @@ public class Scene
      */
     public boolean loops;
 
-    /**
-     * Audio voice line that should be used for this scene for syncing
-     */
-    public String audio = "";
-
-    private AudioState audioState = AudioState.PAUSE;
-
-    /**
-     * Audio shift
-     */
-    public int audioShift;
+    private AudioHandler audioHandler = new AudioHandler();
 
     /* Runtime properties */
 
@@ -159,7 +146,28 @@ public class Scene
      */
     private World world;
 
-    /* Info accessors */
+    public String getAudio()
+    {
+        return this.audioHandler.getAudioName();
+    }
+
+    public void setAudio(String audio)
+    {
+        this.audioHandler.setAudioName(audio);
+    }
+
+    /**
+     * Audio shift
+     */
+    public int getAudioShift()
+    {
+        return this.audioHandler.getAudioShift();
+    }
+
+    public void setAudioShift(int audioShift)
+    {
+        this.audioHandler.setAudioShift(audioShift);
+    }
 
     public String getId()
     {
@@ -201,7 +209,7 @@ public class Scene
 
     public AudioState getAudioState()
     {
-        return this.audioState;
+        return this.audioHandler.getAudioState();
     }
 
     /**
@@ -394,15 +402,11 @@ public class Scene
             CommonProxy.damage.addDamageControl(this, firstActor);
         }
 
-        this.sendAudio(AudioState.REWIND);
+        this.audioHandler.rewindAudio(Blockbuster.audioSync.get());
+
         this.wasRecording = false;
         this.paused = false;
         this.tick = tick;
-    }
-
-    public void startPlayback(String exception)
-    {
-        this.startPlayback(exception);
     }
 
     /**
@@ -507,7 +511,8 @@ public class Scene
     {
         if (!triggered && !this.wasRecording || triggered)
         {
-            this.sendAudio(AudioState.STOP);
+            this.audioHandler.stopAudio(Blockbuster.audioSync.get());
+
             this.wasRecording = false;
         }
 
@@ -721,7 +726,7 @@ public class Scene
             actor.pause();
         }
 
-        this.sendAudio(AudioState.PAUSE);
+        this.audioHandler.pauseAudio(Blockbuster.audioSync.get());
         this.paused = true;
     }
 
@@ -935,11 +940,6 @@ public class Scene
         }
     }
 
-    public void sendAudio(AudioState state)
-    {
-        this.sendAudio(state, 0);
-    }
-
     /**
      * Send the audio in the scene, if present, to all players on the server
      * and set this.audioState to the provided state.
@@ -948,39 +948,7 @@ public class Scene
      */
     public void sendAudio(AudioState state, int shift)
     {
-        this.audioState = state;
-
-        if (this.audio == null || this.audio.isEmpty())
-        {
-            return;
-        }
-
-        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
-
-        for (String username : players.getOnlinePlayerNames())
-        {
-            EntityPlayerMP player = players.getPlayerByUsername(username);
-
-            this.sendAudioToPlayer(state, shift, player);
-        }
-    }
-
-    /**
-     * Send the audio to the provided player
-     * @param state
-     * @param shift shift the audio in ticks
-     * @param player the entity player the audio should be sent to
-     */
-    public void sendAudioToPlayer(AudioState state, int shift, EntityPlayerMP player)
-    {
-        LatencyTimer timer = null;
-
-        if (Blockbuster.audioSync.get())
-        {
-            timer = new LatencyTimer();
-        }
-
-        this.sendAudioToPlayer(state, shift, timer, player);
+        this.audioHandler.sendAudioState(state, shift, Blockbuster.audioSync.get());
     }
 
     /**
@@ -990,21 +958,9 @@ public class Scene
      * @param latencyTimer a timer to measure (approximately) the delay to sync the audio properly
      * @param player the entity player the audio should be sent to
      */
-    public void sendAudioToPlayer(AudioState state, int shift, LatencyTimer latencyTimer, EntityPlayerMP player)
+    public void sendAudioToPlayer(AudioState state, int shift, @Nullable LatencyTimer latencyTimer, EntityPlayerMP player)
     {
-        this.audioState = state;
-
-        if (this.audio == null || this.audio.isEmpty())
-        {
-            return;
-        }
-
-        PacketAudio packet = new PacketAudio(this.audio, state, this.audioShift + shift, latencyTimer);
-
-        if (player != null)
-        {
-            Dispatcher.sendTo(packet, player);
-        }
+        this.audioHandler.sendAudioStateToPlayer(state, shift, latencyTimer, player);
     }
 
     public void copy(Scene scene)
@@ -1029,8 +985,7 @@ public class Scene
         this.startCommand = scene.startCommand;
         this.stopCommand = scene.stopCommand;
 
-        this.audio = scene.audio;
-        this.audioShift = scene.audioShift;
+        this.audioHandler.copy(scene.audioHandler);
     }
 
     /* NBT methods */
@@ -1054,19 +1009,7 @@ public class Scene
         this.startCommand = compound.getString("StartCommand");
         this.stopCommand = compound.getString("StopCommand");
 
-        this.audio = compound.getString("Audio");
-
-        if (compound.hasKey("AudioShift"))
-        {
-            if (compound.getTag("AudioShift") instanceof NBTTagFloat)
-            {
-                this.audioShift = (int) (compound.getFloat("AudioShift") * 20);
-            }
-            else
-            {
-                this.audioShift = compound.getInteger("AudioShift");
-            }
-        }
+        this.audioHandler.fromNBT(compound);
     }
 
     public void toNBT(NBTTagCompound compound)
@@ -1087,8 +1030,7 @@ public class Scene
         compound.setString("StartCommand", this.startCommand);
         compound.setString("StopCommand", this.stopCommand);
 
-        compound.setString("Audio", this.audio);
-        compound.setInteger("AudioShift", this.audioShift);
+        this.audioHandler.toNBT(compound);
     }
 
     /* ByteBuf methods */
@@ -1111,8 +1053,7 @@ public class Scene
         this.startCommand = ByteBufUtils.readUTF8String(buffer);
         this.stopCommand = ByteBufUtils.readUTF8String(buffer);
 
-        this.audio = ByteBufUtils.readUTF8String(buffer);
-        this.audioShift = buffer.readInt();
+        this.audioHandler.fromBytes(buffer);
     }
 
     public void toBuf(ByteBuf buffer)
@@ -1130,7 +1071,6 @@ public class Scene
         ByteBufUtils.writeUTF8String(buffer, this.startCommand);
         ByteBufUtils.writeUTF8String(buffer, this.stopCommand);
 
-        ByteBufUtils.writeUTF8String(buffer, this.audio);
-        buffer.writeInt(this.audioShift);
+        this.audioHandler.toBytes(buffer);
     }
 }
