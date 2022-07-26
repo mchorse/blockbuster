@@ -1,4 +1,7 @@
-buildscript 
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
+buildscript
 {
     repositories 
     {
@@ -36,8 +39,8 @@ minecraft
     runDir = "run"
     mappings = snapshot
     
-    clientJvmArgs = ["-Xmx1G", "-Dfml.coreMods.load=" + coremodPath]
-    serverJvmArgs = ["-Xmx1G"]
+    clientJvmArgs = ["-Xmx5G", "-Dfml.coreMods.load=" + coremodPath]
+    serverJvmArgs = ["-Xmx5G"]
     
     replace "%VERSION%", project.version
     replace "%METAMORPH%", project.metamorph
@@ -186,6 +189,50 @@ task buildLangFiles {
             
             return output
         }
+
+        def replaceNestedLanguageKeys = {File langFile ->
+            String newLangText = langFile.text
+
+            /* replace {yamlfile.key_bla_bla} with the value of the language key in the current language dir */
+            Matcher m = Pattern.compile('\\{([\\w\\d_.]+)\\}').matcher(newLangText);
+
+            while (m.find())
+            {
+                String match = m.group()
+                String langKey = project.archivesBaseName + "." + match.replace('{', '').replace('}', '')
+
+                int indexKey = newLangText.indexOf(langKey)
+
+                int end = indexKey
+                int begin = -1
+
+                while (end < newLangText.length())
+                {
+                    if (newLangText[end] == "\n" || newLangText[end] == "\r\n")
+                    {
+                        break
+                    }
+
+                    if (newLangText[end].equals("=") && begin == -1)
+                    {
+                        begin = end + 1
+                    }
+
+                    end++
+                }
+
+                String value = newLangText.substring(begin, end)
+
+                if (value != null)
+                {
+                    newLangText = newLangText.replace(match, '"' + value + '"')
+                }
+
+                m = Pattern.compile('\\{([\\w\\d_.]+)\\}').matcher(newLangText);
+            }
+
+            return newLangText
+        }
         
         /**
          * Convert given langauge dir from YML to ini
@@ -209,8 +256,9 @@ task buildLangFiles {
             {
                 parentFile.mkdirs();
             }
-            
-            def writer = new PrintWriter(output_file)
+
+            OutputStream os = new FileOutputStream(output_file);
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
             
             writer.println(output.trim())
             writer.close()
@@ -225,6 +273,26 @@ task buildLangFiles {
                     convert(lang_dir)
                     println "Converted ${lang_dir.getName()} to language file"
                 }
+            }
+
+            def langFile = file("src/main/resources/assets/${project.archivesBaseName}/lang/")
+
+            if (langFile.exists())
+            {
+                for (file in langFile.listFiles())
+                {
+                    String output = replaceNestedLanguageKeys(file)
+
+                    OutputStream os = new FileOutputStream(file);
+                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+
+                    writer.print(output.trim())
+                    writer.close()
+                }
+            }
+            else
+            {
+                println "Directory 'lang' is not found!"
             }
         }
         else
