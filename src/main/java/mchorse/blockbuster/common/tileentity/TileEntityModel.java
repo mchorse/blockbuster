@@ -9,7 +9,6 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.mclib.network.IByteBufSerializable;
-import mchorse.mclib.utils.ValueSerializer;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -17,9 +16,7 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -27,7 +24,6 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -49,6 +45,15 @@ public class TileEntityModel extends TileEntity implements ITickable, IRenderLas
 
     private long lastModelUpdate;
     private TileEntityModelSettings settings = new TileEntityModelSettings();
+
+    static
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+
+        tag.setString("Name", "blockbuster.fred");
+
+        DEFAULT_MORPH = MorphManager.INSTANCE.morphFromNBT(tag);
+    }
 
     public TileEntityModel()
     {
@@ -74,15 +79,6 @@ public class TileEntityModel extends TileEntity implements ITickable, IRenderLas
 
     public static AbstractMorph getDefaultMorph()
     {
-        if (DEFAULT_MORPH == null)
-        {
-            NBTTagCompound tag = new NBTTagCompound();
-
-            tag.setString("Name", "blockbuster.fred");
-
-            DEFAULT_MORPH = MorphManager.INSTANCE.morphFromNBT(tag);
-        }
-
         return DEFAULT_MORPH;
     }
 

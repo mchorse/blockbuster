@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -58,7 +59,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
         Minecraft mc = Minecraft.getMinecraft();
         TileEntityModelSettings teSettings = te.getSettings();
 
-        if (!te.morph.isEmpty() && !Blockbuster.modelBlockDisableRendering.get() && teSettings.isEnabled())
+        if (!te.morph.isEmpty() && (!Blockbuster.modelBlockDisableRendering.get() || teSettings.isRenderAlways()) && teSettings.isEnabled())
         {
             AbstractMorph morph = te.morph.get();
 
@@ -101,8 +102,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             /* Apply transformations */
             GlStateManager.pushMatrix();
-            GlStateManager.translate(x + 0.5, y, z + 0.5);
-            GlStateManager.translate(teSettings.getX(), teSettings.getY(), teSettings.getZ());
+            GlStateManager.translate(xx, yy, zz);
 
             boolean wasSet = MatrixUtils.captureMatrix();
 
@@ -275,14 +275,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             GlStateManager.rotate(teSettings.getRx(), 1, 0, 0);
         }
 
-        if (teSettings.isUniform())
-        {
-            GlStateManager.scale(teSettings.getSx(), teSettings.getSx(), teSettings.getSx());
-        }
-        else
-        {
-            GlStateManager.scale(teSettings.getSx(), teSettings.getSy(), teSettings.getSz());
-        }
+        GlStateManager.scale(teSettings.getSx(), teSettings.getSy(), teSettings.getSz());
     }
 
     /**
