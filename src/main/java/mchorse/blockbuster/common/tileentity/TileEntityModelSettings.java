@@ -27,6 +27,7 @@ public class TileEntityModelSettings implements IByteBufSerializable, INBTSerial
     private final ValueBoolean global = new ValueBoolean("global");
     private final ValueBoolean excludeResetPlayback = new ValueBoolean("excludeResetPlayback");
     private final ValueBoolean renderLast = new ValueBoolean("renderLast");
+    private final ValueBoolean renderAlways = new ValueBoolean("renderAlways");
     private final ValueItemSlots slots = new ValueItemSlots("slots", 6);
 
     /* Entity rotations */
@@ -75,6 +76,7 @@ public class TileEntityModelSettings implements IByteBufSerializable, INBTSerial
         this.serializer.registerNBTValue("Items", this.slots);
         this.serializer.registerNBTValue("LightValue", this.lightValue);
         this.serializer.registerNBTValue("RenderLast", this.renderLast);
+        this.serializer.registerNBTValue("RenderAlways", this.renderAlways);
         this.serializer.registerNBTValue("ExcludeResetPlayback", this.excludeResetPlayback);
     }
 
@@ -106,6 +108,16 @@ public class TileEntityModelSettings implements IByteBufSerializable, INBTSerial
     public void setRenderLast(boolean renderLast)
     {
         this.renderLast.set(renderLast);
+    }
+
+    public boolean isRenderAlways()
+    {
+        return this.renderAlways.get();
+    }
+
+    public void setRenderAlways(boolean renderAlways)
+    {
+        this.renderAlways.set(renderAlways);
     }
 
     public ItemStack[] getSlots()
@@ -333,10 +345,12 @@ public class TileEntityModelSettings implements IByteBufSerializable, INBTSerial
         return copy;
     }
 
+    @Override
     public void copy(TileEntityModelSettings settings)
     {
         this.lightValue.copy(settings.lightValue);
         this.renderLast.copy(settings.renderLast);
+        this.renderAlways.copy(settings.renderAlways);
         this.excludeResetPlayback.copy(settings.excludeResetPlayback);
         this.order.copy(settings.order);
         this.rotateYawHead.copy(settings.rotateYawHead);

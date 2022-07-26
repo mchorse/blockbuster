@@ -65,6 +65,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     private GuiToggleElement enabled;
     private GuiToggleElement excludeResetPlayback;
     private GuiToggleElement renderLast;
+    private GuiToggleElement renderAlways;
     private GuiTrackpadElement lightLevel;
 
     private GuiModelBlockList list;
@@ -176,10 +177,13 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.enabled.tooltip(IKey.lang("blockbuster.gui.model_block.enabled_tooltip"), Direction.BOTTOM);
 
         this.excludeResetPlayback = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.exlude_reset_playback"), false, (button) -> this.model.getSettings().setExcludeResetPlayback(button.isToggled()));
-        this.excludeResetPlayback.tooltip(IKey.lang("blockbuster.gui.model_block.exlude_reset_playback_tooltip"));
+        this.excludeResetPlayback.tooltip(IKey.lang("blockbuster.gui.model_block.exlude_reset_playback_tooltip"), Direction.BOTTOM);
 
         this.renderLast = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.render_last"), false, (button) -> this.model.getSettings().setRenderLast(button.isToggled()));
-        this.renderLast.tooltip(IKey.lang("blockbuster.gui.model_block.enabled_tooltip"), Direction.BOTTOM);
+        this.renderLast.tooltip(IKey.lang("blockbuster.gui.model_block.render_last_tooltip"), Direction.BOTTOM);
+
+        this.renderAlways = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.render_always"), false, (button) -> this.model.getSettings().setRenderAlways(button.isToggled()));
+        this.renderAlways.tooltip(IKey.lang("blockbuster.gui.model_block.render_always_tooltip"), Direction.BOTTOM);
 
         this.lightLevel = new GuiTrackpadElement(mc, (value) ->
         {
@@ -190,7 +194,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.lightLevel.integer().limit(0, 15);
         this.lightLevel.tooltip(IKey.lang("blockbuster.gui.model_block.light_level_tooltip"));
 
-        column.add(this.pickMorph, look, this.shadow, this.global, this.enabled, this.excludeResetPlayback, this.renderLast, Elements.label(IKey.lang("blockbuster.gui.model_block.light_level")), this.lightLevel);
+        column.add(this.pickMorph, look, this.shadow, this.global, this.enabled, this.excludeResetPlayback, this.renderLast, this.renderAlways, Elements.label(IKey.lang("blockbuster.gui.model_block.light_level")), this.lightLevel);
         this.subChildren.add(column);
 
         /* Model blocks */
@@ -443,6 +447,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
             this.enabled.toggled(this.model.getSettings().isEnabled());
             this.excludeResetPlayback.toggled(this.model.getSettings().isExcludeResetPlayback());
             this.renderLast.toggled(this.model.getSettings().isRenderLast());
+            this.renderAlways.toggled(this.model.getSettings().isRenderAlways());
 
             int lightValue = this.model.getWorld().getBlockState(this.model.getPos()).getValue(BlockModel.LIGHT);
             this.model.getSettings().setLightValue(lightValue);
@@ -497,13 +502,18 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         {
             super(mc);
 
-            this.sx.callback = (value) -> this.setS(value, this.sy.value, this.sz.value);
             this.one.callback = (toggle) ->
             {
-                this.model.getSettings().setUniform(toggle.isToggled());
+                boolean one = toggle.isToggled();
 
-                this.sy.setVisible(!this.model.getSettings().isUniform());
-                this.sz.setVisible(!this.model.getSettings().isUniform());
+                this.model.getSettings().setUniform(one);
+                this.updateScaleFields();
+
+                if (!one)
+                {
+                    this.sy.setValueAndNotify(this.sx.value);
+                    this.sz.setValueAndNotify(this.sx.value);
+                }
             };
         }
 
