@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
@@ -31,7 +32,7 @@ public class SceneManager
     /**
      * Currently loaded scenes
      */
-    private Map<String, Scene> scenes = new HashMap<String, Scene>();
+    private Map<String, Scene> scenes = new ConcurrentHashMap<String, Scene>();
 
     private List<String> toRemove = new ArrayList<String>();
     private Map<String, Scene> toPut = new HashMap<String, Scene>();
