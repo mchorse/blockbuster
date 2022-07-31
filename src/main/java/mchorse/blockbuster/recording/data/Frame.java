@@ -10,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -71,6 +70,8 @@ public class Frame
     /* Active hand */
     public int activeHands;
 
+    private int hotbarSlot;
+
     /* Methods for retrieving/applying state data */
 
     /**
@@ -123,6 +124,8 @@ public class Frame
         {
             this.fromPlayerClient(player);
         }
+
+        this.hotbarSlot = player.inventory.currentItem;
     }
 
     @SideOnly(Side.CLIENT)
@@ -233,6 +236,11 @@ public class Frame
                 actor.stopActiveHand();
             }
         }
+
+        if (actor instanceof EntityPlayer)
+        {
+            ((EntityPlayer) actor).inventory.currentItem = this.hotbarSlot;
+        }
     }
 
     /**
@@ -318,6 +326,8 @@ public class Frame
 
         frame.roll = this.roll;
 
+        frame.hotbarSlot = this.hotbarSlot;
+
         return frame;
     }
 
@@ -367,6 +377,8 @@ public class Frame
         out.writeByte(this.activeHands);
 
         out.writeFloat(this.roll);
+
+        out.writeInt(this.hotbarSlot);
     }
 
     /**
@@ -412,6 +424,7 @@ public class Frame
         this.activeHands = in.readByte();
 
         this.roll = in.readFloat();
+        this.hotbarSlot = in.readInt();
     }
 
     /**
@@ -463,6 +476,8 @@ public class Frame
         {
             tag.setFloat("Roll", this.roll);
         }
+
+        tag.setInteger("HotbarSlot", this.hotbarSlot);
     }
 
     /**
@@ -514,5 +529,7 @@ public class Frame
         {
             this.roll = tag.getFloat("Roll");
         }
+
+        this.hotbarSlot = tag.getInteger("HotbarSlot");
     }
 }

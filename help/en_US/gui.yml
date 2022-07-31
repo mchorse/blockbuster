@@ -279,6 +279,11 @@ blockbuster.gui:
             use_gun:
                 title: Shoot gun
                 desc: Shoots a BB gun that was held by the actor during recording (even if the actor doesn't hold it anymore)
+            hotbar_change:
+                title: Hotbar change
+                desc: Change the specified hotbar slot to the specified item stack.
+                slot_tooltip: The slot to change
+                durability_tooltip: The durability of the item in percent
 
     # Playback GUI
     playback:
