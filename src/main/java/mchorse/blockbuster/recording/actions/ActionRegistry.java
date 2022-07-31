@@ -192,9 +192,10 @@ public class ActionRegistry
         register("use_item", 18, ItemUseAction.class);
         register("use_item_block", 19, ItemUseBlockAction.class);
         register("use_gun", 20, ShootGunAction.class);
+        register("hotbar_change", 21, HotbarChangeAction.class);
 
         /* Set next ID to max */
-        NEXT_ID = 21;
+        NEXT_ID = 22;
 
         register("interact_entity", InteractEntityAction.class);
         register("close_container", CloseContainerAction.class);

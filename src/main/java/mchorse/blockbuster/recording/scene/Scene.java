@@ -21,6 +21,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.EnumPacketDirection;
@@ -32,6 +33,7 @@ import net.minecraft.scoreboard.Team;
 import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -145,6 +147,30 @@ public class Scene
      * World instance
      */
     private World world;
+
+    /**
+     * List that contains the players that have been chosen for first person playback in this scene
+     * with their inventory before playback has been started
+     */
+    private List<PlayerState> targetPlayers = new ArrayList<>();
+
+    /**
+     *
+     * @param player
+     * @return true if the given player reference has been chosen for first person playback in one actor
+     */
+    public boolean isPlayerTargetPlayback(EntityPlayer player)
+    {
+        for (PlayerState state : this.targetPlayers)
+        {
+            if (state.getPlayer() == player)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public String getAudio()
     {
@@ -533,6 +559,13 @@ public class Scene
 
         CommonProxy.damage.restoreDamageControl(this, this.getWorld());
 
+        this.targetPlayers.forEach((playerState) ->
+        {
+            playerState.resetPlayerState();
+        });
+
+        this.targetPlayers.clear();
+
         this.actors.clear();
         this.setPlaying(false);
         this.sendCommand(this.stopCommand);
@@ -585,6 +618,11 @@ public class Scene
 
                 if (player != null)
                 {
+                    if (!this.isPlayerTargetPlayback(player))
+                    {
+                        this.targetPlayers.add(new PlayerState(player));
+                    }
+
                     actor = player;
                     real = true;
                 }
@@ -1072,5 +1110,45 @@ public class Scene
         ByteBufUtils.writeUTF8String(buffer, this.stopCommand);
 
         this.audioHandler.toBytes(buffer);
+    }
+
+    /**
+     * Class that stores an {@link EntityPlayer} and it's states like inventory etc.
+     * This is used for scene first person playback, to reset those players to their
+     * original state at the end of playback.
+     */
+    public class PlayerState
+    {
+        private EntityPlayer player;
+        private NonNullList<ItemStack> mainInventory;
+
+        public PlayerState(EntityPlayer player)
+        {
+            this.player = player;
+
+            /* data structure used for mainInventory List in InventoryPlayer class */
+            this.mainInventory = NonNullList.<ItemStack>withSize(36, ItemStack.EMPTY);
+
+            for (int i = 0; i < this.mainInventory.size(); i++)
+            {
+                this.mainInventory.set(i, player.inventory.mainInventory.get(i).copy());
+            }
+        }
+
+        public EntityPlayer getPlayer()
+        {
+            return this.player;
+        }
+
+        /**
+         * Resets the player's attributes stored by this state
+         */
+        public void resetPlayerState()
+        {
+            for (int i = 0; i < this.player.inventory.mainInventory.size(); i++)
+            {
+                this.player.inventory.mainInventory.set(i, this.mainInventory.get(i).copy());
+            }
+        }
     }
 }

@@ -92,9 +92,6 @@ public class ActionHandler
      */
     public static TileEntity lastTE;
 
-    private int timer;
-    private int skinsTimer;
-
     /**
      * Adds a world event listener  
      */
@@ -528,44 +525,5 @@ public class ActionHandler
                 record.stopPlaying();
             }
         }
-
-        /* Update TEs in the model's TEISR */
-        if (player.world.isRemote)
-        {
-            this.updateClient();
-        }
-        else
-        {
-            if (this.timer % 100 == 0)
-            {
-                StructureMorph.checkStructures();
-                this.timer = 0;
-            }
-
-            this.timer += 1;
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    private void updateClient()
-    {
-        for (TEModel model : TileEntityModelItemStackRenderer.models.values())
-        {
-            model.model.update();
-        }
-
-        for (GunEntry model : TileEntityGunItemStackRenderer.models.values())
-        {
-            model.props.update();
-        }
-
-        if (this.skinsTimer++ >= 30)
-        {
-            SkinHandler.checkSkinsFolder();
-            this.skinsTimer = 0;
-        }
-
-        RenderingHandler.updateEmitters();
-        GifTexture.updateTick();
     }
 }
