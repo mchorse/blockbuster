@@ -237,6 +237,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
             this.panels.put(ChatAction.class, new GuiChatActionPanel(this.mc, this));
             this.panels.put(DropAction.class, new GuiDropActionPanel(this.mc, this));
             this.panels.put(EquipAction.class, new GuiEquipActionPanel(this.mc, this));
+            this.panels.put(HotbarChangeAction.class, new GuiHotbarChangeActionPanel(this.mc, this));
             this.panels.put(ShootArrowAction.class, new GuiShootArrowActionPanel(this.mc, this));
             this.panels.put(PlaceBlockAction.class, new GuiPlaceBlockActionPanel(this.mc, this));
             this.panels.put(MountingAction.class, new GuiMountingActionPanel(this.mc, this));

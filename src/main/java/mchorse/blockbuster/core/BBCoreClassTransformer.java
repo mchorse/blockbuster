@@ -2,7 +2,6 @@ package mchorse.blockbuster.core;
 
 import mchorse.blockbuster.core.transformers.*;
 import mchorse.blockbuster.utils.mclib.coremod.CoreClassTransformer;
-import net.minecraft.entity.Entity;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
@@ -24,6 +23,7 @@ public class BBCoreClassTransformer extends CoreClassTransformer
     private RenderEntityItemTransformer renderEntityItemTransformer = new RenderEntityItemTransformer();
     private EntityTransformer entity = new EntityTransformer();
     private EntityTransformationUtilsTransformer entityTransformationUtils = new EntityTransformationUtilsTransformer();
+    private EntityItemTransformer entityItemTransformer = new EntityItemTransformer();
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass)
@@ -33,9 +33,11 @@ public class BBCoreClassTransformer extends CoreClassTransformer
             System.out.println("BBCoreMod: Transforming World class (" + name + ")");
 
             return this.world.transform(name, basicClass);
-        }else if (checkName(name, "cct", "net.minecraft.client.renderer.entity.RenderPlayer")){
+        }
+        else if (checkName(name, "cct", "net.minecraft.client.renderer.entity.RenderPlayer")){
 
             System.out.println("BBCoreMod: Transforming RenderPlayer class (" + name + ")");
+
             return this.playerTransformer.transform(name,basicClass);
         }
         else if (checkName(name, "buy", "net.minecraft.client.renderer.RenderGlobal"))
@@ -65,11 +67,20 @@ public class BBCoreClassTransformer extends CoreClassTransformer
         else if (checkName(name, "bzw", "net.minecraft.client.renderer.RenderItem"))
         {
             System.out.println("BBCoreMod: Transforming RenderItem class (" + name + ")");
-            return this.renderItem.transform(name, basicClass);
 
-        }else if (checkName(name, "bzu", "net.minecraft.client.renderer.entity.RenderEntityItem")){
+            return this.renderItem.transform(name, basicClass);
+        }
+        else if (checkName(name, "bzu", "net.minecraft.client.renderer.entity.RenderEntityItem"))
+        {
             System.out.println("BBCoreMod: Transforming RenderItem class (" + name + ")");
-            return this.renderEntityItemTransformer.transform(name,basicClass);
+
+            return this.renderEntityItemTransformer.transform(name, basicClass);
+        }
+        else if (checkName(name, "acl", "net.minecraft.entity.item.EntityItem"))
+        {
+            System.out.println("BBCoreMod: Transforming EntityItem class (" + name + ")");
+
+            return this.entityItemTransformer.transform(name, basicClass);
         }
 
         return basicClass;

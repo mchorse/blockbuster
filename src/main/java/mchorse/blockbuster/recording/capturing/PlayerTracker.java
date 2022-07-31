@@ -5,10 +5,14 @@ import mchorse.blockbuster.recording.RecordRecorder;
 import mchorse.blockbuster.recording.actions.AttackAction;
 import mchorse.blockbuster.recording.actions.CloseContainerAction;
 import mchorse.blockbuster.recording.actions.EquipAction;
+import mchorse.blockbuster.recording.actions.HotbarChangeAction;
 import mchorse.blockbuster.recording.actions.SwipeAction;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Player tracker class
@@ -25,12 +29,19 @@ public class PlayerTracker
 
     /* Items to track */
     private ItemStack[] items = new ItemStack[6];
+    private ItemStack[] hotbar = new ItemStack[9];
+    /**
+     * Runtime variable to track the complete hotbar for the fist frame
+     */
+    private boolean trackedHotbar = false;
     
     private Container container;
 
     public PlayerTracker(RecordRecorder recorder)
     {
         this.recorder = recorder;
+
+        Arrays.fill(hotbar, ItemStack.EMPTY);
     }
 
     /**
@@ -40,6 +51,7 @@ public class PlayerTracker
     {
         this.trackSwing(player);
         this.trackHeldItem(player);
+        this.trackHotBar(player);
         this.trackArmor(player);
         this.trackContainerClose(player);
     }
@@ -63,8 +75,25 @@ public class PlayerTracker
         ItemStack mainhand = player.getHeldItemMainhand();
         ItemStack offhand = player.getHeldItemOffhand();
 
-        this.trackItemToSlot(mainhand, 0);
+        this.trackItemToSlot(mainhand, 0, player.inventory.currentItem);
         this.trackItemToSlot(offhand, 5);
+    }
+
+    private void trackHotBar(EntityPlayer player)
+    {
+        List<ItemStack> playerHotbar = player.inventory.mainInventory;
+
+        for (int i = 0; i < playerHotbar.size() && i < this.hotbar.length; i++)
+        {
+            if (!ItemStack.areItemStacksEqual(this.hotbar[i], playerHotbar.get(i)) || !this.trackedHotbar)
+            {
+                this.recorder.actions.add(new HotbarChangeAction(i, playerHotbar.get(i).copy()));
+
+                this.hotbar[i] = playerHotbar.get(i).copy();
+            }
+        }
+
+        this.trackedHotbar = true;
     }
 
     /**
@@ -75,12 +104,17 @@ public class PlayerTracker
      */
     private boolean trackItemToSlot(ItemStack item, int slot)
     {
+        return this.trackItemToSlot(item, slot, -1);
+    }
+
+    private boolean trackItemToSlot(ItemStack item, int slot, int hotbarslot)
+    {
         if (!item.isEmpty())
         {
             if (item != this.items[slot])
             {
                 this.items[slot] = item;
-                this.recorder.actions.add(new EquipAction((byte) slot, item));
+                this.recorder.actions.add((hotbarslot != -1) ? new EquipAction((byte) slot,(byte) hotbarslot, item) : new EquipAction((byte) slot, item));
 
                 return true;
             }
@@ -88,7 +122,7 @@ public class PlayerTracker
         else if (this.items[slot] != null)
         {
             this.items[slot] = null;
-            this.recorder.actions.add(new EquipAction((byte) slot, null));
+            this.recorder.actions.add((hotbarslot != -1) ? new EquipAction((byte) slot,(byte) hotbarslot, null) : new EquipAction((byte) slot, null));
 
             return true;
         }
