@@ -293,6 +293,13 @@ public class RecordPlayer
         this.kill = kill;
         this.sync = false;
 
+        //TODO this should rather be in Replay.apply(EntityPlayer)
+        // but there seems to be no way to then revert invulnerability based on Replay instance when recording stops
+        if (!this.actor.world.isRemote && this.replay != null)
+        {
+            this.actor.setEntityInvulnerable(this.replay.invincible);
+        }
+
         this.applyFrame(this.playing ? tick : tick - 1, this.actor, true);
 
         EntityUtils.setRecordPlayer(this.actor, this);
@@ -313,6 +320,11 @@ public class RecordPlayer
         CommonProxy.manager.stop(this);
 
         this.actor.noClip = false;
+
+        if (!this.actor.world.isRemote && this.replay != null && this.replay.invincible == true)
+        {
+            this.actor.setEntityInvulnerable(false);
+        }
     }
 
     public void applyFrame(int tick, EntityLivingBase target, boolean force)
