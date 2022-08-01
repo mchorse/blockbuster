@@ -172,6 +172,18 @@ public class Scene
         return false;
     }
 
+    public List<EntityPlayer> getTargetPlaybackPlayers()
+    {
+        List<EntityPlayer> players = new ArrayList<>();
+
+        for (PlayerState state : this.targetPlayers)
+        {
+            players.add(state.getPlayer());
+        }
+
+        return players;
+    }
+
     public String getAudio()
     {
         return this.audioHandler.getAudioName();
@@ -700,7 +712,7 @@ public class Scene
 
             if (player != null)
             {
-                player.replay = replay;
+                player.setReplay(replay);
 
                 this.actorsCount++;
                 replay.apply(actor);
@@ -1121,6 +1133,15 @@ public class Scene
     {
         private EntityPlayer player;
         private NonNullList<ItemStack> mainInventory;
+        private int experienceLevel;
+        /**
+         * The total amount of experience the player has. This also includes the amount of experience within their
+         * Experience Bar.
+         */
+        private int experienceTotal;
+        /** The current amount of experience the player has within their Experience Bar. */
+        private float experience;
+        private int foodLevel;
 
         public PlayerState(EntityPlayer player)
         {
@@ -1133,6 +1154,11 @@ public class Scene
             {
                 this.mainInventory.set(i, player.inventory.mainInventory.get(i).copy());
             }
+
+            this.experience = player.experience;
+            this.experienceLevel = player.experienceLevel;
+            this.experienceTotal = player.experienceTotal;
+            this.foodLevel = player.getFoodStats().getFoodLevel();
         }
 
         public EntityPlayer getPlayer()
@@ -1149,6 +1175,11 @@ public class Scene
             {
                 this.player.inventory.mainInventory.set(i, this.mainInventory.get(i).copy());
             }
+
+            this.player.experience = this.experience;
+            this.player.experienceLevel = this.experienceLevel;
+            this.player.experienceTotal = this.experienceTotal;
+            this.player.getFoodStats().setFoodLevel(this.foodLevel);
         }
     }
 }

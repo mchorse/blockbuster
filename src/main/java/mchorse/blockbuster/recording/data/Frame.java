@@ -3,6 +3,7 @@ package mchorse.blockbuster.recording.data;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.recording.scene.Replay;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -14,6 +15,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -72,6 +74,8 @@ public class Frame
     public int activeHands;
 
     private int hotbarSlot;
+    private int foodLevel;
+    private int totalExperience;
 
     /* Methods for retrieving/applying state data */
 
@@ -127,6 +131,8 @@ public class Frame
         }
 
         this.hotbarSlot = player.inventory.currentItem;
+        this.foodLevel = player.getFoodStats().getFoodLevel();
+        this.totalExperience = player.experienceTotal;
     }
 
     @SideOnly(Side.CLIENT)
@@ -147,6 +153,11 @@ public class Frame
      * Use second argument to force things to be cool.
      */
     public void apply(EntityLivingBase actor, boolean force)
+    {
+        this.apply(actor, null, force);
+    }
+
+    public void apply(EntityLivingBase actor, @Nullable Replay replay, boolean force)
     {
         boolean isRemote = actor.world.isRemote;
 
@@ -240,7 +251,14 @@ public class Frame
 
         if (actor instanceof EntityPlayer)
         {
-            ((EntityPlayer) actor).inventory.currentItem = this.hotbarSlot;
+            EntityPlayer player = (EntityPlayer) actor;
+            player.inventory.currentItem = this.hotbarSlot;
+
+            if (replay != null && replay.playBackXPFood)
+            {
+                player.getFoodStats().setFoodLevel(this.foodLevel);
+                player.addExperience(this.totalExperience - player.experienceTotal);
+            }
         }
     }
 
@@ -328,6 +346,8 @@ public class Frame
         frame.roll = this.roll;
 
         frame.hotbarSlot = this.hotbarSlot;
+        frame.foodLevel = this.foodLevel;
+        frame.totalExperience = this.totalExperience;
 
         return frame;
     }
@@ -373,8 +393,10 @@ public class Frame
         buf.writeByte(this.activeHands);
 
         buf.writeFloat(this.roll);
-
+        
         buf.writeInt(this.hotbarSlot);
+        buf.writeInt(this.foodLevel);
+        buf.writeInt(this.totalExperience);
     }
 
     public void fromBytes(ByteBuf buf)
@@ -417,6 +439,8 @@ public class Frame
 
         this.roll = buf.readFloat();
         this.hotbarSlot = buf.readInt();
+        this.foodLevel = buf.readInt();
+        this.totalExperience = buf.readInt();
     }
 
     /**
@@ -470,6 +494,8 @@ public class Frame
         }
 
         tag.setInteger("HotbarSlot", this.hotbarSlot);
+        tag.setInteger("FoodLevel", this.foodLevel);
+        tag.setInteger("TotalExperience", this.totalExperience);
     }
 
     /**
@@ -522,7 +548,9 @@ public class Frame
             this.roll = tag.getFloat("Roll");
         }
 
-        this.hotbarSlot = tag.getInteger("HotbarSlot");
+        this.hotbarSlot = tag.hasKey("HotbarSlot") ? tag.getInteger("HotbarSlot") : this.hotbarSlot;
+        this.foodLevel = tag.hasKey("FoodLevel") ? tag.getInteger("FoodLevel") : this.foodLevel;
+        this.totalExperience = tag.hasKey("TotalExperience") ? tag.getInteger("TotalExperience") : this.totalExperience;
     }
 
     public enum RotationChannel
