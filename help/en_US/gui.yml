@@ -85,6 +85,8 @@ blockbuster.gui:
         name_tooltip: Name tag of the actor. You can use this to target this actor via commands (like @e[name=Test]) or just display name.\n\nYou can use [ as the section symbol for display name formatting. [cR[aG[1B[r becomes {c}R{a}G{1}B{r}.
         target: Target
         target_tooltip: Here you can specify which player should be used to playback this replay.\n\nAdditional target selectors can be used to pick players beside by their username. @r - random player, @{n}team{r} - where {n}team{r} is the name of the scoreboard team.
+        playback_xp_food_level: Playback XP & food
+        playback_xp_food_level_tooltip: Playback the experience and food level recorded. If you experience issues or want this stuff to be executed dynamically, deactivate the playback.
         invincible: Invincible
         invisible: Invisible
         enable_burning: Allow burning
@@ -95,6 +97,8 @@ blockbuster.gui:
         render_last: Render last
         render_last_tooltip: Makes an actor to be rendered last, which should fix in most of cases opaque actors appear behind actors with semi-transparent morphs.\n\nThis option requires Always render actors mod options to be enabled, and fake player option for this actor to be disabled.
         health: Health
+        total_experience: Total experience
+        food_level: Food level
         edit_record: Edit record
         update_data: Update data
         update_data_tooltip: Updates player data in record file

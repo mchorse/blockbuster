@@ -71,7 +71,7 @@ public class RecordPlayer
     /**
      * It might be null
      */
-    public Replay replay;
+    private Replay replay;
 
     public boolean realPlayer;
 
@@ -84,6 +84,21 @@ public class RecordPlayer
         this.record = record;
         this.mode = mode;
         this.actor = actor;
+    }
+
+    public Replay getReplay()
+    {
+        return replay;
+    }
+
+    public void setReplay(Replay replay)
+    {
+        this.replay = replay;
+
+        if (this.record != null)
+        {
+            this.record.setReplay(this.replay);
+        }
     }
 
     public RecordPlayer realPlayer()

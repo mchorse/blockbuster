@@ -52,11 +52,8 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.Stack;
 
 import javax.annotation.Nullable;
 import javax.vecmath.Vector3d;
@@ -701,11 +698,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             buffer.writeInt(this.playback.tick);
             ByteBufUtils.writeUTF8String(buffer, this.playback.record.filename);
 
-            buffer.writeBoolean(this.playback.replay != null && this.playback.replay.morph != null);
+            buffer.writeBoolean(this.playback.getReplay() != null && this.playback.getReplay().morph != null);
 
-            if (this.playback.replay != null && this.playback.replay.morph != null)
+            if (this.playback.getReplay() != null && this.playback.getReplay().morph != null)
             {
-                MorphUtils.morphToBuf(buffer, this.playback.replay.morph);
+                MorphUtils.morphToBuf(buffer, this.playback.getReplay().morph);
             }
         }
 

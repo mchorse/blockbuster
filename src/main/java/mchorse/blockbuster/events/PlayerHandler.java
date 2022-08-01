@@ -13,6 +13,7 @@ import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.NonNullList;
@@ -81,23 +82,16 @@ public class PlayerHandler
         this.handle(event.getEntityPlayer(), event, rightHandler);
     }
 
-    @SubscribeEvent
-    public void onPlayerItemPickUp(PlayerEvent.ItemPickupEvent event)
-    {
-        preventItemPickUpScenePlayback(event.player);
-    }
-
-    /**
-     * Prevent item pick up for first person playback entities in scenes
-     * @param player
-     */
-    private static void preventItemPickUpScenePlayback(EntityPlayer player)
+    private static void preventItemPickUpScenePlayback(InventoryPlayer inventoryPlayer)
     {
         for (Map.Entry<String, Scene> scene : CommonProxy.scenes.getScenes().entrySet())
         {
-            if (scene.getValue().isPlayerTargetPlayback(player))
+            for (EntityPlayer player : scene.getValue().getTargetPlaybackPlayers())
             {
-                preventItemPickUp(player);
+                if (player.inventory == inventoryPlayer)
+                {
+                    preventItemPickUp(player);
+                }
             }
         }
     }
@@ -128,24 +122,22 @@ public class PlayerHandler
      */
     public static void beforePlayerItemPickUp(EntityPlayer entity, ItemStack itemStack)
     {
-        for (int i = 0; i < entity.inventory.mainInventory.size(); i++)
+    }
+
+    public static void beforeItemStackAdd(InventoryPlayer inventory)
+    {
+        for (int i = 0; i < inventory.mainInventory.size(); i++)
         {
-            ItemStack copy = entity.inventory.mainInventory.get(i).copy();
+            ItemStack copy = inventory.mainInventory.get(i).copy();
 
             mainInventoryBefore.set(i, copy);
         }
     }
 
-    /* TODO - or inject hooks into Player.inventory.addItemStackToInventory instead of using forge events
-    public static void beforePlayerArrowPickUp(EntityPlayer entity, ItemStack itemStack)
+    public static void afterItemStackAdd(InventoryPlayer inventory)
     {
-        beforePlayerItemPickUp(entity, itemStack);
+        preventItemPickUpScenePlayback(inventory);
     }
-
-    public static void afterPlayerArrowPickUp(EntityPlayer entity, ItemStack itemStack)
-    {
-        preventItemPickUpScenePlayback(entity);
-    }*/
 
     private void handle(EntityPlayer player, LivingEvent event, Function<GunProps, Boolean> handler)
     {
