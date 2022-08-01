@@ -105,10 +105,29 @@ public class Record
      */
     public boolean dirty;
 
+    /**
+     * Can be null
+     */
+    private Replay replay;
+
     public Record(String filename)
     {
         this.filename = filename;
         this.resetUnload();
+    }
+
+    /**
+     * Set this replay to the reference of the provided replay
+     * @param replay
+     */
+    public void setReplay(Replay replay)
+    {
+        this.replay = replay;
+    }
+
+    public Replay getReplay()
+    {
+        return this.replay;
     }
 
     /**
@@ -349,7 +368,7 @@ public class Record
 
         Frame frame = this.frames.get(tick);
 
-        frame.apply(actor, force);
+        frame.apply(actor, this.replay, force);
 
         if (realPlayer)
         {

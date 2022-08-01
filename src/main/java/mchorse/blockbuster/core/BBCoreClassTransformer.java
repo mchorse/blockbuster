@@ -24,6 +24,7 @@ public class BBCoreClassTransformer extends CoreClassTransformer
     private EntityTransformer entity = new EntityTransformer();
     private EntityTransformationUtilsTransformer entityTransformationUtils = new EntityTransformationUtilsTransformer();
     private EntityItemTransformer entityItemTransformer = new EntityItemTransformer();
+    private InventoryPlayerTransformer inventoryPlayerTransformer = new InventoryPlayerTransformer();
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass)
@@ -81,6 +82,12 @@ public class BBCoreClassTransformer extends CoreClassTransformer
             System.out.println("BBCoreMod: Transforming EntityItem class (" + name + ")");
 
             return this.entityItemTransformer.transform(name, basicClass);
+        }
+        else if (checkName(name, "aec", "net.minecraft.entity.player.InventoryPlayer"))
+        {
+            System.out.println("BBCoreMod: Transforming InventoryPlayer class (" + name + ")");
+
+            return this.inventoryPlayerTransformer.transform(name, basicClass);
         }
 
         return basicClass;

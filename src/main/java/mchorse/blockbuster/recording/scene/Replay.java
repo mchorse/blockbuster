@@ -12,6 +12,7 @@ import mchorse.vanilla_pack.morphs.PlayerMorph;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
@@ -30,6 +31,10 @@ public class Replay
     public boolean invincible = false;
     public boolean enableBurning = true;
     public boolean teleportBack = true;
+    /**
+     * Whether the food and XP recording should be played back
+     */
+    public boolean playBackXPFood = false;
 
     /* Visual data */
     public AbstractMorph morph;
@@ -38,6 +43,8 @@ public class Replay
     public boolean fake = false;
     public float health = 20F;
     public boolean renderLast = false;
+    public int foodLevel = 20;
+    public int totalExperience = 0;
 
     public Replay()
     {}
@@ -95,6 +102,32 @@ public class Replay
     {
         MorphAPI.morph(player, mchorse.metamorph.api.MorphUtils.copy(this.morph), true);
         player.setHealth(this.health);
+        player.getFoodStats().setFoodLevel(this.foodLevel);
+        player.experienceTotal = 0;
+        player.experience = 0;
+        player.experienceLevel = 0;
+        this.setExperienceWithoutSound(player, this.totalExperience);
+    }
+
+    private void setExperienceWithoutSound(EntityPlayer player, int amount)
+    {
+        /* copied from EntityPlayer.addExperience(int) and modified */
+        player.addScore(amount);
+        int i = Integer.MAX_VALUE - player.experienceTotal;
+
+        if (amount > i)
+        {
+            amount = i;
+        }
+
+        player.experience += (float)amount / (float)player.xpBarCap();
+
+        for (player.experienceTotal += amount; player.experience >= 1.0F; player.experience /= (float)player.xpBarCap())
+        {
+            player.experience = (player.experience - 1.0F) * (float)player.xpBarCap();
+
+            player.experienceLevel += 1;
+        }
     }
 
     /* to / from NBT */
@@ -117,7 +150,10 @@ public class Replay
         tag.setBoolean("Fake", this.fake);
         if (!this.teleportBack) tag.setBoolean("TP", this.teleportBack);
         if (this.health != 20) tag.setFloat("Health", this.health);
+        if (this.foodLevel != 20) tag.setInteger("FoodLevel", this.foodLevel);
+        if (this.totalExperience != 0) tag.setInteger("TotalExperience", this.totalExperience);
         if (this.renderLast) tag.setBoolean("RenderLast", this.renderLast);
+        if (this.playBackXPFood) tag.setBoolean("PlaybackXPFoodLevel", this.playBackXPFood);
     }
 
     public void fromNBT(NBTTagCompound tag)
@@ -130,11 +166,14 @@ public class Replay
         this.invisible = tag.getBoolean("Invisible");
         this.enableBurning = tag.getBoolean("EnableBurning");
         this.fake = tag.getBoolean("Fake");
+        this.foodLevel = tag.hasKey("FoodLevel") ? tag.getInteger("FoodLevel") : this.foodLevel;
+        this.totalExperience = tag.hasKey("TotalExperience") ? tag.getInteger("TotalExperience") : this.totalExperience;
 
         if (tag.hasKey("Enabled")) this.enabled = tag.getBoolean("Enabled");
         if (tag.hasKey("TP")) this.teleportBack = tag.getBoolean("TP");
         if (tag.hasKey("Health")) this.health = tag.getFloat("Health");
         if (tag.hasKey("RenderLast")) this.renderLast = tag.getBoolean("RenderLast");
+        if (tag.hasKey("PlaybackXPFoodLevel")) this.playBackXPFood = tag.getBoolean("PlaybackXPFoodLevel");
     }
 
     /* to / from ByteBuf */
@@ -154,6 +193,9 @@ public class Replay
         buf.writeBoolean(this.teleportBack);
         buf.writeBoolean(this.renderLast);
         buf.writeFloat(this.health);
+        buf.writeInt(this.foodLevel);
+        buf.writeInt(this.totalExperience);
+        buf.writeBoolean(this.playBackXPFood);
     }
 
     public void fromBuf(ByteBuf buf)
@@ -171,6 +213,9 @@ public class Replay
         this.teleportBack = buf.readBoolean();
         this.renderLast = buf.readBoolean();
         this.health = buf.readFloat();
+        this.foodLevel = buf.readInt();
+        this.totalExperience = buf.readInt();
+        this.playBackXPFood = buf.readBoolean();
     }
 
     @Override
@@ -210,6 +255,9 @@ public class Replay
         replay.teleportBack = this.teleportBack;
         replay.renderLast = this.renderLast;
         replay.health = this.health;
+        replay.foodLevel = this.foodLevel;
+        replay.totalExperience = this.totalExperience;
+        replay.playBackXPFood = this.playBackXPFood;
 
         return replay;
     }

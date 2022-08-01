@@ -88,6 +88,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
     public GuiTextElement id;
     public GuiTextElement name;
     public GuiTextElement target;
+    public GuiToggleElement playbackXPFood;
     public GuiToggleElement invincible;
     public GuiToggleElement invisible;
     public GuiToggleElement enableBurning;
@@ -96,6 +97,8 @@ public class GuiScenePanel extends GuiBlockbusterPanel
     public GuiToggleElement teleportBack;
     public GuiToggleElement renderLast;
     public GuiTrackpadElement health;
+    public GuiTrackpadElement foodLevel;
+    public GuiTrackpadElement totalExperience;
 
     public GuiButtonElement record;
     public GuiButtonElement rename;
@@ -183,6 +186,8 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.name.tooltip(IKey.lang("blockbuster.gui.director.name_tooltip"), Direction.RIGHT);
         this.target = new GuiTextElement(mc, 80, (str) -> this.replay.target = str);
         this.target.tooltip(IKey.lang("blockbuster.gui.director.target_tooltip"), Direction.LEFT);
+        this.playbackXPFood = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.playback_xp_food_level"), (b) -> this.replay.playBackXPFood = b.isToggled());
+        this.playbackXPFood.tooltip(IKey.lang("blockbuster.gui.director.playback_xp_food_level_tooltip"), Direction.LEFT);
         this.invincible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invincible"), false, (b) -> this.replay.invincible = b.isToggled());
         this.invisible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invisible"), false, (b) -> this.replay.invisible = b.isToggled());
         this.enableBurning = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.enable_burning"), true, (b) -> this.replay.enableBurning = b.isToggled());
@@ -194,11 +199,18 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.renderLast.tooltip(IKey.lang("blockbuster.gui.director.render_last_tooltip"), Direction.RIGHT);
         this.health = new GuiTrackpadElement(mc, (value) -> this.replay.health = value.floatValue());
         this.health.limit(0);
+        this.foodLevel = new GuiTrackpadElement(mc, (value) -> this.replay.foodLevel = value.intValue());
+        this.foodLevel.limit(0).integer();
+        this.totalExperience = new GuiTrackpadElement(mc, (value) -> this.replay.totalExperience = value.intValue());
+        this.totalExperience.limit(0).integer();
         this.recordingId = Elements.label(IKey.lang("blockbuster.gui.director.id")).color(0xcccccc);
 
         left.add(this.recordingId, this.id);
         left.add(Elements.label(IKey.lang("blockbuster.gui.director.name")).color(0xcccccc), this.name);
-        left.add(Elements.label(IKey.lang("blockbuster.gui.director.health")).color(0xcccccc), this.health, this.invincible, this.invisible, this.enableBurning, this.enabled, this.fake, this.teleportBack, this.renderLast);
+        left.add(Elements.label(IKey.lang("blockbuster.gui.director.health")).color(0xcccccc), this.health,
+                 Elements.label(IKey.lang("blockbuster.gui.director.food_level")).color(0xcccccc), this.foodLevel,
+                 Elements.label(IKey.lang("blockbuster.gui.director.total_experience")).color(0xcccccc), this.totalExperience,
+                 this.invincible, this.invisible, this.enableBurning, this.enabled, this.fake, this.teleportBack, this.renderLast);
         this.replays.add(this.selector, this.replayEditor);
 
         /* Toggle view button */
@@ -290,7 +302,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         }
 
         right.add(this.teleport, this.eulerFilter);
-        right.add(Elements.label(IKey.lang("blockbuster.gui.director.target")).color(0xcccccc).marginTop(12), this.target);
+        right.add(Elements.label(IKey.lang("blockbuster.gui.director.target")).color(0xcccccc).marginTop(12), this.target, this.playbackXPFood);
         this.replayEditor.add(this.pickMorph);
 
         /* Scene manager */
@@ -521,6 +533,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.id.setText(this.replay.id);
         this.name.setText(this.replay.name);
         this.target.setText(this.replay.target);
+        this.playbackXPFood.toggled(this.replay.playBackXPFood);
         this.invincible.toggled(this.replay.invincible);
         this.invisible.toggled(this.replay.invisible);
         this.enableBurning.toggled(this.replay.enableBurning);
@@ -529,6 +542,8 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.teleportBack.toggled(this.replay.teleportBack);
         this.renderLast.toggled(this.replay.renderLast);
         this.health.setValue(this.replay.health);
+        this.foodLevel.setValue(this.replay.foodLevel);
+        this.totalExperience.setValue(this.replay.totalExperience);
         this.pickMorph.setMorph(this.replay.morph);
 
         this.selector.setCurrent(this.replay);
