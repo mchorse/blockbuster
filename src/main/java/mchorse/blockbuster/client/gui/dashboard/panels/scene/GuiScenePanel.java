@@ -174,7 +174,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.name.tooltip(IKey.lang("blockbuster.gui.director.name_tooltip"), Direction.RIGHT);
         this.target = new GuiTextElement(mc, 80, (str) -> this.replay.target = str);
         this.target.tooltip(IKey.lang("blockbuster.gui.director.target_tooltip"), Direction.LEFT);
-        this.playbackXPFood = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.playback_xp_food_level"), (b) -> this.replay.playBackXPFood = b.isToggled());
+        this.playbackXPFood = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.playback_xp_food_level_enabled"), (b) -> this.replay.playBackXPFood = b.isToggled());
         this.playbackXPFood.tooltip(IKey.lang("blockbuster.gui.director.playback_xp_food_level_tooltip"), Direction.LEFT);
         this.invincible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invincible"), false, (b) -> this.replay.invincible = b.isToggled());
         this.invisible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invisible"), false, (b) -> this.replay.invisible = b.isToggled());
@@ -266,7 +266,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         }
 
         right.add(this.teleport);
-        right.add(Elements.label(IKey.lang("blockbuster.gui.director.target")).color(0xcccccc).marginTop(12), this.target, this.playbackXPFood);
+        right.add(Elements.label(IKey.lang("blockbuster.gui.director.target")).color(0xcccccc).marginTop(12), this.target, Elements.label(IKey.lang("blockbuster.gui.director.playback_xp_food_level")), this.playbackXPFood);
         this.replayEditor.add(this.pickMorph);
 
         /* Scene manager */
