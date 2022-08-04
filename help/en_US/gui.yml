@@ -86,6 +86,7 @@ blockbuster.gui:
         target: Target
         target_tooltip: Here you can specify which player should be used to playback this replay.\n\nAdditional target selectors can be used to pick players beside by their username. @r - random player, @{n}team{r} - where {n}team{r} is the name of the scoreboard team.
         playback_xp_food_level: Playback XP & food
+        playback_xp_food_level_enabled: Enabled
         playback_xp_food_level_tooltip: Playback the experience and food level recorded. If you experience issues or want this stuff to be executed dynamically, deactivate the playback.
         invincible: Invincible
         invisible: Invisible

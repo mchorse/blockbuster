@@ -157,6 +157,12 @@ public class Frame
         this.apply(actor, null, force);
     }
 
+    /**
+     *
+     * @param actor
+     * @param replay the replay that is being used for this record - used for playback configuration
+     * @param force
+     */
     public void apply(EntityLivingBase actor, @Nullable Replay replay, boolean force)
     {
         boolean isRemote = actor.world.isRemote;

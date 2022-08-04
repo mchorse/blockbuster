@@ -124,6 +124,11 @@ public class PlayerHandler
     {
     }
 
+    /**
+     * Called by ASM {@link mchorse.blockbuster.core.transformers.InventoryPlayerTransformer}
+     * before an item is added to inventory in {@link InventoryPlayer}
+     * @param inventory the inventory where this method is called from
+     */
     public static void beforeItemStackAdd(InventoryPlayer inventory)
     {
         for (int i = 0; i < inventory.mainInventory.size(); i++)
@@ -134,6 +139,11 @@ public class PlayerHandler
         }
     }
 
+    /**
+     * Called by ASM {@link mchorse.blockbuster.core.transformers.InventoryPlayerTransformer}
+     * after an item is added to inventory in {@link InventoryPlayer}
+     * @param inventory the inventory where this method is called from
+     */
     public static void afterItemStackAdd(InventoryPlayer inventory)
     {
         preventItemPickUpScenePlayback(inventory);
