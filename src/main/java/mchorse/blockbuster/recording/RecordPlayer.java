@@ -319,11 +319,11 @@ public class RecordPlayer
 
         EntityUtils.setRecordPlayer(this.actor, this);
 
-        this.sendToTracked(new PacketPlayback(this.actor.getEntityId(), true, this.realPlayer, filename));
+        this.sendToTracked(new PacketPlayback(this.actor.getEntityId(), true, this.realPlayer, filename, this.replay));
 
         if (this.realPlayer && this.actor instanceof EntityPlayerMP)
         {
-            Dispatcher.sendTo(new PacketPlayback(this.actor.getEntityId(), true, this.realPlayer, filename), (EntityPlayerMP) this.actor);
+            Dispatcher.sendTo(new PacketPlayback(this.actor.getEntityId(), true, this.realPlayer, filename, this.replay), (EntityPlayerMP) this.actor);
         }
     }
 

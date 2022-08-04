@@ -46,6 +46,8 @@ public class ClientHandlerPlayback extends ClientMessageHandler<PacketPlayback>
             {
                 recordPlayer = new RecordPlayer(record, Mode.FRAMES, actor);
 
+                recordPlayer.setReplay(message.replay);
+
                 if (message.realPlayer)
                 {
                     recordPlayer.realPlayer();
@@ -55,6 +57,7 @@ public class ClientHandlerPlayback extends ClientMessageHandler<PacketPlayback>
             }
             else
             {
+                recordPlayer.setReplay(message.replay);
                 recordPlayer.record = record;
                 recordPlayer.realPlayer = message.realPlayer;
                 recordPlayer.tick = 0;
