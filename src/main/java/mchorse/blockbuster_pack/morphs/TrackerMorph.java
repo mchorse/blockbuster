@@ -23,6 +23,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Matrix4f;
 import java.awt.Color;
@@ -109,6 +110,9 @@ public class TrackerMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        GlStateManager.pushMatrix();
+        GL11.glTranslated(x, y, z);
+
         if (Minecraft.isGuiEnabled() && Minecraft.getMinecraft().currentScreen == null && !this.hidden || GuiModelRenderer.isRendering())
         {
             GlStateManager.disableLighting();
@@ -126,6 +130,8 @@ public class TrackerMorph extends AbstractMorph
         {
             this.tracker.track(entity, x, y, z, entityYaw, partialTicks);
         }
+
+        GlStateManager.popMatrix();
     }
 
     @Override
