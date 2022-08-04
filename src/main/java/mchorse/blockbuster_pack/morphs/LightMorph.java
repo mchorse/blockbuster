@@ -183,6 +183,9 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
             return;
         }
 
+        GlStateManager.pushMatrix();
+        GL11.glTranslated(x, y, z);
+
         this.updateAnimation(partialTicks);
 
         Matrix4d[] transformation = MatrixUtils.getTransformation();
@@ -198,7 +201,7 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
 
             RenderingUtils.glRevertRotationScale();
 
-            this.renderPicture(x, y, z, partialTicks);
+            this.renderPicture(partialTicks);
 
             GlStateManager.popMatrix();
         }
@@ -221,10 +224,12 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
 
         this.lastRenderAge = (this.dummy != null) ? this.dummy.getAge() : 0;
         this.renderedOnScreen = false;
+
+        GlStateManager.popMatrix();
     }
 
     @SideOnly(Side.CLIENT)
-    private void renderPicture(double x, double y, double z, float partialTicks)
+    private void renderPicture(float partialTicks)
     {
         float lastBrightnessX = OpenGlHelper.lastBrightnessX;
         float lastBrightnessY = OpenGlHelper.lastBrightnessY;
@@ -234,7 +239,6 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
         GlStateManager.enableRescaleNormal();
 
         GL11.glPushMatrix();
-        GL11.glTranslated(x, y, z);
 
         RenderingUtils.glFacingRotation(RenderingUtils.Facing.ROTATE_XYZ, this.position);
 
