@@ -275,7 +275,14 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             GlStateManager.rotate(teSettings.getRx(), 1, 0, 0);
         }
 
-        GlStateManager.scale(teSettings.getSx(), teSettings.getSy(), teSettings.getSz());
+        if (teSettings.isUniform())
+        {
+            GlStateManager.scale(teSettings.getSx(), teSettings.getSx(), teSettings.getSx());
+        }
+        else
+        {
+            GlStateManager.scale(teSettings.getSx(), teSettings.getSy(), teSettings.getSz());
+        }
     }
 
     /**
