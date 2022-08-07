@@ -62,6 +62,10 @@ public class GuiHotbarChangeActionPanel extends GuiActionPanel<HotbarChangeActio
             this.add(this.durability);
         }
 
+        double durability = (this.item.getStack().getMaxDamage() == 0) ? 1 : (1 - (double) this.item.getStack().getItemDamage() / (double) this.item.getStack().getMaxDamage());
+
+        this.durability.setValue(durability * 100D);
+
         if (this.parent != null)
         {
             this.parent.resize();
@@ -75,9 +79,6 @@ public class GuiHotbarChangeActionPanel extends GuiActionPanel<HotbarChangeActio
 
         this.slot.setValue(action.getSlot());
         this.item.setStack(action.getItemStack() == null ? ItemStack.EMPTY : action.getItemStack().copy());
-
-        double durability = (this.item.getStack().getMaxDamage() == 0) ? 1 : (1 - (double) this.item.getStack().getItemDamage() / (double) this.item.getStack().getMaxDamage());
-        this.durability.setValue(durability * 100D);
 
         this.updateFields();
     }
