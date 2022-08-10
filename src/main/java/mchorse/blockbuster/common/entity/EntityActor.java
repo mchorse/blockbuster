@@ -639,7 +639,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     public void notifyPlayers()
     {
-        if (!this.manual)
+        if (!this.manual && this.playback != null)
         {
             this.playback.sendToTracked(new PacketModifyActor(this));
         }
