@@ -113,7 +113,7 @@ public class TrackerMorph extends AbstractMorph
         GlStateManager.pushMatrix();
         GL11.glTranslated(x, y, z);
 
-        if (Minecraft.isGuiEnabled() && Minecraft.getMinecraft().currentScreen == null && !this.hidden || GuiModelRenderer.isRendering())
+        if (Minecraft.isGuiEnabled() && !this.hidden || GuiModelRenderer.isRendering())
         {
             GlStateManager.disableLighting();
             this.renderPointer();
@@ -132,6 +132,55 @@ public class TrackerMorph extends AbstractMorph
         }
 
         GlStateManager.popMatrix();
+    }
+
+    private void renderPointer()
+    {
+        this.renderTimer %= 50;
+        int rgb = Color.HSBtoRGB(this.renderTimer / 50.0F, 1.0F, 1.0F);
+        int rgb2 = Color.HSBtoRGB(this.renderTimer / 50.0F + 0.5F, 1.0F, 1.0F);
+
+        GlStateManager.pushMatrix();
+
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        GlStateManager.disableTexture2D();
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+        GlStateManager.glLineWidth(5.0F);
+        buffer.begin(1, DefaultVertexFormats.POSITION_COLOR);
+        buffer.pos(0.0, 0.0, 0.0).color(0.0F, 0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(0.0, 0.0, 1.0).color(rgb >> 16 & 0xFF, rgb >> 8 & 0xFF, rgb >> 0 & 0xFF, 255).endVertex();
+        buffer.pos(0.0, 0.0, 0.0).color(0.0F, 0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(0.0, 0.5, 0.0).color(rgb2 >> 16 & 0xFF, rgb2 >> 8 & 0xFF, rgb2 >> 0 & 0xFF, 255).endVertex();
+        tessellator.draw();
+        GlStateManager.glLineWidth(1.0F);
+        Draw.point(0, 0, 0);
+
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.enableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        GlStateManager.enableTexture2D();
+
+        GlStateManager.popMatrix();
+    }
+
+    private void renderLabel()
+    {
+        if (this.tracker != null && !this.tracker.name.isEmpty())
+        {
+            Minecraft mc = Minecraft.getMinecraft();
+            FontRenderer font = mc.fontRenderer;
+
+            Matrix4f mat = MatrixUtils.readModelView(new Matrix4f());
+
+            GlStateManager.pushMatrix();
+            GlStateManager.loadIdentity();
+            EntityRenderer.drawNameplate(font, this.tracker.name, mat.m03, mat.m13 + font.FONT_HEIGHT / 48.0F + 0.1F, mat.m23, 0, 180F, 0, mc.gameSettings.thirdPersonView == 2, false);
+            GlStateManager.popMatrix();
+        }
     }
 
     @Override
@@ -264,55 +313,6 @@ public class TrackerMorph extends AbstractMorph
         if (this.hidden)
         {
             tag.setBoolean("Hidden", this.hidden);
-        }
-    }
-
-    private void renderPointer()
-    {
-        this.renderTimer %= 50;
-        int rgb = Color.HSBtoRGB(this.renderTimer / 50.0F, 1.0F, 1.0F);
-        int rgb2 = Color.HSBtoRGB(this.renderTimer / 50.0F + 0.5F, 1.0F, 1.0F);
-
-        GlStateManager.pushMatrix();
-
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-        GlStateManager.disableTexture2D();
-
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-        GlStateManager.glLineWidth(5.0F);
-        buffer.begin(1, DefaultVertexFormats.POSITION_COLOR);
-        buffer.pos(0.0, 0.0, 0.0).color(0.0F, 0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(0.0, 0.0, 1.0).color(rgb >> 16 & 0xFF, rgb >> 8 & 0xFF, rgb >> 0 & 0xFF, 255).endVertex();
-        buffer.pos(0.0, 0.0, 0.0).color(0.0F, 0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(0.0, 0.5, 0.0).color(rgb2 >> 16 & 0xFF, rgb2 >> 8 & 0xFF, rgb2 >> 0 & 0xFF, 255).endVertex();
-        tessellator.draw();
-        GlStateManager.glLineWidth(1.0F);
-        Draw.point(0, 0, 0);
-
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.enableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-        GlStateManager.enableTexture2D();
-
-        GlStateManager.popMatrix();
-    }
-
-    private void renderLabel()
-    {
-        if (this.tracker != null && !this.tracker.name.isEmpty())
-        {
-            Minecraft mc = Minecraft.getMinecraft();
-            FontRenderer font = mc.fontRenderer;
-
-            Matrix4f mat = MatrixUtils.readModelView(new Matrix4f());
-
-            GlStateManager.pushMatrix();
-            GlStateManager.loadIdentity();
-            EntityRenderer.drawNameplate(font, this.tracker.name, mat.m03, mat.m13 + font.FONT_HEIGHT / 48.0F + 0.1F, mat.m23, 0, 180F, 0, mc.gameSettings.thirdPersonView == 2, false);
-            GlStateManager.popMatrix();
         }
     }
 }
