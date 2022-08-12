@@ -1,13 +1,13 @@
 package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.client.RenderingHandler;
+import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.ExpirableDummyEntity;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.render.VertexBuilder;
-import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.Interpolation;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MathUtils;
@@ -20,36 +20,25 @@ import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
 import mchorse.metamorph.api.morphs.utils.IMorphGenerator;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Matrix4d;
-import javax.vecmath.Matrix4f;
-import javax.vecmath.SingularMatrixException;
-import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
 
-import java.nio.FloatBuffer;
 import java.util.Objects;
+import java.util.UUID;
 
 public class LightMorph extends AbstractMorph implements IAnimationProvider, ISyncableMorph, IMorphGenerator
 {
@@ -61,8 +50,13 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
     private Vector3f prevPosition = new Vector3f();
     private boolean renderedOnScreen;
     private boolean renderedInEditor;
+    /**
+     * Inventory and hand instance are the same
+     * use this to test out if the morph is only rendering in the inventory
+     */
+    private State state = State.CANUPDATE;
 
-    /** The age when it last rendered */
+    /** The age of the dummy entity when this morph last rendered */
     private int lastRenderAge;
 
     public LightMorph()
@@ -105,7 +99,16 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
     {
         if (target.world.isRemote && !this.renderedOnScreen && !this.renderedInEditor)
         {
-            this.addDummyEntityToWorld();
+            if (this.position.equals(new Vector3f(0, 0, 0)))
+            {
+                this.addDummyEntityToWorld(target);
+            }
+            else
+            {
+                this.addDummyEntityToWorld();
+            }
+
+            this.state = State.NOUPDATE;
         }
 
         this.animation.update();
@@ -116,7 +119,7 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
     @SideOnly(Side.CLIENT)
     private void updateDummyEntity()
     {
-        if (this.dummy == null)
+        if (this.dummy == null || this.state != State.CANUPDATE)
         {
             return;
         }
@@ -133,13 +136,31 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
     @SideOnly(Side.CLIENT)
     private void addDummyEntityToWorld()
     {
-        if (this.dummy == null || this.dummy.isDead)
+        this.addDummyEntityToWorld(null);
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void addDummyEntityToWorld(EntityLivingBase target)
+    {
+        if ((this.dummy == null || this.dummy.isDead) && this.state == State.CANUPDATE)
         {
             this.dummy = new ExpirableDummyEntity(Minecraft.getMinecraft().world, 1);
 
             this.updateDummyEntityPosition();
 
-            Minecraft.getMinecraft().world.addEntityToWorld(this.dummy.getEntityId(), this.dummy);
+            if (target != null)
+            {
+                this.dummy.setPosition(target.posX, target.posY, target.posZ);
+            }
+
+            if (mchorse.mclib.events.RenderingHandler.isMinecraftRendering())
+            {
+                RenderingHandler.registerRenderLastEvent(() -> Minecraft.getMinecraft().world.addEntityToWorld(this.dummy.getEntityId(), this.dummy));
+            }
+            else
+            {
+                Minecraft.getMinecraft().world.addEntityToWorld(this.dummy.getEntityId(), this.dummy);
+            }
         }
     }
 
@@ -176,11 +197,24 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void render(EntityLivingBase entityLivingBase, double x, double y, double z, float entityYaw, float partialTicks)
+    public void render(EntityLivingBase target, double x, double y, double z, float entityYaw, float partialTicks)
     {
         if (ReflectionUtils.isOptifineShadowPass())
         {
             return;
+        }
+
+        EntityLivingBase lastItemHolder = RenderingHandler.getLastItemHolder();
+        ItemCameraTransforms.TransformType itemTransformType = RenderingHandler.itemTransformType;
+
+        this.renderedOnScreen = false;
+        boolean renderedInHands = lastItemHolder != null && (itemTransformType == ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND || itemTransformType == ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
+        boolean renderedInThirdPerson = lastItemHolder != null && (itemTransformType == ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND || itemTransformType == ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
+
+        if (renderedInHands || renderedInThirdPerson
+                || itemTransformType == ItemCameraTransforms.TransformType.GROUND || !TileEntityModelItemStackRenderer.isRendering())
+        {
+            this.state = State.CANUPDATE;
         }
 
         GlStateManager.pushMatrix();
@@ -188,12 +222,24 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
 
         this.updateAnimation(partialTicks);
 
-        Matrix4d[] transformation = MatrixUtils.getTransformation();
-        Matrix4d translation = transformation[0];
+        if (renderedInThirdPerson || lastItemHolder == null && (!TileEntityModelItemStackRenderer.isRendering() || itemTransformType == ItemCameraTransforms.TransformType.GROUND))
+        {
+            Matrix4d[] transformation = MatrixUtils.getTransformation();
 
-        this.position.x = (float) translation.m03;
-        this.position.y = (float) translation.m13;
-        this.position.z = (float) translation.m23;
+            Matrix4d translation = transformation[0];
+
+            this.position.x = (float) translation.m03;
+            this.position.y = (float) translation.m13;
+            this.position.z = (float) translation.m23;
+        }
+        else if (renderedInHands)
+        {
+            this.position.x = (float) Interpolations.lerp(lastItemHolder.prevPosX, lastItemHolder.posX, partialTicks);
+            this.position.y = (float) Interpolations.lerp(lastItemHolder.prevPosY, lastItemHolder.posY, partialTicks) + lastItemHolder.getEyeHeight() - 0.15F;
+            this.position.z = (float) Interpolations.lerp(lastItemHolder.prevPosZ, lastItemHolder.posZ, partialTicks);
+
+            //TODO rotate the item position instead of simply adding it at the head
+        }
 
         if (Minecraft.getMinecraft().gameSettings.showDebugInfo || GuiModelRenderer.isRendering())
         {
@@ -223,7 +269,6 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
         }
 
         this.lastRenderAge = (this.dummy != null) ? this.dummy.getAge() : 0;
-        this.renderedOnScreen = false;
 
         GlStateManager.popMatrix();
     }
@@ -498,6 +543,12 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
         {
             tag.setTag("Animation", animation);
         }
+
+        /*
+         * Minecraft has a mechanism that prevents new ItemStack instances when the NBT is equal
+         * Adding a random UUID will force a new ItemStack instance.
+         */
+        tag.setString("UUID", UUID.randomUUID().toString());
     }
 
     public static class LightAnimation extends Animation
@@ -537,5 +588,14 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
         {
             this.lightValue = morph.light;
         }
+    }
+
+    /**
+     * The state used in rendering to identify when to update the entity
+     */
+    private enum State
+    {
+        CANUPDATE,
+        NOUPDATE
     }
 }

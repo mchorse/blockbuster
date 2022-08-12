@@ -20,7 +20,7 @@ public class ExpirableDummyEntity extends DummyEntity
         this(worldIn, lifetime, 0, 0);
     }
 
-    public ExpirableDummyEntity(World worldIn, int lifetime, int height, int width)
+    public ExpirableDummyEntity(World worldIn, int lifetime, float height, float width)
     {
         super(worldIn);
 

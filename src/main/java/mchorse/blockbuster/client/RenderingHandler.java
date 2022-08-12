@@ -56,6 +56,7 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -68,6 +69,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -86,6 +88,8 @@ public class RenderingHandler
     public static Set<OrientedBB> obbsToRender = new HashSet<OrientedBB>();
 
     private static final List<IRenderLast> renderLasts = new ArrayList<>();
+    private static final List<Runnable> renderLastBus = new ArrayList<>();
+    private static ListIterator<Runnable> renderLastBusIterator = renderLastBus.listIterator();
 
     /**
      * is true when renderLasts List is being iterated
@@ -104,7 +108,8 @@ public class RenderingHandler
     private GuiRecordingOverlay overlay;
 
     /**
-     *  ItemRender
+     *  The transformType of the item currently rendered like TransformType.GUI, TransformType.GROUND, TransformType.THIRD_PERSON_RIGHT_HAND etc.
+     *  This variable is set by {@link #setTSRTTransform(ItemCameraTransforms.TransformType)} which is called by ASM.
      */
     public static ItemCameraTransforms.TransformType itemTransformType;
 
@@ -125,6 +130,14 @@ public class RenderingHandler
         }
 
         return false;
+    }
+
+    /**
+     * Add a runnable that will be executed at the end of {@link #onRenderLast(RenderWorldLastEvent)}
+     */
+    public static void registerRenderLastEvent(Runnable runnable)
+    {
+        renderLastBusIterator.add(runnable);
     }
 
     /**
@@ -362,7 +375,9 @@ public class RenderingHandler
     }
 
     /**
-     * Called by ASMR
+     * Called by ASM {@link mchorse.blockbuster.core.transformers.RenderItemTransformer}
+     * and sets the transform type of the currently rendered item
+     * Called in renderItem, renderItemModel and renderItemModelIntoGUI method of Minecraft.
      */
     public static void setTSRTTransform(ItemCameraTransforms.TransformType type)
     {
@@ -370,7 +385,9 @@ public class RenderingHandler
     }
 
     /**
-     * Called by ASM
+     * Called by ASM {@link mchorse.blockbuster.core.transformers.RenderItemTransformer}.
+     * This method sets the entity that is holding the item which is currently rendered.
+     * Called in renderItem method of RenderItem class.
      */
     public static void resetLastItemHolder(EntityLivingBase entity)
     {
@@ -480,7 +497,7 @@ public class RenderingHandler
 
         recordsToRender.clear();
 
-        /* render OBB outlines (move this code to limb renderer or so, later)*/
+        /* TODO render OBB outlines (move this code to limb renderer or so, later)*/
         if (mc.gameSettings.showDebugInfo && !obbsToRender.isEmpty())
         {
             for (OrientedBB obb : this.obbsToRender)
@@ -489,6 +506,18 @@ public class RenderingHandler
             }
         }
         obbsToRender.clear();
+
+        renderLastBusIterator = renderLastBus.listIterator();
+
+        while (renderLastBusIterator.hasNext())
+        {
+            Runnable runnable = renderLastBusIterator.next();
+
+            runnable.run();
+        }
+
+        renderLastBus.clear();
+        renderLastBusIterator = renderLastBus.listIterator();
     }
 
     private void renderPaths(RenderWorldLastEvent event, Set<Record> recordsToRender)

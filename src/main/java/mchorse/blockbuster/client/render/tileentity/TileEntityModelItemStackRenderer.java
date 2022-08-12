@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.render.tileentity;
 
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
+import mchorse.mclib.utils.MatrixUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -11,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.vecmath.Matrix4f;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -32,6 +34,13 @@ public class TileEntityModelItemStackRenderer extends TileEntityItemStackRendere
      * A cache of model TEs
      */
     public static final Map<NBTTagCompound, TEModel> models = new HashMap<NBTTagCompound, TEModel>();
+
+    private static boolean isRendering;
+
+    public static boolean isRendering()
+    {
+        return isRendering;
+    }
 
     @Override
     public void renderByItem(ItemStack stack, float partialTicks)
@@ -88,6 +97,8 @@ public class TileEntityModelItemStackRenderer extends TileEntityItemStackRendere
 
     public void renderModel(TileEntityModel model, float partialTicks)
     {
+        isRendering = true;
+
         ClientProxy.modelRenderer.render(model, 0, 0, 0, partialTicks, 0, 0);
 
         Minecraft mc = Minecraft.getMinecraft();
@@ -96,6 +107,8 @@ public class TileEntityModelItemStackRenderer extends TileEntityItemStackRendere
         manager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         mc.getTextureMapBlocks().setBlurMipmapDirect(false, true);
         mc.getTextureMapBlocks().setBlurMipmap(false, false);
+
+        isRendering = false;
     }
 
     /**
