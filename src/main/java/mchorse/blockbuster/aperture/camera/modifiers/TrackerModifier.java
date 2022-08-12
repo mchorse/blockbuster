@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import mchorse.metamorph.api.MorphUtils;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.aperture.camera.CameraProfile;
@@ -203,38 +204,6 @@ public class TrackerModifier extends EntityModifier
 
     private boolean checkTracker(AbstractMorph morph, String selector)
     {
-        while (true)
-        {
-            if (morph instanceof TrackerMorph && ((TrackerMorph) morph).tracker instanceof ApertureCamera && selector.equals(((TrackerMorph) morph).tracker.name))
-            {
-                return true;
-            }
-
-            if (morph instanceof IBodyPartProvider)
-            {
-                BodyPartManager mgr = ((IBodyPartProvider) morph).getBodyPart();
-                for (BodyPart part : mgr.parts)
-                {
-                    if (part.enabled)
-                    {
-                        if (checkTracker(part.morph.get(), selector))
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            if (morph instanceof IMorphProvider)
-            {
-                morph = ((IMorphProvider) morph).getMorph();
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        return false;
+        return MorphUtils.anyMatch(morph, (element) -> element instanceof TrackerMorph && ((TrackerMorph) element).tracker instanceof ApertureCamera && selector.equals(((TrackerMorph) element).tracker.name));
     }
 }
