@@ -1,11 +1,7 @@
 package mchorse.blockbuster.core.transformers;
 
-import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
-import mchorse.blockbuster.utils.mclib.coremod.ClassMethodTransformer;
 import mchorse.blockbuster.utils.mclib.coremod.CoreClassTransformer;
 import mchorse.blockbuster.utils.mclib.coremod.ClassTransformer;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
@@ -23,7 +19,7 @@ public class RenderItemTransformer extends ClassTransformer
             
             if (methodName != null)
             {
-                this.processMethod(methodName,method);
+                this.processRenderItemMethod(methodName,method);
             }
 
             methodName = this.checkName(method,"a","(Laip;Lcfy;Lbwc$b;Z)V","renderItemModel", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/renderer/block/model/IBakedModel;Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;Z)V");
@@ -49,7 +45,7 @@ public class RenderItemTransformer extends ClassTransformer
         }
     }
 
-    public void processMethod(String methodName, MethodNode method)
+    public void processRenderItemMethod(String methodName, MethodNode method)
     {
         String entity = CoreClassTransformer.obfuscated ? "Lvp;" : "Lnet/minecraft/entity/EntityLivingBase;";
         String transform = CoreClassTransformer.obfuscated ? "Lbwc$b;" : "Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;";
