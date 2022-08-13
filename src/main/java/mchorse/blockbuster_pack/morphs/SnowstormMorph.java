@@ -315,6 +315,12 @@ public class SnowstormMorph extends AbstractMorph
     }
 
     @Override
+    public boolean useTargetDefault()
+    {
+        return true;
+    }
+
+    @Override
     public boolean canMerge(AbstractMorph morph)
     {
         if (morph instanceof SnowstormMorph)

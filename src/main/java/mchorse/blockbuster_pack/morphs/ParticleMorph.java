@@ -337,6 +337,12 @@ public class ParticleMorph extends AbstractMorph
     }
 
     @Override
+    public boolean useTargetDefault()
+    {
+        return true;
+    }
+
+    @Override
     public AbstractMorph create()
     {
         return new ParticleMorph();

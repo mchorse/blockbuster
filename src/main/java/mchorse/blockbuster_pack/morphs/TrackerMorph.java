@@ -260,6 +260,12 @@ public class TrackerMorph extends AbstractMorph
     }
 
     @Override
+    public boolean useTargetDefault()
+    {
+        return true;
+    }
+
+    @Override
     public void reset()
     {
         this.tracker = new ApertureTracker();
