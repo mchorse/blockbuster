@@ -402,12 +402,11 @@ public class Record
     {
         boolean pause = type != MorphType.REGULAR && Blockbuster.recordPausePreview.get();
         AbstractMorph replayMorph = replay == null ? null : replay.morph;
-        FoundAction found = null;
-        
-        if (tick < this.actions.size())
-        {
-            found = this.seekMorphAction(tick, null);
-        }
+
+        /* when the tick is at the end - do not apply replay's morph - stay at the last morph */
+        if (tick >= this.actions.size()) return;
+
+        FoundAction found = this.seekMorphAction(tick, null);
 
         if (found != null)
         {
