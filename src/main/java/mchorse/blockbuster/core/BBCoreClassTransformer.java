@@ -10,6 +10,7 @@ import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 import java.util.Iterator;
 
@@ -121,6 +122,12 @@ public class BBCoreClassTransformer extends CoreClassTransformer
             FieldInsnNode field = (FieldInsnNode) node;
 
             return field.getOpcode() + " " + field.owner + "." + field.name + ":" + field.desc;
+        }
+        else if (node instanceof VarInsnNode)
+        {
+            VarInsnNode var = (VarInsnNode) node;
+
+            return "opcode " + var.getOpcode() + " var " + var.var;
         }
         else if (node instanceof LdcInsnNode)
         {
