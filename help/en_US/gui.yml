@@ -868,3 +868,5 @@ blockbuster.gui:
                 tracker_tooltip: Enter the name of the tracker morph (type must be "Aperture Modifier")
                 main_cam: As the main camera
                 main_cam_tooltip: When this option is turned on, all camera transformations prior to this modifier will be recalculated in this tracker space; otherwise, the modifier will only modify the coordinate data
+                look_at: Look at
+                look_at_tooltip: Look at the tracker modifier. This will disable the {gui.aperture.modifiers.panels.main_cam} option.

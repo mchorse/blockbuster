@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import mchorse.aperture.camera.data.Angle;
 import mchorse.metamorph.api.MorphUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -40,6 +41,7 @@ public class TrackerModifier extends EntityModifier
     public final ValueFloat roll = new ValueFloat("roll");
     public final ValueBoolean relative = new ValueBoolean("relative", true);
     public final ValueBoolean mainCam = new ValueBoolean("main_cam", true);
+    public final ValueBoolean lookAt = new ValueBoolean("look_at");
 
     public TrackerModifier()
     {
@@ -50,6 +52,7 @@ public class TrackerModifier extends EntityModifier
         this.register(this.roll);
         this.register(this.relative);
         this.register(this.mainCam);
+        this.register(this.lookAt);
     }
 
     @Override
@@ -71,40 +74,48 @@ public class TrackerModifier extends EntityModifier
             return;
         }
 
-        this.position.copy(pos);
+        if (!this.lookAt.get())
+        {
+            this.position.copy(pos);
+        }
 
         if (fixture != null && this.relative.get())
         {
             fixture.applyFixture(0, 0, 0, profile, this.position);
         }
 
-        this.position.point.x = pos.point.x - this.position.point.x;
-        this.position.point.y = pos.point.y - this.position.point.y;
-        this.position.point.z = pos.point.z - this.position.point.z;
-
-        this.position.angle.yaw = pos.angle.yaw - this.position.angle.yaw;
-        this.position.angle.pitch = pos.angle.pitch - this.position.angle.pitch;
-        this.position.angle.roll = pos.angle.roll - this.position.angle.roll;
-
-        ApertureCamera.tracking = this.selector.get();
-
-        ApertureCamera.offsetPos.x = (float) this.offset.get().x;
-        ApertureCamera.offsetPos.y = (float) this.offset.get().y;
-        ApertureCamera.offsetPos.z = (float) this.offset.get().z;
-
-        ApertureCamera.offsetRot.x = this.pitch.get();
-        ApertureCamera.offsetRot.y = this.yaw.get();
-        ApertureCamera.offsetRot.z = this.roll.get();
-
-        if (this.mainCam.get())
+        if (!this.lookAt.get())
         {
-            ApertureCamera.offsetPos.x += this.position.point.x;
-            ApertureCamera.offsetPos.y += this.position.point.y;
-            ApertureCamera.offsetPos.z += this.position.point.z;
+            /* probably unnecessary, the other modifiers also dont have this */
+            this.position.point.x = pos.point.x - this.position.point.x;
+            this.position.point.y = pos.point.y - this.position.point.y;
+            this.position.point.z = pos.point.z - this.position.point.z;
 
-            ApertureCamera.offsetRot.x += this.position.angle.pitch;
-            ApertureCamera.offsetRot.y += this.position.angle.yaw;
-            ApertureCamera.offsetRot.z += this.position.angle.roll;
+            this.position.angle.yaw = pos.angle.yaw - this.position.angle.yaw;
+            this.position.angle.pitch = pos.angle.pitch - this.position.angle.pitch;
+            this.position.angle.roll = pos.angle.roll - this.position.angle.roll;
+
+            //TODO refactor this. Get rid of static buffer variables, I dont know why they exist
+            ApertureCamera.tracking = this.selector.get();
+
+            ApertureCamera.offsetPos.x = (float) this.offset.get().x;
+            ApertureCamera.offsetPos.y = (float) this.offset.get().y;
+            ApertureCamera.offsetPos.z = (float) this.offset.get().z;
+
+            ApertureCamera.offsetRot.x = this.pitch.get();
+            ApertureCamera.offsetRot.y = this.yaw.get();
+            ApertureCamera.offsetRot.z = this.roll.get();
+
+            if (this.mainCam.get())
+            {
+                ApertureCamera.offsetPos.x += this.position.point.x;
+                ApertureCamera.offsetPos.y += this.position.point.y;
+                ApertureCamera.offsetPos.z += this.position.point.z;
+
+                ApertureCamera.offsetRot.x += this.position.angle.pitch;
+                ApertureCamera.offsetRot.y += this.position.angle.yaw;
+                ApertureCamera.offsetRot.z += this.position.angle.roll;
+            }
         }
 
         Entity entity = this.entities.get(0);
@@ -123,16 +134,32 @@ public class TrackerModifier extends EntityModifier
         GL11.glPopMatrix();
         GlStateManager.disableLighting();
 
-        pos.point.set(ApertureCamera.pos.x, ApertureCamera.pos.y, ApertureCamera.pos.z);
-        if (this.mainCam.get())
+        if (this.lookAt.get())
         {
-            pos.angle.set(ApertureCamera.rot.y, ApertureCamera.rot.x, ApertureCamera.rot.z, pos.angle.fov);
+            Angle angle = Angle.angle(ApertureCamera.pos.x - pos.point.x, ApertureCamera.pos.y - pos.point.y, ApertureCamera.pos.z - pos.point.z);
+
+            if (this.relative.get())
+            {
+                angle.yaw += pos.angle.yaw + this.yaw.get() - this.position.angle.yaw;
+                angle.pitch += pos.angle.pitch + this.pitch.get() - this.position.angle.pitch;
+            }
+
+            pos.angle.set(angle.yaw, angle.pitch);
         }
         else
         {
-            pos.point.x += this.position.point.x;
-            pos.point.y += this.position.point.y;
-            pos.point.z += this.position.point.z;
+            pos.point.set(ApertureCamera.pos.x, ApertureCamera.pos.y, ApertureCamera.pos.z);
+
+            if (this.mainCam.get())
+            {
+                pos.angle.set(ApertureCamera.rot.y, ApertureCamera.rot.x, ApertureCamera.rot.z, pos.angle.fov);
+            }
+            else
+            {
+                pos.point.x += this.position.point.x;
+                pos.point.y += this.position.point.y;
+                pos.point.z += this.position.point.z;
+            }
         }
     }
 
@@ -141,9 +168,10 @@ public class TrackerModifier extends EntityModifier
     {
         String selector = this.selector.get();
         this.entities = null;
+
         if (selector != null && !selector.isEmpty() && FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
-            queryActor(selector);
+            this.queryActor(selector);
         }
     }
 
@@ -153,6 +181,7 @@ public class TrackerModifier extends EntityModifier
         if (!super.checkForDead())
         {
             Iterator<Entity> it = this.entities.iterator();
+
             while (it.hasNext())
             {
                 if (!checkTracker(mchorse.metamorph.api.EntityUtils.getMorph((EntityLivingBase) it.next()), this.selector.get()))

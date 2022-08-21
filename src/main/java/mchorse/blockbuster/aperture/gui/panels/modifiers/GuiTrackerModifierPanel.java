@@ -22,6 +22,7 @@ public class GuiTrackerModifierPanel extends GuiAbstractModifierPanel<TrackerMod
     public GuiTrackpadElement roll;
     public GuiToggleElement relative;
     public GuiToggleElement mainCam;
+    public GuiToggleElement lookAt;
     
     public GuiTrackerModifierPanel(Minecraft mc, TrackerModifier modifier, GuiModifiersManager modifiers)
     {
@@ -91,7 +92,13 @@ public class GuiTrackerModifierPanel extends GuiAbstractModifierPanel<TrackerMod
         });
         this.mainCam.tooltip(IKey.lang("blockbuster.gui.aperture.modifiers.panels.main_cam_tooltip"));
 
-        this.fields.add(this.target, Elements.row(mc, 5, 0, 20, this.x, this.y, this.z), Elements.row(mc, 5, 0, 20, this.yaw, this.pitch, this.roll), this.relative, this.mainCam);
+        this.lookAt = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.aperture.modifiers.panels.look_at"), (b) ->
+        {
+           this.modifiers.editor.postUndo(this.undo(this.modifier.lookAt, b.isToggled()));
+        });
+        this.lookAt.tooltip(IKey.lang("blockbuster.gui.aperture.modifiers.panels.look_at_tooltip"));
+
+        this.fields.add(this.target, Elements.row(mc, 5, 0, 20, this.x, this.y, this.z), Elements.row(mc, 5, 0, 20, this.yaw, this.pitch, this.roll), this.relative, this.mainCam, this.lookAt);
     }
 
     @Override
@@ -108,6 +115,7 @@ public class GuiTrackerModifierPanel extends GuiAbstractModifierPanel<TrackerMod
         this.roll.setValue(this.modifier.roll.get());
         this.relative.toggled(this.modifier.relative.get());
         this.mainCam.toggled(this.modifier.mainCam.get());
+        this.lookAt.toggled(this.modifier.lookAt.get());
     }
 
 }
