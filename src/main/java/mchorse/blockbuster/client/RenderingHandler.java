@@ -26,6 +26,7 @@ import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Interpolations;
+import mchorse.mclib.utils.OptifineHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -44,6 +45,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
@@ -65,6 +67,8 @@ import org.objectweb.asm.tree.MethodNode;
 import scala.Int;
 
 import javax.vecmath.Vector3d;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -88,6 +92,7 @@ public class RenderingHandler
     public static Set<OrientedBB> obbsToRender = new HashSet<OrientedBB>();
 
     private static final List<IRenderLast> renderLasts = new ArrayList<>();
+    /** Runnables to be executed at the end of renderlast event */
     private static final List<Runnable> renderLastBus = new ArrayList<>();
     private static ListIterator<Runnable> renderLastBusIterator = renderLastBus.listIterator();
 
@@ -341,22 +346,29 @@ public class RenderingHandler
 
         isRenderingLast = true;
 
-        /* copied from RenderGlobal.renderEntities() - I hope this does not fuck around when porting */
-        //TileEntityRendererDispatcher.instance.preDrawBatch();
-
         for (IRenderLast renderLast : renderLasts)
         {
             if (renderLast instanceof EntityActor)
             {
+                /*
+                 * Optifine calls net.optifine.shaders.Shaders.nextEntity before entity is rendered
+                 * Without this the lighting / shadows are weird on renderLast models
+                 */
+                OptifineHelper.nextEntity((EntityActor) renderLast);
+
                 mc.getRenderManager().renderEntityStatic((EntityActor) renderLast, mc.getRenderPartialTicks(), false);
             }
             else if (renderLast instanceof TileEntityModel)
             {
+                /*
+                 * Optifine calls net.optifine.shaders.Shaders.nextBlockEntity before tileEntity is rendered
+                 * Without this the lighting / shadows are weird on renderLast models
+                 */
+                OptifineHelper.nextBlockEntity((TileEntityModel) renderLast);
+
                 TileEntityRendererDispatcher.instance.render((TileEntityModel) renderLast, mc.getRenderPartialTicks(), -1);
             }
         }
-
-        //TileEntityRendererDispatcher.instance.drawBatch(0);
 
         isRenderingLast = false;
 
