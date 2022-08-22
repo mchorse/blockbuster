@@ -136,7 +136,11 @@ public class TrackerModifier extends EntityModifier
 
         if (this.lookAt.get())
         {
-            Angle angle = Angle.angle(ApertureCamera.pos.x - pos.point.x, ApertureCamera.pos.y - pos.point.y, ApertureCamera.pos.z - pos.point.z);
+            double dX = ApertureCamera.pos.x - pos.point.x + this.offset.get().x;
+            double dY = ApertureCamera.pos.y - pos.point.y + this.offset.get().y;
+            double dZ = ApertureCamera.pos.z - pos.point.z + this.offset.get().z;
+
+            Angle angle = Angle.angle(dX, dY, dZ);
 
             if (this.relative.get())
             {
