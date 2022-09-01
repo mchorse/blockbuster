@@ -91,6 +91,7 @@ public class RenderingHandler
     public static Set<Record> recordsToRender = new HashSet<Record>();
     public static Set<OrientedBB> obbsToRender = new HashSet<OrientedBB>();
 
+    private static final List<EntityActor> renderedEntityActors = new ArrayList<>();
     private static final List<IRenderLast> renderLasts = new ArrayList<>();
     /** Runnables to be executed at the end of renderlast event */
     private static final List<Runnable> renderLastBus = new ArrayList<>();
@@ -135,6 +136,18 @@ public class RenderingHandler
         }
 
         return false;
+    }
+
+    /**
+     * Called by ASM in RenderGlobal.renderEntities() {@link mchorse.blockbuster.core.transformers.RenderGlobalTransformer}
+     * @param entity
+     */
+    public static void addRenderedEntity(Entity entity)
+    {
+        if (entity instanceof EntityActor)
+        {
+            renderedEntityActors.add((EntityActor) entity);
+        }
     }
 
     /**
@@ -326,6 +339,7 @@ public class RenderingHandler
         if (MinecraftForgeClient.getRenderPass() != 0)
         {
             renderLasts.clear();
+            renderedEntityActors.clear();
 
             return;
         }
@@ -333,6 +347,23 @@ public class RenderingHandler
         Minecraft mc = Minecraft.getMinecraft();
         Entity camera = mc.getRenderViewEntity();
 
+        /* render always actors that have not been rendered */
+        if (Blockbuster.actorAlwaysRender.get())
+        {
+            List<EntityActor> actors = mc.world.getEntities(EntityActor.class, EntitySelectors.IS_ALIVE);
+
+            actors.removeAll(renderedEntityActors);
+            actors.removeAll(renderLasts);
+
+            for (EntityActor renderAlwaysActor : actors)
+            {
+                OptifineHelper.nextEntity(renderAlwaysActor);
+
+                mc.getRenderManager().renderEntityStatic(renderAlwaysActor, mc.getRenderPartialTicks(), false);
+            }
+        }
+
+        /* render entities and tileEntities last */
         renderLasts.sort((a, b) ->
         {
             Vector3d aPos = a.getRenderLastPos();
@@ -373,6 +404,7 @@ public class RenderingHandler
         isRenderingLast = false;
 
         renderLasts.clear();
+        renderedEntityActors.clear();
     }
 
     /**
