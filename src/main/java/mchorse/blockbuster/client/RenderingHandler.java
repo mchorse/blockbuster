@@ -355,12 +355,11 @@ public class RenderingHandler
             actors.removeAll(renderedEntityActors);
             actors.removeAll(renderLasts);
 
-            for (EntityActor renderAlwaysActor : actors)
-            {
-                OptifineHelper.nextEntity(renderAlwaysActor);
-
-                mc.getRenderManager().renderEntityStatic(renderAlwaysActor, mc.getRenderPartialTicks(), false);
-            }
+            /*
+             * Add them to renderLast
+             * because renderLast entities that are out of range won't be added to renderLast
+             */
+            renderLasts.addAll(actors);
         }
 
         /* render entities and tileEntities last */
