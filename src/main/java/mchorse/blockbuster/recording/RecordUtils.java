@@ -4,13 +4,20 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
+import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.recording.PacketApplyFrame;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketRequestedFrames;
 import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
+import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.mclib.utils.ForgeUtils;
+import net.minecraft.command.CommandBase;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -53,7 +60,7 @@ public class RecordUtils
      */
     public static void broadcastMessage(ITextComponent message)
     {
-        for (EntityPlayerMP player : getPlayers())
+        for (EntityPlayerMP player : ForgeUtils.getServerPlayers())
         {
             player.sendMessage(message);
         }
@@ -66,7 +73,7 @@ public class RecordUtils
      */
     public static void broadcastError(String string, Object... objects)
     {
-        for (EntityPlayerMP player : getPlayers())
+        for (EntityPlayerMP player : ForgeUtils.getServerPlayers())
         {
             Blockbuster.l10n.error(player, string, objects);
         }
@@ -79,15 +86,10 @@ public class RecordUtils
      */
     public static void broadcastInfo(String string, Object... objects)
     {
-        for (EntityPlayerMP player : getPlayers())
+        for (EntityPlayerMP player : ForgeUtils.getServerPlayers())
         {
             Blockbuster.l10n.info(player, string, objects);
         }
-    }
-
-    public static List<EntityPlayerMP> getPlayers()
-    {
-        return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers();
     }
 
     /**
@@ -254,7 +256,7 @@ public class RecordUtils
     {
         String filename = record.filename;
 
-        for (EntityPlayerMP player : RecordUtils.getPlayers())
+        for (EntityPlayerMP player : ForgeUtils.getServerPlayers())
         {
              IRecording recording = Recording.get(player);
 
@@ -293,5 +295,25 @@ public class RecordUtils
         record.dirty = true;
 
         unloadRecord(record);
+    }
+
+    public static void tpToTick(EntityLivingBase entity, Record record, int tick)
+    {
+        tick = MathHelper.clamp(tick, 0, record.frames.size() - 1);
+
+        Frame frame = record.frames.get(tick);
+
+        frame.apply(entity, true);
+
+        PacketApplyFrame packet = new PacketApplyFrame(frame, entity.getEntityId());
+
+        if (entity.world.isRemote)
+        {
+            Dispatcher.sendToServer(packet);
+        }
+        else if (entity instanceof EntityPlayerMP)
+        {
+            Dispatcher.sendTo(packet, (EntityPlayerMP) entity);
+        }
     }
 }

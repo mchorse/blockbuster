@@ -8,6 +8,7 @@ import mchorse.mclib.config.values.ValueInt;
 import mchorse.mclib.config.values.ValueString;
 import mchorse.mclib.network.IByteBufSerializable;
 import mchorse.mclib.network.INBTSerializable;
+import mchorse.mclib.utils.ForgeUtils;
 import mchorse.mclib.utils.ICopy;
 import mchorse.mclib.utils.LatencyTimer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -102,12 +103,8 @@ public class AudioHandler implements ICopy<AudioHandler>, INBTSerializable, IByt
             return;
         }
 
-        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
-
-        for (String username : players.getOnlinePlayerNames())
+        for (EntityPlayerMP player : ForgeUtils.getServerPlayers())
         {
-            EntityPlayerMP player = players.getPlayerByUsername(username);
-
             this.sendAudioStateToPlayer(state, shift, (sync) ? new LatencyTimer() : null, player);
         }
     }
