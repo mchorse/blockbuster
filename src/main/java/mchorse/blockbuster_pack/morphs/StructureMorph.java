@@ -10,6 +10,7 @@ import mchorse.blockbuster_pack.morphs.structure.StructureAnimation;
 import mchorse.blockbuster_pack.morphs.structure.StructureRenderer;
 import mchorse.blockbuster_pack.morphs.structure.StructureStatus;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
+import mchorse.mclib.utils.ForgeUtils;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
@@ -120,12 +121,9 @@ public class StructureMorph extends AbstractMorph implements IAnimationProvider,
                 STRUCTURE_CACHE.put(name, file.lastModified());
 
                 IMessage packet = new PacketStructure(name, null);
-                PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
 
-                for (String username : players.getOnlinePlayerNames())
+                for (EntityPlayerMP player : ForgeUtils.getServerPlayers())
                 {
-                    EntityPlayerMP player = players.getPlayerByUsername(username);
-
                     if (player != null)
                     {
                         Dispatcher.sendTo(packet, player);
