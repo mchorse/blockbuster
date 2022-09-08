@@ -13,6 +13,7 @@ import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.mclib.utils.ForgeUtils;
+import mchorse.mclib.utils.MathUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -269,6 +270,8 @@ public class RecordUtils
         }
     }
 
+    /* records are saved on the server side */
+
     public static void saveRecord(Record record) throws IOException
     {
         saveRecord(record, true);
@@ -295,6 +298,71 @@ public class RecordUtils
         record.dirty = true;
 
         unloadRecord(record);
+    }
+
+    /**
+     * This method filters 360 degrees flips in the given frame list in the given rotation channel.
+     * It does not modify the original list but returns a new list of frame copies.
+     * @param frames the frames to filter
+     * @param from from tick
+     * @param to to tick (this tick will also be filtered)
+     * @param channel the rotation channel of the frames to filter
+     * @return the filtered frames. Returns an empty list if not enough frames are present to filter.
+     */
+    public static List<Frame> discontinuityEulerFilter(List<Frame> frames, int from, int to, Frame.RotationChannel channel)
+    {
+        List<Frame> filteredFrames = new ArrayList<>();
+
+        if (to - from + 1 < 2) return filteredFrames;
+
+        for (int i = from; i < frames.size() && i <= to; i++)
+        {
+            if (i == 0)
+            {
+                filteredFrames.add(frames.get(i));
+
+                continue;
+            }
+
+            Frame filteredFrame = frames.get(i).copy();
+            Frame prevFrame = frames.get(i - 1);
+
+            if (i > from)
+            {
+                prevFrame = filteredFrames.get(i - from - 1);
+            }
+
+            switch (channel)
+            {
+                case BODY_YAW:
+                    float prev = (float) Math.toRadians(prevFrame.bodyYaw);
+                    float current = (float) Math.toRadians(frames.get(i).bodyYaw);
+                    filteredFrame.bodyYaw = (float) Math.toDegrees(MathUtils.filterFlips(prev, current));
+
+                    break;
+                case HEAD_PITCH:
+                    prev = (float) Math.toRadians(prevFrame.pitch);
+                    current = (float) Math.toRadians(frames.get(i).pitch);
+                    filteredFrame.pitch = (float) Math.toDegrees(MathUtils.filterFlips(prev, current));
+
+                    break;
+                case HEAD_YAW:
+                    /* filter both yawHead and yaw... I hope that is correct, Minecraft is weird */
+                    prev = (float) Math.toRadians(prevFrame.yawHead);
+                    current = (float) Math.toRadians(frames.get(i).yawHead);
+                    filteredFrame.yawHead = (float) Math.toDegrees(MathUtils.filterFlips(prev, current));
+
+                    prev = (float) Math.toRadians(prevFrame.yaw);
+                    current = (float) Math.toRadians(frames.get(i).yaw);
+                    filteredFrame.yaw = (float) Math.toDegrees(MathUtils.filterFlips(prev, current));
+
+                    break;
+            }
+
+            filteredFrames.add(filteredFrame);
+        }
+
+        return filteredFrames;
     }
 
     public static void tpToTick(EntityLivingBase entity, Record record, int tick)

@@ -16,6 +16,7 @@ import mchorse.blockbuster.network.client.guns.ClientHandlerGunProjectile;
 import mchorse.blockbuster.network.client.guns.ClientHandlerGunProjectileVanish;
 import mchorse.blockbuster.network.client.guns.ClientHandlerGunShot;
 import mchorse.blockbuster.network.client.guns.ClientHandlerGunStuck;
+import mchorse.blockbuster.network.client.recording.ClientHandlerApplyFrame;
 import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayback;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayerRecording;
@@ -29,7 +30,6 @@ import mchorse.blockbuster.network.client.scene.ClientHandlerSceneCast;
 import mchorse.blockbuster.network.client.scene.ClientHandlerSceneManage;
 import mchorse.blockbuster.network.client.scene.ClientHandlerScenes;
 import mchorse.blockbuster.network.common.PacketActorPause;
-import mchorse.blockbuster.network.common.PacketActorRotate;
 import mchorse.blockbuster.network.common.PacketCaption;
 import mchorse.blockbuster.network.common.PacketDamageControlCheck;
 import mchorse.blockbuster.network.common.PacketModifyActor;
@@ -45,8 +45,10 @@ import mchorse.blockbuster.network.common.guns.PacketGunReloading;
 import mchorse.blockbuster.network.common.guns.PacketGunShot;
 import mchorse.blockbuster.network.common.guns.PacketGunStuck;
 import mchorse.blockbuster.network.common.guns.PacketZoomCommand;
+import mchorse.blockbuster.network.common.recording.PacketApplyFrame;
 import mchorse.blockbuster.network.common.recording.PacketFramesChunk;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
+import mchorse.blockbuster.network.common.recording.PacketFramesOverwrite;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
@@ -76,7 +78,7 @@ import mchorse.blockbuster.network.common.structure.PacketStructure;
 import mchorse.blockbuster.network.common.structure.PacketStructureList;
 import mchorse.blockbuster.network.common.structure.PacketStructureListRequest;
 import mchorse.blockbuster.network.common.structure.PacketStructureRequest;
-import mchorse.blockbuster.network.server.ServerHandlerActorRotate;
+import mchorse.blockbuster.network.server.ServerHandlerApplyFrame;
 import mchorse.blockbuster.network.server.ServerHandlerDamageControlCheck;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerModifyModelBlock;
@@ -89,6 +91,7 @@ import mchorse.blockbuster.network.server.gun.ServerHandlerGunInteract;
 import mchorse.blockbuster.network.server.gun.ServerHandlerGunReloading;
 import mchorse.blockbuster.network.server.gun.ServerHandlerZoomCommand;
 import mchorse.blockbuster.network.server.recording.ServerHandlerFramesChunk;
+import mchorse.blockbuster.network.server.recording.ServerHandlerFramesOverwrite;
 import mchorse.blockbuster.network.server.recording.ServerHandlerPlayback;
 import mchorse.blockbuster.network.server.recording.ServerHandlerRequestFrames;
 import mchorse.blockbuster.network.server.recording.ServerHandlerRequestRecording;
@@ -123,7 +126,6 @@ public class Dispatcher
             register(PacketModifyActor.class, ClientHandlerModifyActor.class, Side.CLIENT);
             register(PacketModifyActor.class, ServerHandlerModifyActor.class, Side.SERVER);
             register(PacketActorPause.class, ClientHandlerActorPause.class, Side.CLIENT);
-            register(PacketActorRotate.class, ServerHandlerActorRotate.class, Side.SERVER);
 
             /* Update model block properties */
             register(PacketModifyModelBlock.class, ClientHandlerModifyModelBlock.class, Side.CLIENT);
@@ -144,6 +146,10 @@ public class Dispatcher
             register(PacketFramesChunk.class, ServerHandlerFramesChunk.class, Side.SERVER);
             register(PacketRequestedFrames.class, ClientHandlerRequestedFrames.class, Side.CLIENT);
             register(PacketRequestFrames.class, ServerHandlerRequestFrames.class, Side.SERVER);
+            register(PacketFramesOverwrite.class, ServerHandlerFramesOverwrite.class, Side.SERVER);
+
+            register(PacketApplyFrame.class, ClientHandlerApplyFrame.class, Side.CLIENT);
+            register(PacketApplyFrame.class, ServerHandlerApplyFrame.class, Side.SERVER);
 
             register(PacketAction.class, ServerHandlerAction.class, Side.SERVER);
             register(PacketActions.class, ClientHandlerActions.class, Side.CLIENT);

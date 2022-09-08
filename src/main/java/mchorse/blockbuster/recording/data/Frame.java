@@ -1,5 +1,6 @@
 package mchorse.blockbuster.recording.data;
 
+import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.client.Minecraft;
@@ -322,96 +323,87 @@ public class Frame
     }
 
     /* Save/load frame instance */
-
-    /**
-     * Write frame data to an output stream. Used purely for data
-     * transportation over the network.
-     */
-    public void toBytes(DataOutput out) throws IOException
+    public void toBytes(ByteBuf buf)
     {
-        out.writeDouble(this.x);
-        out.writeDouble(this.y);
-        out.writeDouble(this.z);
+        buf.writeDouble(this.x);
+        buf.writeDouble(this.y);
+        buf.writeDouble(this.z);
 
-        out.writeFloat(this.yaw);
-        out.writeFloat(this.yawHead);
-        out.writeFloat(this.pitch);
+        buf.writeFloat(this.yaw);
+        buf.writeFloat(this.yawHead);
+        buf.writeFloat(this.pitch);
 
-        out.writeBoolean(this.hasBodyYaw);
+        buf.writeBoolean(this.hasBodyYaw);
 
         if (this.hasBodyYaw)
         {
-            out.writeFloat(this.bodyYaw);
+            buf.writeFloat(this.bodyYaw);
         }
 
-        out.writeBoolean(this.isMounted);
+        buf.writeBoolean(this.isMounted);
 
         if (this.isMounted)
         {
-            out.writeFloat(this.mountYaw);
-            out.writeFloat(this.mountPitch);
+            buf.writeFloat(this.mountYaw);
+            buf.writeFloat(this.mountPitch);
         }
 
-        out.writeFloat((float) this.motionX);
-        out.writeFloat((float) this.motionY);
-        out.writeFloat((float) this.motionZ);
+        buf.writeFloat((float) this.motionX);
+        buf.writeFloat((float) this.motionY);
+        buf.writeFloat((float) this.motionZ);
 
-        out.writeFloat(this.fallDistance);
+        buf.writeFloat(this.fallDistance);
 
-        out.writeBoolean(this.isAirBorne);
-        out.writeBoolean(this.isSneaking);
-        out.writeBoolean(this.isSprinting);
-        out.writeBoolean(this.onGround);
-        out.writeBoolean(this.flyingElytra);
+        buf.writeBoolean(this.isAirBorne);
+        buf.writeBoolean(this.isSneaking);
+        buf.writeBoolean(this.isSprinting);
+        buf.writeBoolean(this.onGround);
+        buf.writeBoolean(this.flyingElytra);
 
-        out.writeByte(this.activeHands);
+        buf.writeByte(this.activeHands);
 
-        out.writeFloat(this.roll);
+        buf.writeFloat(this.roll);
     }
 
-    /**
-     * Read frame data from input stream. Used purely for data transportation
-     * over the network.
-     */
-    public void fromBytes(DataInput in) throws IOException
+    public void fromBytes(ByteBuf buf)
     {
-        this.x = in.readDouble();
-        this.y = in.readDouble();
-        this.z = in.readDouble();
+        this.x = buf.readDouble();
+        this.y = buf.readDouble();
+        this.z = buf.readDouble();
 
-        this.yaw = in.readFloat();
-        this.yawHead = in.readFloat();
-        this.pitch = in.readFloat();
+        this.yaw = buf.readFloat();
+        this.yawHead = buf.readFloat();
+        this.pitch = buf.readFloat();
 
-        if (in.readBoolean())
+        if (buf.readBoolean())
         {
             this.hasBodyYaw = true;
-            this.bodyYaw = in.readFloat();
+            this.bodyYaw = buf.readFloat();
         }
 
-        this.isMounted = in.readBoolean();
+        this.isMounted = buf.readBoolean();
 
         if (this.isMounted)
         {
-            this.mountYaw = in.readFloat();
-            this.mountPitch = in.readFloat();
+            this.mountYaw = buf.readFloat();
+            this.mountPitch = buf.readFloat();
         }
 
-        this.motionX = in.readFloat();
-        this.motionY = in.readFloat();
-        this.motionZ = in.readFloat();
+        this.motionX = buf.readFloat();
+        this.motionY = buf.readFloat();
+        this.motionZ = buf.readFloat();
 
-        this.fallDistance = in.readFloat();
+        this.fallDistance = buf.readFloat();
 
-        this.isAirBorne = in.readBoolean();
-        this.isSneaking = in.readBoolean();
-        this.isSprinting = in.readBoolean();
-        this.onGround = in.readBoolean();
-        this.flyingElytra = in.readBoolean();
+        this.isAirBorne = buf.readBoolean();
+        this.isSneaking = buf.readBoolean();
+        this.isSprinting = buf.readBoolean();
+        this.onGround = buf.readBoolean();
+        this.flyingElytra = buf.readBoolean();
 
-        this.activeHands = in.readByte();
+        this.activeHands = buf.readByte();
 
-        this.roll = in.readFloat();
+        this.roll = buf.readFloat();
     }
 
     /**
@@ -514,5 +506,12 @@ public class Frame
         {
             this.roll = tag.getFloat("Roll");
         }
+    }
+
+    public enum RotationChannel
+    {
+        HEAD_YAW,
+        HEAD_PITCH,
+        BODY_YAW
     }
 }
