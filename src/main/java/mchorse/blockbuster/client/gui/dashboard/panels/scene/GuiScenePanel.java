@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.scene;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.common.item.ItemPlayback;
@@ -13,13 +14,19 @@ import mchorse.blockbuster.network.common.scene.PacketScenePause;
 import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.network.common.scene.PacketSceneTeleport;
+import mchorse.blockbuster.network.server.recording.ServerHandlerFramesOverwrite;
+import mchorse.blockbuster.recording.RecordUtils;
+import mchorse.blockbuster.recording.data.Frame;
+import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.mclib.client.gui.framework.GuiBase;
+import mchorse.mclib.client.gui.framework.elements.GuiCollapseSection;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
@@ -38,6 +45,7 @@ import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Direction;
+import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.OpHelper;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -56,6 +64,7 @@ import net.minecraft.util.text.event.HoverEvent;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class GuiScenePanel extends GuiBlockbusterPanel
@@ -95,6 +104,11 @@ public class GuiScenePanel extends GuiBlockbusterPanel
     public GuiButtonElement attach;
     public GuiButtonElement camera;
     public GuiButtonElement teleport;
+    public GuiCollapseSection eulerFilter;
+    public GuiCirculateElement eulerFilterChannel;
+    public GuiTrackpadElement eulerFilterFrom;
+    public GuiTrackpadElement eulerFilterTo;
+    public GuiButtonElement eulerFilterExecute;
 
     public GuiLabel recordingId;
     public GuiNestedEdit pickMorph;
@@ -232,6 +246,30 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.teleport = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.tp"), (b) -> this.teleport());
         this.teleport.keys().register(this.teleport.label, Keyboard.KEY_T, () -> this.teleport.clickItself(GuiBase.getCurrent())).category(category).active(active);
 
+        this.eulerFilter = new GuiCollapseSection(mc, IKey.lang("blockbuster.gui.director.rotation_filter.title"));
+        this.eulerFilter.setCollapsed(true);
+
+        this.eulerFilterFrom = new GuiTrackpadElement(mc, (Consumer<Double>) null);
+        this.eulerFilterFrom.limit(0).integer();
+        this.eulerFilterFrom.tooltip(IKey.lang("blockbuster.gui.director.rotation_filter.from_tooltip"));
+
+        this.eulerFilterTo = new GuiTrackpadElement(mc, (Consumer<Double>) null);
+        this.eulerFilterTo.limit(0).integer();
+        this.eulerFilterTo.tooltip(IKey.lang("blockbuster.gui.director.rotation_filter.to_tooltip"));
+
+        this.eulerFilterChannel = new GuiCirculateElement(mc, null);
+        this.eulerFilterChannel.addLabel(IKey.lang("blockbuster.gui.director.rotation_filter.head_yaw"));
+        this.eulerFilterChannel.addLabel(IKey.lang("blockbuster.gui.director.rotation_filter.head_pitch"));
+        this.eulerFilterChannel.addLabel(IKey.lang("blockbuster.gui.director.rotation_filter.body_yaw"));
+        this.eulerFilterChannel.tooltip(IKey.lang("blockbuster.gui.director.rotation_filter.channel_tooltip"));
+
+        this.eulerFilterExecute = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.rotation_filter.execute"), (b) ->
+        {
+            this.rotationFilter();
+        });
+
+        this.eulerFilter.addFields(this.eulerFilterChannel, this.eulerFilterFrom, this.eulerFilterTo, this.eulerFilterExecute);
+
         this.pickMorph.flex().relative(this.selector).x(0.5F).y(-10).w(100).anchor(0.5F, 1F);
 
         update.tooltip(IKey.lang("blockbuster.gui.director.update_data_tooltip"), Direction.LEFT);
@@ -253,7 +291,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
             right.add(this.camera);
         }
 
-        right.add(this.teleport);
+        right.add(this.teleport, this.eulerFilter);
         right.add(Elements.label(IKey.lang("blockbuster.gui.director.target")).color(0xcccccc).marginTop(12), this.target);
         this.replayEditor.add(this.pickMorph);
 
@@ -332,6 +370,32 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.scenes.setScene(location.getScene());
 
         return this;
+    }
+
+    protected void rotationFilter()
+    {
+        try
+        {
+            Frame.RotationChannel channel = Frame.RotationChannel.values()[this.eulerFilterChannel.getValue()];
+            Record record = ClientProxy.manager.get(this.replay.id); //TODO this would not work on dedicated servers - add mechanism to request recordings
+
+            if (record == null) return;
+
+            int from = MathUtils.clamp(Math.min((int) this.eulerFilterFrom.value, (int) this.eulerFilterTo.value), 0, record.frames.size() - 1);
+            int to = MathUtils.clamp(Math.max((int) this.eulerFilterFrom.value, (int) this.eulerFilterTo.value), 0, record.frames.size() - 1);
+
+            List<Frame> frames = RecordUtils.discontinuityEulerFilter(CommonProxy.manager.get(this.replay.id).frames, from, to, channel);
+
+            if (frames.isEmpty()) return;
+
+            ServerHandlerFramesOverwrite.sendFramesToServer(this.replay.id, frames, from, to);
+        }
+        catch (Exception e)
+        {
+            System.out.println("Exception happened during executing rotation Filter.");
+
+            e.printStackTrace();
+        }
     }
 
     @Override

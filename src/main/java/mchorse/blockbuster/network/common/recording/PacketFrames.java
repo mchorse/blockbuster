@@ -8,6 +8,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import mchorse.blockbuster.recording.data.Frame;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
@@ -35,27 +36,19 @@ public abstract class PacketFrames implements IMessage
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        ByteBufInputStream input = new ByteBufInputStream(buf);
         List<Frame> frames = new ArrayList<Frame>();
 
-        try
-        {
-            this.filename = input.readUTF();
-            this.preDelay = input.readInt();
-            this.postDelay = input.readInt();
-            int count = input.readInt();
+        this.filename = ByteBufUtils.readUTF8String(buf);
+        this.preDelay = buf.readInt();
+        this.postDelay = buf.readInt();
+        int count = buf.readInt();
 
-            for (int i = 0; i < count; i++)
-            {
-                Frame frame = new Frame();
-
-                frame.fromBytes(input);
-                frames.add(frame);
-            }
-        }
-        catch (IOException e)
+        for (int i = 0; i < count; i++)
         {
-            e.printStackTrace();
+            Frame frame = new Frame();
+
+            frame.fromBytes(buf);
+            frames.add(frame);
         }
 
         this.frames = frames;
@@ -64,23 +57,14 @@ public abstract class PacketFrames implements IMessage
     @Override
     public void toBytes(ByteBuf buf)
     {
-        ByteBufOutputStream output = new ByteBufOutputStream(buf);
+        ByteBufUtils.writeUTF8String(buf, this.filename);
+        buf.writeInt(this.preDelay);
+        buf.writeInt(this.postDelay);
+        buf.writeInt(this.frames.size());
 
-        try
+        for (Frame frame : this.frames)
         {
-            output.writeUTF(this.filename);
-            output.writeInt(this.preDelay);
-            output.writeInt(this.postDelay);
-            output.writeInt(this.frames.size());
-
-            for (Frame frame : this.frames)
-            {
-                frame.toBytes(output);
-            }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
+            frame.toBytes(buf);
         }
     }
 }

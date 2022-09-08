@@ -103,6 +103,16 @@ blockbuster.gui:
         rename_replay_dupe_modal: This replay ID already exists in this scene. You may use it again if you wish to.
         rename_prefix_popup: "Enter a new prefix:"
 
+        rotation_filter:
+            title: Rotation filter
+            head_yaw: Head yaw
+            head_pitch: Head pitch
+            body_yaw: Body yaw
+            channel_tooltip: The rotation channel that should be filtered.
+            to_tooltip: To tick
+            from_tooltip: From tick
+
+
         attach: Attach
         attach_tooltip: Attach this scene to currently held playback button.\n\nAlternatively, you can also attach a playback button by holding it, and right clicking it while sneaking.
 
