@@ -2,7 +2,6 @@ package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.textures.GifTexture;
-import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
 import mchorse.mclib.client.render.VertexBuilder;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.MatrixUtils;
@@ -20,7 +19,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +26,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
@@ -582,7 +579,7 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         if (this.lighting == false) tag.setBoolean("Lighting", this.lighting);
         if (this.billboard == true) tag.setBoolean("Billboard", this.billboard);
         if (this.removeParentScaleRotation == true) tag.setBoolean("RemoveParentSpace", this.removeParentScaleRotation);
-        if (this.facing != RenderingUtils.Facing.ROTATE_XYZ) tag.setInteger("FacingMode", ArrayUtils.indexOf(GuiImageMorph.GuiImageMorphPanel.SORTED_FACING_MODES, this.facing));
+        if (this.facing != RenderingUtils.Facing.ROTATE_XYZ) tag.setString("FacingMode", this.facing.id);
         if (this.crop.x != 0) tag.setInteger("Left", (int) this.crop.x);
         if (this.crop.z != 0) tag.setInteger("Right", (int) this.crop.z);
         if (this.crop.y != 0) tag.setInteger("Top", (int) this.crop.y);
@@ -614,7 +611,11 @@ public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISy
         if (tag.hasKey("Lighting")) this.lighting = tag.getBoolean("Lighting");
         if (tag.hasKey("Billboard")) this.billboard = tag.getBoolean("Billboard");
         if (tag.hasKey("RemoveParentSpace")) this.removeParentScaleRotation = tag.getBoolean("RemoveParentSpace");
-        if (tag.hasKey("FacingMode")) this.facing = GuiImageMorph.GuiImageMorphPanel.SORTED_FACING_MODES[tag.getInteger("FacingMode")];
+        if (tag.hasKey("FacingMode"))
+        {
+            RenderingUtils.Facing facing = RenderingUtils.Facing.fromString(tag.getString("FacingMode"));
+            this.facing = facing != null ? facing : RenderingUtils.Facing.ROTATE_XYZ;
+        }
         if (tag.hasKey("Left")) this.crop.x = tag.getInteger("Left");
         if (tag.hasKey("Right")) this.crop.z = tag.getInteger("Right");
         if (tag.hasKey("Top")) this.crop.y = tag.getInteger("Top");
