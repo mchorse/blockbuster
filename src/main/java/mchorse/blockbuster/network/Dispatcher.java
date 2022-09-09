@@ -110,6 +110,7 @@ import mchorse.blockbuster.network.server.scene.sync.ServerHandlerScenePlay;
 import mchorse.mclib.network.AbstractDispatcher;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -232,6 +233,16 @@ public class Dispatcher
     public static void sendToServer(IMessage message)
     {
         DISPATCHER.sendToServer(message);
+    }
+
+    public static void sendToAll(IMessage message)
+    {
+        DISPATCHER.sendToAll(message);
+    }
+
+    public static void sendToAllAround(IMessage message, NetworkRegistry.TargetPoint point)
+    {
+        DISPATCHER.sendToAllAround(message, point);
     }
 
     /**

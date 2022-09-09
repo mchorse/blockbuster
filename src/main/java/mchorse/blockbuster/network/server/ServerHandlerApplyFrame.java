@@ -28,10 +28,7 @@ public class ServerHandlerApplyFrame  extends ServerMessageHandler<PacketApplyFr
             /* Frame does not apply bodyYaw, EntityActor.updateDistance() does... TODO refactor this*/
             ((EntityLivingBase) entity).renderYawOffset = packet.getFrame().bodyYaw;
 
-            for (EntityPlayerMP target : ForgeUtils.getServerPlayers())
-            {
-                Dispatcher.sendTo(packet, target);
-            }
+            Dispatcher.sendToAll(packet);
         }
     }
 }
