@@ -109,6 +109,11 @@ public class RecordUtils
         return Utils.serverFile("blockbuster/records", filename);
     }
 
+    /**
+     * This method gets a record that has been saved in the mod's jar file
+     * @param filename
+     * @return An {@link InputStream} object or null if no resource with this name is found
+     */
     public static InputStream getLocalReplay(String filename)
     {
         return RecordUtils.class.getResourceAsStream("/assets/blockbuster/records/" + filename + ".dat");
