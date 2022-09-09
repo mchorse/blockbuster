@@ -13,7 +13,6 @@ import mchorse.blockbuster.network.common.scene.PacketSceneCast;
 import mchorse.blockbuster.network.common.scene.PacketScenePause;
 import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
-import mchorse.blockbuster.network.common.scene.PacketSceneTeleport;
 import mchorse.blockbuster.network.server.recording.ServerHandlerFramesOverwrite;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Frame;
@@ -688,7 +687,15 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         }
 
         this.mc.displayGuiScreen(null);
-        Dispatcher.sendToServer(new PacketSceneTeleport(this.replay.id));
+
+        try
+        {
+            RecordUtils.applyFrameOnEntity(Minecraft.getMinecraft().player, ClientProxy.manager.get(this.replay.id), 0); //TODO requires client to request recording from server
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private void renamePrefix()

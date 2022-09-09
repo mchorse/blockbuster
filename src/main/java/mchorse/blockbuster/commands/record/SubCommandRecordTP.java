@@ -1,14 +1,13 @@
 package mchorse.blockbuster.commands.record;
 
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.recording.data.Frame;
+import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.MathHelper;
 
 /**
  * Command /record tp
@@ -42,12 +41,8 @@ public class SubCommandRecordTP extends SubCommandRecordBase
         String filename = args[0];
         int tick = args.length > 1 ? CommandBase.parseInt(args[1]) : 0;
         Record record = CommandRecord.getRecord(filename);
-
-        tick = MathHelper.clamp(tick, 0, record.frames.size() - 1);
-
         EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-        Frame frame = record.frames.get(tick);
 
-        player.connection.setPlayerLocation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
+        RecordUtils.applyFrameOnEntity(player, record, tick);
     }
 }

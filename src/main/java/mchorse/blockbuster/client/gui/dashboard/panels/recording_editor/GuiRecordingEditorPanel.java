@@ -1,6 +1,5 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 
-import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
@@ -11,8 +10,8 @@ import mchorse.blockbuster.network.common.recording.actions.PacketAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
-import mchorse.blockbuster.network.common.scene.PacketSceneTeleport;
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
+import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.actions.*;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.recording.scene.SceneLocation;
@@ -27,7 +26,6 @@ import mchorse.mclib.client.gui.utils.Label;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -338,7 +336,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
             }
 
             GuiBase.getCurrent().screen.closeThisScreen();
-            Dispatcher.sendToServer(new PacketSceneTeleport(this.record.filename, offset));
+
+            RecordUtils.applyFrameOnEntity(Minecraft.getMinecraft().player, this.record, offset - record.preDelay);
         }
     }
 
