@@ -70,7 +70,6 @@ import mchorse.blockbuster.network.common.scene.PacketScenePause;
 import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
-import mchorse.blockbuster.network.common.scene.PacketSceneTeleport;
 import mchorse.blockbuster.network.common.scene.PacketScenes;
 import mchorse.blockbuster.network.common.scene.sync.PacketSceneGoto;
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
@@ -106,7 +105,6 @@ import mchorse.blockbuster.network.server.scene.ServerHandlerScenePause;
 import mchorse.blockbuster.network.server.scene.ServerHandlerScenePlayback;
 import mchorse.blockbuster.network.server.scene.ServerHandlerSceneRecord;
 import mchorse.blockbuster.network.server.scene.ServerHandlerSceneRequestCast;
-import mchorse.blockbuster.network.server.scene.ServerHandlerSceneTeleport;
 import mchorse.blockbuster.network.server.scene.sync.ServerHandlerSceneGoto;
 import mchorse.blockbuster.network.server.scene.sync.ServerHandlerScenePlay;
 import mchorse.mclib.network.AbstractDispatcher;
@@ -176,7 +174,6 @@ public class Dispatcher
             register(PacketScenePlayback.class, ServerHandlerScenePlayback.class, Side.SERVER);
             register(PacketSceneRecord.class, ServerHandlerSceneRecord.class, Side.SERVER);
             register(PacketScenePause.class, ServerHandlerScenePause.class, Side.SERVER);
-            register(PacketSceneTeleport.class, ServerHandlerSceneTeleport.class, Side.SERVER);
 
             /* Multiplayer */
             register(PacketReloadModels.class, ServerHandlerReloadModels.class, Side.SERVER);

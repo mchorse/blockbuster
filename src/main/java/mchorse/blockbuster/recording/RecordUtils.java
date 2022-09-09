@@ -365,9 +365,16 @@ public class RecordUtils
         return filteredFrames;
     }
 
-    public static void tpToTick(EntityLivingBase entity, Record record, int tick)
+    /**
+     * This method applies a frame at the given tick on the given entity
+     * and synchronises with all players depending on which side this method has been executed on
+     * @param entity the entity where the frame should be applied
+     * @param record the recording with the frames
+     * @param tick the tick to apply
+     */
+    public static void applyFrameOnEntity(EntityLivingBase entity, Record record, int tick)
     {
-        tick = MathHelper.clamp(tick, 0, record.frames.size() - 1);
+        tick = MathUtils.clamp(tick, 0, record.frames.size() - 1);
 
         Frame frame = record.frames.get(tick);
 
@@ -377,11 +384,16 @@ public class RecordUtils
 
         if (entity.world.isRemote)
         {
+            /* send to server which will also sync it with all other players */
             Dispatcher.sendToServer(packet);
         }
-        else if (entity instanceof EntityPlayerMP)
+        else
         {
-            Dispatcher.sendTo(packet, (EntityPlayerMP) entity);
+            /* already on server - sync with all players */
+            for (EntityPlayerMP player : ForgeUtils.getServerPlayers())
+            {
+                Dispatcher.sendTo(packet, player);
+            }
         }
     }
 }
