@@ -182,6 +182,8 @@ public class ModelCustomRenderer extends ModelRenderer
         {
             if (this.showModel)
             {
+                GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
+
                 if (!this.compiled)
                 {
                     this.compileDisplayList(scale);
@@ -289,6 +291,7 @@ public class ModelCustomRenderer extends ModelRenderer
                 GlStateManager.translate(-this.offsetX, -this.offsetY, -this.offsetZ);
                 
                 GlStateManager.popMatrix();
+                GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
             }
         }
     }
