@@ -139,10 +139,10 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 
                 this.panel.records.removeFromParent();
                 this.panel.records.flex().relative(editor.outerPanel);
-                this.panel.selector.removeFromParent();
-                this.panel.selector.flex().relative(editor.outerPanel);
+                this.panel.timeline.removeFromParent();
+                this.panel.timeline.flex().relative(editor.outerPanel);
 
-                editor.outerPanel.add(this.panel.records, this.panel.selector);
+                editor.outerPanel.add(this.panel.records, this.panel.timeline);
 
                 this.addOnionSkin(editor.morphs);
 
@@ -166,7 +166,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
     public void updateMorphEditor(GuiImmersiveMorphMenu menu)
     {
         Record record = ClientProxy.manager.records.get(this.panel.record.filename);
-        int tick = this.panel.selector.tick;
+        int tick = this.panel.timeline.getCurrentTick();
 
         if (menu.isNested())
         {
@@ -240,7 +240,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 
         if (record != null && !record.frames.isEmpty() && this.skin != null && menu.target != null)
         {
-            Frame last = record.getFrameSafe(this.panel.selector.tick - 1);
+            Frame last = record.getFrameSafe(this.panel.timeline.getCurrentTick() - 1);
             EntityLivingBase actor = menu.target;
             float yaw = actor.rotationYaw;
 
@@ -257,7 +257,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 
         if (record != null)
         {
-            return record.getFrameSafe(this.panel.selector.tick + tick - 1);
+            return record.getFrameSafe(this.panel.timeline.getCurrentTick() + tick - 1);
         }
         else
         {
@@ -278,7 +278,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 
         if (record != null)
         {
-            FoundAction found = record.seekMorphAction(this.panel.selector.tick, this.action);
+            FoundAction found = record.seekMorphAction(this.panel.timeline.getCurrentTick(), this.action);
             AbstractMorph morph = null;
             int tick = 0;
 
@@ -301,7 +301,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 
             if (morph != null)
             {
-                MorphUtils.pause(morph, null, Math.max(0, this.panel.selector.tick - tick));
+                MorphUtils.pause(morph, null, Math.max(0, this.panel.timeline.getCurrentTick() - tick));
 
                 this.skin = new OnionSkin().color(color.r, color.g, color.b, color.a).morph(morph);
                 skins.add(this.skin);

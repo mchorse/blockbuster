@@ -7,11 +7,9 @@ import mchorse.aperture.camera.minema.MinemaIntegration;
 import mchorse.aperture.camera.ModifierRegistry;
 import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.client.gui.GuiModifiersManager;
-import mchorse.aperture.client.gui.panels.modifiers.GuiRemapperModifierPanel;
 import mchorse.aperture.events.CameraEditorEvent;
 import mchorse.aperture.network.common.PacketCameraProfileList;
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.aperture.camera.modifiers.TrackerModifier;
 import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
@@ -31,7 +29,6 @@ import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecor
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
 import mchorse.blockbuster.network.common.scene.sync.PacketSceneGoto;
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
@@ -55,7 +52,6 @@ import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -463,12 +459,12 @@ public class CameraHandler
 
         GuiBlockbusterPanels dashboard = mchorse.blockbuster.ClientProxy.panels;
 
-        if (dashboard != null && dashboard.recordingEditorPanel.selector.isVisible())
+        if (dashboard != null && dashboard.recordingEditorPanel.timeline.isVisible())
         {
-            ScrollArea scroll = dashboard.recordingEditorPanel.selector.scroll;
+            ScrollArea scroll = dashboard.recordingEditorPanel.timeline.scroll;
 
             scroll.scrollIntoView(scroll.scrollItemSize * (event.position - dashboard.recordingEditorPanel.record.preDelay), 2);
-            dashboard.recordingEditorPanel.selector.cursor = event.position;
+            dashboard.recordingEditorPanel.timeline.cursor = event.position;
         }
     }
 
@@ -547,31 +543,31 @@ public class CameraHandler
             @Override
             public boolean mouseClicked(GuiContext context)
             {
-                return super.mouseClicked(context) || (record.editor.delegate != null && record.editor.area.isInside(context));
+                return super.mouseClicked(context) || (record.actionEditor.delegate != null && record.actionEditor.area.isInside(context));
             }
 
             @Override
             public boolean mouseScrolled(GuiContext context)
             {
-                return super.mouseScrolled(context) || (record.editor.delegate != null && record.editor.area.isInside(context));
+                return super.mouseScrolled(context) || (record.actionEditor.delegate != null && record.actionEditor.area.isInside(context));
             }
 
             @Override
             public void draw(GuiContext context)
             {
-                if (this.isVisible() && record.editor.delegate != null)
+                if (this.isVisible() && record.actionEditor.delegate != null)
                 {
-                    Area area = record.editor.delegate.area;
+                    Area area = record.actionEditor.delegate.area;
 
                     area.draw(0x66000000);
                 }
 
                 if (editor.getRunner().isRunning())
                 {
-                    ScrollArea scroll = panels.recordingEditorPanel.selector.scroll;
+                    ScrollArea scroll = panels.recordingEditorPanel.timeline.scroll;
 
                     scroll.scrollIntoView(scroll.scrollItemSize * (int) (editor.getRunner().ticks - panels.recordingEditorPanel.record.preDelay), 2);
-                    panels.recordingEditorPanel.selector.cursor = (int) editor.getRunner().ticks;
+                    panels.recordingEditorPanel.timeline.cursor = (int) editor.getRunner().ticks;
                 }
 
                 super.draw(context);
@@ -594,7 +590,7 @@ public class CameraHandler
         GuiIconElement open = new GuiIconElement(mc, BBIcons.EDITOR, (b) -> panels.recordingEditorPanel.records.toggleVisible());
         GuiIconElement toggle = new GuiIconElement(mc, Icons.UPLOAD, (b) ->
         {
-            if (!record.selector.isVisible())
+            if (!record.timeline.isVisible())
             {
                 return;
             }
@@ -608,7 +604,7 @@ public class CameraHandler
             int w = (int) (editor.root.area.w * Blockbuster.audioWaveformWidth.get());
 
             AudioRenderer.renderAll(editor.root.area.x + (editor.root.area.w - w) / 2, editor.timeline.area.y - 15, w, Blockbuster.audioWaveformHeight.get(), context.screen.width, context.screen.height);
-            record.selector.cursor = editor.timeline.value;
+            record.timeline.cursor = editor.timeline.value;
         });
 
         IKey category = IKey.lang("blockbuster.gui.aperture.keys.category");
@@ -675,15 +671,15 @@ public class CameraHandler
     {
         GuiCameraEditor editor = ClientProxy.getCameraEditor();
 
-        panel.selector.removeFromParent();
-        panel.selector.flex().relative(editor.viewport);
-        panel.editor.removeFromParent();
-        panel.editor.flex().relative(editor.viewport);
+        panel.timeline.removeFromParent();
+        panel.timeline.flex().relative(editor.viewport);
+        panel.actionEditor.removeFromParent();
+        panel.actionEditor.flex().relative(editor.viewport);
         panel.records.removeFromParent();
         panel.records.flex().relative(editor.viewport).h(1F, editorElement.isVisible() ? -80 : 0);
 
         cameraEditorElements.prepend(panel.records);
-        editorElement.add(panel.selector, panel.editor);
+        editorElement.add(panel.timeline, panel.actionEditor);
     }
 
     /**

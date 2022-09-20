@@ -78,7 +78,9 @@ public class Record
     public int postDelay = 0;
 
     /**
-     * Recorded actions
+     * Recorded actions.
+     * The list contains every frame of the recording.
+     * If no action is present at a frame, the frame will be null.
      */
     public List<List<Action>> actions = new ArrayList<List<Action>>();
 
@@ -138,7 +140,10 @@ public class Record
     }
 
     /**
-     * Get an action on given tick and index 
+     * @param tick negative values are allowed as they will return null
+     * @param index negative values are allowed as they will return null
+     * @return action at the given tick and index.
+     *         Returns null if none was found or if the tick or index are out of bounds.
      */
     public Action getAction(int tick, int index)
     {
@@ -150,6 +155,121 @@ public class Record
         }
 
         return null;
+    }
+
+    /**
+     * @param fromTick0 from tick, inclusive
+     * @param toTick0 to tick, inclusive
+     * @param fromIndex0 from action index, inclusive
+     * @param toIndex0 to action index, inclusive
+     * @return a new list containing the actions in the specified ranges. The list can contain null values.
+     * @throws IndexOutOfBoundsException if fromTick < 0 || toTick > size of {@link #actions}
+     */
+    public List<List<Action>> getActions(int fromTick0, int toTick0, int fromIndex0, int toIndex0) throws IndexOutOfBoundsException
+    {
+        if (fromTick0 < 0 || toTick0 < 0 || fromIndex0 < 0 || toIndex0 < 0
+            || fromTick0 > this.actions.size() || toTick0 > this.actions.size())
+        {
+            return new ArrayList<>();
+        }
+
+        int fromIndex = Math.min(fromIndex0, toIndex0);
+        int toIndex = Math.max(fromIndex0, toIndex0);
+        int fromTick = Math.min(fromTick0, toTick0);
+        int toTick = Math.max(fromTick0, toTick0);
+
+        List<List<Action>> actionRange = this.actions.subList(fromTick, toTick + 1);
+
+        if (actionRange != null)
+        {
+            actionRange = new ArrayList<>(actionRange);
+
+            for (int i = 0; i < actionRange.size(); i++)
+            {
+                List<Action> frame = actionRange.get(i);
+
+                if (frame != null && !frame.isEmpty())
+                {
+                    if (fromIndex >= frame.size())
+                    {
+                        actionRange.set(i, null);
+                    }
+                    else
+                    {
+                        int i0 = MathUtils.clamp(fromIndex, 0, frame.size() - 1);
+                        int i1 = MathUtils.clamp(toIndex + 1, 0, frame.size());
+
+                        actionRange.set(i, new ArrayList<>(frame.subList(i0, i1)));
+                    }
+                }
+                else
+                {
+                    actionRange.set(i, null);
+                }
+            }
+        }
+
+        return actionRange;
+    }
+
+    /**
+     * @return convert the given action list into a boolean mask, which can be used for deletion.
+     *         Returns an empty list if the specified tick is out of range.
+     */
+    public List<List<Boolean>> getActionsMask(int fromTick, List<List<Action>> actions)
+    {
+        if (fromTick < 0 || fromTick >= this.actions.size())
+        {
+            return new ArrayList<>();
+        }
+
+        List<List<Boolean>> mask = new ArrayList<>();
+
+        for (int t = fromTick; t < this.actions.size() && t - fromTick < actions.size(); t++)
+        {
+            List<Boolean> maskFrame = new ArrayList<>();
+
+            if (actions.get(t - fromTick) != null && this.actions.get(t) != null && !this.actions.get(t).isEmpty())
+            {
+                for (int a = 0; a < this.actions.get(t).size(); a++)
+                {
+                    maskFrame.add(actions.get(t - fromTick).contains(this.actions.get(t).get(a)));
+                }
+            }
+            else
+            {
+                maskFrame.add(false);
+            }
+
+            mask.add(maskFrame);
+        }
+
+        return mask;
+    }
+
+    /**
+     * @param tick
+     * @param action
+     * @return the index of the provided action at the provided tick.
+     *         If nothing is found or if the tick is out of range or if the tick has no actions -1 will be returned.
+     */
+    public int getActionIndex(int tick, Action action)
+    {
+        if (tick < 0 || tick >= this.actions.size()
+            || this.actions.get(tick) == null || this.actions.get(tick).isEmpty())
+        {
+            return -1;
+        }
+
+        for (int a = 0; a < this.actions.get(tick).size(); a++)
+        {
+            if (this.actions.get(tick).get(a) == action)
+            {
+                return a;
+            }
+        }
+
+        return -1;
     }
 
     /**
@@ -551,7 +671,12 @@ public class Record
     }
 
     /**
-     * Add an action to the record
+     * Add an action to the recording at the specified tick and index.
+     * If the index is greater than the frame's size at the specified tick,
+     * the action will just be appended to the actions of the frame.
+     * @param tick
+     * @param index
+     * @param action
      */
     public void addAction(int tick, int index, Action action)
     {
@@ -559,7 +684,7 @@ public class Record
 
         if (actions != null)
         {
-            if (index == -1)
+            if (index == -1 || index > actions.size())
             {
                 actions.add(action);
             }
@@ -574,6 +699,34 @@ public class Record
             actions.add(action);
 
             this.actions.set(tick, actions);
+        }
+    }
+
+    /**
+     * Adds many ticks of actions beginning at the provided fromTick.
+     * @param tick
+     * @param actions
+     */
+    public void addActionCollection(int tick, List<List<Action>> actions)
+    {
+        if (tick < 0 || tick >= this.actions.size() || actions == null)
+        {
+            return;
+        }
+
+        for (int i = tick; i < this.actions.size() && i - tick < actions.size(); i++)
+        {
+            List<Action> frame = this.actions.get(i);
+            List<Action> actionFrame = actions.get(i - tick) != null ? new ArrayList<>(actions.get(i - tick)) : null;
+
+            if (frame == null)
+            {
+                this.actions.set(i, actionFrame);
+            }
+            else if (actionFrame != null)
+            {
+                frame.addAll(actionFrame);
+            }
         }
     }
 
@@ -612,6 +765,109 @@ public class Record
             if (index >= 0 && index < actions.size())
             {
                 actions.remove(index);
+
+                if (actions.isEmpty())
+                {
+                    this.actions.set(tick, null);
+                }
+            }
+        }
+    }
+
+    public void removeActions(int fromTick, List<List<Action>> actions)
+    {
+        for (int tick = fromTick, c = 0; tick < this.actions.size() && c < actions.size(); tick++, c++)
+        {
+            if (this.actions.get(tick) != null && actions.get(c) != null)
+            {
+                this.actions.get(tick).removeAll(actions.get(c));
+            }
+
+            if (this.actions.get(tick) != null && this.actions.get(tick).isEmpty())
+            {
+                this.actions.set(tick, null);
+            }
+        }
+    }
+
+    /**
+     * Remove actions based on the boolean mask provided.
+     * @param fromTick
+     * @param mask
+     */
+    public void removeActionsMask(int fromTick, List<List<Boolean>> mask)
+    {
+        for (int tick = fromTick, c = 0; tick < this.actions.size() && c < mask.size(); tick++, c++)
+        {
+            if (this.actions.get(tick) != null && mask.get(c) != null)
+            {
+                List<Action> remove = new ArrayList<>();
+
+                for (int a = 0; a < this.actions.get(tick).size() && a < mask.get(c).size(); a++)
+                {
+                    if (mask.get(c).get(a))
+                    {
+                        remove.add(this.actions.get(tick).get(a));
+                    }
+                }
+
+                this.actions.get(tick).removeAll(remove);
+            }
+        }
+    }
+
+    /**
+     * Remove actions from tick and to tick inclusive and at every tick
+     * remove from index to index inclusive.
+     * If both index parameters are -1, all actions at the respective ticks will be deleted.
+     * @param fromTick0
+     * @param toTick0
+     * @param fromIndex0
+     * @param toIndex0
+     */
+    public void removeActions(int fromTick0, int toTick0, int fromIndex0, int toIndex0)
+    {
+        int fromIndex = Math.min(fromIndex0, toIndex0);
+        int toIndex = Math.max(fromIndex0, toIndex0);
+        int fromTick = Math.min(fromTick0, toTick0);
+        int toTick = Math.max(fromTick0, toTick0);
+        int frameCount = this.actions.size();
+
+        if (fromIndex == -1 && toIndex == -1)
+        {
+            for (int tick = fromTick; tick <= toTick && tick < frameCount; tick++)
+            {
+                this.actions.set(tick, null);
+            }
+        }
+        else
+        {
+            for (int tick = fromTick; tick <= toTick && tick < frameCount; tick++)
+            {
+                List<Action> actions = this.actions.get(tick);
+
+                if (actions == null) continue;
+
+                if (fromIndex != -1 && toIndex != -1)
+                {
+                    int max = toIndex;
+
+                    while (fromIndex <= max && fromIndex < actions.size())
+                    {
+                        actions.remove(fromIndex);
+
+                        max--;
+                    }
+                }
+                else
+                {
+                    int index = fromIndex == -1 ? toIndex : fromIndex;
+
+                    if (index < actions.size())
+                    {
+                        actions.remove(index);
+                    }
+                }
 
                 if (actions.isEmpty())
                 {

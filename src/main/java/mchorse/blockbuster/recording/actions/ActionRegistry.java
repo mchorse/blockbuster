@@ -93,6 +93,16 @@ public class ActionRegistry
         return type == null ? -1 : type;
     }
 
+    public static int getRegisterdActionCount()
+    {
+        return CLASS_TO_ID.size();
+    }
+
+    public static int getMaxID()
+    {
+        return NEXT_ID - 1;
+    }
+
     /**
      * Write an action to byte buffer 
      */

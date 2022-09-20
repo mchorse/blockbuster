@@ -6,11 +6,11 @@ import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.*;
 import mchorse.blockbuster.events.ActionPanelRegisterEvent;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.recording.actions.PacketAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
+import mchorse.blockbuster.network.server.recording.actions.ServerHandlerActionsChange;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.actions.*;
 import mchorse.blockbuster.recording.data.Record;
@@ -43,8 +43,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
     public Map<Class<? extends Action>, GuiActionPanel<? extends Action>> panels = new HashMap<Class<? extends Action>, GuiActionPanel<? extends Action>>();
 
     public GuiRecordList records;
-    public GuiRecordSelector selector;
-    public GuiDelegateElement<GuiActionPanel<? extends Action>> editor;
+    public GuiRecordTimeline timeline;
+    public GuiDelegateElement<GuiActionPanel<? extends Action>> actionEditor;
 
     public GuiIconElement add;
     public GuiIconElement dupe;
@@ -63,7 +63,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
     public NBTTagCompound buffer;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public GuiActionPanel<? extends Action> getPanel(Action action)
+    public GuiActionPanel<? extends Action> getActionPanel(Action action)
     {
         if (action == null)
         {
@@ -86,31 +86,31 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
     {
         super(mc, dashboard);
 
-        this.selector = new GuiRecordSelector(mc, this, this::selectAction);
-        this.selector.setVisible(false);
+        this.timeline = new GuiRecordTimeline(mc, this);
+        this.timeline.setVisible(false);
         this.records = new GuiRecordList(mc, this);
-        this.editor = new GuiDelegateElement<GuiActionPanel<? extends Action>>(mc, null);
+        this.actionEditor = new GuiDelegateElement<GuiActionPanel<? extends Action>>(mc, null);
 
         /* Add/remove */
         this.add = new GuiIconElement(mc, Icons.ADD, (b) -> this.list.toggleVisible());
         this.add.tooltip(IKey.lang("blockbuster.gui.add"), Direction.LEFT);
-        this.dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.dupeAction());
+        this.dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.timeline.dupeAction());
         this.dupe.tooltip(IKey.lang("blockbuster.gui.duplicate"), Direction.LEFT);
-        this.remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeAction());
+        this.remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.timeline.removeActions());
         this.remove.tooltip(IKey.lang("blockbuster.gui.remove"), Direction.LEFT);
         this.capture = new GuiIconElement(mc, Icons.SPHERE, (b) -> this.capture());
         this.capture.tooltip(IKey.lang("blockbuster.gui.record_editor.capture"), Direction.LEFT);
 
-        this.cut = new GuiIconElement(mc, Icons.CUT, (icon) -> this.cutAction());
+        this.cut = new GuiIconElement(mc, Icons.CUT, (icon) -> this.timeline.cutAction());
         this.cut.tooltip(IKey.lang("blockbuster.gui.record_editor.cut"), Direction.RIGHT);
-        this.copy = new GuiIconElement(mc, Icons.COPY, (icon) -> this.toNBT());
+        this.copy = new GuiIconElement(mc, Icons.COPY, (icon) -> this.timeline.copy());
         this.copy.tooltip(IKey.lang("blockbuster.gui.record_editor.copy"), Direction.RIGHT);
-        this.paste = new GuiIconElement(mc, Icons.PASTE, (b) -> this.pasteAction());
+        this.paste = new GuiIconElement(mc, Icons.PASTE, (b) -> this.timeline.pasteAction());
         this.paste.tooltip(IKey.lang("blockbuster.gui.record_editor.paste"), Direction.RIGHT);
         this.teleport = new GuiIconElement(mc, Icons.MOVE_TO, (b) -> this.teleport());
         this.teleport.tooltip(IKey.lang("blockbuster.gui.record_editor.teleport"), Direction.RIGHT);
 
-        this.list = new GuiLabelSearchListElement<String>(mc, (str) -> this.createAction(str.get(0).value));
+        this.list = new GuiLabelSearchListElement<String>(mc, (str) -> this.timeline.createAction(str.get(0).value));
         this.list.label(IKey.lang("blockbuster.gui.search"));
         this.list.list.background();
 
@@ -123,174 +123,34 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 
         this.list.filter("", false);
 
-        this.add.flex().relative(this.selector).x(1F);
+        this.add.flex().relative(this.timeline).x(1F);
         this.dupe.flex().relative(this.add.resizer()).y(20);
         this.remove.flex().relative(this.dupe.resizer()).y(20);
         this.capture.flex().relative(this.remove.resizer()).y(20);
-        this.cut.flex().relative(this.selector).x(-20);
+        this.cut.flex().relative(this.timeline).x(-20);
         this.copy.flex().relative(this.cut.resizer()).y(20);
         this.paste.flex().relative(this.copy.resizer()).y(20);
         this.teleport.flex().relative(this.paste.resizer()).y(20);
-        this.list.flex().set(0, 0, 80, 80).relative(this.selector.area).x(1, -80);
+        this.list.flex().set(0, 0, 80, 80).relative(this.timeline.area).x(1, -80);
 
         this.open = new GuiIconElement(mc, Icons.MORE, (b) -> this.records.toggleVisible());
         this.open.flex().relative(this.area).set(0, 2, 24, 24).x(1, -28);
 
         this.add(this.open);
-        this.selector.add(this.add, this.dupe, this.remove, this.capture, this.cut, this.copy, this.paste, this.teleport, this.list);
+        this.timeline.add(this.add, this.dupe, this.remove, this.capture, this.cut, this.copy, this.paste, this.teleport, this.list);
 
         IKey category = IKey.lang("blockbuster.gui.aperture.keys.category");
 
-        this.selector.keys().register(IKey.lang("blockbuster.gui.aperture.keys.add_morph_action"), Keyboard.KEY_M, () -> this.createAction("morph"))
+        this.timeline.keys().register(IKey.lang("blockbuster.gui.aperture.keys.add_morph_action"), Keyboard.KEY_M, () -> this.timeline.createAction("morph"))
             .held(Keyboard.KEY_LCONTROL).category(category);
-        this.selector.keys().register(IKey.lang("blockbuster.gui.record_editor.capture"), Keyboard.KEY_R, this::capture)
+        this.timeline.keys().register(IKey.lang("blockbuster.gui.record_editor.capture"), Keyboard.KEY_R, this::capture)
             .held(Keyboard.KEY_LCONTROL).category(category);
-        this.selector.keys().register(IKey.lang("blockbuster.gui.record_editor.teleport"), Keyboard.KEY_T, this::teleport)
+        this.timeline.keys().register(IKey.lang("blockbuster.gui.record_editor.teleport"), Keyboard.KEY_T, this::teleport)
             .held(Keyboard.KEY_LCONTROL).category(category);
-        this.selector.keys().register(IKey.lang("blockbuster.gui.record_editor.unselect"), Keyboard.KEY_ESCAPE, () -> this.selectAction(null))
-            .category(category).active(() -> this.editor.delegate != null);
+        this.timeline.keys().register(IKey.lang("blockbuster.gui.record_editor.unselect"), Keyboard.KEY_ESCAPE, () -> this.timeline.deselect())
+            .category(category).active(() -> this.timeline.isActive());
         this.keys().register(IKey.lang("blockbuster.gui.aperture.keys.toggle_list"), Keyboard.KEY_L, () -> this.open.clickItself(GuiBase.getCurrent()))
             .held(Keyboard.KEY_LCONTROL).category(category);
-    }
-
-    private void cutAction()
-    {
-        if (this.editor.delegate == null)
-        {
-            return;
-        }
-
-        this.toNBT();
-        this.removeAction();
-    }
-
-    private void toNBT()
-    {
-        if (this.editor.delegate == null)
-        {
-            return;
-        }
-
-        Action action = this.editor.delegate.action;
-        NBTTagCompound tag = new NBTTagCompound();
-
-        tag.setString("ActionType", ActionRegistry.NAME_TO_CLASS.inverse().get(action.getClass()));
-        action.toNBT(tag);
-        this.buffer = tag;
-    }
-
-    private void pasteAction()
-    {
-        if (this.buffer == null)
-        {
-            return;
-        }
-
-        int tick = this.selector.tick;
-        int index = this.selector.index;
-
-        Action action = null;
-
-        try
-        {
-            action = ActionRegistry.fromName(this.buffer.getString("ActionType"));
-            action.fromNBT(this.buffer);
-        }
-        catch (Exception e)
-        {}
-
-        if (action == null)
-        {
-            return;
-        }
-
-        this.record.addAction(tick, index, action);
-        this.selector.recalculateVertical();
-        this.selector.index = this.record.actions.get(tick).size() - 1;
-        this.selectAction(action);
-        Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, action, true));
-    }
-
-    private void createAction(String str)
-    {
-        if (!ActionRegistry.NAME_TO_CLASS.containsKey(str))
-        {
-            return;
-        }
-
-        try
-        {
-            Action action = ActionRegistry.fromName(str);
-            int tick = this.selector.tick;
-            int index = this.selector.index;
-
-            this.record.addAction(tick, index, action);
-            this.list.setVisible(false);
-            this.selectAction(action);
-            this.selector.index = index == -1 ? this.record.actions.get(tick).size() - 1 : index;
-            this.selector.recalculateVertical();
-
-            Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, action, true));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private void dupeAction()
-    {
-        int tick = this.selector.tick;
-        int index = this.selector.index;
-
-        Action action = this.record.getAction(tick, index);
-
-        if (action == null)
-        {
-            return;
-        }
-
-        try
-        {
-            Action newAction = ActionRegistry.fromType(ActionRegistry.getType(action));
-            NBTTagCompound tag = new NBTTagCompound();
-            action.toNBT(tag);
-            newAction.fromNBT(tag);
-            action = newAction;
-        }
-        catch (Exception e)
-        {}
-
-        this.record.addAction(tick, index, action);
-        this.selector.recalculateVertical();
-        Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, action, true));
-    }
-
-    private void removeAction()
-    {
-        if (this.selector.tick == -1)
-        {
-            return;
-        }
-
-        int tick = this.selector.tick;
-        int index = this.selector.index;
-
-        this.record.removeAction(tick, index);
-
-        if (this.selector.index == 0)
-        {
-            this.selector.index = -1;
-            this.setDelegate(null);
-        }
-        else
-        {
-            this.selector.index--;
-            this.setDelegate(this.getPanel(this.record.getAction(this.selector.tick, this.selector.index)));
-        }
-
-        this.selector.recalculateVertical();
-        Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, null));
     }
 
     private void capture()
@@ -343,7 +203,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 
     private int getOffset()
     {
-        return this.selector.tick;
+        return this.timeline.getCurrentTick();
     }
 
     @Override
@@ -352,15 +212,15 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.records.clear();
         Dispatcher.sendToServer(new PacketRequestActions());
 
-        this.selector.removeFromParent();
-        this.selector.flex().reset().relative(this.area).x(20).y(1F, -80).h(80).w(1F, -40);
-        this.editor.removeFromParent();
-        this.editor.flex().reset().relative(this.area).w(1F).h(1, -80);
+        this.timeline.removeFromParent();
+        this.timeline.flex().reset().relative(this.area).x(20).y(1F, -80).h(80).w(1F, -40);
+        this.actionEditor.removeFromParent();
+        this.actionEditor.flex().reset().relative(this.area).w(1F).h(1, -80);
         this.records.removeFromParent();
-        this.records.flex().reset().relative(this).w(120).x(1, -120).hTo(this.selector.flex());
+        this.records.flex().reset().relative(this).w(120).x(1, -120).hTo(this.timeline.flex());
 
         this.prepend(this.records);
-        this.add(this.editor, this.selector);
+        this.add(this.actionEditor, this.timeline);
 
         this.updateEditorWidth();
 
@@ -402,9 +262,9 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 
         ClientProxy.panels.picker((morph) ->
         {
-            if (this.editor.delegate != null)
+            if (this.actionEditor.delegate != null)
             {
-                this.editor.delegate.setMorph(morph);
+                this.actionEditor.delegate.setMorph(morph);
             }
         });
     }
@@ -417,15 +277,17 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 
     public void save()
     {
-        if (this.editor.delegate != null && this.record != null)
+        if (this.actionEditor.delegate != null && this.record != null)
         {
-            this.editor.delegate.disappear();
+            this.actionEditor.delegate.disappear();
 
-            Action old = this.editor.delegate.action;
+            if (this.actionEditor.delegate.action != null)
+            {
+                /* save the old action */
+                ServerHandlerActionsChange.editAction(this.actionEditor.delegate.action, this.record.filename, this.timeline.getCurrentTick(), this.timeline.getCurrentIndex());
+            }
 
-            Dispatcher.sendToServer(new PacketAction(this.record.filename, this.selector.tick, this.selector.index, old));
-
-            this.editor.delegate = null;
+            this.actionEditor.delegate = null;
         }
     }
 
@@ -441,23 +303,16 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 
     public void selectRecord(String str)
     {
-        this.selector.reset();
+        this.timeline.reset();
         this.save();
         Dispatcher.sendToServer(new PacketRequestAction(str, true));
-    }
-
-    public void selectAction(Action action)
-    {
-        this.save();
-
-        this.setDelegate(getPanel(action));
     }
 
     public void selectRecord(Record record)
     {
         this.record = record;
-        this.selector.setVisible(record != null);
-        this.selector.update();
+        this.timeline.setVisible(record != null);
+        this.timeline.reset();
         this.setDelegate(null);
         this.list.setVisible(false);
     }
@@ -471,47 +326,28 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         }
     }
 
-    public void moveTo(int tick)
-    {
-        if (tick < 0 || tick >= this.record.actions.size())
-        {
-            return;
-        }
-
-        Action action = this.record.getAction(this.selector.tick, this.selector.index);
-
-        this.removeAction();
-        this.record.addAction(tick, action);
-        this.selector.recalculateVertical();
-        this.selector.tick = tick;
-        this.selector.index = this.record.actions.get(tick).size() - 1;
-
-        this.setDelegate(getPanel(action));
-        Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, -1, action, true));
-    }
-
     public void updateEditorWidth()
     {
         if (this.records.isVisible())
         {
-            this.editor.flex().wTo(this.records.area);
+            this.actionEditor.flex().wTo(this.records.area);
         }
         else
         {
-            this.editor.flex().w(1F);
+            this.actionEditor.flex().w(1F);
         }
 
-        this.editor.resize();
+        this.actionEditor.resize();
     }
 
     public void setDelegate(GuiActionPanel<? extends Action> panel)
     {
-        if (this.editor.delegate != null)
+        if (this.actionEditor.delegate != null)
         {
-            this.editor.delegate.disappear();
+            this.actionEditor.delegate.disappear();
         }
 
-        this.editor.setDelegate(panel);
+        this.actionEditor.setDelegate(panel);
     }
 
     @Override
