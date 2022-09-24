@@ -12,6 +12,7 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.ScrollArea;
 import mchorse.mclib.client.gui.utils.ScrollDirection;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.ICopy;
@@ -26,7 +27,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -107,6 +110,24 @@ public class GuiRecordTimeline extends GuiElement
         this.vertical = new ScrollArea(this.itemHeight);
         this.vertical.direction = ScrollDirection.VERTICAL;
         this.panel = panel;
+
+        IKey category = IKey.lang("blockbuster.gui.aperture.keys.category");
+
+        this.keys().register(IKey.lang("blockbuster.gui.aperture.keys.add_morph_action"), Keyboard.KEY_M, () -> this.createAction("morph"))
+                .held(Keyboard.KEY_LCONTROL).category(category);
+        this.keys().register(IKey.lang("blockbuster.gui.record_editor.unselect"), Keyboard.KEY_ESCAPE, () -> this.deselect())
+                .category(category).active(() -> this.isActive());
+        this.keys().register(IKey.lang("blockbuster.gui.record_editor.select_all"), Keyboard.KEY_A, () -> this.selectAll())
+                .held(Keyboard.KEY_LCONTROL).category(category);
+        this.keys().register(IKey.lang("blockbuster.gui.record_editor.copy"), Keyboard.KEY_C, () -> this.copyActions())
+                .held(Keyboard.KEY_LCONTROL).category(category);
+        this.keys().register(IKey.lang("blockbuster.gui.record_editor.paste"), Keyboard.KEY_V, () -> this.pasteActions())
+                .held(Keyboard.KEY_LCONTROL).category(category);
+        this.keys().register(IKey.lang("blockbuster.gui.record_editor.cut"), Keyboard.KEY_X, () -> this.cutActions())
+                .held(Keyboard.KEY_LCONTROL).category(category);
+        this.keys().register(IKey.lang("blockbuster.gui.record_editor.dupe"), Keyboard.KEY_D, () -> this.dupeActions())
+                .held(Keyboard.KEY_LSHIFT).category(category);
+        this.keys().register(IKey.lang("blockbuster.gui.record_editor.delete"), Keyboard.KEY_DELETE, () -> this.removeActions()).category(category);
     }
 
     /**
@@ -131,9 +152,6 @@ public class GuiRecordTimeline extends GuiElement
         return !(this.selection.isEmpty() || (this.selection.size() == 1 && this.isFrameEmpty(this.selection.get(0))));
     }
 
-    //public void reset()
-    //{}
-
     @Override
     public void resize()
     {
@@ -150,12 +168,8 @@ public class GuiRecordTimeline extends GuiElement
     {
         if (this.panel.record != null)
         {
-            this.fromTick = MathUtils.clamp(this.fromTick, 0, this.panel.record.actions.size() - 1);
-            this.currentTick.tick = -1;
-            this.currentTick.index = -1;
-            this.current = null;
             this.selection.clear();
-
+            this.selectCurrent(MathUtils.clamp(this.fromTick, 0, this.panel.record.actions.size() - 1), -1);
             this.scroll.setSize(this.panel.record.actions.size());
             this.scroll.clamp();
 
@@ -210,6 +224,7 @@ public class GuiRecordTimeline extends GuiElement
             }
 
             this.moving = false;
+            this.canMove = false;
             this.selectingArea = false;
         }
 
@@ -254,7 +269,7 @@ public class GuiRecordTimeline extends GuiElement
             }
             else
             {
-                this.awaitDragging();
+                this.awaitMoving();
             }
         }
         else
@@ -266,35 +281,16 @@ public class GuiRecordTimeline extends GuiElement
                     /* select a range from current tick to clicked tick */
                     List<List<Action>> actionRange = this.panel.record.getActions(tick, this.currentTick.tick, index, this.currentTick.index);
 
-                    this.selectTick(tick);
-
-                    int start = tick < this.currentTick.tick ? tick - this.fromTick : this.currentTick.tick - this.fromTick;
-
-                    if (start >= 0)
-                    {
-                        for (int i = start, c = 0; i < this.selection.size() && c < actionRange.size(); i++, c++)
-                        {
-                            if (this.selection.get(i) == null && actionRange.get(c) != null)
-                            {
-                                this.selection.set(i, actionRange.get(c));
-                            }
-                            else if (this.selection.get(i) != null && actionRange.get(c) != null)
-                            {
-                                this.selection.get(i).removeAll(actionRange.get(c));
-
-                                this.selection.get(i).addAll(actionRange.get(c));
-                            }
-                        }
-                    }
+                    this.addToSelection(Math.min(tick, this.currentTick.tick), actionRange);
                 }
 
-                this.selectCurrent(tick, index);
+                this.selectCurrentSaveOld(tick, index);
             }
             else if (GuiBase.isCtrlKeyDown())
             {
                 if (this.panel.record.getAction(tick, index) != null)
                 {
-                    this.selectCurrent(tick, index);
+                    this.selectCurrentSaveOld(tick, index);
                 }
             }
             else if (this.panel.record.getAction(tick, index) != null)
@@ -302,8 +298,8 @@ public class GuiRecordTimeline extends GuiElement
                 this.selection.clear();
                 this.fromTick = tick;
 
-                this.selectCurrent(tick, index);
-                this.awaitDragging();
+                this.selectCurrentSaveOld(tick, index);
+                this.awaitMoving();
             }
             else
             {
@@ -312,7 +308,7 @@ public class GuiRecordTimeline extends GuiElement
         }
     }
 
-    private void awaitDragging()
+    private void awaitMoving()
     {
         this.canMove = true;
         this.moving = false;
@@ -327,7 +323,7 @@ public class GuiRecordTimeline extends GuiElement
         {
             if (this.moving)
             {
-                this.moveSelectionTo(this.scroll.getIndex(context.mouseX, context.mouseY));
+                this.moveSelectionTo(this.scroll.getIndex(context.mouseX, context.mouseY), this.vertical.getIndex(context.mouseX, context.mouseY));
             }
             else if (this.selectingArea)
             {
@@ -336,39 +332,25 @@ public class GuiRecordTimeline extends GuiElement
                     this.selection.clear();
                 }
 
-                int fromSt = Math.min(this.lastClicked.tick, this.scroll.getIndex(context.mouseX, context.mouseY));
-                int toSt = Math.max(this.lastClicked.tick, this.scroll.getIndex(context.mouseX, context.mouseY));
-                int fromSi = MathUtils.clamp(Math.min(this.lastClicked.index, this.vertical.getIndex(context.mouseX, context.mouseY)), 0, Integer.MAX_VALUE);
-                int toSi = MathUtils.clamp(Math.max(this.lastClicked.index, this.vertical.getIndex(context.mouseX, context.mouseY)), 0, Integer.MAX_VALUE);
+                int scrollIndex = this.scroll.getIndex(context.mouseX, context.mouseY);
+                int verticalIndex = this.vertical.getIndex(context.mouseX, context.mouseY);
 
-                if (0 <= fromSt && fromSt < this.panel.record.actions.size())
-                {
-                    /* select a range from current tick to clicked tick */
-                    List<List<Action>> actionRange = this.panel.record.getActions(fromSt, toSt, fromSi, toSi);
+                scrollIndex = scrollIndex == -1 ? 0 : (scrollIndex == -2 ? this.panel.record.actions.size() - 1 : scrollIndex);
 
-                    int startShift = this.trimSelectionBeginning(actionRange);
-                    int endShift = this.trimSelectionEnd(actionRange);
+                int frameSize = this.panel.record.getActions(scrollIndex) == null ? 1 : this.panel.record.getActions(scrollIndex).size();
+                verticalIndex = verticalIndex == -1 ? 0 : (verticalIndex == -2 ? frameSize - 1 : verticalIndex);
 
-                    this.selectTick(fromSt + startShift);
-                    this.selectTick(toSt - endShift);
+                int fromSt = Math.min(this.lastClicked.tick, scrollIndex);
+                int toSt = Math.max(this.lastClicked.tick, scrollIndex);
+                int fromSi = Math.min(this.lastClicked.index, verticalIndex);
+                int toSi = Math.max(this.lastClicked.index, verticalIndex);
 
-                    //TODO copy
-                    int start = (fromSt + startShift) - this.fromTick;
+                List<List<Action>> actionRange = this.panel.record.getActions(fromSt, toSt, fromSi, toSi);
 
-                    for (int i = start, c = 0; c < actionRange.size(); i++, c++)
-                    {
-                        if (this.selection.get(i) == null && actionRange.get(c) != null)
-                        {
-                            this.selection.set(i, actionRange.get(c));
-                        }
-                        else if (this.selection.get(i) != null && actionRange.get(c) != null)
-                        {
-                            this.selection.get(i).removeAll(actionRange.get(c));
+                int startShift = this.trimSelectionBeginning(actionRange);
+                this.trimSelectionEnd(actionRange);
 
-                            this.selection.get(i).addAll(actionRange.get(c));
-                        }
-                    }
-                }
+                this.addToSelection(fromSt + startShift, actionRange);
             }
             else if (!this.preventMouseReleaseSelect)
             {
@@ -381,13 +363,12 @@ public class GuiRecordTimeline extends GuiElement
                             && (this.isInSelection(tick, index) || this.panel.record.getAction(tick, index) == null))
                     {
                         this.selection.clear();
-                        this.selectCurrent(tick, index);
+                        this.selectCurrentSaveOld(tick, index);
                     }
                 }
             }
 
             this.preventMouseReleaseSelect = false;
-
             this.canSelectArea = false;
             this.selectingArea = false;
             this.canMove = false;
@@ -397,6 +378,39 @@ public class GuiRecordTimeline extends GuiElement
         this.lastDragging = false;
         this.scroll.mouseReleased(context);
         this.vertical.mouseReleased(context);
+    }
+
+    /**
+     * Add the given actions to the selection starting at the specified tick.
+     * Nothing will be added if the tick is outside the record.actions range or if the specified actions are empty.
+     * @param tick
+     * @param actions
+     */
+    private void addToSelection(int tick, List<List<Action>> actions)
+    {
+        if (actions.isEmpty() || this.panel.record.actions.size() <= tick || tick < 0)
+        {
+            return;
+        }
+
+        this.selectTick(tick);
+        this.selectTick(tick + actions.size() - 1);
+
+        int start = tick - this.fromTick;
+
+        for (int i = start, c = 0; i < this.selection.size() && c < actions.size(); i++, c++)
+        {
+            if (this.selection.get(i) == null && actions.get(c) != null)
+            {
+                this.selection.set(i, new ArrayList<>(actions.get(c)));
+            }
+            else if (this.selection.get(i) != null && actions.get(c) != null)
+            {
+                this.selection.get(i).removeAll(actions.get(c));
+
+                this.selection.get(i).addAll(actions.get(c));
+            }
+        }
     }
 
     @Override
@@ -503,17 +517,24 @@ public class GuiRecordTimeline extends GuiElement
 
         if (this.current == remove)
         {
-            this.selectCurrent(-1, -1);
+            this.selectCurrentSaveOld(-1, -1);
         }
     }
 
     /**
-     * Clear the selection, but keep current tick (without selecting a current action)
+     * Clear the selection, but keep current tick (without selecting a current action) and save the old action.
      */
     public void deselect()
     {
         this.selection.clear();
-        this.selectCurrent(this.currentTick.tick, -1);
+        this.selectCurrentSaveOld(this.currentTick.tick, -1);
+    }
+
+    public void selectAll()
+    {
+        this.selection.clear();
+        this.addToSelection(0, this.panel.record.getActions(0, this.panel.record.actions.size() - 1));
+        this.selectCurrentSaveOld(this.currentTick.tick, this.currentTick.index);
     }
 
     /**
@@ -589,18 +610,15 @@ public class GuiRecordTimeline extends GuiElement
         return shift;
     }
 
-
     /**
      * Sets current action and {@link #currentTick} and updates the selection.
      * This method also updates the GUI action panel of the recording editor panel.
-     * If the selection was empty or if {@link #fromTick} was -1 before: {@link #fromTick} will be set to the provided tick
+     * If the selection was empty or if {@link #fromTick} was -1 then {@link #fromTick} will be set to the provided tick
      * @param tick
      * @param index
      */
     public void selectCurrent(int tick, int index)
     {
-        this.panel.save();
-
         Action selected = this.panel.record.getAction(tick, index);
 
         if (selected != null)
@@ -647,6 +665,21 @@ public class GuiRecordTimeline extends GuiElement
     }
 
     /**
+     * This method also saves the old action of the panel via {@link GuiRecordingEditorPanel#save()}.
+     * Sets current action and {@link #currentTick} and updates the selection.
+     * This method also updates the GUI action panel of the recording editor panel.
+     * If the selection was empty or if {@link #fromTick} was -1 then {@link #fromTick} will be set to the provided tick
+     * @param tick
+     * @param index
+     */
+    public void selectCurrentSaveOld(int tick, int index)
+    {
+        this.panel.save();
+
+        this.selectCurrent(tick, index);
+    }
+
+    /**
      * Add the given tick to the selection and close gaps to previous selection.
      * The provided tick will be greater or equal to {@link #fromTick} after this operation.
      * @param tick
@@ -668,16 +701,100 @@ public class GuiRecordTimeline extends GuiElement
         }
     }
 
-    private void moveSelectionTo(int tick)
+    /**
+     * Sort the given actions to the original actions list from the recording.
+     * This should be used for example when copying or moving so the order of selection doesn't
+     * change the order of the actions when inserted.
+     * @param actions
+     */
+    private void sortToOriginal(List<List<Action>> actions)
     {
-        if (tick >= this.panel.record.actions.size())
+        for (int tick = 0; tick < actions.size(); tick++)
         {
-            return;
+            if (actions.get(tick) != null && !actions.get(tick).isEmpty())
+            {
+                List<Action> frameList = new ArrayList<>();
+                boolean added = false;
+
+                for (int a = 0; a < actions.get(tick).size(); a++)
+                {
+                    int newIndex = this.panel.record.getActionIndex(this.fromTick + tick, actions.get(tick).get(a));
+
+                    if (newIndex != -1)
+                    {
+                        if (newIndex >= frameList.size())
+                        {
+                            frameList.addAll(Arrays.asList(new Action[newIndex - frameList.size() + 1]));
+                        }
+
+                        frameList.set(newIndex, actions.get(tick).get(a));
+
+                        if (!added)
+                        {
+                            added = actions.get(tick).get(a) != null;
+                        }
+                    }
+                }
+
+                if (added)
+                {
+                    this.removeNulls(frameList);
+                    actions.set(tick, frameList);
+                }
+            }
+        }
+    }
+
+    private void removeNulls(List<Action> frame)
+    {
+        for (int s = 0, e = frame.size() - 1; s < frame.size() && e >= 0; s++, e--)
+        {
+            if (frame.get(e) == null)
+            {
+                frame.remove(e);
+                e--;
+            }
+
+            if (frame.get(s) == null)
+            {
+                frame.remove(s);
+                s--;
+                e--;
+            }
+
+            if (s >= e) break;
+        }
+    }
+
+    private void moveSelectionTo(int tick, int index)
+    {
+        /* beyond start */
+        if (tick == -1)
+        {
+            tick = 0;
+        }
+        /* beyond end */
+        else if (tick == -2)
+        {
+            tick = this.panel.record.actions.size() - this.selection.size();
+        }
+        else
+        {
+            tick = tick + this.fromTick - this.lastClicked.tick;
         }
 
-        tick = tick + this.fromTick - this.lastClicked.tick;
+        if (index == -1)
+        {
+            index = 0;
+        }
+        else if (index == -2)
+        {
+            index = this.panel.record.actions.get(tick) == null ? 0 : this.panel.record.actions.get(tick).size() - 1;
+        }
 
         List<List<Action>> selectionCopy = new ArrayList<>(this.selection);
+
+        this.sortToOriginal(selectionCopy);
 
         int start = this.trimSelectionBeginning(selectionCopy);
         this.trimSelectionEnd(selectionCopy);
@@ -695,79 +812,166 @@ public class GuiRecordTimeline extends GuiElement
 
         tick += start;
 
-        this.panel.record.addActionCollection(tick, this.selection);
+        /* move it back if outside of range */
+        if (tick < 0)
+        {
+            tick = 0;
+        }
+        else if (tick + this.selection.size() - 1 >= this.panel.record.actions.size())
+        {
+            tick -= tick + this.selection.size() - 1 - this.panel.record.actions.size() + 1;
+        }
+
         this.recalculateVertical();
 
         this.fromTick = tick;
         this.currentTick.tick = tick + dT - start;
         this.currentTick.index = this.panel.record.getActionIndex(this.currentTick.tick, current);
-        this.preventMouseReleaseSelect = true;
 
         this.selectCurrent(this.currentTick.tick, this.currentTick.index);
-        ServerHandlerActionsChange.addActions(this.selection, this.panel.record.filename, tick);
+        ServerHandlerActionsChange.addActions(selectionCopy, this.panel.record, tick, index);
     }
 
-    public void cutAction()
+    public void cutActions()
     {
-        if (this.panel.actionEditor.delegate == null)
+        if (this.fromTick == -1 || this.selection.isEmpty())
         {
             return;
         }
 
-        this.copy();
+        this.copyActions();
         this.removeActions();
     }
 
-    public void copy()
+    public void copyActions()
     {
-        if (this.panel.actionEditor.delegate == null)
+        if (this.fromTick == -1 || this.selection.isEmpty())
         {
             return;
         }
 
-        Action action = this.panel.actionEditor.delegate.action;
-        NBTTagCompound tag = new NBTTagCompound();
+        List<List<Action>> selectionCopy = new ArrayList<>(this.selection);
 
-        tag.setString("ActionType", ActionRegistry.NAME_TO_CLASS.inverse().get(action.getClass()));
-        action.toNBT(tag);
-        this.panel.buffer = tag;
+        this.sortToOriginal(selectionCopy);
+
+        this.trimSelectionBeginning(selectionCopy);
+        this.trimSelectionEnd(selectionCopy);
+
+        if (selectionCopy.isEmpty())
+        {
+            return;
+        }
+
+        NBTTagList list = new NBTTagList();
+
+        for (List<Action> frame : selectionCopy)
+        {
+            NBTTagList frameNBT = new NBTTagList();
+
+            if (frame != null)
+            {
+                for (Action action : frame)
+                {
+                    NBTTagCompound actionNBT = new NBTTagCompound();
+
+                    actionNBT.setString("ActionType", ActionRegistry.NAME_TO_CLASS.inverse().get(action.getClass()));
+                    action.toNBT(actionNBT);
+                    frameNBT.appendTag(actionNBT);
+                }
+            }
+
+            list.appendTag(frameNBT);
+        }
+
+        this.panel.buffer = new NBTTagCompound();
+        this.panel.buffer.setTag("Actions", list);
     }
 
-    public void pasteAction()
+    public void pasteActions()
     {
-        if (this.panel.buffer == null)
+        if (this.panel.buffer == null || !this.panel.buffer.hasKey("Actions") || this.currentTick.tick == -1)
         {
             return;
         }
 
-        int tick = this.fromTick;
-        int index = this.fromTick;
+        List<List<Action>> copied = new ArrayList<>();
 
-        Action action = null;
-
-        try
+        if (this.panel.buffer.getTag("Actions") instanceof NBTTagList)
         {
-            action = ActionRegistry.fromName(this.panel.buffer.getString("ActionType"));
-            action.fromNBT(this.panel.buffer);
-        }
-        catch (Exception e)
-        {}
+            NBTTagList nbtList = (NBTTagList) this.panel.buffer.getTag("Actions");
 
-        if (action == null)
+            for (int i = 0; i < nbtList.tagCount(); i++)
+            {
+                if (nbtList.get(i) == null || !(nbtList.get(i) instanceof NBTTagList))
+                {
+                    copied.add(null);
+
+                    continue;
+                }
+
+                List<Action> frame = null;
+
+                NBTTagList frameNBT = (NBTTagList) nbtList.get(i);
+
+                //TODO externalise parsing of action data - checkout Record too
+                for (int a = 0; a < frameNBT.tagCount(); a++)
+                {
+                    if (frameNBT.get(a) instanceof NBTTagCompound)
+                    {
+                        NBTTagCompound actionNBT = (NBTTagCompound) frameNBT.get(a);
+
+                        if (actionNBT.hasKey("ActionType"))
+                        {
+                            try
+                            {
+                                Action action = ActionRegistry.fromName(actionNBT.getString("ActionType"));
+
+                                action.fromNBT(actionNBT);
+
+                                if (frame == null)
+                                {
+                                    frame = new ArrayList<>();
+                                }
+
+                                frame.add(action);
+                            }
+                            catch (Exception e)
+                            { }
+                        }
+                    }
+                }
+
+                copied.add(frame);
+            }
+        }
+
+        this.trimSelectionBeginning(copied);
+        this.trimSelectionEnd(copied);
+
+        if (copied.isEmpty())
         {
             return;
         }
 
-        this.panel.record.addAction(tick, index, action);
+        if (this.currentTick.index < 0 || this.current == null)
+        {
+            ServerHandlerActionsChange.addActions(copied, this.panel.record, this.currentTick.tick);
+        }
+        else
+        {
+            ServerHandlerActionsChange.addActions(copied, this.panel.record, this.currentTick.tick, this.currentTick.index);
+        }
+
+        this.selection.clear();
+        this.selection.addAll(copied);
+        this.selectCurrent(this.currentTick.tick, -1);
         this.recalculateVertical();
-        this.fromTick = this.panel.record.actions.get(tick).size() - 1;
-        //this.panel.selectAction(action);
-        //Dispatcher.sendToServer(new PacketActionsOverwrite(this.panel.record.filename, tick, index, action, true));
     }
 
     public void createAction(String str)
     {
-        if (!ActionRegistry.NAME_TO_CLASS.containsKey(str))
+        if (!ActionRegistry.NAME_TO_CLASS.containsKey(str)
+            || this.currentTick.tick < 0 || this.currentTick.tick >= this.panel.record.actions.size())
         {
             return;
         }
@@ -778,13 +982,12 @@ public class GuiRecordTimeline extends GuiElement
             int tick = this.currentTick.tick;
             int index = this.currentTick.index;
 
-            this.panel.record.addAction(tick, index, action);
             this.panel.list.setVisible(false);
             this.selection.clear();
-            this.selectCurrent(tick, this.panel.record.getActionIndex(tick, action));
+            this.selectCurrentSaveOld(tick, this.panel.record.getActionIndex(tick, action));
             this.recalculateVertical();
 
-            ServerHandlerActionsChange.addAction(action, this.panel.record.filename, tick, index);
+            ServerHandlerActionsChange.addAction(action, this.panel.record, tick, index);
         }
         catch (Exception e)
         {
@@ -792,32 +995,67 @@ public class GuiRecordTimeline extends GuiElement
         }
     }
 
-    public void dupeAction()
+    public void dupeActions()
     {
-        int tick = this.fromTick;
-        int index = this.fromTick;
-
-        Action action = this.panel.record.getAction(tick, index);
-
-        if (action == null)
+        if (this.fromTick < 0 || this.selection.isEmpty())
         {
             return;
         }
 
-        try
-        {
-            Action newAction = ActionRegistry.fromType(ActionRegistry.getType(action));
-            NBTTagCompound tag = new NBTTagCompound();
-            action.toNBT(tag);
-            newAction.fromNBT(tag);
-            action = newAction;
-        }
-        catch (Exception e)
-        {}
+        int tick = this.fromTick;
+        int index = this.currentTick.index == -1 ? 0 : (this.currentTick.index == -2 ? -1 : this.currentTick.index);
 
-        this.panel.record.addAction(tick, index, action);
+        List<List<Action>> selectionCopy = new ArrayList<>(this.selection);
+
+        if (selectionCopy.isEmpty())
+        {
+            return;
+        }
+
+        this.sortToOriginal(selectionCopy);
+        int start = this.trimSelectionBeginning(selectionCopy);
+        this.trimSelectionEnd(selectionCopy);
+
+        Action newCurrent = null;
+
+        for (int t = 0; t < selectionCopy.size(); t++)
+        {
+            if (selectionCopy.get(t) != null && !selectionCopy.get(t).isEmpty())
+            {
+                for (int a = 0; a < selectionCopy.get(t).size(); a++)
+                {
+                    if (selectionCopy.get(t).get(a) == null) continue;
+
+                    try
+                    {
+                        //TODO implement copy interface for actions...
+                        Action newAction = ActionRegistry.fromType(ActionRegistry.getType(selectionCopy.get(t).get(a)));
+                        NBTTagCompound tag = new NBTTagCompound();
+
+                        selectionCopy.get(t).get(a).toNBT(tag);
+                        newAction.fromNBT(tag);
+
+                        if (selectionCopy.get(t).get(a) == this.current)
+                        {
+                            newCurrent = newAction;
+                        }
+
+                        selectionCopy.get(t).set(a, newAction);
+                    }
+                    catch (Exception e)
+                    {}
+                }
+            }
+        }
+
+        tick += start;
+
+        ServerHandlerActionsChange.addActions(selectionCopy, this.panel.record, tick, index);
+
+        this.selection.clear();
+        this.addToSelection(tick, selectionCopy);
+        this.selectCurrent(this.currentTick.tick, this.panel.record.getActionIndex(this.currentTick.tick, newCurrent));
         this.recalculateVertical();
-        //Dispatcher.sendToServer(new PacketActionsOverwrite(this.panel.record.filename, tick, index, action, true));
     }
 
     /**
@@ -830,11 +1068,26 @@ public class GuiRecordTimeline extends GuiElement
             return;
         }
 
-        List<List<Boolean>> deletionMask = this.panel.record.getActionsMask(this.fromTick, this.selection);
-        this.panel.record.removeActions(this.fromTick, this.selection);
-        ServerHandlerActionsChange.deleteActions(this.panel.record.filename, this.fromTick, deletionMask);
+        List<List<Action>> selectionCopy = new ArrayList<>(this.selection);
 
-        this.deselect();
+        int startShift = this.trimSelectionBeginning(selectionCopy);
+        this.trimSelectionEnd(selectionCopy);
+
+        if (selectionCopy.isEmpty())
+        {
+            return;
+        }
+
+        int from = this.fromTick + startShift;
+
+        List<List<Boolean>> deletionMask = this.panel.record.getActionsMask(from, selectionCopy);
+
+        ServerHandlerActionsChange.deleteActions(this.panel.record, from, deletionMask);
+
+        /* deselect without saving previous action */
+        this.selection.clear();
+        this.selectCurrent(this.currentTick.tick, -1);
+
         this.recalculateVertical();
     }
 
@@ -934,10 +1187,16 @@ public class GuiRecordTimeline extends GuiElement
 
                         int y = this.scroll.y + j * this.itemHeight - this.vertical.scroll;
 
-                        int fromSt = Math.min(this.lastClicked.tick, this.scroll.getIndex(mouseX, mouseY));
-                        int toSt = Math.max(this.lastClicked.tick, this.scroll.getIndex(mouseX, mouseY));
-                        int fromSi = Math.min(this.lastClicked.index, this.vertical.getIndex(mouseX, mouseY));
-                        int toSi = Math.max(this.lastClicked.index, this.vertical.getIndex(mouseX, mouseY));
+                        int scrollIndex = this.scroll.getIndex(mouseX, mouseY);
+                        int verticalIndex = this.vertical.getIndex(mouseX, mouseY);
+
+                        scrollIndex = scrollIndex == -1 ? 0 : (scrollIndex == -2 ? count - 1 : scrollIndex);
+                        verticalIndex = verticalIndex == -1 ? 0 : (verticalIndex == -2 ? actions.size() - 1 : verticalIndex);
+
+                        int fromSt = Math.min(this.lastClicked.tick, scrollIndex);
+                        int toSt = Math.max(this.lastClicked.tick, scrollIndex);
+                        int fromSi = Math.min(this.lastClicked.index, verticalIndex);
+                        int toSi = Math.max(this.lastClicked.index, verticalIndex);
 
                         boolean selected;
 

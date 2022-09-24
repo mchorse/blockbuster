@@ -28,6 +28,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FilenameUtils;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -127,7 +128,7 @@ public class Record
     }
 
     /**
-     * Get actions on given tick
+     * @return actions at the given tick. Can return null if nothing is present there.
      */
     public List<Action> getActions(int tick)
     {
@@ -158,16 +159,17 @@ public class Record
     }
 
     /**
+     * If fromIndex0 and toIndex0 are both -1 every action at the frame in the range will be added.
      * @param fromTick0 from tick, inclusive
      * @param toTick0 to tick, inclusive
-     * @param fromIndex0 from action index, inclusive
-     * @param toIndex0 to action index, inclusive
+     * @param fromIndex0 from action index, inclusive. Can be -1 only together with toIndex0.
+     * @param toIndex0 to action index, inclusive. Can be -1 only together with fromIndex0.
      * @return a new list containing the actions in the specified ranges. The list can contain null values.
      * @throws IndexOutOfBoundsException if fromTick < 0 || toTick > size of {@link #actions}
      */
     public List<List<Action>> getActions(int fromTick0, int toTick0, int fromIndex0, int toIndex0) throws IndexOutOfBoundsException
     {
-        if (fromTick0 < 0 || toTick0 < 0 || fromIndex0 < 0 || toIndex0 < 0
+        if (fromTick0 < 0 || toTick0 < 0 || ((fromIndex0 != -1 || toIndex0 != -1) && fromIndex0 < 0 && toIndex0 < 0)
             || fromTick0 > this.actions.size() || toTick0 > this.actions.size())
         {
             return new ArrayList<>();
@@ -190,7 +192,11 @@ public class Record
 
                 if (frame != null && !frame.isEmpty())
                 {
-                    if (fromIndex >= frame.size())
+                    if (fromIndex == -1 && toIndex == -1)
+                    {
+                        actionRange.set(i, new ArrayList<>(frame));
+                    }
+                    else if (fromIndex >= frame.size())
                     {
                         actionRange.set(i, null);
                     }
@@ -210,6 +216,18 @@ public class Record
         }
 
         return actionRange;
+    }
+
+
+    /**
+     * @param fromTick0 from tick, inclusive
+     * @param toTick0 to tick, inclusive
+     * @return a new list containing the actions in the specified ranges. The list can contain null values.
+     * @throws IndexOutOfBoundsException if fromTick < 0 || toTick > size of {@link #actions}
+     */
+    public List<List<Action>> getActions(int fromTick0, int toTick0) throws IndexOutOfBoundsException
+    {
+        return this.getActions(fromTick0, toTick0, -1, -1);
     }
 
     /**
@@ -256,7 +274,7 @@ public class Record
     public int getActionIndex(int tick, Action action)
     {
         if (tick < 0 || tick >= this.actions.size()
-            || this.actions.get(tick) == null || this.actions.get(tick).isEmpty())
+            || this.actions.get(tick) == null || this.actions.get(tick).isEmpty() || action == null)
         {
             return -1;
         }
@@ -709,7 +727,19 @@ public class Record
      */
     public void addActionCollection(int tick, List<List<Action>> actions)
     {
-        if (tick < 0 || tick >= this.actions.size() || actions == null)
+        this.addActionCollection(tick, -1, actions);
+    }
+
+    /**
+     * Add an action collection beginning at the specified tick at the specified index.
+     * If the index is -1, the actions at the frames will just be added on top.
+     * @param tick
+     * @param index can be -1
+     * @param actions
+     */
+    public void addActionCollection(int tick, int index, List<List<Action>> actions)
+    {
+        if (index < -1 || tick < 0 || tick >= this.actions.size() || actions == null)
         {
             return;
         }
@@ -717,7 +747,7 @@ public class Record
         for (int i = tick; i < this.actions.size() && i - tick < actions.size(); i++)
         {
             List<Action> frame = this.actions.get(i);
-            List<Action> actionFrame = actions.get(i - tick) != null ? new ArrayList<>(actions.get(i - tick)) : null;
+            List<Action> actionFrame = actions.get(i - tick) != null && !actions.get(i - tick).isEmpty() ? new ArrayList<>(actions.get(i - tick)) : null;
 
             if (frame == null)
             {
@@ -725,7 +755,14 @@ public class Record
             }
             else if (actionFrame != null)
             {
-                frame.addAll(actionFrame);
+                if (index > frame.size() || index == -1)
+                {
+                    frame.addAll(actionFrame);
+                }
+                else
+                {
+                    frame.addAll(index, actionFrame);
+                }
             }
         }
     }
