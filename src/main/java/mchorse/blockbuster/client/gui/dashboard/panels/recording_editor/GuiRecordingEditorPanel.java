@@ -94,18 +94,18 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         /* Add/remove */
         this.add = new GuiIconElement(mc, Icons.ADD, (b) -> this.list.toggleVisible());
         this.add.tooltip(IKey.lang("blockbuster.gui.add"), Direction.LEFT);
-        this.dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.timeline.dupeAction());
+        this.dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.timeline.dupeActions());
         this.dupe.tooltip(IKey.lang("blockbuster.gui.duplicate"), Direction.LEFT);
         this.remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.timeline.removeActions());
         this.remove.tooltip(IKey.lang("blockbuster.gui.remove"), Direction.LEFT);
         this.capture = new GuiIconElement(mc, Icons.SPHERE, (b) -> this.capture());
         this.capture.tooltip(IKey.lang("blockbuster.gui.record_editor.capture"), Direction.LEFT);
 
-        this.cut = new GuiIconElement(mc, Icons.CUT, (icon) -> this.timeline.cutAction());
+        this.cut = new GuiIconElement(mc, Icons.CUT, (icon) -> this.timeline.cutActions());
         this.cut.tooltip(IKey.lang("blockbuster.gui.record_editor.cut"), Direction.RIGHT);
-        this.copy = new GuiIconElement(mc, Icons.COPY, (icon) -> this.timeline.copy());
+        this.copy = new GuiIconElement(mc, Icons.COPY, (icon) -> this.timeline.copyActions());
         this.copy.tooltip(IKey.lang("blockbuster.gui.record_editor.copy"), Direction.RIGHT);
-        this.paste = new GuiIconElement(mc, Icons.PASTE, (b) -> this.timeline.pasteAction());
+        this.paste = new GuiIconElement(mc, Icons.PASTE, (b) -> this.timeline.pasteActions());
         this.paste.tooltip(IKey.lang("blockbuster.gui.record_editor.paste"), Direction.RIGHT);
         this.teleport = new GuiIconElement(mc, Icons.MOVE_TO, (b) -> this.teleport());
         this.teleport.tooltip(IKey.lang("blockbuster.gui.record_editor.teleport"), Direction.RIGHT);
@@ -141,14 +141,10 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 
         IKey category = IKey.lang("blockbuster.gui.aperture.keys.category");
 
-        this.timeline.keys().register(IKey.lang("blockbuster.gui.aperture.keys.add_morph_action"), Keyboard.KEY_M, () -> this.timeline.createAction("morph"))
-            .held(Keyboard.KEY_LCONTROL).category(category);
         this.timeline.keys().register(IKey.lang("blockbuster.gui.record_editor.capture"), Keyboard.KEY_R, this::capture)
             .held(Keyboard.KEY_LCONTROL).category(category);
         this.timeline.keys().register(IKey.lang("blockbuster.gui.record_editor.teleport"), Keyboard.KEY_T, this::teleport)
             .held(Keyboard.KEY_LCONTROL).category(category);
-        this.timeline.keys().register(IKey.lang("blockbuster.gui.record_editor.unselect"), Keyboard.KEY_ESCAPE, () -> this.timeline.deselect())
-            .category(category).active(() -> this.timeline.isActive());
         this.keys().register(IKey.lang("blockbuster.gui.aperture.keys.toggle_list"), Keyboard.KEY_L, () -> this.open.clickItself(GuiBase.getCurrent()))
             .held(Keyboard.KEY_LCONTROL).category(category);
     }
@@ -284,7 +280,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
             if (this.actionEditor.delegate.action != null)
             {
                 /* save the old action */
-                ServerHandlerActionsChange.editAction(this.actionEditor.delegate.action, this.record.filename, this.timeline.getCurrentTick(), this.timeline.getCurrentIndex());
+                ServerHandlerActionsChange.editAction(this.actionEditor.delegate.action, this.record, this.timeline.getCurrentTick(), this.timeline.getCurrentIndex());
             }
 
             this.actionEditor.delegate = null;
@@ -301,13 +297,22 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         }
     }
 
+    /**
+     * Select the record by the filename - request actions from the server
+     * @param str
+     */
     public void selectRecord(String str)
     {
-        this.timeline.reset();
+        //this.timeline.reset();
         this.save();
         Dispatcher.sendToServer(new PacketRequestAction(str, true));
     }
 
+    //TODO This needs refactoring... data flow is not clear and ClientHandlerActions receiver shouldn't control GUI...
+    /**
+     * When the server sends back actions after the request {@link #selectRecord(String)} - select the recording
+     * @param record
+     */
     public void selectRecord(Record record)
     {
         this.record = record;

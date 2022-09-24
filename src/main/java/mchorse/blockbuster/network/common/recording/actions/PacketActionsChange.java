@@ -48,6 +48,15 @@ public class PacketActionsChange implements IMessage
         this.type = type;
     }
 
+    public PacketActionsChange(String filename, int tick, int index, List<List<Action>> actions, Type type)
+    {
+        this.filename = filename;
+        this.fromTick = tick;
+        this.index = index;
+        this.actions = actions;
+        this.type = type;
+    }
+
     /**
      * A deletion package
      * @param filename

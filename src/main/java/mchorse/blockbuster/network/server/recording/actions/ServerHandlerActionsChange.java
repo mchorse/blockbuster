@@ -52,7 +52,7 @@ public class ServerHandlerActionsChange extends ServerMessageHandler<PacketActio
                     {
                         if (message.containsOneAction())
                         {
-                            record.addAction(message.getFromTick(), message.getIndex(), message.getActions().get(0).get(0));
+                            record.addActionCollection(message.getFromTick(), message.getIndex(), message.getActions());
                         }
                     }
                     else
@@ -88,36 +88,54 @@ public class ServerHandlerActionsChange extends ServerMessageHandler<PacketActio
      * Send a deletion package to the server
      */
     @SideOnly(Side.CLIENT)
-    public static void deleteActions(String filename, int from, List<List<Boolean>> mask)
+    public static void deleteActions(Record record, int from, List<List<Boolean>> mask)
     {
-        Dispatcher.sendToServer(new PacketActionsChange(filename, from, mask));
+        record.removeActionsMask(from, mask);
+        Dispatcher.sendToServer(new PacketActionsChange(record.filename, from, mask));
     }
 
     /**
      * Send a package to the server to add the given actions at the given tick
      */
     @SideOnly(Side.CLIENT)
-    public static void addActions(List<List<Action>> actions, String filename, int tick)
+    public static void addActions(List<List<Action>> actions, Record record, int tick)
     {
-        Dispatcher.sendToServer(new PacketActionsChange(filename, tick, actions, PacketActionsChange.Type.ADD));
+        record.addActionCollection(tick, actions);
+        Dispatcher.sendToServer(new PacketActionsChange(record.filename, tick, actions, PacketActionsChange.Type.ADD));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void addActions(List<List<Action>> actions, Record record, int tick, int index)
+    {
+        if (index == -1)
+        {
+            addActions(actions, record, tick);
+        }
+        else
+        {
+            record.addActionCollection(tick, index, actions);
+            Dispatcher.sendToServer(new PacketActionsChange(record.filename, tick, index, actions, PacketActionsChange.Type.ADD));
+        }
     }
 
     /**
      * Send a package to the server to add an action at a specific index
      * @param action
-     * @param filename
+     * @param record
      * @param tick
      * @param index
      */
     @SideOnly(Side.CLIENT)
-    public static void addAction(Action action, String filename, int tick, int index)
+    public static void addAction(Action action, Record record, int tick, int index)
     {
-        Dispatcher.sendToServer(new PacketActionsChange(filename, tick, index, action, PacketActionsChange.Type.ADD));
+        record.addAction(tick, index, action);
+        Dispatcher.sendToServer(new PacketActionsChange(record.filename, tick, index, action, PacketActionsChange.Type.ADD));
     }
 
     @SideOnly(Side.CLIENT)
-    public static void editAction(Action action, String filename, int tick, int index)
+    public static void editAction(Action action, Record record, int tick, int index)
     {
-        Dispatcher.sendToServer(new PacketActionsChange(filename, tick, index, action, PacketActionsChange.Type.EDIT));
+        record.replaceAction(tick, index, action);
+        Dispatcher.sendToServer(new PacketActionsChange(record.filename, tick, index, action, PacketActionsChange.Type.EDIT));
     }
 }
