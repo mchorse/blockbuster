@@ -4,8 +4,7 @@ Thank you for contributing to the mods. The maintainer will review your changes 
 
 Here are some guidelines for pull requests to prevent bugs and problems.
 
-1. Do not submit **massive** pull requests with 10k lines of code changed. The maintainer has to review it and the harder you make the review process the less the maintainer will be fond of the PR.
-   <br><br>Massive PRs also lead to a ton of change requests and comments because more lines of code are changed. You should rather try and split up your changes into multiple pull requests. Change things one by one... don't try to change the whole world in one Pull Request. 
+1. If you have **massive** pull requests with 10k+ lines of code changed it would be good if you split the changes into smaller PRs if possible. The maintainer has to review them, so smaller PRs will make the review process easier and more organized. 
 
 2. McHorse has not followed encapsulation everywhere but that does not mean you get a free pass to not adhere to the core principles of OOP. So when you add a new class you should encapsulate its attributes. Also, this has been misrepresented in many places but encapsulation does not mean you are forced to automatically add getters and setters for every single thing. It is about hiding the internal implementation details to make the code maintainable.
    <br><br>If you are not sure about encapsulation because it collides with existing modules / code or has design issues, come to the [McHorse's Discord server](https://discord.gg/qfxrqUF) and we can talk about it and find a solution.
