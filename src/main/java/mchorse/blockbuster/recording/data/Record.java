@@ -291,6 +291,27 @@ public class Record
     }
 
     /**
+     * @param action
+     * @return int array {tick, index} of the found action. If nothing was found the values will be -1
+     */
+    public int[] findAction(Action action)
+    {
+        if (action == null)
+        {
+            return new int[]{-1, -1};
+        }
+
+        for (int t = 0; t < this.actions.size(); t++)
+        {
+            int i = this.getActionIndex(t, action);
+
+            if (i != -1) return new int[]{t, i};
+        }
+
+        return new int[]{-1, -1};
+    }
+
+    /**
      * Get frame on given tick 
      */
     public Frame getFrame(int tick)

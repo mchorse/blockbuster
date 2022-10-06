@@ -34,14 +34,12 @@ import org.lwjgl.input.Keyboard;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class GuiRecordTimeline extends GuiElement
 {
     public GuiRecordingEditorPanel panel;
     public ScrollArea scroll;
     public ScrollArea vertical;
-    public Consumer<Action> callback;
     /**
      * Pointer to the current selected action.
      * Can be null
@@ -115,19 +113,19 @@ public class GuiRecordTimeline extends GuiElement
 
         this.keys().register(IKey.lang("blockbuster.gui.aperture.keys.add_morph_action"), Keyboard.KEY_M, () -> this.createAction("morph"))
                 .held(Keyboard.KEY_LCONTROL).category(category);
-        this.keys().register(IKey.lang("blockbuster.gui.record_editor.unselect"), Keyboard.KEY_ESCAPE, () -> this.deselect())
+        this.keys().register(IKey.lang("blockbuster.gui.record_editor.deselect"), Keyboard.KEY_ESCAPE, this::deselect)
                 .category(category).active(() -> this.isActive());
-        this.keys().register(IKey.lang("blockbuster.gui.record_editor.select_all"), Keyboard.KEY_A, () -> this.selectAll())
+        this.keys().register(IKey.lang("blockbuster.gui.record_editor.select_all"), Keyboard.KEY_A, this::selectAll)
                 .held(Keyboard.KEY_LCONTROL).category(category);
-        this.keys().register(IKey.lang("blockbuster.gui.record_editor.copy"), Keyboard.KEY_C, () -> this.copyActions())
+        this.keys().register(IKey.lang("blockbuster.gui.record_editor.copy"), Keyboard.KEY_C, this::copyActions)
                 .held(Keyboard.KEY_LCONTROL).category(category);
-        this.keys().register(IKey.lang("blockbuster.gui.record_editor.paste"), Keyboard.KEY_V, () -> this.pasteActions())
+        this.keys().register(IKey.lang("blockbuster.gui.record_editor.paste"), Keyboard.KEY_V, this::pasteActions)
                 .held(Keyboard.KEY_LCONTROL).category(category);
-        this.keys().register(IKey.lang("blockbuster.gui.record_editor.cut"), Keyboard.KEY_X, () -> this.cutActions())
+        this.keys().register(IKey.lang("blockbuster.gui.record_editor.cut"), Keyboard.KEY_X, this::cutActions)
                 .held(Keyboard.KEY_LCONTROL).category(category);
-        this.keys().register(IKey.lang("blockbuster.gui.record_editor.dupe"), Keyboard.KEY_D, () -> this.dupeActions())
+        this.keys().register(IKey.lang("blockbuster.gui.duplicate"), Keyboard.KEY_D, this::dupeActions)
                 .held(Keyboard.KEY_LSHIFT).category(category);
-        this.keys().register(IKey.lang("blockbuster.gui.record_editor.delete"), Keyboard.KEY_DELETE, () -> this.removeActions()).category(category);
+        this.keys().register(IKey.lang("blockbuster.gui.remove"), Keyboard.KEY_DELETE, this::removeActions).category(category);
     }
 
     /**
@@ -661,11 +659,11 @@ public class GuiRecordTimeline extends GuiElement
         this.currentTick.tick = tick;
         this.currentTick.index = index;
 
-        this.panel.setDelegate(this.panel.getActionPanel(this.current));
+        this.panel.selectAction(this.current);
     }
 
     /**
-     * This method also saves the old action of the panel via {@link GuiRecordingEditorPanel#save()}.
+     * This method also saves the old action of the panel via {@link GuiRecordingEditorPanel#saveAction()}.
      * Sets current action and {@link #currentTick} and updates the selection.
      * This method also updates the GUI action panel of the recording editor panel.
      * If the selection was empty or if {@link #fromTick} was -1 then {@link #fromTick} will be set to the provided tick
@@ -674,9 +672,14 @@ public class GuiRecordTimeline extends GuiElement
      */
     public void selectCurrentSaveOld(int tick, int index)
     {
-        this.panel.save();
+        this.saveAction();
 
         this.selectCurrent(tick, index);
+    }
+
+    public void saveAction()
+    {
+        this.panel.saveAction();
     }
 
     /**
@@ -822,14 +825,11 @@ public class GuiRecordTimeline extends GuiElement
             tick -= tick + this.selection.size() - 1 - this.panel.record.actions.size() + 1;
         }
 
-        this.recalculateVertical();
-
         this.fromTick = tick;
         this.currentTick.tick = tick + dT - start;
-        this.currentTick.index = this.panel.record.getActionIndex(this.currentTick.tick, current);
 
-        this.selectCurrent(this.currentTick.tick, this.currentTick.index);
-        ServerHandlerActionsChange.addActions(selectionCopy, this.panel.record, tick, index);
+        this.addActions(tick, index, selectionCopy);
+        this.selectCurrent(this.currentTick.tick, this.panel.record.getActionIndex(this.currentTick.tick, current));
     }
 
     public void cutActions()
@@ -953,19 +953,20 @@ public class GuiRecordTimeline extends GuiElement
             return;
         }
 
+        this.saveAction();
+
         if (this.currentTick.index < 0 || this.current == null)
         {
-            ServerHandlerActionsChange.addActions(copied, this.panel.record, this.currentTick.tick);
+            this.addActions(this.currentTick.tick, -1, copied);
         }
         else
         {
-            ServerHandlerActionsChange.addActions(copied, this.panel.record, this.currentTick.tick, this.currentTick.index);
+            this.addActions(this.currentTick.tick, this.currentTick.index, copied);
         }
 
         this.selection.clear();
         this.selection.addAll(copied);
         this.selectCurrent(this.currentTick.tick, -1);
-        this.recalculateVertical();
     }
 
     public void createAction(String str)
@@ -982,12 +983,12 @@ public class GuiRecordTimeline extends GuiElement
             int tick = this.currentTick.tick;
             int index = this.currentTick.index;
 
-            this.panel.list.setVisible(false);
+            List<List<Action>> insert = new ArrayList<>();
+            insert.add(new ArrayList<>(Arrays.asList(action)));
+
+            this.addActions(tick, index, insert);
             this.selection.clear();
             this.selectCurrentSaveOld(tick, this.panel.record.getActionIndex(tick, action));
-            this.recalculateVertical();
-
-            ServerHandlerActionsChange.addAction(action, this.panel.record, tick, index);
         }
         catch (Exception e)
         {
@@ -1050,11 +1051,24 @@ public class GuiRecordTimeline extends GuiElement
 
         tick += start;
 
-        ServerHandlerActionsChange.addActions(selectionCopy, this.panel.record, tick, index);
+        this.addActions(tick, index, selectionCopy);
 
         this.selection.clear();
         this.addToSelection(tick, selectionCopy);
-        this.selectCurrent(this.currentTick.tick, this.panel.record.getActionIndex(this.currentTick.tick, newCurrent));
+        this.selectCurrentSaveOld(this.currentTick.tick, this.panel.record.getActionIndex(this.currentTick.tick, newCurrent));
+    }
+
+    private void addActions(int tick, int index, List<List<Action>> actions)
+    {
+        if (index < 0)
+        {
+            ServerHandlerActionsChange.addActions(actions, this.panel.record, tick);
+        }
+        else
+        {
+            ServerHandlerActionsChange.addActions(actions, this.panel.record, tick, index);
+        }
+
         this.recalculateVertical();
     }
 
@@ -1082,6 +1096,7 @@ public class GuiRecordTimeline extends GuiElement
 
         List<List<Boolean>> deletionMask = this.panel.record.getActionsMask(from, selectionCopy);
 
+        this.saveAction();
         ServerHandlerActionsChange.deleteActions(this.panel.record, from, deletionMask);
 
         /* deselect without saving previous action */

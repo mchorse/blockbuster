@@ -740,7 +740,7 @@ public class CameraHandler
             }
             else if (location != null && current instanceof GuiCameraEditor)
             {
-                mchorse.blockbuster.ClientProxy.panels.recordingEditorPanel.save();
+                mchorse.blockbuster.ClientProxy.panels.recordingEditorPanel.saveAction();
 
                 if (!((GuiCameraEditor) current).getRunner().isRunning() && stopScene.get())
                 {
