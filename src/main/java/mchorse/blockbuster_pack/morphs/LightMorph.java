@@ -43,7 +43,7 @@ import java.util.UUID;
 public class LightMorph extends AbstractMorph implements IAnimationProvider, ISyncableMorph, IMorphGenerator
 {
     private LightAnimation animation = new LightAnimation();
-    private LightProperties lightProperties = new LightProperties();
+    private LightProperties lightProperties = new LightProperties(15);
     private int light = 15;
     private ExpirableDummyEntity dummy;
     private Vector3f position = new Vector3f();
@@ -237,8 +237,6 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
             this.position.x = (float) Interpolations.lerp(lastItemHolder.prevPosX, lastItemHolder.posX, partialTicks);
             this.position.y = (float) Interpolations.lerp(lastItemHolder.prevPosY, lastItemHolder.posY, partialTicks) + lastItemHolder.getEyeHeight() - 0.15F;
             this.position.z = (float) Interpolations.lerp(lastItemHolder.prevPosZ, lastItemHolder.posZ, partialTicks);
-
-            //TODO rotate the item position instead of simply adding it at the head
         }
 
         if (Minecraft.getMinecraft().gameSettings.showDebugInfo || GuiModelRenderer.isRendering())
@@ -374,13 +372,22 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
         {
             LightMorph lightMorph = (LightMorph) previous;
 
-            this.animation.last = new LightProperties();
-            this.animation.last.from(lightMorph);
-        }
-        else
-        {
-            this.animation.last = new LightProperties();
-            this.animation.last.from(this);
+            if (lightMorph.animation.isInProgress())
+            {
+                LightProperties newLast = new LightProperties();
+
+                newLast.from(lightMorph);
+
+                lightMorph.animation.apply(newLast, 1);
+
+                this.animation.last = newLast;
+            }
+            else
+            {
+                this.animation.last = new LightProperties();
+
+                this.animation.last.from(lightMorph);
+            }
         }
     }
 
@@ -459,9 +466,16 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
 
                     this.animation.last = newLast;
                 }
+                else
+                {
+                    this.animation.last = new LightProperties();
+
+                    this.animation.last.from(this);
+                }
 
                 this.animation.merge(this, lightMorph);
                 this.light = lightMorph.light;
+                this.animation.progress = 0;
             }
             else
             {
@@ -562,9 +576,9 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
             if (this.last == null)
             {
                 this.last = new LightProperties();
-            }
 
-            this.last.from(last);
+                this.last.from(last);
+            }
         }
 
         public void apply(LightProperties properties, float partialTicks)
@@ -583,6 +597,14 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
     public static class LightProperties
     {
         private int lightValue;
+
+        public LightProperties()
+        {}
+
+        public LightProperties(int lightValue)
+        {
+            this.lightValue = lightValue;
+        }
 
         public void from(LightMorph morph)
         {
