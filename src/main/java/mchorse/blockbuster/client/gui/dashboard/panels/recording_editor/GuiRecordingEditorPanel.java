@@ -62,26 +62,6 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
     public Record record;
     public NBTTagCompound buffer;
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public GuiActionPanel<? extends Action> getActionPanel(Action action)
-    {
-        if (action == null)
-        {
-            return null;
-        }
-
-        GuiActionPanel panel = this.panels.get(action.getClass());
-
-        if (panel == null)
-        {
-            panel = this.panels.get(Action.class);
-        }
-
-        panel.fill(action);
-
-        return panel;
-    }
-
     public GuiRecordingEditorPanel(Minecraft mc, GuiDashboard dashboard)
     {
         super(mc, dashboard);
@@ -110,7 +90,11 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.teleport = new GuiIconElement(mc, Icons.MOVE_TO, (b) -> this.teleport());
         this.teleport.tooltip(IKey.lang("blockbuster.gui.record_editor.teleport"), Direction.RIGHT);
 
-        this.list = new GuiLabelSearchListElement<String>(mc, (str) -> this.timeline.createAction(str.get(0).value));
+        this.list = new GuiLabelSearchListElement<String>(mc, (str) ->
+        {
+            this.timeline.createAction(str.get(0).value);
+            this.list.setVisible(false);
+        });
         this.list.label(IKey.lang("blockbuster.gui.search"));
         this.list.list.background();
 
@@ -147,6 +131,26 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
             .held(Keyboard.KEY_LCONTROL).category(category);
         this.keys().register(IKey.lang("blockbuster.gui.aperture.keys.toggle_list"), Keyboard.KEY_L, () -> this.open.clickItself(GuiBase.getCurrent()))
             .held(Keyboard.KEY_LCONTROL).category(category);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public GuiActionPanel<? extends Action> getActionPanel(Action action)
+    {
+        if (action == null)
+        {
+            return null;
+        }
+
+        GuiActionPanel panel = this.panels.get(action.getClass());
+
+        if (panel == null)
+        {
+            panel = this.panels.get(Action.class);
+        }
+
+        panel.fill(action);
+
+        return panel;
     }
 
     private void capture()
@@ -268,10 +272,10 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
     @Override
     public void close()
     {
-        this.save();
+        this.saveAction();
     }
 
-    public void save()
+    public void saveAction()
     {
         if (this.actionEditor.delegate != null && this.record != null)
         {
@@ -279,10 +283,16 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 
             if (this.actionEditor.delegate.action != null)
             {
-                /* save the old action */
-                ServerHandlerActionsChange.editAction(this.actionEditor.delegate.action, this.record, this.timeline.getCurrentTick(), this.timeline.getCurrentIndex());
-            }
+                /* so this method is independent from the current tick and index of GuiRecordTimeline */
+                int[] found = this.record.findAction(this.actionEditor.delegate.action);
 
+                if (found[0] != -1 && found[1] != -1)
+                {
+                    /* save the old action */
+                    ServerHandlerActionsChange.editAction(this.actionEditor.delegate.action, this.record, found[0], found[1]);
+                }
+            }
+            //TODO out of scope for this method to reset delegate GUI
             this.actionEditor.delegate = null;
         }
     }
@@ -304,7 +314,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
     public void selectRecord(String str)
     {
         //this.timeline.reset();
-        this.save();
+        this.saveAction();
         Dispatcher.sendToServer(new PacketRequestAction(str, true));
     }
 
@@ -329,6 +339,11 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
             this.record.preDelay = record.preDelay;
             this.record.postDelay = record.postDelay;
         }
+    }
+
+    public void selectAction(Action action)
+    {
+        this.setDelegate(this.getActionPanel(action));
     }
 
     public void updateEditorWidth()

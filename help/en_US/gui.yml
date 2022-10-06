@@ -111,6 +111,14 @@ blockbuster.gui:
             channel_tooltip: The rotation channel that should be filtered.
             to_tooltip: To tick
             from_tooltip: From tick
+            execute: Execute
+            success: Success
+            frame_chunk_error: Frames overwrite error. The received frames chunk cannot be inserted properly.
+            exception: Failure, an exception happened during executing the rotation filter.
+            record_save_error: An error happened while saving the record on the server.
+            not_enough_frames: Not enough frames were provided.
+            record_not_loaded: The recording could not be loaded.
+            empty_filtered_frames: The list of filtered frames is empty.
 
 
         attach: Attach
@@ -197,13 +205,15 @@ blockbuster.gui:
         not_selected: Select a player recording...
         action: action
 
-        cut: Cut action
-        copy: Copy action
-        paste: Paste action
+        cut: Cut actions
+        copy: Copy actions
+        paste: Paste actions
         capture: Record from cursor
         teleport: Teleport at cursor
 
-        unselect: Unselect action
+        deselect: Deselect actions
+        select_all: Select all actions
+
 
         drop: Drop block
         damage: Damage
