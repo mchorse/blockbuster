@@ -172,6 +172,7 @@ public class Blockbuster
     public static ValueBoolean recordCommands;
     public static ValueString recordChatPrefix;
     public static ValueBoolean recordPausePreview;
+    public static ValueBoolean recordRenderDebugPaths;
 
     public static ValueBoolean sceneSaveUpdate;
 
@@ -270,6 +271,7 @@ public class Blockbuster
         recordCommands = builder.getBoolean("record_commands", true);
         recordChatPrefix = builder.getString("record_chat_prefix", "");
         recordPausePreview = builder.getBoolean("record_pause_preview", true);
+        recordRenderDebugPaths = builder.getBoolean("record_render_debug_paths", true);
 
         /* Scene */
         sceneSaveUpdate = builder.category("scenes").getBoolean("save_update", true);

@@ -27,6 +27,7 @@ blockbuster.config.comments:
         record_commands: Does command action get recorded during recording?
         record_chat_prefix: Prefix which will get prepended to the actual message in the chat action (%%NAME%% wild card supported for current actor's name)
         record_pause_preview: This option enabled preview of animated morphs like image morph animations, animated poses, record morphs and sequencers. It's affects performance of the server side.
+        record_render_debug_paths: Enable the rendering of recording debug paths.
 
     scenes:
         save_update: Whether scenes should be reloaded, if running, after saving the scene by exiting the dashboard GUI.

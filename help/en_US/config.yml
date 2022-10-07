@@ -39,6 +39,7 @@ blockbuster.config:
         record_commands: Record commands
         record_chat_prefix: Chat action prefix
         record_pause_preview: Better preview
+        record_render_debug_paths: Render debug paths
 
     scenes:
         title: Scenes
