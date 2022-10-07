@@ -44,6 +44,7 @@ public class GuiLightMorph extends GuiAbstractMorph<LightMorph>
             this.animation = new GuiAnimation(mc, true);
 
             this.animation.flex().relative(this).x(1F, -130).w(130);
+            this.animation.ignored.removeFromParent();
 
             this.lightValue = new GuiTrackpadElement(mc, (value) -> this.morph.setLightValue(value.intValue()));
 

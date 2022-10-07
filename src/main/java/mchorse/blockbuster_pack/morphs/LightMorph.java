@@ -12,6 +12,7 @@ import mchorse.mclib.utils.Interpolation;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.MatrixUtils;
+import mchorse.mclib.utils.OptifineHelper;
 import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.mclib.utils.RenderingUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -199,7 +200,7 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase target, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        if (ReflectionUtils.isOptifineShadowPass())
+        if (OptifineHelper.isOptifineShadowPass())
         {
             return;
         }
@@ -397,7 +398,9 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
         LightMorph morph = (LightMorph) this.copy();
 
         morph.lightProperties.from(this);
-        this.animation.apply(morph.lightProperties, partialTicks);
+        morph.animation.last = new LightProperties(this.animation.last.lightValue);
+
+        morph.animation.apply(morph.lightProperties, partialTicks);
 
         morph.animation.duration = this.animation.progress;
 
@@ -454,6 +457,7 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
                 this.dummy.setLifetime(this.dummy.getAge() + 1);
             }
 
+            /* light morph animation.ignored GUI is disabled because it doesn't make sense now */
             if (!lightMorph.animation.ignored)
             {
                 if (this.animation.isInProgress())
