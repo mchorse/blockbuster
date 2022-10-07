@@ -383,7 +383,7 @@ public class RecordPlayer
                     }
                 }
 
-                if (!this.realPlayer)
+                if (!this.realPlayer && !this.actor.isDead)
                 {
                     this.actor.world.getMinecraftServer().getPlayerList().playerLoggedIn((EntityPlayerMP) this.actor);
                 }
