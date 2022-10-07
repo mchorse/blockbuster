@@ -533,7 +533,7 @@ public class RenderingHandler
         }
 
         /* render actor paths */
-        if (mc.gameSettings.showDebugInfo && !recordsToRender.isEmpty())
+        if (mc.gameSettings.showDebugInfo && !recordsToRender.isEmpty() && Blockbuster.recordRenderDebugPaths.get())
         {
             renderPaths(event, recordsToRender);
         }
