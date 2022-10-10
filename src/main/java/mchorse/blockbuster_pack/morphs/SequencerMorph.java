@@ -216,10 +216,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
                 this.updateSetDuration(morph, 1, 1);
             }
         }
-        else
-        {
-            this.updateProgress(morph, 1);
-        }
 
         return morph;
     }
