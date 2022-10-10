@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
+import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -112,6 +113,8 @@ public class GifTexture extends AbstractTexture
 
             index++;
         }
+
+        index = MathUtils.clamp(index, 0, this.frames.length - 1);
 
         return this.frames[index];
     }
