@@ -17,7 +17,7 @@ import mchorse.blockbuster.network.client.guns.ClientHandlerGunProjectileVanish;
 import mchorse.blockbuster.network.client.guns.ClientHandlerGunShot;
 import mchorse.blockbuster.network.client.guns.ClientHandlerGunStuck;
 import mchorse.blockbuster.network.client.recording.ClientHandlerApplyFrame;
-import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
+import mchorse.blockbuster.network.client.recording.ClientHandlerFramesLoad;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayback;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayerRecording;
 import mchorse.blockbuster.network.client.recording.ClientHandlerRequestedFrames;
@@ -58,7 +58,7 @@ import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
 import mchorse.blockbuster.network.common.recording.PacketUnloadRecordings;
 import mchorse.blockbuster.network.common.recording.PacketUpdatePlayerData;
-import mchorse.blockbuster.network.common.recording.actions.PacketAction;
+import mchorse.blockbuster.network.common.recording.actions.PacketActionsChange;
 import mchorse.blockbuster.network.common.recording.actions.PacketActionList;
 import mchorse.blockbuster.network.common.recording.actions.PacketActions;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestAction;
@@ -95,7 +95,7 @@ import mchorse.blockbuster.network.server.recording.ServerHandlerPlayback;
 import mchorse.blockbuster.network.server.recording.ServerHandlerRequestFrames;
 import mchorse.blockbuster.network.server.recording.ServerHandlerRequestRecording;
 import mchorse.blockbuster.network.server.recording.ServerHandlerUpdatePlayerData;
-import mchorse.blockbuster.network.server.recording.actions.ServerHandlerAction;
+import mchorse.blockbuster.network.server.recording.actions.ServerHandlerActionsChange;
 import mchorse.blockbuster.network.server.recording.actions.ServerHandlerRequestAction;
 import mchorse.blockbuster.network.server.recording.actions.ServerHandlerRequestActions;
 import mchorse.blockbuster.network.server.scene.ServerHandlerRequestScenes;
@@ -141,7 +141,7 @@ public class Dispatcher
             register(PacketUnloadFrames.class, ClientHandlerUnloadFrames.class, Side.CLIENT);
             register(PacketUnloadRecordings.class, ClientHandlerUnloadRecordings.class, Side.CLIENT);
 
-            register(PacketFramesLoad.class, ClientHandlerFrames.class, Side.CLIENT);
+            register(PacketFramesLoad.class, ClientHandlerFramesLoad.class, Side.CLIENT);
             register(PacketFramesChunk.class, ServerHandlerFramesChunk.class, Side.SERVER);
             register(PacketRequestedFrames.class, ClientHandlerRequestedFrames.class, Side.CLIENT);
             register(PacketRequestFrames.class, ServerHandlerRequestFrames.class, Side.SERVER);
@@ -150,7 +150,7 @@ public class Dispatcher
             register(PacketApplyFrame.class, ClientHandlerApplyFrame.class, Side.CLIENT);
             register(PacketApplyFrame.class, ServerHandlerApplyFrame.class, Side.SERVER);
 
-            register(PacketAction.class, ServerHandlerAction.class, Side.SERVER);
+            register(PacketActionsChange.class, ServerHandlerActionsChange.class, Side.SERVER);
             register(PacketActions.class, ClientHandlerActions.class, Side.CLIENT);
             register(PacketRequestAction.class, ServerHandlerRequestAction.class, Side.SERVER);
             register(PacketRequestActions.class, ServerHandlerRequestActions.class, Side.SERVER);

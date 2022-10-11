@@ -4,7 +4,6 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
-import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketApplyFrame;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
@@ -14,16 +13,13 @@ import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.mclib.utils.ForgeUtils;
 import mchorse.mclib.utils.MathUtils;
-import net.minecraft.command.CommandBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -155,12 +151,31 @@ public class RecordUtils
     }
 
     /**
-     * Send record frames to given player (from the server)
+     * Send record frames to given player from the server.
+     * @param filename
+     * @param player
      */
-    public static void sendRecord(String filename, EntityPlayerMP player)
+    public static void sendRecordTo(String filename, EntityPlayerMP player)
+    {
+        sendRecordTo(filename, player, -1);
+    }
+
+    /**
+     * Send record frames to given player from the server.
+     * @param filename
+     * @param player
+     * @param callbackID the id of the callback that should be executed on the client.
+     *                   -1 if no callback was created or should be executed.
+     */
+    public static void sendRecordTo(String filename, EntityPlayerMP player, int callbackID)
     {
         if (!playerNeedsAction(filename, player))
         {
+            PacketFramesLoad packet = callbackID == -1 ? new PacketFramesLoad(filename, PacketFramesLoad.State.NOCHANGES) :
+                                      new PacketFramesLoad(filename, PacketFramesLoad.State.NOCHANGES, callbackID);
+
+            Dispatcher.sendTo(packet, player);
+
             return;
         }
 
@@ -193,8 +208,18 @@ public class RecordUtils
         {
             record.resetUnload();
 
-            Dispatcher.sendTo(new PacketFramesLoad(filename, record.preDelay, record.postDelay, record.frames), player);
+            PacketFramesLoad packet = callbackID == -1 ? new PacketFramesLoad(filename, record.preDelay, record.postDelay, record.frames) :
+                                      new PacketFramesLoad(filename, record.preDelay, record.postDelay, record.frames, callbackID);
+
+            Dispatcher.sendTo(packet, player);
             System.out.println("Sent " + filename + " to " + player.getName());
+        }
+        else
+        {
+            PacketFramesLoad packet = callbackID == -1 ? new PacketFramesLoad(filename, PacketFramesLoad.State.ERROR) :
+                                      new PacketFramesLoad(filename, PacketFramesLoad.State.ERROR, callbackID);
+
+            Dispatcher.sendTo(packet, player);
         }
     }
 
@@ -384,6 +409,9 @@ public class RecordUtils
         Frame frame = record.frames.get(tick);
 
         frame.apply(entity, true);
+
+        /* Frame does not apply bodyYaw, EntityActor.updateDistance() does... TODO refactor this*/
+        entity.renderYawOffset = frame.bodyYaw;
 
         PacketApplyFrame packet = new PacketApplyFrame(frame, entity.getEntityId());
 

@@ -42,6 +42,6 @@ public class SubCommandActionRequest extends BBCommandBase
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         CommonProxy.scenes.play(args[0], sender.getEntityWorld());
-        RecordUtils.sendRecord(args[0], getCommandSenderAsPlayer(sender));
+        RecordUtils.sendRecordTo(args[0], getCommandSenderAsPlayer(sender));
     }
 }

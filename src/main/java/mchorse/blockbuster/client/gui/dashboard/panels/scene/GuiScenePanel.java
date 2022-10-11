@@ -2,7 +2,6 @@ package mchorse.blockbuster.client.gui.dashboard.panels.scene;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.common.item.ItemPlayback;
@@ -14,9 +13,9 @@ import mchorse.blockbuster.network.common.scene.PacketScenePause;
 import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.network.server.recording.ServerHandlerFramesOverwrite;
+import mchorse.blockbuster.network.server.recording.ServerHandlerRequestRecording;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Frame;
-import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.blockbuster.recording.scene.SceneLocation;
@@ -373,28 +372,55 @@ public class GuiScenePanel extends GuiBlockbusterPanel
 
     protected void rotationFilter()
     {
-        try
+        int fromTest = Math.min((int) this.eulerFilterFrom.value, (int) this.eulerFilterTo.value);
+        int toTest = Math.max((int) this.eulerFilterFrom.value, (int) this.eulerFilterTo.value);
+
+        if (toTest - fromTest + 1 < 2)
+        {
+            this.addPopUpModal(IKey.lang("blockbuster.gui.director.rotation_filter.not_enough_frames"));
+
+            return;
+        }
+
+        /* wait for the requested recording to return from server */
+        ServerHandlerRequestRecording.requestRecording(this.replay.id, (record) ->
         {
             Frame.RotationChannel channel = Frame.RotationChannel.values()[this.eulerFilterChannel.getValue()];
-            Record record = ClientProxy.manager.get(this.replay.id); //TODO this would not work on dedicated servers - add mechanism to request recordings
 
-            if (record == null) return;
+            if (record == null)
+            {
+                this.addPopUpModal(IKey.lang("blockbuster.gui.director.rotation_filter.record_not_loaded"));
+
+                return;
+            }
 
             int from = MathUtils.clamp(Math.min((int) this.eulerFilterFrom.value, (int) this.eulerFilterTo.value), 0, record.frames.size() - 1);
             int to = MathUtils.clamp(Math.max((int) this.eulerFilterFrom.value, (int) this.eulerFilterTo.value), 0, record.frames.size() - 1);
 
-            List<Frame> frames = RecordUtils.discontinuityEulerFilter(CommonProxy.manager.get(this.replay.id).frames, from, to, channel);
+            List<Frame> frames = RecordUtils.discontinuityEulerFilter(record.frames, from, to, channel);
 
-            if (frames.isEmpty()) return;
+            if (frames.isEmpty())
+            {
+                this.addPopUpModal(IKey.lang("blockbuster.gui.director.rotation_filter.empty_filtered_frames"));
 
-            ServerHandlerFramesOverwrite.sendFramesToServer(this.replay.id, frames, from, to);
-        }
-        catch (Exception e)
-        {
-            System.out.println("Exception happened during executing rotation Filter.");
+                return;
+            }
 
-            e.printStackTrace();
-        }
+            ServerHandlerFramesOverwrite.sendFramesToServer(record.filename, frames, from, to, (obj) ->
+            {
+                this.addPopUpModal((IKey) obj[0]);
+            });
+        });
+    }
+
+    private void addPopUpModal(IKey lang)
+    {
+        GuiPopUpModal modal = new GuiPopUpModal(this.mc, lang);
+        modal.flex().relative(this.parent).wh(200, 50);
+        modal.setFadeDuration(0);
+        modal.resize();
+
+        this.add(modal);
     }
 
     @Override
