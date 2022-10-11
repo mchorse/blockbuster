@@ -6,17 +6,22 @@ import mchorse.blockbuster.network.common.recording.PacketFramesOverwrite;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.network.ServerMessageHandler;
+import mchorse.mclib.network.mclib.client.ClientHandlerAnswer;
+import mchorse.mclib.network.mclib.common.PacketStatusAnswer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFramesOverwrite>
 {
@@ -29,6 +34,8 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
     public void run(EntityPlayerMP entityPlayerMP, PacketFramesOverwrite packet)
     {
         Record targetRecord;
+        IKey answer = null;
+        boolean status = false;
 
         try
         {
@@ -36,11 +43,15 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
 
             if (targetRecord == null)
             {
+                this.sendAnswer(packet, entityPlayerMP, IKey.format("blockbuster.error.recording.not_found", packet.filename), false);
+
                 return;
             }
         }
         catch (Exception e)
         {
+            this.sendAnswer(packet, entityPlayerMP, IKey.lang("blockbuster.gui.director.rotation_filter.record_save_error"), false);
+
             return;
         }
 
@@ -79,10 +90,14 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
                 try
                 {
                     RecordUtils.saveRecord(targetRecord);
+
+                    status = true;
+                    answer = IKey.lang("blockbuster.gui.director.rotation_filter.success");
                 }
                 catch (IOException e)
                 {
-                    System.out.println("Error while saving Record.");
+                    status = false;
+                    answer = IKey.lang("blockbuster.gui.director.rotation_filter.record_save_error");
 
                     e.printStackTrace();
                 }
@@ -92,22 +107,55 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
         }
         else
         {
-            System.out.println("Frames overwrite error. The received frames chunk cannot be inserted properly.");
-            System.out.println("Error with overwrite task for file " + key.filename + " from tick " + key.from + " to tick " + key.to + ".");
-            System.out.println("The respective queued frame chunks have been cleared.");
+            status = false;
+            answer = IKey.lang("blockbuster.gui.director.rotation_filter.frame_chunk_error");
 
             overwriteQueue.remove(key);
+        }
+
+        if (answer != null)
+        {
+            this.sendAnswer(packet, entityPlayerMP, answer, status);
+        }
+    }
+
+    private void sendAnswer(PacketFramesOverwrite packet, EntityPlayerMP player, IKey message, boolean status)
+    {
+        if (packet.requiresAnswer())
+        {
+            PacketStatusAnswer answer = packet.getAnswer(new Object[]{message, status});
+
+            mchorse.mclib.network.mclib.Dispatcher.sendTo(answer, player);
         }
     }
 
     @SideOnly(Side.CLIENT)
     public static void sendFramesToServer(String filename, List<Frame> frames, int from, int to)
     {
+        sendFramesToServer(filename, frames, from, to, null);
+    }
+
+    /**
+     *
+     * @param filename
+     * @param frames
+     * @param from
+     * @param to
+     * @param callback the callback that should be called when the answer from the server returns
+     */
+    @SideOnly(Side.CLIENT)
+    public static void sendFramesToServer(String filename, List<Frame> frames, int from, int to, @Nullable Consumer<Object[]> callback)
+    {
         int cap = 400;
+
+        int callbackID = callback != null ? ClientHandlerAnswer.registerConsumer(callback) : -1;
 
         if (frames.size() <= cap)
         {
-            Dispatcher.sendToServer(new PacketFramesOverwrite(from, to, 0, filename, frames));
+            PacketFramesOverwrite packet = callbackID != -1 ? new PacketFramesOverwrite(from, to, 0, filename, frames, callbackID) :
+                                            new PacketFramesOverwrite(from, to, 0, filename, frames);
+
+            Dispatcher.sendToServer(packet);
 
             return;
         }
@@ -121,7 +169,10 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
 
             if (chunk.size() == cap)
             {
-                Dispatcher.sendToServer(new PacketFramesOverwrite(from, to, chunkStart, filename, chunk));
+                PacketFramesOverwrite packet = callbackID != -1 ? new PacketFramesOverwrite(from, to, chunkStart, filename, chunk, callbackID) :
+                                                new PacketFramesOverwrite(from, to, chunkStart, filename, chunk);
+
+                Dispatcher.sendToServer(packet);
 
                 chunk.clear();
 

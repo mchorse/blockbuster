@@ -41,17 +41,21 @@ public abstract class PacketFrames implements IMessage
         this.filename = ByteBufUtils.readUTF8String(buf);
         this.preDelay = buf.readInt();
         this.postDelay = buf.readInt();
-        int count = buf.readInt();
 
-        for (int i = 0; i < count; i++)
+        if (buf.readBoolean())
         {
-            Frame frame = new Frame();
+            int count = buf.readInt();
 
-            frame.fromBytes(buf);
-            frames.add(frame);
+            for (int i = 0; i < count; i++)
+            {
+                Frame frame = new Frame();
+
+                frame.fromBytes(buf);
+                frames.add(frame);
+            }
+
+            this.frames = frames;
         }
-
-        this.frames = frames;
     }
 
     @Override
@@ -60,11 +64,16 @@ public abstract class PacketFrames implements IMessage
         ByteBufUtils.writeUTF8String(buf, this.filename);
         buf.writeInt(this.preDelay);
         buf.writeInt(this.postDelay);
-        buf.writeInt(this.frames.size());
+        buf.writeBoolean(this.frames != null);
 
-        for (Frame frame : this.frames)
+        if (this.frames != null)
         {
-            frame.toBytes(buf);
+            buf.writeInt(this.frames.size());
+
+            for (Frame frame : this.frames)
+            {
+                frame.toBytes(buf);
+            }
         }
     }
 }

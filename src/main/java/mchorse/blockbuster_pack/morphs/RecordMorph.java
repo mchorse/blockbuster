@@ -3,8 +3,8 @@ package mchorse.blockbuster_pack.morphs;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.recording.PacketRequestRecording;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestAction;
+import mchorse.blockbuster.network.server.recording.ServerHandlerRequestRecording;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Frame;
@@ -236,7 +236,7 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
 
             if (record == null && !this.record.isEmpty())
             {
-                Dispatcher.sendToServer(new PacketRequestRecording(this.record));
+                ServerHandlerRequestRecording.requestRecording(this.record);
             }
             else if (this.animation.progress != 0 && record != null)
             {
