@@ -167,18 +167,18 @@ public class Record
      * @return a new list containing the actions in the specified ranges. The list can contain null values.
      * @throws IndexOutOfBoundsException if fromTick < 0 || toTick > size of {@link #actions}
      */
-    public List<List<Action>> getActions(int fromTick0, int toTick0, int fromIndex0, int toIndex0) throws IndexOutOfBoundsException
+    public List<List<Action>> getActions(int fromTick0, int toTick0, int fromIndex0, int toIndex0)
     {
-        if (fromTick0 < 0 || toTick0 < 0 || ((fromIndex0 != -1 || toIndex0 != -1) && fromIndex0 < 0 && toIndex0 < 0)
-            || fromTick0 > this.actions.size() || toTick0 > this.actions.size())
-        {
-            return new ArrayList<>();
-        }
-
         int fromIndex = Math.min(fromIndex0, toIndex0);
         int toIndex = Math.max(fromIndex0, toIndex0);
         int fromTick = Math.min(fromTick0, toTick0);
         int toTick = Math.max(fromTick0, toTick0);
+
+        if (fromTick0 < 0 || toTick0 < 0 || ((fromIndex0 != -1 || toIndex0 != -1) && fromIndex0 < 0 && toIndex0 < 0)
+            || toTick >= this.actions.size())
+        {
+            return new ArrayList<>();
+        }
 
         List<List<Action>> actionRange = this.actions.subList(fromTick, toTick + 1);
 
@@ -225,7 +225,7 @@ public class Record
      * @return a new list containing the actions in the specified ranges. The list can contain null values.
      * @throws IndexOutOfBoundsException if fromTick < 0 || toTick > size of {@link #actions}
      */
-    public List<List<Action>> getActions(int fromTick0, int toTick0) throws IndexOutOfBoundsException
+    public List<List<Action>> getActions(int fromTick0, int toTick0)
     {
         return this.getActions(fromTick0, toTick0, -1, -1);
     }
