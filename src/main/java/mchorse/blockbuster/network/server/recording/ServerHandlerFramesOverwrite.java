@@ -26,9 +26,11 @@ import java.util.function.Consumer;
 public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFramesOverwrite>
 {
     /**
-     * In case many people on a server want to overwrite the same record - avoid collision with packets
+     * In case many people on a server want to overwrite the same record - avoid collision with packets.
+     * The key identifies which record should have which ticks overwritten.
+     * TODO If two people at the same time want to override the same ticks, this may be a problem.
      */
-    private static Map<FramesOverwrite, List<Frame>> overwriteQueue = new HashMap<>();
+    private static Map<OverwriteIdentifier, List<Frame>> overwriteQueue = new HashMap<>();
 
     @Override
     public void run(EntityPlayerMP entityPlayerMP, PacketFramesOverwrite packet)
@@ -36,6 +38,13 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
         Record targetRecord;
         IKey answer = null;
         boolean status = false;
+
+        if (packet.frames.isEmpty())
+        {
+            System.out.println("Received an empty chunk...");
+
+            return;
+        }
 
         try
         {
@@ -55,11 +64,15 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
             return;
         }
 
-        FramesOverwrite key = null;
+        OverwriteIdentifier key = null;
 
-        FramesOverwrite targetKey = new FramesOverwrite(packet.getFrom(), packet.getTo(), packet.filename);
+        /*
+         * the constructor sorts from and to tick already.
+         * It is important that from tick is always smaller than to tick, no matter what the client sends!
+         */
+        OverwriteIdentifier targetKey = new OverwriteIdentifier(packet.getFrom(), packet.getTo(), packet.filename);
 
-        for (Map.Entry<FramesOverwrite, List<Frame>> entry : overwriteQueue.entrySet())
+        for (Map.Entry<OverwriteIdentifier, List<Frame>> entry : overwriteQueue.entrySet())
         {
             if (entry.getKey().equals(targetKey))
             {
@@ -80,26 +93,36 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
 
         if (this.insertChunk(packet.frames, packet.getIndex(), frames))
         {
-            if (frames.size() == (key.to - key.from) + 1 && !frames.contains(null))
+            if (frames.size() == (key.toTick - key.fromTick) + 1 && !frames.contains(null))
             {
-                for (int i = key.from; i <= key.to; i++)
-                {
-                    targetRecord.frames.set(i, frames.get(i - key.from));
-                }
-
-                try
-                {
-                    RecordUtils.saveRecord(targetRecord);
-
-                    status = true;
-                    answer = IKey.lang("blockbuster.gui.director.rotation_filter.success");
-                }
-                catch (IOException e)
+                if (key.toTick >= targetRecord.frames.size())
                 {
                     status = false;
                     answer = IKey.lang("blockbuster.gui.director.rotation_filter.record_save_error");
 
-                    e.printStackTrace();
+                    System.out.println("toTick " + key.toTick + " out of range of record frames size.");
+                }
+                else
+                {
+                    for (int i = key.fromTick; i <= key.toTick; i++)
+                    {
+                        targetRecord.frames.set(i, frames.get(i - key.fromTick));
+                    }
+
+                    try
+                    {
+                        RecordUtils.saveRecord(targetRecord);
+
+                        status = true;
+                        answer = IKey.lang("blockbuster.gui.director.rotation_filter.success");
+                    }
+                    catch (IOException e)
+                    {
+                        status = false;
+                        answer = IKey.lang("blockbuster.gui.director.rotation_filter.record_save_error");
+
+                        e.printStackTrace();
+                    }
                 }
 
                 overwriteQueue.remove(key);
@@ -200,35 +223,29 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
         }
         else
         {
-            if (frames.get(targetIndex) == null)
+            int i = targetIndex;
+
+            while (i < frames.size() && i < targetIndex + chunk.size())
             {
-                int i = targetIndex;
-
-                while (i < frames.size() && i < targetIndex + chunk.size())
+                if (frames.get(i) != null)
                 {
-                    if (frames.get(i) != null)
-                    {
-                        break;
-                    }
-
-                    i++;
+                    break;
                 }
 
-                /* if the part in frames only contains nulls insert chunk */
-                if (i == targetIndex + chunk.size())
+                i++;
+            }
+
+            /* if the part in frames only contains nulls insert chunk */
+            if (i == targetIndex + chunk.size())
+            {
+                for (int j = targetIndex; j < targetIndex + chunk.size(); j++)
                 {
-                    for (int j = targetIndex; j < targetIndex + chunk.size(); j++)
-                    {
-                        frames.set(j, chunk.get(j - targetIndex));
-                    }
-                }
-                else
-                {
-                    return false;
+                    frames.set(j, chunk.get(j - targetIndex));
                 }
             }
             else
             {
+                /* the chunk doesn't fit in the slot because there are non null values */
                 return false;
             }
         }
@@ -236,29 +253,44 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
         return true;
     }
 
-    private static class FramesOverwrite
+    /**
+     * Identifier which record should get the specified ticks overwritten.
+     */
+    private static class OverwriteIdentifier
     {
-        private int from;
-        private int to;
+        /**
+         * From tick to overwrite
+         */
+        private int fromTick;
+        /**
+         * To tick (inclusive) to overwrite to
+         */
+        private int toTick;
         private String filename;
 
-        public FramesOverwrite(int from, int to, String filename)
+        /**
+         * Sorts from and to
+         * @param from
+         * @param to
+         * @param filename
+         */
+        public OverwriteIdentifier(int from, int to, String filename)
         {
-            this.from = from;
-            this.to = to;
+            this.fromTick = Math.min(from, to);
+            this.toTick = Math.max(from, to);
             this.filename = filename;
         }
 
         @Override
         public boolean equals(Object obj)
         {
-            if (obj instanceof FramesOverwrite)
+            if (obj instanceof OverwriteIdentifier)
             {
-                FramesOverwrite framesOverwrite = (FramesOverwrite) obj;
+                OverwriteIdentifier framesOverwrite = (OverwriteIdentifier) obj;
 
                 return framesOverwrite.filename.equals(this.filename)
-                        && framesOverwrite.from == this.from
-                        && framesOverwrite.to == this.to;
+                        && framesOverwrite.fromTick == this.fromTick
+                        && framesOverwrite.toTick == this.toTick;
             }
 
             return false;
