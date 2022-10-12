@@ -167,7 +167,7 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
         {
             chunk.add(frames.get(i));
 
-            if (chunk.size() == cap)
+            if (chunk.size() == cap || i == frames.size() - 1)
             {
                 PacketFramesOverwrite packet = callbackID != -1 ? new PacketFramesOverwrite(from, to, chunkStart, filename, chunk, callbackID) :
                                                 new PacketFramesOverwrite(from, to, chunkStart, filename, chunk);
@@ -214,7 +214,8 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
                     i++;
                 }
 
-                if (i == targetIndex + chunk.size() - 1)
+                /* if the part in frames only contains nulls insert chunk */
+                if (i == targetIndex + chunk.size())
                 {
                     for (int j = targetIndex; j < targetIndex + chunk.size(); j++)
                     {
