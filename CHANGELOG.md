@@ -1,3 +1,52 @@
+## Version 2.6
+
+This update was made by Chryfi, exceptions are mentioned at the respective items
+
+**Compatible** with McLib `2.4.1`, Metamorph `1.3.1` and Aperture `1.8.1`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+* Added light morph (requires Optifine's dynamic lighting)
+* Added custom light strength for model blocks
+* Record editor
+    * Added ability to select multiple things in record editor
+        * Area selection via mouse drag (press shift after dragging to add the area to the previous selection)
+        * Select an area by pressing shift and clicking
+        * Add / deselect individual actions to the selection
+    * Added keybinds for record editor
+        * CTRL + C = copy, CTRL + V = paste, CTRL + A = select all, CTRL + X = cut, SHIFT + D = duplicate, DEL = delete selected actions, ESC = deselect or escape screen if nothing is selected
+    * Added right click to abort moving selected actions
+* Model block
+    * Added render last for model  blocks
+    * Added "prevent reset" button to model block to prevent reset on playback when that option is enabled in BB config
+    * Added "always render" option for model block when BB disable model block rendering config is enabled (suggested by gewenzsko)
+* Added local / global translation mode
+* Added facing option to image morph
+* Added "remove parent space" option to image morph: it removes the transformations of the parent morph e.g. bodyparts
+* First person playback related
+    * Added HotBarChangeAction for recording of hotbar current slot changes and item changes 
+    * Added rotation filter to scene's menu to fix flickering in first person playback after recording from cursor (sponsored by Not Safe)
+    * Added recording of XP and food level in an easy straightforward way (without actions)
+    * Added "playback XP and food" button to scene's menu to enable playback of the recorded XP and food level (not recorded via actions)
+* Added "look at" to tracker modifier (suggested by Herr Bergmann)
+* Added config option to disable rendering actor paths in debug screen (suggested by gewenzsko)
+* Re-added the panel with item scale and anchor point for items for obj models in model editor
+* Fixed record tp and other recording tp GUI elements not supporting body yaw
+* Fixed emoticons sequencer issue while walking (by MiaoNLI)
+* Fixed bb gun shoots not in the direction where the recorded actor looks at (fixed by McHorse)
+* Fixed bug where actor spams "Tried to add entity but it was marked as removed already" in logs
+* Fixed crash concurrent modification exception in ScenesManager when an acotr starts another scene
+* Fixed morph resetting to replay morph when playing beyond recording's end
+* Fixed sequencer morph animation broken and weird in preview (e.g. when pausing) and broken with tracker modifier
+* Fixed GIF crashes when duration of GIF frames is 0
+* Fixed rounding format error in snowstorm causing lag spikes when opening model block
+* Fixed limb transparency going completely transparent at 10% alpha
+* Fixed tracker morph being at camera position when used directly as actor morph without bodyparts
+* Fixed actor first person playback invincibility not being applied
+* Fixed crash with Carry-on mod when picking up entity actor
+* Fixed tracker morph not rendering in GUI
+* Fixed crash when McLib is missing (by MiaoNLI)
+* Improved render last performance of actors and combined with model blocks
+* Improved serialisation of NBT and ByteBuffer in model block
+
 ## Version 2.5
 
 This huge update was made by MiaoNLI, exceptions are mentioned at the respective items.
@@ -12,7 +61,7 @@ This huge update was made by MiaoNLI, exceptions are mentioned at the respective
     * Adjusted the width of GuiTransformations
     * Added damage control tips
 * GIF
-    * Compatible with OptiFine shaders (*_n.gif & *_s.gif)
+    * Compatible with OptiFine shaders (\*_n.gif & \*_s.gif)
     * Added the function to select a frame of gif
 * Model Editor
     * OBJ/VOX limb highlighting
