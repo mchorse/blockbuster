@@ -872,6 +872,8 @@ public class GuiRecordTimeline extends GuiElement
             {
                 for (Action action : frame)
                 {
+                    if (action == null) continue;
+
                     NBTTagCompound actionNBT = new NBTTagCompound();
 
                     actionNBT.setString("ActionType", ActionRegistry.NAME_TO_CLASS.inverse().get(action.getClass()));
