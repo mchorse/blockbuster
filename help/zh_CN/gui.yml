@@ -92,6 +92,9 @@ blockbuster.gui:
         name_tooltip: 演员的名称标签。你可以通过这一参数，并结合命令（比如 @e[name=Test]）来锁定该演员，或只是单纯让演员显示名称。\n\n你可以使用 [ 作为显示名称的格式化代码。如 [cR[aG[1B[r 会变成 {c}R{a}G{1}B{r}.
         target: 目标
         target_tooltip: 你可以在此指定需要哪个玩家来播放这段回放。\n\n额外的目标选择器可以用来选择玩家的用户名. @r - 随机玩家, @{n}team{r} - 其中 {n}team{r} 是计分板中的队伍名称.
+        playback_xp_food_level: 播放 XP 和饱食度
+        playback_xp_food_level_enabled: 启用
+        playback_xp_food_level_tooltip: 播放玩家回放中的经验值与饱食度等级的变化。如果你遇到问题或希望这些参数能被动态执行，请禁用回放。
         invincible: 无敌
         invisible: 隐身
         enable_burning: 允许燃烧
@@ -102,6 +105,8 @@ blockbuster.gui:
         render_last: 最后渲染
         render_last_tooltip: 使演员在最后被渲染，可以解决在大多数情况下，不透明的演员出现在使用了半透明伪装的演员后面的显示问题。\n\n该选项需要先启用“始终渲染演员”模组选项，并且该演员的“假玩家”选项需要保持禁用。
         health: 生命值
+        total_experience: 总经验值
+        food_level: 饱食度
         edit_record: 编辑回放
         update_data: 更新数据
         update_data_tooltip: 更新在回放文件中的玩家数据
@@ -109,6 +114,24 @@ blockbuster.gui:
         rename_prefix_tooltip: 使用新前缀来重命名回放的回放 ID
         rename_replay_dupe_modal: 该回放 ID 已存在于当前场景。你也可以重复使用它，如果你想的话。
         rename_prefix_popup: "输入一个新的前缀："
+
+        rotation_filter:
+            title: 过滤旋转参数
+            head_yaw: 头部偏航
+            head_pitch: 头部俯仰
+            body_yaw: 身体偏航
+            channel_tooltip: 需要过滤的旋转参数通道
+            to_tooltip: 入点
+            from_tooltip: 出点
+            execute: 执行
+            success: 执行成功
+            frame_chunk_error: 帧重写发成错误。输入的帧区块无法正常插入。
+            exception: 失败，在执行旋转过滤的过程中发生异常。
+            record_save_error: 在服务器上保存回放时发生错位。
+            not_enough_frames: 未提供足够的帧。
+            record_not_loaded: 无法加载回放。
+            empty_filtered_frames: 被过滤帧的列表为空
+
 
         attach: 链接
         attach_tooltip: 将该场景链接到当前手持的播放按钮上。\n\n另外，你也可以通过手持播放按钮，并在潜行的同时，右键点击播放按钮实现对它的链接。
@@ -171,6 +194,15 @@ blockbuster.gui:
         global_tooltip: 启用忽略区块卸载
         enabled: 启用
         enabled_tooltip: 启用模型方块渲染
+        render_last: 最后渲染
+        render_last_tooltip: 让这个模型方块被最后渲染。适用于半透明的模型方块。可以解决大多数情况下某个模型方块在半透明模型方块后方而不会被渲染的问题。
+        render_always: 始终渲染
+        render_always_tooltip: 在启用 Blockbuster 中的 {config.model_block.model_block_disable_rendering} 模组选项的情况下，也能够渲染模型。
+        exlude_reset_playback: 避免重置
+        exlude_reset_playback_tooltip: 在播放场景，或启用了 Blockbuster - 模型方块中的 {config.model_block.reset_on_playback} 模组选项的情况下，也不会重置模型方块的状态。
+
+        light_level: 光照等级
+        light_level_tooltip: 以方块光源的形式发出给定等级的光，Minecraft 的最大发光等级为 15。
         look: 转向您
 
         entity: 实体
@@ -191,7 +223,9 @@ blockbuster.gui:
         capture: 从光标处开始录制
         teleport: 从光标处进行传送
 
-        unselect: 取消选择
+        deselect: 取消选择
+        select_all: 选择所有动作
+
 
         drop: 掉落方块
         damage: 伤害
@@ -274,6 +308,14 @@ blockbuster.gui:
             close_container:
                 title: 关闭箱子 Close Container
                 desc: 关闭演员所打开的容器，这通常可以关闭演员先前所交互的箱子。（仅适用于假玩家）
+            use_gun:
+                title: 射击 Shoot gun
+                desc: 在录制过程中发动演员握着的 BB 枪进行射击（即使演员不再握着枪）
+            hotbar_change:
+                title: 物品栏变化 Hotbar change
+                desc: 将物品栏指定位置上的物品槽变成指定的某组物品。
+                slot_tooltip: 需要更改的物品槽
+                durability_tooltip: 物品耐久度
 
     # Playback GUI
     playback:
@@ -337,6 +379,8 @@ blockbuster.gui:
         keying_tooltip: 该选项会清除屏幕中，由这个伪装（在帧缓冲器中）渲染的颜色数据，最终可以用于 Minema 的“使用 Alpha 通道”选项输出已键控（抠像）的画面，而不需要外部视频编辑软件
         shadow: 阴影
         shadow_tooltip: 该图像伪装是否会在加载了 OptiFine 的光影后产生阴影（当图像伪装过大时，它能够修复图像伪装自身的阴影问题），不使用 OptiFine 功能则会不产生影响
+        remove_parent_space_effects: 移除父级空间
+        remove_parent_space_effects_tooltip: 移除此图片上的父级空间的旋转和缩放。如果停用，可能会导致与“看向玩家”选项一起产生奇怪的形变。
 
     sequencer:
         duration: 持续长度
@@ -456,7 +500,6 @@ blockbuster.gui:
             angular_velocity: 角速度
             angular_velocity_tooltip: 角度速度会根据 Snowstorm 伪装的旋转变化来计算，并乘以给定的系数。它会被添加至粒子在生成时间的速度中去。半径为 Snowstorm 伪装身体附件的位移。
 
-
         initialization:
             title: 初始化表达式
 
@@ -466,7 +509,6 @@ blockbuster.gui:
 
             particle_expression_title: 粒子表达式（Blockbuster）
             particle_update_expression: 粒子表达式，会为每个粒子运行。它们对每个粒子都是相对运行的
-
 
         rate:
             title: 生成频率
@@ -669,6 +711,10 @@ blockbuster.gui:
             combine_tracking: 自动追加
             combine_tracking_tooltip: 若追踪器的名称已被追踪，本选项将检查该追踪器是否会在原追踪器停止的下一帧开始。若追踪器在下一帧仍然存在，那么它就会将追踪数据附加到原来的数据上。
 
+    light_morph:
+        name: 光源
+        light_value: 光照等级
+        light_value_tooltip: 你需要安装 Optifine，并将动态光源设置为高品质，才能正常使用。拖动滑块可以选择发光强度。
 
     texture:
         title: 材质管理器
@@ -794,7 +840,6 @@ blockbuster.gui:
         vanish_command: 消失时的命令
         vanish_delay: 消失延迟
         penetration: 穿透系数 - 炮弹会穿透多厚的方块（该选项仅在启用“附着”时才有效）
-
         collision: 碰撞
         ignore_blocks: 忽略方块
         ignore_blocks_tooltip: 该选项可以使炮弹穿过方块，而不是弹跳、滑动或粘住
@@ -860,3 +905,5 @@ blockbuster.gui:
                 tracker_tooltip: 输入追踪器伪装的名称（类型必须为“Aperture调整器”）
                 main_cam: 作为主要相机
                 main_cam_tooltip: 开启此选项后，此调整器之前的所有相机变换将在此追踪器空间进行重新计算，否则，调整器将只修改坐标数据
+                look_at: 看向目标
+                look_at_tooltip: 看向追踪器调整器。这会强制禁用 {gui.aperture.modifiers.panels.main_cam} 选项。

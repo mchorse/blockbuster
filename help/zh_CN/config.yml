@@ -39,6 +39,7 @@ blockbuster.config:
         record_commands: 录制命令
         record_chat_prefix: 聊天动作前缀
         record_pause_preview: 预览增强
+        record_render_debug_paths: 显示调试路径
 
     scenes:
         title: 场景

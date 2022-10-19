@@ -37,6 +37,23 @@ item:
         register.name: 激活设备
         actor_config.name: 演员设置设备
         gun.name: BB 枪
+        model.name: 模型方块
+        model1.name: 模型方块 亮度 1
+        model2.name: 模型方块 亮度 2
+        model3.name: 模型方块 亮度 3
+        model4.name: 模型方块 亮度 4
+        model5.name: 模型方块 亮度 5
+        model6.name: 模型方块 亮度 6
+        model7.name: 模型方块 亮度 7
+        model8.name: 模型方块 亮度 8
+        model9.name: 模型方块 亮度 9
+        model10.name: 模型方块 亮度 10
+        model11.name: 模型方块 亮度 11
+        model12.name: 模型方块 亮度 12
+        model13.name: 模型方块 亮度 13
+        model14.name: 模型方块 亮度 14
+        model15.name: 模型方块 亮度 15
+
 
 # Entity names
 entity.blockbuster.Actor.name: 演员

@@ -27,6 +27,7 @@ blockbuster.config.comments:
         record_commands: 是否录制玩家输入命令的动作？
         record_chat_prefix: 将会在确切要执行的命令之前预先用的前缀（%%NAME%% 通配符可用于指向演员的名称）
         record_pause_preview: 该选项启用了包含动画的伪装预览功能，例如图像伪装的动画，回放伪装以及序列。这会影响服务端的性能。
+        record_render_debug_paths: 在调试界面显示玩家回放的路径（调试路径）
 
     scenes:
         save_update: 如果正在运行，在退出仪表盘 GUI 保存场景后，是否会重新加载场景。
@@ -45,7 +46,7 @@ blockbuster.config.comments:
     damage_control:
         damage_control: 破坏控制是否启用
         damage_control_distance: 破坏控制效果的半径范围
-        damage_control_message: 显示当前方块是否由破坏控制管理
+        damage_control_message: 显示当前看向的方块是否由破坏控制管理
 
     model_folders:
         path: 附加模型文件夹的绝对路径（Windows 用户请加上盘符）
@@ -67,4 +68,4 @@ blockbuster.config.comments:
 
     immersive_editor:
         model_block: 是否为模型方块启用沉浸式编辑器
-        record_editor: 当使用 Aperture 相机编辑器 时，是否为回放编辑器启用沉浸式编辑器
+        record_editor: 当使用 Aperture 相机编辑器时，是否为回放编辑器启用沉浸式编辑器
