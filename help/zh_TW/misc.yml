@@ -16,6 +16,8 @@ blockbuster:
     bye_director_block_guide_watch: "請看本視頻"
     bye_register_item: 導演方塊已被移除。這個物品現在已經沒用了...
 
+    light: 光照 %s
+
 # Metamorph
 morph.section.blockbuster: Blockbuster 模型
 

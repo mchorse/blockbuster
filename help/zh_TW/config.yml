@@ -39,6 +39,7 @@ blockbuster.config:
         record_commands: 錄製命令
         record_chat_prefix: 聊天動作前綴
         record_pause_preview: 預覽增強
+        record_render_debug_paths: 顯示調試路徑
 
     scenes:
         title: 場景
@@ -66,7 +67,7 @@ blockbuster.config:
 
         damage_control: 破壞控制
         damage_control_distance: 破壞距離
-        damage_control_message: 破壞控制訊息
+        damage_control_message: 破壞控制提示
 
     model_folders:
         title: 模型文件夾
@@ -93,13 +94,13 @@ blockbuster.config:
         audio_sync: 在服務器與客戶端之間同步音頻
 
     onion_skin:
-        title: 洋葱皮
+        title: 洋蔥皮
 
         seq_prev: 先前的偽裝
         seq_prev_color: 先前的偽裝顏色
         seq_next: 後續的偽裝
         seq_next_color: 後續的偽裝顏色
-        seq_loop_color: 迴圈位移標記
+        seq_loop_color: 循環位移標記
 
     immersive_editor:
         title: 沉浸式編輯器
