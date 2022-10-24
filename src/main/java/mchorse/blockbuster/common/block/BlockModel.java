@@ -279,6 +279,13 @@ public class BlockModel extends Block implements ITileEntityProvider
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
     {
+        TileEntity te = worldIn.getTileEntity(pos);
+
+        if (te instanceof TileEntityModel && ((TileEntityModel) te).getSettings().isBlockHitbox())
+        {
+            return super.getCollisionBoundingBox(blockState, worldIn, pos);
+        }
+
         return null;
     }
 }

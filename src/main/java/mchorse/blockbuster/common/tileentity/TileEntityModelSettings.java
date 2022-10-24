@@ -28,6 +28,7 @@ public class TileEntityModelSettings implements IByteBufSerializable, INBTSerial
     private final ValueBoolean excludeResetPlayback = new ValueBoolean("excludeResetPlayback");
     private final ValueBoolean renderLast = new ValueBoolean("renderLast");
     private final ValueBoolean renderAlways = new ValueBoolean("renderAlways");
+    private final ValueBoolean enableBlockHitbox = new ValueBoolean("enableBlockHitbox");
     private final ValueItemSlots slots = new ValueItemSlots("slots", 6);
 
     /* Entity rotations */
@@ -77,7 +78,18 @@ public class TileEntityModelSettings implements IByteBufSerializable, INBTSerial
         this.serializer.registerNBTValue("LightValue", this.lightValue);
         this.serializer.registerNBTValue("RenderLast", this.renderLast);
         this.serializer.registerNBTValue("RenderAlways", this.renderAlways);
+        this.serializer.registerNBTValue("Hitbox", this.enableBlockHitbox);
         this.serializer.registerNBTValue("ExcludeResetPlayback", this.excludeResetPlayback);
+    }
+
+    public boolean isBlockHitbox()
+    {
+        return this.enableBlockHitbox.get();
+    }
+
+    public void setEnableBlockHitbox(boolean enableBlockHitbox)
+    {
+        this.enableBlockHitbox.set(enableBlockHitbox);
     }
 
     public int getLightValue()
@@ -351,6 +363,7 @@ public class TileEntityModelSettings implements IByteBufSerializable, INBTSerial
         this.lightValue.copy(settings.lightValue);
         this.renderLast.copy(settings.renderLast);
         this.renderAlways.copy(settings.renderAlways);
+        this.enableBlockHitbox.copy(settings.enableBlockHitbox);
         this.excludeResetPlayback.copy(settings.excludeResetPlayback);
         this.order.copy(settings.order);
         this.rotateYawHead.copy(settings.rotateYawHead);
