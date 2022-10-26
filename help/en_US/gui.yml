@@ -193,7 +193,7 @@ blockbuster.gui:
         render_always_tooltip: Render the model block even when the Blockbuster config {config.model_block.model_block_disable_rendering} option is enabled.
         exlude_reset_playback: Prevent reset
         exlude_reset_playback_tooltip: Prevent reset when scene playbacks and Blockbuster model block {config.model_block.reset_on_playback} configuration is enabled.
-        enable_hitbox: Enable block hitbox
+        enable_hitbox: Enable hitbox
         enable_hitbox_tooltip: Enable the hitbox of the block. It is the standard Minecraft block hitbox.
 
         light_level: Light value

@@ -29,9 +29,12 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Item for Model Block.
- * It cant extend ItemBlock because it seems like Optifine does not
- * recognise ItemBlock subclasses for dynamic_lighting.properties
+ * Item for Model Block with light strength.
+ * It cannot extend ItemBlock because it seems like Optifine does not
+ * recognise ItemBlock subclasses for dynamic_lighting.properties.
+ *
+ * Block items not extending ItemBlock do not seem to copy NBT on Spigot servers.
+ * This class is only for the ModelBlocks that have a light strength.
  */
 public class ItemBlockModel extends Item
 {
