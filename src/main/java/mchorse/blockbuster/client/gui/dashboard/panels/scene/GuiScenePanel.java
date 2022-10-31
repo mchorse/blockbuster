@@ -420,7 +420,7 @@ public class GuiScenePanel extends GuiBlockbusterPanel
 
             ServerHandlerFramesOverwrite.sendFramesToServer(record.filename, frames, from, to, (obj) ->
             {
-                this.addPopUpModal((IKey) obj[0]);
+                this.addPopUpModal(obj.getKey());
             });
         });
     }

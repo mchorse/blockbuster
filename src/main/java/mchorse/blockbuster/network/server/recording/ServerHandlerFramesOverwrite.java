@@ -9,13 +9,13 @@ import mchorse.blockbuster.recording.data.Record;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.network.ServerMessageHandler;
 import mchorse.mclib.network.mclib.client.ClientHandlerAnswer;
-import mchorse.mclib.network.mclib.common.PacketStatusAnswer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -144,11 +144,9 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
 
     private void sendAnswer(PacketFramesOverwrite packet, EntityPlayerMP player, IKey message, boolean status)
     {
-        if (packet.requiresAnswer())
+        if (packet.getCallbackID().isPresent())
         {
-            PacketStatusAnswer answer = packet.getAnswer(new Object[]{message, status});
-
-            mchorse.mclib.network.mclib.Dispatcher.sendTo(answer, player);
+            ClientHandlerAnswer.sendAnswerTo(player, packet.getAnswer(new AbstractMap.SimpleEntry<>(message, status)));
         }
     }
 
@@ -167,18 +165,22 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
      * @param callback the callback that should be called when the answer from the server returns
      */
     @SideOnly(Side.CLIENT)
-    public static void sendFramesToServer(String filename, List<Frame> frames, int from, int to, @Nullable Consumer<Object[]> callback)
+    public static void sendFramesToServer(String filename, List<Frame> frames, int from, int to,
+                                          @Nullable Consumer<AbstractMap.SimpleEntry<IKey, Boolean>> callback)
     {
         int cap = 400;
 
-        int callbackID = callback != null ? ClientHandlerAnswer.registerConsumer(callback) : -1;
-
         if (frames.size() <= cap)
         {
-            PacketFramesOverwrite packet = callbackID != -1 ? new PacketFramesOverwrite(from, to, 0, filename, frames, callbackID) :
-                                            new PacketFramesOverwrite(from, to, 0, filename, frames);
-
-            Dispatcher.sendToServer(packet);
+            if (callback != null)
+            {
+                ClientHandlerAnswer.requestServerAnswer(Dispatcher.DISPATCHER,
+                        new PacketFramesOverwrite(from, to, 0, filename, frames), callback);
+            }
+            else
+            {
+                Dispatcher.sendToServer(new PacketFramesOverwrite(from, to, 0, filename, frames));
+            }
 
             return;
         }
@@ -192,10 +194,14 @@ public class ServerHandlerFramesOverwrite extends ServerMessageHandler<PacketFra
 
             if (chunk.size() == cap || i == frames.size() - 1)
             {
-                PacketFramesOverwrite packet = callbackID != -1 ? new PacketFramesOverwrite(from, to, chunkStart, filename, chunk, callbackID) :
-                                                new PacketFramesOverwrite(from, to, chunkStart, filename, chunk);
-
-                Dispatcher.sendToServer(packet);
+                if (callback != null)
+                {
+                    ClientHandlerAnswer.requestServerAnswer(Dispatcher.DISPATCHER, new PacketFramesOverwrite(from, to, chunkStart, filename, chunk), callback);
+                }
+                else
+                {
+                    Dispatcher.sendToServer(new PacketFramesOverwrite(from, to, chunkStart, filename, chunk));
+                }
 
                 chunk.clear();
 
