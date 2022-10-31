@@ -4,9 +4,8 @@ import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.network.mclib.common.IAnswerRequest;
-import mchorse.mclib.network.mclib.common.PacketStatusAnswer;
-
-import javax.annotation.Nullable;
+import mchorse.mclib.network.mclib.common.PacketAnswer;
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -14,7 +13,7 @@ import java.util.Optional;
 /**
  * Packet of frame ranges, split up in chunks to avoid max packet size error
  */
-public class PacketFramesOverwrite extends PacketFrames implements IAnswerRequest
+public class PacketFramesOverwrite extends PacketFrames implements IAnswerRequest<AbstractMap.SimpleEntry<IKey, Boolean>>
 {
     /**
      * overwrite frames from tick.
@@ -69,6 +68,12 @@ public class PacketFramesOverwrite extends PacketFrames implements IAnswerReques
         return this.index;
     }
 
+    @Override
+    public void setCallbackID(int callbackID)
+    {
+        this.callbackID = callbackID;
+    }
+
     public Optional<Integer> getCallbackID()
     {
         return Optional.of(this.callbackID == -1 ? null : this.callbackID);
@@ -96,22 +101,16 @@ public class PacketFramesOverwrite extends PacketFrames implements IAnswerReques
         super.toBytes(buf);
     }
 
-    @Override
-    public boolean requiresAnswer()
-    {
-        return this.callbackID != -1;
-    }
-
     /**
      *
      * @param value expects {String, boolean}
      * @return the packet answer or null if no callback has been registered
      */
     @Override
-    public PacketStatusAnswer getAnswer(Object[] value) throws NoSuchElementException
+    public PacketAnswer<AbstractMap.SimpleEntry<IKey, Boolean>> getAnswer(AbstractMap.SimpleEntry<IKey, Boolean> value) throws NoSuchElementException
     {
-        if (!this.requiresAnswer()) throw new NoSuchElementException();
+        if (!this.getCallbackID().isPresent()) throw new NoSuchElementException();
 
-        return new PacketStatusAnswer(this.callbackID, (IKey) value[0], (boolean) value[1]);
+        return new PacketAnswer<>(this.callbackID, value);
     }
 }
