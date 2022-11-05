@@ -3,9 +3,11 @@ package mchorse.blockbuster.common.block;
 import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.common.BlockbusterPermissions;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.recording.capturing.ActionHandler;
+import mchorse.mclib.permissions.PermissionUtils;
 import mchorse.mclib.utils.EntityUtils;
 import mchorse.mclib.utils.OpHelper;
 import net.minecraft.block.Block;
@@ -198,18 +200,18 @@ public class BlockModel extends Block implements ITileEntityProvider
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-        if (worldIn.isRemote && this.canOpenMenu(playerIn))
+        if (worldIn.isRemote && !EntityUtils.isAdventureMode(playerIn))
         {
-            GuiHandler.open(playerIn, GuiHandler.MODEL_BLOCK, pos.getX(), pos.getY(), pos.getZ());
+            PermissionUtils.hasPermission(playerIn, BlockbusterPermissions.editModelBlock, (bool) ->
+            {
+                if (bool)
+                {
+                    GuiHandler.open(playerIn, GuiHandler.MODEL_BLOCK, pos.getX(), pos.getY(), pos.getZ());
+                }
+            });
         }
 
         return true;
-    }
-
-    @SideOnly(Side.CLIENT)
-    private boolean canOpenMenu(EntityPlayer player)
-    {
-        return OpHelper.isPlayerOp() && !EntityUtils.isAdventureMode(player);
     }
 
     @Override
