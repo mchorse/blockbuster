@@ -5,7 +5,7 @@ import mchorse.blockbuster.recording.data.Frame;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.network.mclib.common.IAnswerRequest;
 import mchorse.mclib.network.mclib.common.PacketAnswer;
-import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * Packet of frame ranges, split up in chunks to avoid max packet size error
  */
-public class PacketFramesOverwrite extends PacketFrames implements IAnswerRequest<AbstractMap.SimpleEntry<IKey, Boolean>>
+public class PacketFramesOverwrite extends PacketFrames implements IAnswerRequest<SimpleEntry<IKey, Boolean>>
 {
     /**
      * overwrite frames from tick.
@@ -107,10 +107,8 @@ public class PacketFramesOverwrite extends PacketFrames implements IAnswerReques
      * @return the packet answer or null if no callback has been registered
      */
     @Override
-    public PacketAnswer<AbstractMap.SimpleEntry<IKey, Boolean>> getAnswer(AbstractMap.SimpleEntry<IKey, Boolean> value) throws NoSuchElementException
+    public PacketAnswer<SimpleEntry<IKey, Boolean>> getAnswer(SimpleEntry<IKey, Boolean> value) throws NoSuchElementException
     {
-        if (!this.getCallbackID().isPresent()) throw new NoSuchElementException();
-
-        return new PacketAnswer<>(this.callbackID, value);
+        return new PacketAnswer<>(this.getCallbackID().get(), value);
     }
 }

@@ -9,11 +9,11 @@ import mchorse.blockbuster.commands.CommandOnHead;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.commands.CommandScene;
 import mchorse.blockbuster.commands.CommandSpectate;
+import mchorse.blockbuster.common.BlockbusterPermissions;
 import mchorse.blockbuster.utils.mclib.ValueAudioButtons;
 import mchorse.blockbuster.utils.mclib.ValueMainButtons;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.McLib;
-import mchorse.mclib.client.gui.utils.ValueColors;
 import mchorse.mclib.commands.utils.L10n;
 import mchorse.mclib.config.ConfigBuilder;
 import mchorse.mclib.config.values.ValueBoolean;
@@ -21,6 +21,9 @@ import mchorse.mclib.config.values.ValueFloat;
 import mchorse.mclib.config.values.ValueInt;
 import mchorse.mclib.config.values.ValueString;
 import mchorse.mclib.events.RegisterConfigEvent;
+import mchorse.mclib.events.RegisterPermissionsEvent;
+import mchorse.mclib.permissions.McLibPermissions;
+import mchorse.mclib.permissions.PermissionCategory;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -36,6 +39,7 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -349,6 +353,17 @@ public class Blockbuster
         builder.getCategory().markClientSide();
 
         CameraHandler.registerConfig(builder);
+    }
+
+    @SubscribeEvent
+    public void onPermissionRegister(RegisterPermissionsEvent event)
+    {
+        event.registerMod(MOD_ID, DefaultPermissionLevel.OP);
+
+        event.registerCategory(new PermissionCategory("model_block"));
+        BlockbusterPermissions.editModelBlock = event.registerPermission(new PermissionCategory("edit"));
+
+        event.endCategory();
     }
 
     @EventHandler
