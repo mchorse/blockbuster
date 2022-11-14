@@ -637,25 +637,13 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     @Override
     public void update(EntityLivingBase target)
     {
-        if (this.isPaused())
-        {
-            return;
-        }
+        this.updateCycle();
 
-        if (!target.world.isRemote)
-        {
-            this.updateCycle();
+        AbstractMorph morph = this.currentMorph.get();
 
-            AbstractMorph morph = this.currentMorph.get();
-
-            if (morph != null)
-            {
-                morph.update(target);
-            }
-        }
-        else
+        if (morph != null)
         {
-            this.timer++;
+            morph.update(target);
         }
     }
 
@@ -666,18 +654,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     protected void updateClient(EntityLivingBase entity, float progress)
     {
         this.updateMorph(progress);
-
-        if (!this.currentMorph.isEmpty())
-        {
-            int delta = (int) (progress - this.lastDuration) - (int) Math.max(this.lastUpdate - this.lastDuration, 0);
-
-            while (delta-- > 0)
-            {
-                this.currentMorph.get().update(entity);
-
-                this.lastUpdate = progress;
-            }
-        }
     }
 
     /**
@@ -817,7 +793,8 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     {
         if (morph instanceof SequencerMorph)
         {
-            ((SequencerMorph) morph).timer += progress;
+            //breaks keep progress with the fix that emoticons action animation flickers (thanks to MiaoNLI for this update)
+            //((SequencerMorph) morph).timer += progress;
         }
         else if (morph instanceof IMorphProvider)
         {
