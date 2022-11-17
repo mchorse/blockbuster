@@ -364,6 +364,13 @@ public class Blockbuster
         BlockbusterPermissions.editModelBlock = event.registerPermission(new PermissionCategory("edit"));
 
         event.endCategory();
+
+        event.registerCategory(new PermissionCategory("scenes"));
+        BlockbusterPermissions.openScene = event.registerPermission(new PermissionCategory("open"));
+
+        event.endCategory();
+
+        event.endCategory();
     }
 
     @EventHandler

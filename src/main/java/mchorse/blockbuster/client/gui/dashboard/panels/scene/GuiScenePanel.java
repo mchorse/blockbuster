@@ -4,6 +4,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
+import mchorse.blockbuster.common.BlockbusterPermissions;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
@@ -41,6 +42,7 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.permissions.PermissionCategory;
 import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.MathUtils;
@@ -314,6 +316,12 @@ public class GuiScenePanel extends GuiBlockbusterPanel
         this.keys().register(IKey.lang("blockbuster.gui.director.keys.toggle_options"), Keyboard.KEY_O, () -> toggle.clickItself(GuiBase.getCurrent())).category(category);
     }
 
+    @Override
+    public PermissionCategory getRequiredPermission()
+    {
+        return BlockbusterPermissions.openScene;
+    }
+
     public SceneLocation getLocation()
     {
         return this.location;
@@ -451,11 +459,6 @@ public class GuiScenePanel extends GuiBlockbusterPanel
     @Override
     public void open()
     {
-        if (!OpHelper.isPlayerOp())
-        {
-            return;
-        }
-
         ClientProxy.panels.morphs.reload();
 
         this.setScene(this.location);

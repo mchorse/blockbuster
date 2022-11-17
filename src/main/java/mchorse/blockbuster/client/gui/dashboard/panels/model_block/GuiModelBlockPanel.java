@@ -5,6 +5,7 @@ import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.GuiImmersiveEditor;
 import mchorse.blockbuster.client.gui.GuiImmersiveMorphMenu;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
+import mchorse.blockbuster.common.BlockbusterPermissions;
 import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.network.Dispatcher;
@@ -22,6 +23,7 @@ import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.permissions.PermissionCategory;
 import mchorse.mclib.utils.ColorUtils;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.MatrixUtils.RotationOrder;
@@ -244,6 +246,12 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     }
 
     @Override
+    public PermissionCategory getRequiredPermission()
+    {
+        return BlockbusterPermissions.editModelBlock;
+    }
+
+    @Override
     public boolean needsBackground()
     {
         return false;
@@ -320,11 +328,6 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     @Override
     public void open()
     {
-        if (!OpHelper.isPlayerOp())
-        {
-            return;
-        }
-
         opened = true;
 
         this.updateList();
