@@ -16,9 +16,21 @@ import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import net.minecraft.network.NetworkManager;
 import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-public class FakeChannel implements Channel
-{
+public class FakeChannel implements Channel{
+    
+    private class FalseBool implements Attribute<Boolean>{
+        public AttributeKey<Boolean> key() {return null;}
+        public Boolean get() {return Boolean.valueOf(false);}
+        public void set(Boolean value) {}
+        public Boolean getAndSet(Boolean value) {return Boolean.valueOf(false);}
+        public Boolean setIfAbsent(Boolean value) {return Boolean.valueOf(false);}
+        public Boolean getAndRemove() {return Boolean.valueOf(false);}
+        public boolean compareAndSet(Boolean oldValue, Boolean newValue) {return false;}
+        public void remove(){}
+    }
+    
     @Override
     public <T> Attribute<T> attr(AttributeKey<T> key)
     {
@@ -31,7 +43,11 @@ public class FakeChannel implements Channel
         {
             return (Attribute<T>) new FakeProtocol();
         }
-
+        
+        if (key == NetworkRegistry.FML_MARKER) {
+            return (Attribute<T>) new FalseBool();
+        }
+        
         return null;
     }
 
