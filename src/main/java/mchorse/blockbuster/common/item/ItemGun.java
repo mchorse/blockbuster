@@ -71,13 +71,10 @@ public class ItemGun extends Item
                 same &= Objects.equals(entry.props.reloadMorph, props.reloadMorph);
                 same &= Objects.equals(entry.props.zoomOverlayMorph, props.zoomOverlayMorph);
 
-                if (same)
-                {
-                    TileEntityGunItemStackRenderer.models.put(to, TileEntityGunItemStackRenderer.models.remove(from));
-                }
+                TileEntityGunItemStackRenderer.models.put(to, TileEntityGunItemStackRenderer.models.remove(from));
 
-                return !same;
-            };
+                return same;
+            }
         }
 
         return true; // what animation to use when the player holds the "use" button
