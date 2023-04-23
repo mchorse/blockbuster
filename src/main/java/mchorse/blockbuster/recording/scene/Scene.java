@@ -483,7 +483,7 @@ public class Scene
     }
 
     /**
-     * Spawns actors at given tick in idle mode. This is pretty useful
+     * Spawns actors at given tick in idle mode and pause the scene. This is pretty useful
      * for positioning cameras for exact positions.
      */
     public boolean spawn(int tick)
@@ -509,7 +509,8 @@ public class Scene
         }
 
         this.collectActors(null);
-        this.setPlaying(true);
+        this.playing = true;
+        this.paused = true;
 
         int j = 0;
 
