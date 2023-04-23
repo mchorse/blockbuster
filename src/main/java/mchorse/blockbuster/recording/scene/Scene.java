@@ -388,7 +388,11 @@ public class Scene
      */
     public void checkActors()
     {
-        if (this.areActorsFinished() && !this.loops)
+        /*
+         * don't stop the entire scene when one actor is left and if that is the recording actor
+         * If it would stop, delayed audio might not start.
+         */
+        if (this.areActorsFinished() && !this.loops && !this.wasRecording)
         {
             this.stopPlayback(false);
         }
