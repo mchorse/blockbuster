@@ -108,7 +108,7 @@ public class Scene
     /* Runtime properties */
 
     /**
-     * Whether this director block is playing
+     * Whether this scene is active
      */
     public boolean playing;
 
@@ -205,6 +205,11 @@ public class Scene
     public void setAudioShift(int audioShift)
     {
         this.audioHandler.setAudioShift(audioShift);
+        /* update the audio on the server so the shift change is visible */
+        if (this.world != null && !this.world.isRemote)
+        {
+            this.audioHandler.goTo(this.tick);
+        }
     }
 
     public String getId()
@@ -324,11 +329,9 @@ public class Scene
 
         if (this.playing && !this.paused)
         {
-            if (this.tick % 4 == 0)
-            {
-                this.checkActors();
-            }
+            if (this.tick % 4 == 0 && !this.checkActors()) return;
 
+            this.audioHandler.update();
             this.tick++;
         }
     }
@@ -385,8 +388,9 @@ public class Scene
     /**
      * Check whether actors are still playing, if they're stop the whole
      * thing
+     * @return false if every actor is finished and the scene can be stopped.
      */
-    public void checkActors()
+    public boolean checkActors()
     {
         /*
          * don't stop the entire scene when one actor is left and if that is the recording actor
@@ -395,7 +399,11 @@ public class Scene
         if (this.areActorsFinished() && !this.loops && !this.wasRecording)
         {
             this.stopPlayback(false);
+
+            return false;
         }
+
+        return true;
     }
 
     /**
@@ -436,7 +444,7 @@ public class Scene
             actor.startPlaying(replay.id, tick, !this.loops);
         }
 
-        this.setPlaying(true);
+        this.playing = true;
         this.sendCommand(this.startCommand);
 
         if (firstActor != null)
@@ -444,7 +452,7 @@ public class Scene
             CommonProxy.damage.addDamageControl(this, firstActor);
         }
 
-        this.audioHandler.rewindAudio(Blockbuster.audioSync.get());
+        this.audioHandler.startAudio(tick);
 
         this.wasRecording = false;
         this.paused = false;
@@ -474,9 +482,11 @@ public class Scene
             actor.startPlaying(replay.id, tick, true);
         }
 
-        this.setPlaying(true);
+        this.playing = true;
         this.sendCommand(this.startCommand);
-        this.sendAudio(AudioState.REWIND, tick);
+
+        this.audioHandler.startAudio(tick);
+
         this.wasRecording = true;
         this.paused = false;
         this.tick = tick;
@@ -539,7 +549,7 @@ public class Scene
             j++;
         }
 
-        this.sendAudio(AudioState.PAUSE_SET, tick);
+        this.audioHandler.pauseAudio(tick);
         this.tick = tick;
 
         return true;
@@ -554,8 +564,6 @@ public class Scene
     {
         if (!triggered && !this.wasRecording || triggered)
         {
-            this.audioHandler.stopAudio(Blockbuster.audioSync.get());
-
             this.wasRecording = false;
         }
 
@@ -583,8 +591,10 @@ public class Scene
 
         this.targetPlayers.clear();
 
+        this.audioHandler.stopAudio();
+
         this.actors.clear();
-        this.setPlaying(false);
+        this.playing = false;
         this.sendCommand(this.stopCommand);
     }
 
@@ -781,12 +791,13 @@ public class Scene
             actor.pause();
         }
 
-        this.audioHandler.pauseAudio(Blockbuster.audioSync.get());
+        this.audioHandler.pauseAudio();
         this.paused = true;
     }
 
     /**
      * Resume paused director block playback (basically, resume all actors)
+     * @param tick the tick at which to resume playing. If -1 the scene will just play at the tick it was paused at.
      */
     public void resume(int tick)
     {
@@ -800,7 +811,7 @@ public class Scene
             player.resume(tick);
         }
 
-        this.sendAudio(AudioState.RESUME_SET, tick < 0 ? this.tick : tick);
+        this.audioHandler.resume(this.tick);
         this.paused = false;
     }
 
@@ -823,7 +834,7 @@ public class Scene
             entry.getValue().goTo(tick, actions);
         }
 
-        this.sendAudio(this.isPlaying() ? AudioState.SET : AudioState.PAUSE_SET, tick);
+        this.audioHandler.goTo(tick);
     }
 
     /**
@@ -959,14 +970,6 @@ public class Scene
     }
 
     /**
-     * Set this director playing
-     */
-    public void setPlaying(boolean playing)
-    {
-        this.playing = playing;
-    }
-
-    /**
      * Send a command
      */
     public void sendCommand(String command)
@@ -996,26 +999,11 @@ public class Scene
     }
 
     /**
-     * Send the audio in the scene, if present, to all players on the server
-     * and set this.audioState to the provided state.
-     * @param state
-     * @param shift shift the audio in ticks
+     * Sends the audio state to the player.
+     * @param player
      */
-    public void sendAudio(AudioState state, int shift)
-    {
-        this.audioHandler.sendAudioState(state, shift, Blockbuster.audioSync.get());
-    }
-
-    /**
-     * Send the audio to the provided player
-     * @param state
-     * @param shift shift the audio in ticks
-     * @param latencyTimer a timer to measure (approximately) the delay to sync the audio properly
-     * @param player the entity player the audio should be sent to
-     */
-    public void sendAudioToPlayer(AudioState state, int shift, @Nullable LatencyTimer latencyTimer, EntityPlayerMP player)
-    {
-        this.audioHandler.sendAudioStateToPlayer(state, shift, latencyTimer, player);
+    public void syncAudio(EntityPlayerMP player) {
+        this.audioHandler.syncPlayer(player);
     }
 
     public void copy(Scene scene)

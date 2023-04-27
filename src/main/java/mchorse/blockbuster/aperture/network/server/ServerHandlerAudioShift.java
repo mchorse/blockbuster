@@ -17,7 +17,6 @@ public class ServerHandlerAudioShift extends ServerMessageHandler<PacketAudioShi
         if (scene != null)
         {
             scene.setAudioShift(message.shift);
-            scene.sendAudio(AudioState.SET, scene.getTick());
 
             try
             {
