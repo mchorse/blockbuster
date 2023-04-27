@@ -91,7 +91,7 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
                 }
             }
         });
-        this.audioShift.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.director.audio_shift_tooltip"));
+        this.audioShift.integer().tooltip(IKey.lang("blockbuster.gui.director.audio_shift_tooltip"));
 
         this.add(this.detachScene, this.reload, this.actions, this.stopScene, this.reloadScene);
         this.add(Elements.label(IKey.lang("blockbuster.gui.director.audio_shift")).background(), this.audioShift);

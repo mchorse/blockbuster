@@ -76,8 +76,7 @@ public class CapabilityHandler
         /* send playing audio to client */
         for(Map.Entry<String, Scene> entry : CommonProxy.scenes.getScenes().entrySet())
         {
-            Scene scene = entry.getValue();
-            scene.sendAudioToPlayer(scene.getAudioState(), scene.getTick(), new LatencyTimer(), player);
+            entry.getValue().syncAudio(player);
         }
     }
 
