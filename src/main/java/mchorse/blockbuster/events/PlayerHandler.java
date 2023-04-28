@@ -11,6 +11,7 @@ import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -184,7 +185,14 @@ public class PlayerHandler
             /* Update TEs in the model's TEISR */
             if (event.player.world.isRemote)
             {
-                this.updateClient();
+                /*
+                 * The PlayerTickEvent is called for every player on a server.
+                 * Only update the client once per tick.
+                 */
+                if (Minecraft.getMinecraft().player == event.player)
+                {
+                    this.updateClient();
+                }
             }
             else
             {
