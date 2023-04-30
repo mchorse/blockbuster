@@ -36,9 +36,10 @@ public class VoxReader extends BinaryReader
             throw new Exception("Not a 'VOX ' file!");
         }
 
-        if (this.readInt(stream) != 150)
+        int version = this.readInt(stream);
+        if (version != 150)
         {
-            throw new Exception("Version doesn't match!");
+            System.out.println("Reading a vox file with version: " + version + ". This version might not be supported. Version 150 is supported.");
         }
 
         VoxChunk main = this.readChunk(stream);
