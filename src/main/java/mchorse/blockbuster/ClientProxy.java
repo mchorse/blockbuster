@@ -11,6 +11,7 @@ import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
 import mchorse.blockbuster.client.render.GunMiscRender;
 import mchorse.blockbuster.client.render.RenderActor;
+import mchorse.blockbuster.client.render.RenderExpirableDummy;
 import mchorse.blockbuster.client.render.RenderGunProjectile;
 import mchorse.blockbuster.client.render.tileentity.TileEntityDirectorRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
@@ -22,6 +23,7 @@ import mchorse.blockbuster.common.block.BlockGreen.ChromaColor;
 import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
+import mchorse.blockbuster.common.entity.ExpirableDummyEntity;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.recording.RecordManager;
@@ -130,6 +132,7 @@ public class ClientProxy extends CommonProxy
 
         /* Entities */
         this.registerEntityRender(EntityActor.class, new RenderActor.FactoryActor());
+        this.registerEntityRender(ExpirableDummyEntity.class, new RenderExpirableDummy.FactoryExpirableDummy());
         this.registerEntityRender(EntityGunProjectile.class, new RenderGunProjectile.FactoryGunProjectile());
 
         /* Tile entity */
