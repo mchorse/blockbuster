@@ -200,6 +200,8 @@ blockbuster.gui:
         render_always_tooltip: 在啟用 Blockbuster 中的 {config.model_block.model_block_disable_rendering} 模組選項的情況下，也能夠渲染模型。
         exlude_reset_playback: 避免重置
         exlude_reset_playback_tooltip: 在播放場景，或啟用了 Blockbuster - 模型方塊中的 {config.model_block.reset_on_playback} 模組選項的情況下，也不會重置模型方塊的狀態。
+        enable_hitbox: 啟用碰撞箱
+        enable_hitbox_tooltip: 啟用方塊碰撞箱。用的是標準的 Minecraft 碰撞箱。
 
         light_level: 光照等級
         light_level_tooltip: 以方塊光源的形式發出給定等級的光，Minecraft 的最大發光等級為 15。
