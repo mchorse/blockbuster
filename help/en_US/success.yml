@@ -38,7 +38,7 @@ blockbuster.success:
         erase: "{f}Successfully erased %s{f} frames at %s{f} tick in %s{f} player recording (final length is %s{f} ticks)!"
         process: "{f}Player recording %s{f}'s %s{f} property was successfully processed between %s{f} to %s{f}!"
         calculate_body_yaw: "{f}Player recording %s{f}'s body yaw was successfully auto calculated!"
-        remove_body_yaw: "{f}Player recording %s{f}'s body yaw was remove!"
+        remove_body_yaw: "{f}Player recording %s{f}'s body yaw was removed!"
         renamed: "{f}Player recording %s{f} was successfully renamed to %s{f}!"
         camera: "{f}Player recording %s{f} was successfully generated out of camera profile %s{f}!"
         apply: "{f}Player recording %s{f}'s %s{f} property was successfully applied with %s{f} properties from player recording %s{f} from %s{f} to %s{f}!"
