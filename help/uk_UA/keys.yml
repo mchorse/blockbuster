@@ -2,12 +2,12 @@
 key:
     blockbuster:
         # Categories
-        category: Блокбастер
+        category: Blockbuster
         
-        dashboard: Головна Панель
-        model_editor: Редактор Моделей
-        marker: Маркер тіків
-        plause_director: Програти/зупинити блок режисера
-        record_director: Записати відтворення до блоку режисера
-        pause_director: Зупинити відтворення блоку режисера
-        open_gun: Налаштувати зброю
+        plause_director: Відтворити/зупинити сцену
+        record_director: Записати відтворення сцени
+        pause_director: Зупинити сцену / Відмінити запис
+        open_gun: Налаштувати BB-Ґан
+        zoom: Прицілитись
+        gun_reload: Перезарядитись
+        gun_shoot: Вистрілити

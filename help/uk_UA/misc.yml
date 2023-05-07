@@ -1,23 +1,27 @@
 # Recording
 blockbuster:
-    # Parsing хуярсінг
+    # Parsing
     parsing:
-        lacks_pose: Проаналізована модель з назвою "%s" не має пози "%s"!
-        lacks_limbs: Проаналізована модель з назвою "%s" не має кінцівок!
-    
-    marker: "{6}{l}|{r} Запис {7}%s{r} {8}({6}x%s{8}){r}, {7}%s{6}t{r} {8}({r}різниця становить {7}%s{6}t{8}){r}."
-    recording: Запис до {7}%s{r}
+        lacks_pose: Зчитана модель з назвою "%s" не містить пози "%s"!
+        lacks_limbs: Зчитана модель з назвою "%s" не містить кінцівок!
+
+    recording: Запис у {7}%s{r}
     "yes": "Так"
     "no": "Ні"
-    eggs:
-        yike: "{l}Так, все{r}, {o}гаразд{r}, то був {7}МакХорсів{r} жарт! Повертаємося назад до {6}ЯйкФілмз{r}."
     morph_error: Моделі не знайдено
-    start_recording: "Початок запису {7}%s{r} у {7}%s{r}"
+    start_recording: "Початок запису {7}%s{r} через {7}%s{r}"
 
-# Metamorph category
+    bye_director_block: Блоки режисера було видалено. Зміст даного блоку режисера було конвертовано у сцену. Користуйтеся сценами.
+    bye_director_block_guide: "Аби дізнатися більше, "
+    bye_director_block_guide_watch: "подивіться це відео"
+    bye_register_item: Блоки режисера було видалено. Нині цей предмет безкорисний...
+
+    light: світло %s
+
+# Metamorph
+morph.section.blockbuster: Моделі Blockbuster
+
 morph.category:
-    blockbuster: Моделі Блокбастера
-    blockbuster_extra: Додаткові моделі
-
-metamorph.builder.blockbuster: Користувацький конструктор моделей
-# This is Ukrainian localisation, and it was also made by Andruxioid, nay by shlyak tya kurvo trafyv!
+    blockbuster_extra: Blockbuster Екстра
+    blockbuster_structures: Структури Blockbuster
+    blockbuster_models: Моделі Blockbuster

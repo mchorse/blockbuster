@@ -1,41 +1,58 @@
 # Item tooltips
 blockbuster:
     info:
-        playback_button: Активує блок режисера
-        playback_director: Прив'язана до ({r}%d{7}, {r}%d{7}, {r}%d{7})
-        playback_profile: Програє профіль "{f}{o}%s{r}{7}"
-        playback_play: Програє камеру
-        playback_scene: Прив'язана до сцени {f}%s{r}
+        playback_button: Вмик.\Вимк. відтворення сцени
+        playback_profile: Відтворює профіль "{f}{o}%s{r}{7}"
+        playback_play: Відтворює камеру
+        playback_scene: Прив'язано до сцени {f}%s{r}
 
-        actor_config: Використовуйте на акторі
-        register: Прив'язує актора до блока режисера
-        director_block: Керує акторами та відтвореннями
-        model_block: Дозволяє розмістити морф у якості статичної моделі
-        green_block: "%s хромаблок. Може бути використаний для хромакеїнга."
+        actor_config: Використовуйте його на акторі
+        register: Колись він прив'язував акторів до режисерського блоку. Пережиток минулого...
+        director_block: Раніше це були сцени перед сценами. Пережиток минулого...
+        model_block: Дозволяє розміщувати морфи у якості статичних моделей
+        green_block: "%s хромаблок. Можна використати для хромакеїнгу."
+        dim_green_block: "Не світиться."
 
     morph:
-        image: Зображення
-        sequencer: Секвенсер
+        image: Світлина 
+        sequencer: Секвенсор
         record: Запис
         structure: Структура
-        particle: Частинки
+        particle: Частинка
 
 # Creative tabs
-itemGroup.blockbuster: Блокбастер
+itemGroup.blockbuster: Blockbuster
 
 # Block name
 tile.blockbuster:
     director.name: Блок режисера
     model.name: Блок-модель
     green.name: Хромаблок
+    dim_green.name: Тьмяний хромаблок
 
 # Item names
 item:
     blockbuster:
         playback.name: Кнопка відтворення
-        register.name: Реєструючий прилад
-        actor_config.name: Прилад для налаштування актора
-        gun.name: ББ зброя
+        register.name: Пристрій реєстрації
+        actor_config.name: Пристрій конфігурації актора
+        gun.name: BB-ґан
+        model.name: Блок-модель
+        model1.name: Світло блока-моделі 1
+        model2.name: Світло блока-моделі 2
+        model3.name: Світло блока-моделі 3
+        model4.name: Світло блока-моделі 4
+        model5.name: Світло блока-моделі 5
+        model6.name: Світло блока-моделі 6
+        model7.name: Світло блока-моделі 7
+        model8.name: Світло блока-моделі 8
+        model9.name: Світло блока-моделі 9
+        model10.name: Світло блока-моделі 10
+        model11.name: Світло блока-моделі 11
+        model12.name: Світло блока-моделі 12
+        model13.name: Світло блока-моделі 13
+        model14.name: Світло блока-моделі 14
+        model15.name: Світло блока-моделі 15
 
 # Entity names
 entity.blockbuster.Actor.name: Актор
@@ -45,7 +62,7 @@ blockbuster.chroma_blocks:
     1: Синій
     2: Червоний
     3: Жовтий
-    4: Бірюзовий
+    4: Блакитний
     5: Фіолетовий
     6: Білий
     7: Чорний
