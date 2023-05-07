@@ -102,6 +102,9 @@ blockbuster.gui:
         one_tooltip: Uniform one slider scale
         shadow: Ombre
         
+        enable_hitbox: Activer la hitbox
+        enable_hitbox_tooltip: Active la hitbox (et donc les collisions) du bloc. Il s'agit de la hitbox de base de Minecraft.
+        
         entity: Entitée
         translate: Déplacer
         rotate: Tourner
