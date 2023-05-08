@@ -1,48 +1,110 @@
 # Config strings
 blockbuster.config:
+    title: Blockbuster
+
     general:
         title: Загальні
+        tooltip: Загальний конфіг налаштувань моду Blockbuster
 
-        show_first_time_modal: Показувати заставку першого запуску
-        disable_teleport_playback_button: Вимкнути телепортацію кнопкою відтворення
-        extra_wubs: Додаткові Тици
-        auto_refresh_models: Перезавантаження моделей та скінів
-        debug_playback_ticks: Тики налагодження
+        show_first_time_modal: Показувати першоразове вітання
+        extra_wubs: Екстра Тиці # 5 років перекладаю цей мод ніхуя не розумію що це за опція
+        auto_refresh_models: Автооновлення моделей та скінів
+        debug_playback_ticks: Тіки дебагінгу
         green_screen_sky: Хроманебо
         green_screen_sky_color: Колір хроманеба
-        url_skins_sync_download: Синхронні завантаження з покликань
+        url_skins_sync_download: Синхронне завантаження URL-посилань
+        add_utility_blocks: Додати корисні блоки
+        bb_gun_sync_distance: Дистанція синронізації BB-Ґану
     
     model_block:
         title: Блок-модель
+        tooltip: Налаштування, що стосуються конфігурації блоків-моделей
         
         model_block_disable_rendering: Вимкнути відображення блоків-моделей
-        model_block_disable_item_rendering: Вимкнути відображення речей
+        model_block_disable_item_rendering: Вимкнути відображення предметів
+        model_block_missing_name_rendering: Відображати місцезнаходження відсутніх моделей
+        model_block_debug_rendering_f1: Відображати блок-модель у режимі дебагінгу на F1
+        restore: Відновлювати блоки-моделі
+        reset_on_playback: Скидати при відтворенні
     
     recording:
-        title: Записування
+        title: Запис
+        tooltip: Тут знаходиться все, що стосується системи записів гравця
 
-        recording_countdown: Зворотній відлік записування
-        recording_delay: Пропуск кадрів записування
-        record_unload_time: Час автоматичного вивантаження записів
-        record_unload: Автоматичне вивантаження записів
-        record_sync_rate: Інтервал синхронізації тиків записування
-        record_attack_on_swipe: Атака з помахом
-        record_commands: Команди записування
-        record_chat_prefix: Префікс дії у чаті
-    
+        recording_countdown: Зворотній відлік при записі
+        record_unload_time: Автоматичний час вивантаження запису
+        record_unload: Автоматичне вивантаження запису
+        record_sync_rate: Частота синхронізація тіків у записі
+        record_attack_on_swipe: Атака на помах
+        record_commands: Записувати команди
+        record_chat_prefix: Префкс дії "Чат"
+        record_pause_preview: Кращий попередперегляд
+        record_render_debug_paths: Відображати шляхи при дебагінгу
+
+    scenes:
+        title: Сцени
+        tooltip: Тут знаходиться все, що стосується сцен
+
+        save_update: Оновлювати сцену після збереження
+
     actor:
         title: Актор
-        
-        actor_fall_damage: Пошкодження акторів при приземленні
-        actor_tracking_range: Дальність відстеження акторів
-        actor_rendering_range: Дальність відображення акторів
-        actor_always_render: Завжди відображати акторів
-        actor_always_render_names: Завжди відображати імена акторів
-        actor_swish_swipe: Помах при шелесті
-        actor_y: Зафіксувати рух за віссю Y
+        tooltip: Опція налаштування істоти-актору (не стосується фальшивого гравця)
+
+        actor_fall_damage: Шкода від падіння
+        actor_tracking_range: Діапазон відстеження актора
+        actor_rendering_range: Діапазон відображення актора
+        actor_always_render: Завжди відображати актор
+        actor_always_render_names: Завжди відображати назви акторів
+        actor_swish_swipe: Звук при змасі
+        actor_y: Виправити рух за Y
+        actor_disable_riding: Вимкнути сідлання
+        actor_playback_body_yaw: Рискання тіла відтворення
 
     damage_control:
-        title: Котроль пошкоджень
+        title: Контроль пошкоджень
+        tooltip: Контроль пошкоджень це система, що розміщує назад блоки після того, як актор закінчує запис чи сцена закінчує відтворення
         
-        damage_control: Котроль пошкоджень
-        damage_control_distance: Відстань пошкоджень
+        damage_control: Контроль пошкоджень
+        damage_control_distance: Дистанція пошкоджень
+        damage_control_message: Повідомлення контролю пошкоджень
+
+    model_folders:
+        title: Теки з Моделями
+        tooltip: Додати додаткові теки з моделями
+
+        path: Додаткова Тека
+
+    snowstorm:
+        title: Snowstorm
+        tooltip: Snowstorm це система частинок, що дозволяє створювати досить витончені ефекти частинок, тут ви можете знайти глобальні налаштування, що стосуються роботи системи
+
+        depth_sorting: Сортування глибини частинок
+
+    audio:
+        title: Аудіо
+        tooltip: Налаштування для функції синхронізації звуку у грі
+
+        waveform_visible: Видимість аудіосмуг
+        waveform_density: Щільність форми хвилі
+        waveform_width: Ширина аудіосмуги
+        waveform_height: Висота аудіосмуги
+        waveform_filename: Показувати ім'я файлу аудіодоріжки
+        waveform_time: Показувати таймер відтворення аудіодоріжки
+        audio_sync: Синхронізація аудіо між сервером і клієнтом
+
+    onion_skin:
+        title: Цебулевий скін
+
+        seq_prev: Попередні морфи
+        seq_prev_color: Колір попередніх морфів
+        seq_next: Наступні морфи
+        seq_next_color: Колір наступних морфів
+        seq_loop_color: Маркер зміщення
+
+    immersive_editor:
+        title: Імерсивний редактор
+        tooltip: Налаштування імерсивного редактору
+
+        model_block: Блок-модель
+        record_editor: Редактор записів
