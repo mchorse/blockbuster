@@ -33,7 +33,7 @@ public class ChatAction extends Action
 
         if (!prefix.isEmpty())
         {
-            message = prefix.replace("%NAME%", actor == null ? "Player" : actor.getName()) + message;
+            message = prefix.replace("@NAME@", actor == null ? "Player" : actor.getName()) + message;
         }
 
         return TextUtils.processColoredText(message);
