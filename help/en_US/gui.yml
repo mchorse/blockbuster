@@ -524,7 +524,7 @@ blockbuster.gui:
 
             active_expression: Expression that responsible for restarting the emitter, if evaluated result is a non-zero
             active_looping: Expression that determines for how long a single cycle will be active before a sleeping phase
-            active_once: Expression that determines for how long the single
+            active_once: Expression that determines for how long the single cycle should be active
 
             expiration_expression: Expression that responsible for stopping the emitter, if evaluated result is a non-zero
             sleep_time: Expression that determines for how long emitter will be sleeping before next cycle
