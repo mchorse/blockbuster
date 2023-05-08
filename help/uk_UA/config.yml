@@ -14,7 +14,7 @@ blockbuster.config:
         green_screen_sky_color: Колір хроманеба
         url_skins_sync_download: Синхронне завантаження URL-посилань
         add_utility_blocks: Додати корисні блоки
-        bb_gun_sync_distance: Дистанція синронізації BB-Ґану
+        bb_gun_sync_distance: Дистанція синхронізації BB-Ґану
     
     model_block:
         title: Блок-модель
@@ -37,8 +37,8 @@ blockbuster.config:
         record_sync_rate: Частота синхронізація тіків у записі
         record_attack_on_swipe: Атака на помах
         record_commands: Записувати команди
-        record_chat_prefix: Префкс дії "Чат"
-        record_pause_preview: Кращий попередперегляд
+        record_chat_prefix: Префікс дії Чат
+        record_pause_preview: Кращий передперегляд
         record_render_debug_paths: Відображати шляхи при дебагінгу
 
     scenes:
@@ -52,9 +52,9 @@ blockbuster.config:
         tooltip: Опція налаштування істоти-актору (не стосується фальшивого гравця)
 
         actor_fall_damage: Шкода від падіння
-        actor_tracking_range: Діапазон відстеження актора
-        actor_rendering_range: Діапазон відображення актора
-        actor_always_render: Завжди відображати актор
+        actor_tracking_range: Дальність відстеження актора
+        actor_rendering_range: Дальність відображення актора
+        actor_always_render: Завжди відображати акторів
         actor_always_render_names: Завжди відображати назви акторів
         actor_swish_swipe: Звук при змасі
         actor_y: Виправити рух за Y
