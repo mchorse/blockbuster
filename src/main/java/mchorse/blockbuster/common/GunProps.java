@@ -134,6 +134,7 @@ public class GunProps
 
     /* Transforms */
     public ModelTransform gunTransform = new ModelTransform();
+    public ModelTransform gunTransformFirstPerson = new ModelTransform();
     public ModelTransform projectileTransform = new ModelTransform();
 
     private int shoot = 0;
@@ -341,7 +342,7 @@ public class GunProps
     }
 
     @SideOnly(Side.CLIENT)
-    public void render(EntityLivingBase target, float partialTicks)
+    public void render(EntityLivingBase target, float partialTicks, boolean firstPerson)
     {
         if (this.renderLock)
         {
@@ -371,7 +372,7 @@ public class GunProps
 
             GL11.glPushMatrix();
             GL11.glTranslatef(0.5F, 0, 0.5F);
-            this.gunTransform.transform();
+            (firstPerson ? this.gunTransformFirstPerson : this.gunTransform).transform();
 
             this.setupEntity();
 
@@ -420,7 +421,7 @@ public class GunProps
     }
 
     @SideOnly(Side.CLIENT)
-    public void renderHands(EntityLivingBase target, float partialTicks)
+    public void renderHands(EntityLivingBase target, float partialTicks, boolean firstPerson)
     {
         if (this.renderLock)
         {
@@ -450,7 +451,7 @@ public class GunProps
 
             GL11.glPushMatrix();
             GL11.glTranslatef(0.5F, 0, 0.5F);
-            this.gunTransform.transform();
+            (firstPerson ? this.gunTransformFirstPerson : this.gunTransform).transform();
 
             this.setupEntity();
             MorphUtils.render(morph, entity, 0, 0, 0, 0, partialTicks);
@@ -717,6 +718,7 @@ public class GunProps
 
         /* Transforms */
         if (tag.hasKey("Gun")) this.gunTransform.fromNBT(tag.getCompoundTag("Gun"));
+        if (tag.hasKey("GunFirstPerson")) this.gunTransformFirstPerson.fromNBT(tag.getCompoundTag("GunFirstPerson"));
         if (tag.hasKey("Transform")) this.projectileTransform.fromNBT(tag.getCompoundTag("Transform"));
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
@@ -863,6 +865,7 @@ public class GunProps
 
         /* Transforms */
         if (!this.gunTransform.isDefault()) tag.setTag("Gun", this.gunTransform.toNBT());
+        if (!this.gunTransformFirstPerson.isDefault()) tag.setTag("GunFirstPerson", this.gunTransformFirstPerson.toNBT());
         if (!this.projectileTransform.isDefault()) tag.setTag("Transform", this.projectileTransform.toNBT());
 
         return tag;

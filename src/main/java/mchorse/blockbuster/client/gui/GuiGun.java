@@ -163,6 +163,10 @@ public class GuiGun extends GuiBase
     public GuiMorphRenderer arms;
     public GuiProjectileModelRenderer bullet;
 
+    /* First person transform */
+    public GuiElement transformFirstPersonOptions;
+    public GuiPoseTransformations gunFirstPerson;
+
     public GuiGun(ItemStack stack)
     {
         TileEntityGunItemStackRenderer.GunEntry entry = TileEntityGunItemStackRenderer.models.get(stack);
@@ -184,6 +188,7 @@ public class GuiGun extends GuiBase
         this.aimOptions = new GuiElement(mc);
         this.aimOptionsSecond = new GuiElement(mc);
         this.transformOptions = new GuiElement(mc);
+        this.transformFirstPersonOptions = new GuiElement(mc);
         this.impactOptions = new GuiElement(mc);
 
         this.panel = new GuiGunPanels(mc);
@@ -194,6 +199,7 @@ public class GuiGun extends GuiBase
         this.panel.registerPanel(this.aimOptionsSecond, IKey.lang("blockbuster.gui.gun.aim_options"), Icons.CURSOR);
         this.panel.registerPanel(this.impactOptions, IKey.lang("blockbuster.gui.gun.impact_props"), Icons.DOWNLOAD);
         this.panel.registerPanel(this.transformOptions, IKey.lang("blockbuster.gui.gun.transforms"), Icons.POSE);
+        this.panel.registerPanel(this.transformFirstPersonOptions, IKey.lang("blockbuster.gui.gun.transforms_first_person"), Icons.WRENCH);
 
         this.morphs = new GuiCreativeMorphsMenu(mc, this::setMorph);
 
@@ -511,6 +517,14 @@ public class GuiGun extends GuiBase
 
         this.transformOptions.add(this.arms, this.bullet, this.gun, this.projectile);
 
+        /* Gun transforms (first person) */
+        area = this.transformFirstPersonOptions.area;
+
+        this.gunFirstPerson = new GuiPoseTransformations(mc);
+        this.gunFirstPerson.flex().relative(area).x(0.5F).y(1, -80).wh(190, 70).anchorX(0.5F);
+
+        this.transformFirstPersonOptions.add(this.gunFirstPerson);
+
         /* Placement of the elements */
         this.morphs.flex().relative(this.viewport).wh(1F, 1F);
         this.panel.flex().relative(this.viewport).set(0, 35, 0, 0).w(1, 0).h(1, -35);
@@ -604,6 +618,7 @@ public class GuiGun extends GuiBase
 
         /* Gun transforms */
         this.gun.set(this.props.gunTransform);
+        this.gunFirstPerson.set(this.props.gunTransformFirstPerson);
         this.projectile.set(this.props.projectileTransform);
 
         this.root.add(this.panel);

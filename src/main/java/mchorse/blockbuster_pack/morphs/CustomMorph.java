@@ -1,7 +1,6 @@
 package mchorse.blockbuster_pack.morphs;
 
 import com.google.common.base.Objects;
-
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.Model;
@@ -15,7 +14,6 @@ import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.OrientedBB;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
-import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.Interpolation;
 import mchorse.mclib.utils.NBTUtils;
@@ -51,7 +49,6 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.vecmath.Vector3f;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

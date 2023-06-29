@@ -4,14 +4,12 @@ import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.utils.NBTUtils;
-import mchorse.mclib.math.functions.limit.Min;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -70,6 +68,9 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
         {
             model.timer = 20;
 
+            boolean firstPerson = RenderingHandler.itemTransformType == ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND
+                || RenderingHandler.itemTransformType == ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
+
             if (
                 RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.GUI &&
                 RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND &&
@@ -79,7 +80,7 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
             ) {
                 if (!(KeyboardHandler.zoom.isKeyDown() && model.props.hideHandsOnZoom))
                 {
-                    model.props.renderHands(RenderingHandler.getLastItemHolder(), partialTicks);
+                    model.props.renderHands(RenderingHandler.getLastItemHolder(), partialTicks, firstPerson);
                 }
 
                 if (model.props.useZoomOverlayMorph && KeyboardHandler.zoom.isKeyDown())
@@ -96,12 +97,12 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
                         RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND &&
                         RenderingHandler.itemTransformType != ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND
                     ) {
-                        model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
+                        model.props.render(RenderingHandler.getLastItemHolder(), partialTicks, firstPerson);
                     }
                 }
                 else
                 {
-                    model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
+                    model.props.render(RenderingHandler.getLastItemHolder(), partialTicks, firstPerson);
                 }
             }
             
@@ -113,7 +114,7 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
                 }
                 else
                 {
-                    model.props.render(RenderingHandler.getLastItemHolder(), partialTicks);
+                    model.props.render(RenderingHandler.getLastItemHolder(), partialTicks, firstPerson);
                 }
             }
 

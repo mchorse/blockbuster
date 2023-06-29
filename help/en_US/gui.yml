@@ -732,6 +732,7 @@ blockbuster.gui:
         projectile_props: Projectile properties
         impact_props: Impact properties
         transforms: Transformations
+        transforms_first_person: Transformations (1st person)
         
         default_morph: Default morph
         fire_morph: Firing morph
@@ -807,7 +808,7 @@ blockbuster.gui:
         shot_delay_tooltip: Delay between shots during automatic firing (in ticks)
 
         aim_options_second: Pro options (page 2)
-        destroyed_command: Command on gun destroyed # Evanechecssss: cummands
+        destroyed_command: Command on gun destroyed
         melee_command: Command on melee attack
         reload_command: Command on reload
         zoom_on_command: Command on zoom
@@ -824,7 +825,7 @@ blockbuster.gui:
         impact_delay: Impact delay
         impact_command: Command on impact
         impact_entity_command: Command on entity impact
-        vanish: Vanish # or Spanish
+        vanish: Vanish
         bounce: Bounce
         sticks: Sticks
         hits: Hits
