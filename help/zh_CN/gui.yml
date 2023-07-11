@@ -474,6 +474,7 @@ blockbuster.gui:
             particles_opaque: 不透明度
             particles_alpha: Alpha
             particles_blend: 混合
+            particles_additive: 叠加
 
         particle_morph:
             title: 伪装

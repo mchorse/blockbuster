@@ -467,6 +467,7 @@ blockbuster.gui:
             particles_opaque: Opaque
             particles_alpha: Alpha
             particles_blend: Blend
+            particles_additive: Additive
 
         particle_morph:
             title: Morph
