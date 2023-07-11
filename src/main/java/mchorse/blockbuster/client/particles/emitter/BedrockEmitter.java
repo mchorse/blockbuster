@@ -454,7 +454,7 @@ public class BedrockEmitter
         {
             Minecraft.getMinecraft().renderEngine.bindTexture(this.scheme.texture);
 
-            GlStateManager.enableBlend();
+            this.scheme.material.beginGL();
             GlStateManager.disableCull();
 
             if (this.guiParticle == null || this.guiParticle.dead)
@@ -472,7 +472,7 @@ public class BedrockEmitter
                 render.renderOnScreen(this.guiParticle, x, y, scale, partialTicks);
             }
 
-            GlStateManager.disableBlend();
+            this.scheme.material.endGL();
             GlStateManager.enableCull();
         }
 
@@ -667,10 +667,7 @@ public class BedrockEmitter
             double playerY = camera.prevPosY + (camera.posY - camera.prevPosY) * (double) partialTicks;
             double playerZ = camera.prevPosZ + (camera.posZ - camera.prevPosZ) * (double) partialTicks;
 
-            GlStateManager.enableBlend();
-            GlStateManager.enableAlpha();
-            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-            GlStateManager.alphaFunc(GL11.GL_GREATER, 0F);
+            this.scheme.material.beginGL();
 
             BufferBuilder builder = Tessellator.getInstance().getBuffer();
 
@@ -689,8 +686,7 @@ public class BedrockEmitter
         {
             Tessellator.getInstance().getBuffer().setTranslation(0, 0, 0);
 
-            GlStateManager.disableBlend();
-            GlStateManager.alphaFunc(516, 0.1F);
+            this.scheme.material.endGL();
         }
     }
 
