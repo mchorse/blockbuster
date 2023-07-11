@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 
 public enum  BedrockMaterial
 {
-    OPAQUE("particles_opaque"), ALPHA("particles_alpha"), BLEND("particles_blend"), ADDITIVE("particles_additive");
+    OPAQUE("particles_opaque"), ALPHA("particles_alpha"), BLEND("particles_blend"), ADDITIVE("particles_add");
 
     public final String id;
 

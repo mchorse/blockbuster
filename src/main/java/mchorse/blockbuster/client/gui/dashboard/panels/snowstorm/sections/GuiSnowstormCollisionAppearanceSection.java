@@ -75,6 +75,7 @@ public class GuiSnowstormCollisionAppearanceSection extends GuiSnowstormComponen
         this.material.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.particles_opaque"));
         this.material.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.particles_alpha"));
         this.material.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.particles_blend"));
+        this.material.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.particles_additive"));
 
         this.texture = new GuiTexturePicker(mc, (rl) ->
         {
