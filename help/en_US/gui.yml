@@ -607,6 +607,7 @@ blockbuster.gui:
                 direction_z: Direction Z
                 lookat_xyz: Look at XYZ
                 lookat_y: Look at Y
+                lookat_direction: Look at Direction
                 rotate_xyz: Rotate XYZ
                 rotate_y: Rotate Y
                 emitter_xy: Emitter XY-Plane
