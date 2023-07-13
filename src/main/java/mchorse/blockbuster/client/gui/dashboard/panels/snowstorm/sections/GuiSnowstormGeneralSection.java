@@ -21,6 +21,7 @@ public class GuiSnowstormGeneralSection extends GuiSnowstormSection
     public GuiTextElement identifier;
     public GuiButtonElement pick;
     public GuiCirculateElement material;
+    public GuiCirculateElement play;
     public GuiTexturePicker texture;
 
     public GuiSnowstormGeneralSection(Minecraft mc, GuiSnowstorm parent)
@@ -66,7 +67,14 @@ public class GuiSnowstormGeneralSection extends GuiSnowstormSection
             this.parent.dirty();
         });
 
-        this.fields.add(this.identifier, Elements.row(mc, 5, 0, 20, this.pick, this.material));
+        this.play = new GuiCirculateElement(mc, (b) ->
+        {
+            this.parent.renderer.playing = this.play.getValue() == 0;
+        });
+        this.play.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.play_playing"));
+        this.play.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.play_paused"));
+
+        this.fields.add(this.identifier, Elements.row(mc, 5, 0, 20, this.pick, this.material), this.play);
     }
     
     @Override

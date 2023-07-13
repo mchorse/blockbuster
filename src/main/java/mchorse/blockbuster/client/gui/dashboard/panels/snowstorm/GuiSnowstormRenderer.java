@@ -18,6 +18,8 @@ public class GuiSnowstormRenderer extends GuiModelRenderer
 {
     public BedrockEmitter emitter;
 
+    public boolean playing = true;
+
     private Vector3f vector = new Vector3f(0, 0, 0);
 
     public GuiSnowstormRenderer(Minecraft mc)
@@ -38,7 +40,7 @@ public class GuiSnowstormRenderer extends GuiModelRenderer
     {
         super.update();
 
-        if (this.emitter != null)
+        if (this.playing && this.emitter != null)
         {
             this.emitter.rotation.setIdentity();
             this.emitter.update();
@@ -71,7 +73,7 @@ public class GuiSnowstormRenderer extends GuiModelRenderer
         GlStateManager.glLineWidth(1);
         GlStateManager.enableDepth();
 
-        this.emitter.render(context.partialTicks);
+        this.emitter.render(this.playing ? context.partialTicks : 1);
 
         BedrockComponentKillPlane plane = this.emitter.scheme.get(BedrockComponentKillPlane.class);
 
