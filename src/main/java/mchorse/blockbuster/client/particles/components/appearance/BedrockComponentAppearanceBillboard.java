@@ -32,6 +32,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
     public MolangExpression sizeH = MolangParser.ZERO;
     public CameraFacing facing = CameraFacing.LOOKAT_XYZ;
     public boolean customDirection = false;
+    public float directionSpeedThreshhold = 0.01F;
     public MolangExpression directionX = MolangParser.ZERO;
     public MolangExpression directionY = MolangParser.ZERO;
     public MolangExpression directionZ = MolangParser.ZERO;
@@ -96,12 +97,34 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             this.facing = CameraFacing.fromString(element.get("facing_camera_mode").getAsString());
         }
 
+        if (this.facing.isDirection && element.has("direction"))
+        {
+            this.parseDirection(element.get("direction").getAsJsonObject(), parser);
+        }
+
         if (element.has("uv") && element.get("uv").isJsonObject())
         {
             this.parseUv(element.get("uv").getAsJsonObject(), parser);
         }
 
         return super.fromJson(element, parser);
+    }
+
+    protected void parseDirection(JsonObject object, MolangParser parser) throws MolangException
+    {
+        this.customDirection = object.has("mode") && object.get("mode").getAsString().equals("custom");
+
+        if (customDirection && object.has("custom_direction"))
+        {
+            JsonArray directionArray = object.getAsJsonArray("custom_direction");
+            this.directionX = parser.parseJson(directionArray.get(0));
+            this.directionY = parser.parseJson(directionArray.get(1));
+            this.directionZ = parser.parseJson(directionArray.get(2));
+        }
+        else if (!customDirection && object.has("min_speed_threshold"))
+        {
+            this.directionSpeedThreshhold = object.get("min_speed_threshold").getAsFloat();
+        }
     }
 
     protected void parseUv(JsonObject object, MolangParser parser) throws MolangException
@@ -249,6 +272,35 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             if (this.loop) flipbook.addProperty("loop", true);
 
             uv.add("flipbook", flipbook);
+        }
+
+        if (this.facing.isDirection)
+        {
+            JsonObject directionObj = new JsonObject();
+
+            if (this.customDirection)
+            {
+                directionObj.addProperty("mode", "custom");
+
+                if (this.directionX != MolangParser.ZERO || this.directionY != MolangParser.ZERO || this.directionZ != MolangParser.ZERO)
+                {
+                    JsonArray directionArray = new JsonArray();
+                    directionArray.add(this.directionX.toJson());
+                    directionArray.add(this.directionY.toJson());
+                    directionArray.add(this.directionZ.toJson());
+
+                    directionObj.add("custom_direction", directionArray);
+                }
+
+                object.add("direction", directionObj);
+            }
+            else if (this.directionSpeedThreshhold != 0.01f)
+            {
+                directionObj.addProperty("mode", "derive_from_velocity");
+                directionObj.addProperty("min_speed_threshold", this.directionSpeedThreshhold);
+
+                object.add("direction", directionObj);
+            }
         }
 
         /* Add main properties */
