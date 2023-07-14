@@ -457,10 +457,14 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
                 direction.y = (float) this.directionY.get();
                 direction.z = (float) this.directionZ.get();
             }
-            else // default use particle motion as its direction
+            else // use particle velocity as its direction
             {
-                // TODO: keep previous direction when particle is not moving
-                direction.set(particle.speed);
+                if (particle.speed.lengthSquared() > this.directionSpeedThreshhold * this.directionSpeedThreshhold)
+                {
+                    particle.direction.set(particle.speed);
+                    particle.direction.normalize();
+                }
+                direction.set(particle.direction);
             }
 
             double lengthSq = direction.lengthSquared();
