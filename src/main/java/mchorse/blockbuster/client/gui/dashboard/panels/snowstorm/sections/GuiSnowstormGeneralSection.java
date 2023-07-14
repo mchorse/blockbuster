@@ -113,5 +113,6 @@ public class GuiSnowstormGeneralSection extends GuiSnowstormSection
 
         this.identifier.setText(scheme.identifier);
         this.material.setValue(scheme.material.ordinal());
+        this.play.setValue(0);
     }
 }

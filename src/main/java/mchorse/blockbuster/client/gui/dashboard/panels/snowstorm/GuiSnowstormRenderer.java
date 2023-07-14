@@ -33,6 +33,7 @@ public class GuiSnowstormRenderer extends GuiModelRenderer
     {
         this.emitter = new BedrockEmitter();
         this.emitter.setScheme(scheme);
+        this.playing = true;
     }
 
     @Override
