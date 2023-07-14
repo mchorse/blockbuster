@@ -24,7 +24,7 @@ public enum CameraFacing
             }
         }
 
-        return null;
+        return ROTATE_XYZ;
     }
 
     private CameraFacing(String id, boolean isLookAt, boolean isDirection)
