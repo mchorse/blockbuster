@@ -11,6 +11,7 @@ public class BedrockComponentShapeEntityAABB extends BedrockComponentShapeBase
         float centerX = (float) this.offset[0].get();
         float centerY = (float) this.offset[1].get();
         float centerZ = (float) this.offset[2].get();
+        particle.origin.set(centerX, centerY, centerZ);
 
         float w = 0;
         float h = 0;

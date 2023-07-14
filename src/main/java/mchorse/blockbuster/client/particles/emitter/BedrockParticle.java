@@ -79,6 +79,7 @@ public class BedrockParticle
     public Vector3d offset = new Vector3d();
     /* Position */
     public Vector3d position = new Vector3d();
+    public Vector3d origin = new Vector3d();
     public Vector3d initialPosition = new Vector3d();
     public Vector3d prevPosition = new Vector3d();
     public Matrix3f matrix = new Matrix3f();

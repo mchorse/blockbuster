@@ -57,6 +57,7 @@ public class BedrockComponentShapeBox extends BedrockComponentShapeBase
         float centerX = (float) this.offset[0].get();
         float centerY = (float) this.offset[1].get();
         float centerZ = (float) this.offset[2].get();
+        particle.origin.set(centerX, centerY, centerZ);
 
         float w = (float) this.halfDimensions[0].get();
         float h = (float) this.halfDimensions[1].get();

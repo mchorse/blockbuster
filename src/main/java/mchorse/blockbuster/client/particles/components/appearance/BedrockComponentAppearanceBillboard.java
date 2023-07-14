@@ -31,6 +31,10 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
     public MolangExpression sizeW = MolangParser.ZERO;
     public MolangExpression sizeH = MolangParser.ZERO;
     public CameraFacing facing = CameraFacing.LOOKAT_XYZ;
+    public boolean customDirection = false;
+    public MolangExpression directionX = MolangParser.ZERO;
+    public MolangExpression directionY = MolangParser.ZERO;
+    public MolangExpression directionZ = MolangParser.ZERO;
     public int textureWidth = 128;
     public int textureHeight = 128;
     public MolangExpression uvX = MolangParser.ZERO;
@@ -64,6 +68,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
         new Vector4f(0, 0, 0, 1)
     };
     protected Vector3f vector = new Vector3f();
+    protected Vector3f direction = new Vector3f();
 
     public BedrockComponentAppearanceBillboard()
     {}
@@ -309,7 +314,6 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
         double entityX = emitter.cX;
         double entityY = emitter.cY;
         double entityZ = emitter.cZ;
-        boolean lookAt = this.facing == CameraFacing.LOOKAT_XYZ || this.facing == CameraFacing.LOOKAT_Y;
 
         /* Flip width when frontal perspective mode */
         if (emitter.perspective == 2)
@@ -317,7 +321,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             this.w = -this.w;
         }
         /* In GUI renderer */
-        else if (emitter.perspective == 100 && !lookAt)
+        else if (emitter.perspective == 100 && !this.facing.isLookAt)
         {
             entityYaw = 180 - entityYaw;
 
@@ -325,11 +329,12 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             this.h = -this.h;
         }
 
-        if (lookAt)
+        if (this.facing.isLookAt && !this.facing.isDirection)
         {
             double dX = entityX - px;
             double dY = entityY - py;
             double dZ = entityZ - pz;
+
             double horizontalDistance = MathHelper.sqrt(dX * dX + dZ * dZ);
 
             entityYaw = 180 - (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
@@ -392,28 +397,133 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
                 this.transform.mul(this.rotation);
             }
         }
+        else if (this.facing.isDirection)
+        {
+            if (this.customDirection)
+            {
+                direction.x = (float) this.directionX.get();
+                direction.y = (float) this.directionY.get();
+                direction.z = (float) this.directionZ.get();
+            }
+            else // default use particle motion as its direction
+            {
+                // TODO: keep previous direction when particle is not moving
+                direction.set(particle.speed);
+            }
+
+            double lengthSq = direction.lengthSquared();
+            if (lengthSq < 0.0001)
+            {
+                direction.set(1, 0, 0);
+            }
+            else if (Math.abs(lengthSq - 1) > 0.0001)
+            {
+                direction.normalize();
+            }
+
+            // extract yaw and pitch from direction
+            entityYaw = getYaw();
+            entityPitch = getPitch();
+
+            if (this.facing == CameraFacing.DIRECTION_X)
+            {
+                this.rotation.rotY((float) (entityYaw / 180 * Math.PI));
+                this.transform.mul(this.rotation);
+                this.rotation.rotX((float) (entityPitch / 180 * Math.PI));
+                this.transform.mul(this.rotation);
+                this.rotation.rotY((float) Math.toRadians(90));
+                this.transform.mul(this.rotation);
+            }
+            else if (facing == CameraFacing.DIRECTION_Y)
+            {
+                this.rotation.rotY((float) (entityYaw / 180 * Math.PI));
+                this.transform.mul(this.rotation);
+                this.rotation.rotX((float) (entityPitch / 180 * Math.PI));
+                this.transform.mul(this.rotation);
+                this.rotation.rotX((float) Math.toRadians(90));
+                this.transform.mul(this.rotation);
+            }
+            else if (facing == CameraFacing.DIRECTION_Z)
+            {
+                this.rotation.rotY((float) (entityYaw / 180 * Math.PI));
+                this.transform.mul(this.rotation);
+                this.rotation.rotX((float) (entityPitch / 180 * Math.PI));
+                this.transform.mul(this.rotation);
+            }
+            else if (facing == CameraFacing.LOOKAT_DIRECTION)
+            {
+                Vector3f cameraDir = new Vector3f(
+                        (float) (entityX - particle.origin.x),
+                        (float) (entityY - particle.origin.y),
+                        (float) (entityZ - particle.origin.z));
+
+                Vector3f particleDir = new Vector3f(
+                        (float) (px - particle.origin.x),
+                        (float) (py - particle.origin.y),
+                        (float) (pz - particle.origin.z));
+
+                cameraDir.normalize();
+                particleDir.normalize();
+
+                Vector3f particleD_ = new Vector3f(particleDir);
+                particleD_.scale(cameraDir.dot(particleDir));
+                direction.sub(cameraDir, particleD_);
+
+                Vector3f up = new Vector3f(0, 1, 0);
+                Vector3f right = new Vector3f();
+                right.cross(particleDir, up);
+                float angle = direction.angle(right);
+
+                if (direction.dot(up) < 0)
+                    angle = -angle;
+
+                rotation.rotY((float) (entityYaw / 180 * Math.PI));
+                transform.mul(rotation);
+                rotation.rotX((float) (entityPitch / 180 * Math.PI));
+                transform.mul(rotation);
+                rotation.rotY((float) Math.PI * 0.5f);
+                transform.mul(rotation);
+                rotation.rotX(angle);
+                transform.mul(rotation);
+            }
+        }
+    }
+
+    private float getYaw()
+    {
+        double yaw = Math.atan2(-direction.x, direction.z);
+        yaw = Math.toDegrees(yaw);
+        if (yaw < -180) {
+            yaw += 360;
+        } else if (yaw > 180) {
+            yaw -= 360;
+        }
+        return (float) -yaw;
+    }
+
+    private float getPitch()
+    {
+        double pitch = Math.atan2(direction.y, Math.sqrt(direction.x * direction.x + direction.z * direction.z));
+        return (float) -Math.toDegrees(pitch);
     }
 
     protected void calculateVertices(BedrockEmitter emitter, BedrockParticle particle)
     {
-        this.vertices[0].set(-this.w / 2, -this.h / 2, 0, 1);
-        this.vertices[1].set(this.w / 2, -this.h / 2, 0, 1);
-        this.vertices[2].set(this.w / 2, this.h / 2, 0, 1);
-        this.vertices[3].set(-this.w / 2, this.h / 2, 0, 1);
         this.transform.setIdentity();
+
+        float hw = this.w * 0.5f;
+        float hh = this.h * 0.5f;
 
         if (particle.relativeScaleBillboard)
         {
-            Matrix4d scale = new Matrix4d(emitter.scale[0], 0, 0, 0,
-                    0, emitter.scale[1], 0, 0,
-                    0, 0, emitter.scale[2], 0,
-                    0, 0, 0, 1);
-
-            for (Vector4f vertex : this.vertices)
-            {
-                scale.transform(vertex);
-            }
+            hw *= emitter.scale[0];
+            hh *= emitter.scale[1];
         }
+
+        this.vertices[0].set(-hw, -hh, 0, 1);
+        this.vertices[1].set( hw, -hh, 0, 1);
+        this.vertices[2].set( hw,  hh, 0, 1);
+        this.vertices[3].set(-hw,  hh, 0, 1);
     }
 
     protected Vector3d calculatePosition(BedrockEmitter emitter, BedrockParticle particle, double px, double py, double pz)
@@ -476,10 +586,13 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
         float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
 
         /* Calculate the geometry for billboards using cool matrix math */
-        this.vertices[0].set(-this.w / 2, -this.h / 2, 0, 1);
-        this.vertices[1].set(this.w / 2, -this.h / 2, 0, 1);
-        this.vertices[2].set(this.w / 2, this.h / 2, 0, 1);
-        this.vertices[3].set(-this.w / 2, this.h / 2, 0, 1);
+        float hw = this.w * 0.5f;
+        float hh = this.h * 0.5f;
+        this.vertices[0].set(-hw, -hh, 0, 1);
+        this.vertices[1].set( hw, -hh, 0, 1);
+        this.vertices[2].set( hw,  hh, 0, 1);
+        this.vertices[3].set(-hw,  hh, 0, 1);
+
         this.transform.setIdentity();
         this.transform.setScale(scale * 2.75F);
         this.transform.setTranslation(new Vector3f(x, y - scale / 2, 0));
