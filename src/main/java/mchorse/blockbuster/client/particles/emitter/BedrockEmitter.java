@@ -660,6 +660,8 @@ public class BedrockEmitter
 
     private void setupOpenGL(float partialTicks)
     {
+        this.scheme.material.beginGL();
+
         if (!GuiModelRenderer.isRendering())
         {
             Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
@@ -667,11 +669,7 @@ public class BedrockEmitter
             double playerY = camera.prevPosY + (camera.posY - camera.prevPosY) * (double) partialTicks;
             double playerZ = camera.prevPosZ + (camera.posZ - camera.prevPosZ) * (double) partialTicks;
 
-            this.scheme.material.beginGL();
-
             BufferBuilder builder = Tessellator.getInstance().getBuffer();
-
-            GlStateManager.disableTexture2D();
 
             builder.setTranslation(-playerX, -playerY, -playerZ);
 
@@ -685,9 +683,9 @@ public class BedrockEmitter
         if (!GuiModelRenderer.isRendering())
         {
             Tessellator.getInstance().getBuffer().setTranslation(0, 0, 0);
-
-            this.scheme.material.endGL();
         }
+
+        this.scheme.material.endGL();
     }
 
 
