@@ -456,11 +456,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
             this.renderLast.toggled(this.model.getSettings().isRenderLast());
             this.renderAlways.toggled(this.model.getSettings().isRenderAlways());
             this.enableBlockHitbox.toggled(this.model.getSettings().isBlockHitbox());
-
-            int lightValue = this.model.getWorld().getBlockState(this.model.getPos()).getValue(BlockModel.LIGHT);
-            this.model.getSettings().setLightValue(lightValue);
-
-            this.lightLevel.setValue(lightValue);
+            this.lightLevel.setValue(this.model.getSettings().getLightValue());
 
             for (int i = 0; i < this.slots.length; i++)
             {
