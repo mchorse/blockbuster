@@ -44,7 +44,6 @@ public class BedrockComponentShapeSphere extends BedrockComponentShapeBase
         float centerY = (float) this.offset[1].get();
         float centerZ = (float) this.offset[2].get();
         float radius = (float) this.radius.get();
-        particle.origin.set(centerX, centerY, centerZ);
 
         Vector3f direction = new Vector3f((float) Math.random() * 2 - 1, (float) Math.random() * 2 - 1, (float) Math.random() * 2 - 1);
         direction.normalize();

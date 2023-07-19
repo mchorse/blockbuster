@@ -19,7 +19,6 @@ import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Matrix3d;
-import javax.vecmath.Matrix4d;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
@@ -509,37 +508,38 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             else if (facing == CameraFacing.LOOKAT_DIRECTION)
             {
                 Vector3f cameraDir = new Vector3f(
-                        (float) (entityX - particle.origin.x),
-                        (float) (entityY - particle.origin.y),
-                        (float) (entityZ - particle.origin.z));
-
-                Vector3f particleDir = new Vector3f(
-                        (float) (px - particle.origin.x),
-                        (float) (py - particle.origin.y),
-                        (float) (pz - particle.origin.z));
+                        (float) (entityX - px),
+                        (float) (entityY - py),
+                        (float) (entityZ - pz));
 
                 cameraDir.normalize();
-                particleDir.normalize();
 
-                Vector3f particleD_ = new Vector3f(particleDir);
-                particleD_.scale(cameraDir.dot(particleDir));
-                direction.sub(cameraDir, particleD_);
+                // front, up and right vectors
+                float frontX, frontY, frontZ;
+                float upX, upY, upZ;
+                float rightX, rightY, rightZ;
 
-                Vector3f up = new Vector3f(0, 1, 0);
-                Vector3f right = new Vector3f();
-                right.cross(particleDir, up);
-                float angle = direction.angle(right);
+                // front = direction
+                frontX = direction.x;
+                frontY = direction.y;
+                frontZ = direction.z;
 
-                if (direction.dot(up) < 0)
-                    angle = -angle;
+                // up = cameraDir x front
+                upX = cameraDir.y * frontZ - cameraDir.z * frontY;
+                upY = frontX * cameraDir.z - frontZ * cameraDir.x;
+                upZ = cameraDir.x * frontY - cameraDir.y * frontX;
 
-                rotation.rotY((float) (entityYaw / 180 * Math.PI));
-                transform.mul(rotation);
-                rotation.rotX((float) (entityPitch / 180 * Math.PI));
-                transform.mul(rotation);
-                rotation.rotY((float) Math.PI * 0.5f);
-                transform.mul(rotation);
-                rotation.rotX(angle);
+                // right = front x up
+                rightX = frontY * upZ - frontZ * upY;
+                rightY = upX * frontZ - upZ * frontX;
+                rightZ = frontX * upY - frontY * upX;
+
+                // setup rotation matrix from front, right and up vectors
+                rotation.setIdentity();
+                rotation.setColumn(0, frontX, frontY, frontZ, 0);
+                rotation.setColumn(1, upX, upY, upZ, 0);
+                rotation.setColumn(2, rightX, rightY, rightZ, 0);
+
                 transform.mul(rotation);
             }
         }

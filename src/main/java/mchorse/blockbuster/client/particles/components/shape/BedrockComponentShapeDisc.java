@@ -83,7 +83,6 @@ public class BedrockComponentShapeDisc extends BedrockComponentShapeSphere
         float centerX = (float) this.offset[0].get();
         float centerY = (float) this.offset[1].get();
         float centerZ = (float) this.offset[2].get();
-        particle.origin.set(centerX, centerY, centerZ);
 
         Vector3f normal = new Vector3f((float) this.normal[0].get(), (float) this.normal[1].get(), (float) this.normal[2].get());
 
