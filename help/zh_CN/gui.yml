@@ -469,10 +469,13 @@ blockbuster.gui:
             title: 常规
             pick: 选择材质
 
+            play_playing: 播放中
+            play_paused: 暂停中
+
             identifier: 该粒子效果的标识，可以作为显示名称，但在基岩版中，它是粒子效果的 ID
 
-            particles_opaque: 不透明度
-            particles_alpha: Alpha
+            particles_opaque: 不透明
+            particles_alpha: 透明度测试
             particles_blend: 混合
             particles_additive: 叠加
 
@@ -606,13 +609,14 @@ blockbuster.gui:
             camera_facing:
                 label: 朝向模式
 
-                direction_x: 方向 X
-                direction_y: 方向 Y
-                direction_z: 方向 Z
+                direction_x: 朝向 X
+                direction_y: 朝向 Y
+                direction_z: 朝向 Z
                 lookat_xyz: 看向 XYZ
                 lookat_y: 看向 Y
-                rotate_xyz: 旋转 XYZ
-                rotate_y: 旋转 Y
+                lookat_direction: 看向朝向
+                rotate_xyz: 转向 XYZ
+                rotate_y: 转向 Y
                 emitter_xy: 沿发射器 XY-平面
                 emitter_xz: 沿发射器 XZ-平面
                 emitter_yz: 沿发射器 YZ-平面
