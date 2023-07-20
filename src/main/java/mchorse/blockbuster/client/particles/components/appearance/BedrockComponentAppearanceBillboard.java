@@ -392,72 +392,18 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             entityPitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI))) + 180;
         }
 
-        this.calculateVertices(emitter, particle);
-
-        if (this.facing == CameraFacing.ROTATE_XYZ || this.facing == CameraFacing.LOOKAT_XYZ)
-        {
-            this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
-            this.transform.mul(this.rotation);
-            this.rotation.rotX(entityPitch / 180 * (float) Math.PI);
-            this.transform.mul(this.rotation);
-        }
-        else if (this.facing == CameraFacing.ROTATE_Y || this.facing == CameraFacing.LOOKAT_Y) {
-            this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
-            this.transform.mul(this.rotation);
-        }
-        else if (this.facing == CameraFacing.EMITTER_YZ)
-        {
-            if (!GuiModelRenderer.isRendering())
-            {
-                this.rotation.rotZ((float) Math.toRadians(180));
-                this.transform.mul(this.rotation);
-                this.rotation.rotY((float) Math.toRadians(90));
-                this.transform.mul(this.rotation);
-            }
-            else
-            {
-                this.rotation.rotY((float) Math.toRadians(-90));
-                this.transform.mul(this.rotation);
-            }
-        }
-        else if (this.facing == CameraFacing.EMITTER_XZ)
-        {
-            if (!GuiModelRenderer.isRendering())
-            {
-                this.rotation.rotX((float) Math.toRadians(90));
-                this.transform.mul(this.rotation);
-            }
-            else
-            {
-                this.rotation.rotZ((float) Math.toRadians(180));
-                this.transform.mul(this.rotation);
-                this.rotation.rotX((float) Math.toRadians(-90));
-                this.transform.mul(this.rotation);
-            }
-        }
-        else if (this.facing == CameraFacing.EMITTER_XY)
-        {
-            if (!GuiModelRenderer.isRendering())
-            {
-                this.rotation.rotX((float) Math.toRadians(180));
-                this.transform.mul(this.rotation);
-            }
-            else
-            {
-                this.rotation.rotY((float) Math.toRadians(180));
-                this.transform.mul(this.rotation);
-            }
-        }
-        else if (this.facing.isDirection)
+        if (this.facing.isDirection)
         {
             if (this.customDirection)
             {
+                // use custom direction
                 direction.x = (float) this.directionX.get();
                 direction.y = (float) this.directionY.get();
                 direction.z = (float) this.directionZ.get();
             }
-            else // use particle velocity as its direction
+            else
             {
+                // use particle velocity as its direction
                 if (particle.speed.lengthSquared() > this.directionSpeedThreshhold * this.directionSpeedThreshhold)
                 {
                     particle.direction.set(particle.speed);
@@ -475,37 +421,99 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
             {
                 direction.normalize();
             }
+        }
 
-            // extract yaw and pitch from direction
-            entityYaw = getYaw();
-            entityPitch = getPitch();
+        this.calculateVertices(emitter, particle);
 
-            if (this.facing == CameraFacing.DIRECTION_X)
-            {
+        switch (this.facing)
+        {
+            case ROTATE_XYZ:
+            case LOOKAT_XYZ:
+                this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
+                this.transform.mul(this.rotation);
+                this.rotation.rotX(entityPitch / 180 * (float) Math.PI);
+                this.transform.mul(this.rotation);
+                break;
+            case ROTATE_Y:
+            case LOOKAT_Y:
+                this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
+                this.transform.mul(this.rotation);
+                break;
+            case EMITTER_YZ:
+                if (!GuiModelRenderer.isRendering())
+                {
+                    this.rotation.rotZ((float) Math.toRadians(180));
+                    this.transform.mul(this.rotation);
+                    this.rotation.rotY((float) Math.toRadians(90));
+                    this.transform.mul(this.rotation);
+                }
+                else
+                {
+                    this.rotation.rotY((float) Math.toRadians(-90));
+                    this.transform.mul(this.rotation);
+                }
+                break;
+            case EMITTER_XZ:
+                if (!GuiModelRenderer.isRendering())
+                {
+                    this.rotation.rotX((float) Math.toRadians(90));
+                    this.transform.mul(this.rotation);
+                }
+                else
+                {
+                    this.rotation.rotZ((float) Math.toRadians(180));
+                    this.transform.mul(this.rotation);
+                    this.rotation.rotX((float) Math.toRadians(-90));
+                    this.transform.mul(this.rotation);
+                }
+                break;
+            case EMITTER_XY:
+                if (!GuiModelRenderer.isRendering())
+                {
+                    this.rotation.rotX((float) Math.toRadians(180));
+                    this.transform.mul(this.rotation);
+                }
+                else
+                {
+                    this.rotation.rotY((float) Math.toRadians(180));
+                    this.transform.mul(this.rotation);
+                }
+                break;
+            case DIRECTION_X:
+                // extract yaw and pitch from direction
+                entityYaw = getYaw();
+                entityPitch = getPitch();
+
                 this.rotation.rotY((float) (entityYaw / 180 * Math.PI));
                 this.transform.mul(this.rotation);
                 this.rotation.rotX((float) (entityPitch / 180 * Math.PI));
                 this.transform.mul(this.rotation);
                 this.rotation.rotY((float) Math.toRadians(90));
                 this.transform.mul(this.rotation);
-            }
-            else if (facing == CameraFacing.DIRECTION_Y)
-            {
+                break;
+            case DIRECTION_Y:
+                // extract yaw and pitch from direction
+                entityYaw = getYaw();
+                entityPitch = getPitch();
+
                 this.rotation.rotY((float) (entityYaw / 180 * Math.PI));
                 this.transform.mul(this.rotation);
                 this.rotation.rotX((float) (entityPitch / 180 * Math.PI));
                 this.transform.mul(this.rotation);
                 this.rotation.rotX((float) Math.toRadians(90));
                 this.transform.mul(this.rotation);
-            }
-            else if (facing == CameraFacing.DIRECTION_Z)
-            {
+                break;
+            case DIRECTION_Z:
+                // extract yaw and pitch from direction
+                entityYaw = getYaw();
+                entityPitch = getPitch();
+
                 this.rotation.rotY((float) (entityYaw / 180 * Math.PI));
                 this.transform.mul(this.rotation);
                 this.rotation.rotX((float) (entityPitch / 180 * Math.PI));
                 this.transform.mul(this.rotation);
-            }
-            else if (facing == CameraFacing.LOOKAT_DIRECTION)
+                break;
+            case LOOKAT_DIRECTION:
             {
                 Vector3f cameraDir = new Vector3f(
                         (float) (entityX - px),
@@ -541,7 +549,11 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
                 rotation.setColumn(2, rightX, rightY, rightZ, 0);
 
                 transform.mul(rotation);
+                break;
             }
+            default:
+                // Unknown facing mode
+                break;
         }
     }
 
