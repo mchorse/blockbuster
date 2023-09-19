@@ -31,6 +31,13 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
     public GuiTextElement uvY;
     public GuiTextElement uvW;
     public GuiTextElement uvH;
+    public GuiElement modeRow;
+    public GuiElement directionContainer;
+    public GuiCirculateElement directionMode;
+    public GuiTrackpadElement speedThreshold;
+    public GuiTextElement directionX;
+    public GuiTextElement directionY;
+    public GuiTextElement directionZ;
 
     public GuiElement flipbook;
     public GuiTrackpadElement stepX;
@@ -57,6 +64,7 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
         this.facingMode = new GuiCirculateElement(mc, (b) ->
         {
             this.component.facing = SORTED_FACING_MODES[this.facingMode.getValue()];
+            this.updateElements();
             this.parent.dirty();
         });
         this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.direction_x"));
@@ -71,6 +79,38 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
         this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.emitter_xz"));
         this.facingMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.emitter_yz"));
         this.facingModeLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.label"), 20).anchor(0, 0.5F);
+
+        this.directionContainer = new GuiElement(mc);
+        this.directionContainer.flex().column(5).vertical().stretch();
+        this.directionMode = new GuiCirculateElement(mc, (b) -> {
+            this.component.customDirection = b.getValue() == 1;
+            this.updateElements();
+            this.parent.dirty();
+        });
+        this.directionMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.direction_mode.motion"));
+        this.directionMode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.direction_mode.custom"));
+
+        this.directionX = new GuiTextElement(mc, 10000, (str) -> {
+            this.component.directionX = this.parse(str, this.directionX, this.component.directionX);
+        });
+        this.directionX.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.direction_mode.direction_x_tooltip"));
+
+        this.directionY = new GuiTextElement(mc, 10000, (str) -> {
+            this.component.directionY = this.parse(str, this.directionY, this.component.directionY);
+        });
+        this.directionX.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.direction_mode.direction_y_tooltip"));
+
+        this.directionZ = new GuiTextElement(mc, 10000, (str) -> {
+            this.component.directionZ = this.parse(str, this.directionZ, this.component.directionZ);
+        });
+        this.directionX.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.direction_mode.direction_z_tooltip"));
+        this.speedThreshold = new GuiTrackpadElement(mc, (value) -> {
+            this.component.directionSpeedThreshhold = value.floatValue();
+            this.parent.dirty();
+        });
+        this.speedThreshold.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.camera_facing.direction_mode.speed_threshold_tooltip"));
+
+        this.directionContainer.add(this.directionMode, this.speedThreshold);
         
         this.sizeW = new GuiTextElement(mc, 10000, (str) -> this.component.sizeW = this.parse(str, this.sizeW, this.component.sizeW));
         this.sizeW.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.width"));
@@ -120,6 +160,8 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
         });
         this.loop.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.loop_tooltip"));
 
+        this.modeRow = Elements.row(mc, 5, 0, 20, this.facingModeLabel, this.facingMode);
+
         this.flipbook = new GuiElement(mc);
         this.flipbook.flex().column(5).vertical().stretch();
         this.flipbook.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.animated")).marginTop(12));
@@ -128,7 +170,7 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
         this.flipbook.add(Elements.row(mc, 5, 0, 20, this.stretch, this.loop));
 
         this.fields.add(Elements.row(mc, 5, 0, 20, this.modeLabel, this.mode));
-        this.fields.add(Elements.row(mc, 5, 0, 20, this.facingModeLabel, this.facingMode));
+        this.fields.add(this.modeRow);
         this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.size")).marginTop(12));
         this.fields.add(this.sizeW, this.sizeH);
         this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.mapping")).marginTop(12));
@@ -145,6 +187,30 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
 
     private void updateElements()
     {
+        this.directionContainer.removeFromParent();
+
+        if (this.component.facing.isDirection)
+        {
+            this.fields.addAfter(this.modeRow, this.directionContainer);
+            this.speedThreshold.removeFromParent();
+            this.directionX.removeFromParent();
+            this.directionY.removeFromParent();
+            this.directionZ.removeFromParent();
+
+            if (this.component.customDirection)
+            {
+                this.directionContainer.add(this.directionX, this.directionY, this.directionZ);
+            }
+            else
+            {
+                this.directionContainer.add(this.speedThreshold);
+            }
+        }
+        else
+        {
+            this.directionContainer.removeFromParent();
+        }
+
         this.flipbook.removeFromParent();
 
         if (this.component.flipbook)
@@ -180,6 +246,11 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
         this.set(this.uvY, this.component.uvY);
         this.set(this.uvW, this.component.uvW);
         this.set(this.uvH, this.component.uvH);
+        this.set(this.directionX, this.component.directionX);
+        this.set(this.directionY, this.component.directionY);
+        this.set(this.directionZ, this.component.directionZ);
+        this.speedThreshold.setValue(this.component.directionSpeedThreshhold);
+        this.directionMode.setValue(this.component.customDirection ? 1 : 0);
 
         this.stepX.setValue(this.component.stepX);
         this.stepY.setValue(this.component.stepY);

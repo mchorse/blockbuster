@@ -605,6 +605,13 @@ blockbuster.gui:
                 direction_x: Direction X
                 direction_y: Direction Y
                 direction_z: Direction Z
+                direction_mode:
+                    motion: Motion
+                    custom: Custom Direction
+                    direction_x_tooltip: Custom X direction
+                    direction_y_tooltip: Custom Y direction
+                    direction_z_tooltip: Custom Z direction
+                    speed_threshold_tooltip: Speed threshold
                 lookat_xyz: Look at XYZ
                 lookat_y: Look at Y
                 lookat_direction: Look at Direction
