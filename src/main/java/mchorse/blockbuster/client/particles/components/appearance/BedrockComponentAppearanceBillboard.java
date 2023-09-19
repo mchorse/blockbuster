@@ -515,40 +515,44 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
                 break;
             case LOOKAT_DIRECTION:
             {
+                this.rotation.setIdentity();
+                this.rotation.rotY((float) Math.toRadians(this.getYaw()));
+                this.transform.mul(this.rotation);
+                this.rotation.rotX((float) Math.toRadians(this.getPitch() + 90));
+                this.transform.mul(this.rotation);
+
                 Vector3f cameraDir = new Vector3f(
                         (float) (entityX - px),
                         (float) (entityY - py),
                         (float) (entityZ - pz));
 
+                Vector3f rotatedNormal = new Vector3f(0,0,1);
+
+                this.transform.transform(rotatedNormal);
+
+                /*
+                 * The direction vector is the normal of the plane used for calculating the rotation around local y Axis.
+                 * Project the cameraDir onto that plane to find out the axis angle (direction vector is the y axis).
+                 */
+                Vector3f projectDir = new Vector3f(this.direction);
+                projectDir.scale(cameraDir.dot(this.direction));
+                cameraDir.sub(projectDir);
+
+                if (cameraDir.lengthSquared() < 1.0e-30) break;
+
                 cameraDir.normalize();
 
-                // front, up and right vectors
-                float frontX, frontY, frontZ;
-                float upX, upY, upZ;
-                float rightX, rightY, rightZ;
+                /*
+                 * The angle between two vectors is only between 0 and 180 degrees.
+                 * RotationDirection will be parallel to direction but pointing in different directions depending
+                 * on the rotation of cameraDir. Use this to find out the sign of the angle
+                 * between cameraDir and the rotatedNormal.
+                 */
+                Vector3f rotationDirection = new Vector3f();
+                rotationDirection.cross(cameraDir, rotatedNormal);
 
-                // front = direction
-                frontX = direction.x;
-                frontY = direction.y;
-                frontZ = direction.z;
-
-                // up = cameraDir x front
-                upX = cameraDir.y * frontZ - cameraDir.z * frontY;
-                upY = frontX * cameraDir.z - frontZ * cameraDir.x;
-                upZ = cameraDir.x * frontY - cameraDir.y * frontX;
-
-                // right = front x up
-                rightX = frontY * upZ - frontZ * upY;
-                rightY = upX * frontZ - upZ * frontX;
-                rightZ = frontX * upY - frontY * upX;
-
-                // setup rotation matrix from front, right and up vectors
-                rotation.setIdentity();
-                rotation.setColumn(0, frontX, frontY, frontZ, 0);
-                rotation.setColumn(1, upX, upY, upZ, 0);
-                rotation.setColumn(2, rightX, rightY, rightZ, 0);
-
-                transform.mul(rotation);
+                this.rotation.rotY(-Math.copySign(cameraDir.angle(rotatedNormal), rotationDirection.dot(this.direction)));
+                this.transform.mul(this.rotation);
                 break;
             }
             default:
