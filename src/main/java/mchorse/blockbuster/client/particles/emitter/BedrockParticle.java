@@ -85,7 +85,6 @@ public class BedrockParticle
     private boolean matrixSet;
 
     public Vector3f speed = new Vector3f();
-    public Vector3f direction = new Vector3f();
     public Vector3f acceleration = new Vector3f();
     public Vector3f accelerationFactor = new Vector3f(1, 1, 1);
     public float drag = 0;

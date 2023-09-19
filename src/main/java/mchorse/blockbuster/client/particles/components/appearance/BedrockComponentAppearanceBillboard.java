@@ -113,14 +113,14 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
     {
         this.customDirection = object.has("mode") && object.get("mode").getAsString().equals("custom");
 
-        if (customDirection && object.has("custom_direction"))
+        if (this.customDirection && object.has("custom_direction"))
         {
             JsonArray directionArray = object.getAsJsonArray("custom_direction");
             this.directionX = parser.parseJson(directionArray.get(0));
             this.directionY = parser.parseJson(directionArray.get(1));
             this.directionZ = parser.parseJson(directionArray.get(2));
         }
-        else if (!customDirection && object.has("min_speed_threshold"))
+        else if (!this.customDirection && object.has("min_speed_threshold"))
         {
             this.directionSpeedThreshhold = object.get("min_speed_threshold").getAsFloat();
         }
@@ -360,11 +360,11 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
     protected void calculateFacing(BedrockEmitter emitter, BedrockParticle particle, double px, double py, double pz)
     {
         /* Calculate yaw and pitch based on the facing mode */
-        float entityYaw = emitter.cYaw;
-        float entityPitch = emitter.cPitch;
-        double entityX = emitter.cX;
-        double entityY = emitter.cY;
-        double entityZ = emitter.cZ;
+        float cameraYaw = emitter.cYaw;
+        float cameraPitch = emitter.cPitch;
+        double cameraX = emitter.cX;
+        double cameraY = emitter.cY;
+        double cameraZ = emitter.cZ;
 
         /* Flip width when frontal perspective mode */
         if (emitter.perspective == 2)
@@ -374,7 +374,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
         /* In GUI renderer */
         else if (emitter.perspective == 100 && !this.facing.isLookAt)
         {
-            entityYaw = 180 - entityYaw;
+            cameraYaw = 180 - cameraYaw;
 
             this.w = -this.w;
             this.h = -this.h;
@@ -382,44 +382,43 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 
         if (this.facing.isLookAt && !this.facing.isDirection)
         {
-            double dX = entityX - px;
-            double dY = entityY - py;
-            double dZ = entityZ - pz;
+            double dX = cameraX - px;
+            double dY = cameraY - py;
+            double dZ = cameraZ - pz;
 
             double horizontalDistance = MathHelper.sqrt(dX * dX + dZ * dZ);
 
-            entityYaw = 180 - (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
-            entityPitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI))) + 180;
+            cameraYaw = 180 - (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
+            cameraPitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI))) + 180;
         }
 
         if (this.facing.isDirection)
         {
             if (this.customDirection)
             {
-                // use custom direction
-                direction.x = (float) this.directionX.get();
-                direction.y = (float) this.directionY.get();
-                direction.z = (float) this.directionZ.get();
+                /* evaluate custom direction molang */
+                this.direction.x = (float) this.directionX.get();
+                this.direction.y = (float) this.directionY.get();
+                this.direction.z = (float) this.directionZ.get();
+            }
+            else if (particle.speed.lengthSquared() > this.directionSpeedThreshhold * this.directionSpeedThreshhold)
+            {
+                this.direction.set(particle.speed);
+                this.direction.normalize();
             }
             else
             {
-                // use particle velocity as its direction
-                if (particle.speed.lengthSquared() > this.directionSpeedThreshhold * this.directionSpeedThreshhold)
-                {
-                    particle.direction.set(particle.speed);
-                    particle.direction.normalize();
-                }
-                direction.set(particle.direction);
+                this.direction.set(1, 0, 0);
             }
 
-            double lengthSq = direction.lengthSquared();
+            double lengthSq = this.direction.lengthSquared();
             if (lengthSq < 0.0001)
             {
-                direction.set(1, 0, 0);
+                this.direction.set(1, 0, 0);
             }
             else if (Math.abs(lengthSq - 1) > 0.0001)
             {
-                direction.normalize();
+                this.direction.normalize();
             }
         }
 
@@ -429,14 +428,14 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
         {
             case ROTATE_XYZ:
             case LOOKAT_XYZ:
-                this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
+                this.rotation.rotY((float) Math.toRadians(cameraYaw));
                 this.transform.mul(this.rotation);
-                this.rotation.rotX(entityPitch / 180 * (float) Math.PI);
+                this.rotation.rotX((float) Math.toRadians(cameraPitch));
                 this.transform.mul(this.rotation);
                 break;
             case ROTATE_Y:
             case LOOKAT_Y:
-                this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
+                this.rotation.rotY((float) Math.toRadians(cameraYaw));
                 this.transform.mul(this.rotation);
                 break;
             case EMITTER_YZ:
@@ -480,41 +479,26 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
                 }
                 break;
             case DIRECTION_X:
-                // extract yaw and pitch from direction
-                entityYaw = getYaw();
-                entityPitch = getPitch();
-
-                this.rotation.rotY((float) (entityYaw / 180 * Math.PI));
+                this.rotation.rotY((float) Math.toRadians(this.getYaw()));
                 this.transform.mul(this.rotation);
-                this.rotation.rotX((float) (entityPitch / 180 * Math.PI));
+                this.rotation.rotX((float) Math.toRadians(this.getPitch()));
                 this.transform.mul(this.rotation);
                 this.rotation.rotY((float) Math.toRadians(90));
                 this.transform.mul(this.rotation);
                 break;
             case DIRECTION_Y:
-                // extract yaw and pitch from direction
-                entityYaw = getYaw();
-                entityPitch = getPitch();
-
-                this.rotation.rotY((float) (entityYaw / 180 * Math.PI));
+                this.rotation.rotY((float) Math.toRadians(this.getYaw()));
                 this.transform.mul(this.rotation);
-                this.rotation.rotX((float) (entityPitch / 180 * Math.PI));
-                this.transform.mul(this.rotation);
-                this.rotation.rotX((float) Math.toRadians(90));
+                this.rotation.rotX((float) Math.toRadians(this.getPitch() + 90));
                 this.transform.mul(this.rotation);
                 break;
             case DIRECTION_Z:
-                // extract yaw and pitch from direction
-                entityYaw = getYaw();
-                entityPitch = getPitch();
-
-                this.rotation.rotY((float) (entityYaw / 180 * Math.PI));
+                this.rotation.rotY((float) Math.toRadians(this.getYaw()));
                 this.transform.mul(this.rotation);
-                this.rotation.rotX((float) (entityPitch / 180 * Math.PI));
+                this.rotation.rotX((float) Math.toRadians(this.getPitch()));
                 this.transform.mul(this.rotation);
                 break;
             case LOOKAT_DIRECTION:
-            {
                 this.rotation.setIdentity();
                 this.rotation.rotY((float) Math.toRadians(this.getYaw()));
                 this.transform.mul(this.rotation);
@@ -522,9 +506,9 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
                 this.transform.mul(this.rotation);
 
                 Vector3f cameraDir = new Vector3f(
-                        (float) (entityX - px),
-                        (float) (entityY - py),
-                        (float) (entityZ - pz));
+                        (float) (cameraX - px),
+                        (float) (cameraY - py),
+                        (float) (cameraZ - pz));
 
                 Vector3f rotatedNormal = new Vector3f(0,0,1);
 
@@ -554,16 +538,18 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
                 this.rotation.rotY(-Math.copySign(cameraDir.angle(rotatedNormal), rotationDirection.dot(this.direction)));
                 this.transform.mul(this.rotation);
                 break;
-            }
             default:
                 // Unknown facing mode
                 break;
         }
     }
 
+    /**
+     * @return the yaw angle in degrees of this {@link #direction}
+     */
     private float getYaw()
     {
-        double yaw = Math.atan2(-direction.x, direction.z);
+        double yaw = Math.atan2(-this.direction.x, this.direction.z);
         yaw = Math.toDegrees(yaw);
         if (yaw < -180) {
             yaw += 360;
@@ -573,9 +559,12 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
         return (float) -yaw;
     }
 
+    /**
+     * @return the pitch angle in degrees of this {@link #direction}
+     */
     private float getPitch()
     {
-        double pitch = Math.atan2(direction.y, Math.sqrt(direction.x * direction.x + direction.z * direction.z));
+        double pitch = Math.atan2(this.direction.y, Math.sqrt(this.direction.x * this.direction.x + this.direction.z * this.direction.z));
         return (float) -Math.toDegrees(pitch);
     }
 
