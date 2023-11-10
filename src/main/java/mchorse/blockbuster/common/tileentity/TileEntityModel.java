@@ -160,9 +160,8 @@ public class TileEntityModel extends TileEntity implements ITickable, IRenderLas
             {
                 BlockPos pos = this.pos;
                 PacketModifyModelBlock message = new PacketModifyModelBlock(pos, this);
-                NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64);
 
-                Dispatcher.DISPATCHER.get().sendToAllAround(message, point);
+                Dispatcher.DISPATCHER.get().sendToDimension(message, this.world.provider.getDimension());
             }
 
             this.lastModelUpdate = Scene.lastUpdate;
