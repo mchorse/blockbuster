@@ -1,15 +1,15 @@
 package mchorse.blockbuster_pack.client.gui.trackers;
 
-import mchorse.blockbuster_pack.trackers.ApertureTracker;
+import mchorse.blockbuster_pack.trackers.MorphTracker;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 
-public class GuiApertureTracker extends GuiBaseTracker<ApertureTracker>
+public class GuiMorphTracking extends GuiBaseTracker<MorphTracker>
 {
     public GuiToggleElement combineTracking;
 
-    public GuiApertureTracker(Minecraft mc)
+    public GuiMorphTracking(Minecraft mc)
     {
         super(mc);
 
@@ -24,7 +24,7 @@ public class GuiApertureTracker extends GuiBaseTracker<ApertureTracker>
     }
 
     @Override
-    public void fill(ApertureTracker tracker)
+    public void fill(MorphTracker tracker)
     {
         super.fill(tracker);
 

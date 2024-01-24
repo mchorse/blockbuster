@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableList;
 import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.blockbuster_pack.client.gui.trackers.GuiBaseTracker;
 import mchorse.blockbuster_pack.morphs.TrackerMorph;
-import mchorse.blockbuster_pack.trackers.ApertureTracker;
+import mchorse.blockbuster_pack.trackers.MorphTracker;
 import mchorse.blockbuster_pack.trackers.BaseTracker;
 import mchorse.blockbuster_pack.trackers.TrackerRegistry;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
@@ -114,7 +114,7 @@ public class GuiTrackerMorph extends GuiAbstractMorph<TrackerMorph>
 
             if (this.morph.tracker == null)
             {
-                this.morph.tracker = new ApertureTracker();
+                this.morph.tracker = new MorphTracker();
             }
 
             this.type.setValue(this.trackers.indexOf(TrackerRegistry.CLASS_TO_ID.get(this.morph.tracker.getClass())));

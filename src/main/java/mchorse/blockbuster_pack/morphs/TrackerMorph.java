@@ -1,7 +1,7 @@
 package mchorse.blockbuster_pack.morphs;
 
 import com.google.common.base.Objects;
-import mchorse.blockbuster_pack.trackers.ApertureTracker;
+import mchorse.blockbuster_pack.trackers.MorphTracker;
 import mchorse.blockbuster_pack.trackers.BaseTracker;
 import mchorse.blockbuster_pack.trackers.TrackerRegistry;
 import mchorse.mclib.client.Draw;
@@ -30,7 +30,7 @@ import java.awt.Color;
 
 public class TrackerMorph extends AbstractMorph
 {
-    public BaseTracker tracker = new ApertureTracker();
+    public BaseTracker tracker = new MorphTracker();
 
     public boolean hidden = false;
 
@@ -268,7 +268,7 @@ public class TrackerMorph extends AbstractMorph
     @Override
     public void reset()
     {
-        this.tracker = new ApertureTracker();
+        this.tracker = new MorphTracker();
         this.hidden = false;
     }
 
@@ -280,7 +280,13 @@ public class TrackerMorph extends AbstractMorph
         if (tag.hasKey("Tracker", NBT.TAG_COMPOUND))
         {
             NBTTagCompound tracker = tag.getCompoundTag("Tracker");
+
             Class<? extends BaseTracker> clazz = TrackerRegistry.ID_TO_CLASS.get(tracker.getString("Id"));
+
+            /* backwards compatibility with old minema tracker that got merge to MorphTracker class */
+            if (tracker.getString("Id").equals("minema")) {
+                clazz = MorphTracker.class;
+            }
 
             if (clazz != null)
             {

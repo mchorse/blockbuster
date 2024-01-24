@@ -20,7 +20,6 @@ import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
 import mchorse.blockbuster.commands.CommandItemNBT;
 import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.common.block.BlockGreen.ChromaColor;
-import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.common.entity.ExpirableDummyEntity;
@@ -30,15 +29,14 @@ import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.recording.capturing.FrameHandler;
 import mchorse.blockbuster.utils.mclib.BlockbusterJarTree;
 import mchorse.blockbuster.utils.mclib.BlockbusterTree;
-import mchorse.blockbuster_pack.client.gui.trackers.GuiApertureTracker;
+import mchorse.blockbuster_pack.client.gui.trackers.GuiMorphTracking;
 import mchorse.blockbuster_pack.client.gui.trackers.GuiBaseTracker;
 import mchorse.blockbuster_pack.client.render.RenderCustomActor;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.blockbuster_pack.morphs.structure.StructureRenderer;
 import mchorse.blockbuster_pack.trackers.ApertureCamera;
-import mchorse.blockbuster_pack.trackers.ApertureTracker;
+import mchorse.blockbuster_pack.trackers.MorphTracker;
 import mchorse.blockbuster_pack.trackers.BaseTracker;
-import mchorse.blockbuster_pack.trackers.MinemaTracker;
 import mchorse.blockbuster_pack.trackers.TrackerRegistry;
 import mchorse.mclib.McLib;
 import mchorse.mclib.utils.files.FileTree;
@@ -249,9 +247,8 @@ public class ClientProxy extends CommonProxy
 
         /* Tracker editors */
         TrackerRegistry.CLIENT = new HashMap<Class<? extends BaseTracker>, GuiBaseTracker<? extends BaseTracker>>();
-        TrackerRegistry.CLIENT.put(ApertureTracker.class, new GuiApertureTracker(mc));
+        TrackerRegistry.CLIENT.put(MorphTracker.class, new GuiMorphTracking(mc));
         TrackerRegistry.CLIENT.put(ApertureCamera.class, new GuiBaseTracker<>(mc));
-        TrackerRegistry.CLIENT.put(MinemaTracker.class, new GuiBaseTracker<>(mc));
     }
 
     protected void registerItemModel(Block block, String path)

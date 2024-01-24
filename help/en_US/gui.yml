@@ -709,14 +709,13 @@ blockbuster.gui:
             title: Name
         type:
             title: Type
-            aperture_tracker: Aperture Morph tracker
-            minema: Minema Morph tracker
+            aperture_tracker: Morph tracking
             apcam: Aperture Modifier
         hidden: Hide pointer
 
         aperture_tracker:
             combine_tracking: Automatic append
-            combine_tracking_tooltip: If the tracker's name already was tracked, it will check if this tracker starts at the next frame where the original tracker has stopped. If it is continuing at the next frame, it then appends this tracking data to the original one.
+            combine_tracking_tooltip: (for Aperture tracking) If the tracker's name already was tracked, it will check if this tracker starts at the next frame where the original tracker has stopped. If it is continuing at the next frame, it then appends this tracking data to the original one.
 
     light_morph:
         name: Light
