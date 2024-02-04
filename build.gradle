@@ -6,22 +6,32 @@ buildscript
     repositories 
     {
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = 'https://maven.minecraftforge.net/' }
     }
 
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath 'org.yaml:snakeyaml:1.18'
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
+
+repositories {
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+}
 
 if (project.hasProperty("dev")) 
 {
     version += "-dev" + dev
 }
 
+version = project.version
 group = "mchorse.blockbuster"
 archivesBaseName = "blockbuster"
 sourceCompatibility = targetCompatibility = "1.8"
@@ -35,27 +45,28 @@ compileJava
 
 minecraft 
 {
-    version = "${mc_version}-${forge_version}"
-    runDir = "run"
-    mappings = snapshot
-    
-    clientJvmArgs = ["-Xmx5G", "-Dfml.coreMods.load=" + coremodPath]
-    serverJvmArgs = ["-Xmx5G"]
-    
-    replace "%VERSION%", project.version
-    replace "%METAMORPH%", project.metamorph
-    replace "%MCLIB%", project.mclib
-    replace "%APERTURE%", project.aperture
-    replace "%EMOTICONS%", project.emoticons
-    replace "%MINEMA%", project.minema
+    mappings channel: 'snapshot', version: project.snapshot
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            jvmArgs(["-Dfml.coreMods.load=" + coremodPath])
+        }
+
+        server {
+
+        }
+    }
+
 }
 
 dependencies 
 {
-	compile files("run/libs/mclib-${mclib}-${project.minecraft.version}-dev.jar")
-	compile files("run/libs/metamorph-${metamorph}-${project.minecraft.version}-dev.jar")
-	compile files("run/libs/aperture-${aperture}-${project.minecraft.version}-dev.jar")
-    compile files("run/libs/Minema-${minema}-${project.minecraft.version}-dev.jar")
+    minecraft "net.minecraftforge:forge:${project.mc_version}-${project.forge_version}"
+    implementation fg.deobf("curse.maven:mclib-304750:4044267")
+    implementation fg.deobf("curse.maven:metamorph-256932:4044182")
+    implementation fg.deobf("curse.maven:aperture-271561:4044181")
+    implementation fg.deobf("curse.maven:Minema-645749:3884808")
 }
 
 jar {
@@ -64,17 +75,17 @@ jar {
    }
 }
 
-eclipse
+/*eclipse
 {
     classpath
     {
         file
         {
             whenMerged
-            { classpath -> 
-                def ver = project.minecraft.version
-                /* Fucking gradle 2.14 doesn't have fileReference() method,
-                 * screw you piece of shit */
+            { classpath ->
+                def ver = project.mc_version
+                *//* Fucking gradle 2.14 doesn't have fileReference() method,
+                 * screw you piece of shit *//*
                 def getMeReference = { File file ->
                 	return [
                 		getFile: { return file },
@@ -83,37 +94,60 @@ eclipse
                 		isRelativeToPathVariable: { return false }
                 	] as org.gradle.plugins.ide.eclipse.model.FileReference
                 }
-                
+
                 def lib = entries.find { it.path.contains "metamorph-${metamorph}" }
                 lib.sourcePath = getMeReference(file("run/libs/metamorph-${metamorph}-${ver}-sources.jar"))
-                
-                lib = entries.find { it.path.contains "aperture-${aperture}" } 
+
+                lib = entries.find { it.path.contains "aperture-${aperture}" }
                 lib.sourcePath = getMeReference(file("run/libs/aperture-${aperture}-${ver}-sources.jar"))
-                
-                lib = entries.find { it.path.contains "mclib-${mclib}" } 
+
+                lib = entries.find { it.path.contains "mclib-${mclib}" }
                 lib.sourcePath = getMeReference(file("run/libs/mclib-${mclib}-${ver}-sources.jar"))
             }
         }
     }
-}
+}*/
 
 processResources
 {
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property "mcversion", project.mc_version
 
-	project.version += "-" + project.minecraft.version
+	project.version += "-" + project.mc_version
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
                 
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version':project.version, 'mcversion':project.mc_version
     }
         
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
 }
+
+
+import org.apache.tools.ant.filters.ReplaceTokens
+def copyDir = "$compileJava.temporaryDir/replaced"
+
+task tokenReplace(type:Copy){
+    var test = sourceSets.main.java.sourceDirectories;
+    from(sourceSets.main.java.sourceDirectories)
+    into copyDir
+    filter(ReplaceTokens, tokens: [
+            VERSION: project.version,
+            METAMORPH: project.metamorph,
+            MCLIB: project.mclib,
+            APERTURE: project.aperture,
+            EMOTICONS: project.emoticons,
+            MINEMA: project.minema
+    ])
+}
+
+compileJava.setSource(copyDir)
+
+compileJava.dependsOn(tokenReplace)
+
 
 /* Dev build */
 task deobfJar(type: Jar) {
