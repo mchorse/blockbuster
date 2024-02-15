@@ -48,6 +48,7 @@ minecraft
     replace "%APERTURE%", project.aperture
     replace "%EMOTICONS%", project.emoticons
     replace "%MINEMA%", project.minema
+    replace "%BETTERLIGHTS%", project.betterlights
 }
 
 dependencies 
@@ -56,6 +57,8 @@ dependencies
 	compile files("run/libs/metamorph-${metamorph}-${project.minecraft.version}-dev.jar")
 	compile files("run/libs/aperture-${aperture}-${project.minecraft.version}-dev.jar")
     compile files("run/libs/Minema-${minema}-${project.minecraft.version}-dev.jar")
+    compile files("run/mods/BetterLights-${betterlights}.PREVIEW-all.jar")
+    compile files("run/libs/ACsGuis-1.2.11-dev.jar")
 }
 
 jar {
