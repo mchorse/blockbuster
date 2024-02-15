@@ -53,21 +53,6 @@ public class TileEntityModelItemStackRenderer extends TileEntityItemStackRendere
             this.def = new TileEntityModel();
         }
 
-        /* Removing from the cache unused models */
-        Iterator<TEModel> it = models.values().iterator();
-
-        while (it.hasNext())
-        {
-            TEModel model = it.next();
-
-            if (model.timer <= 0)
-            {
-                it.remove();
-            }
-
-            model.timer--;
-        }
-
         NBTTagCompound tag = stack.getTagCompound();
 
         if (tag != null)
@@ -82,14 +67,15 @@ public class TileEntityModelItemStackRenderer extends TileEntityItemStackRendere
                 model = new TEModel(te);
                 models.put(tag, model);
             }
+            
+            /*
+             * timer in ticks when to remove items that are not rendered anymore
+             * 5 should be enough to ensure that even with very low fps the model doesn't get removed unnecessarily
+             */
+            model.timer = 5;
+            this.renderModel(model.model, partialTicks);
 
-            if (model != null)
-            {
-                model.timer = 20;
-                this.renderModel(model.model, partialTicks);
-
-                return;
-            }
+            return;
         }
 
         this.renderModel(this.def, partialTicks);

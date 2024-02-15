@@ -36,21 +36,6 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
         /* Thank you Mojang, very cool! */
         partialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
 
-        /* Removing from the cache unused models */
-        Iterator<GunEntry> it = models.values().iterator();
-
-        while (it.hasNext())
-        {
-            GunEntry model = it.next();
-
-            if (model.timer <= 0)
-            {
-                it.remove();
-            }
-
-            model.timer--;
-        }
-
         GunEntry model = models.get(stack);
 
         if (model == null)
@@ -66,7 +51,11 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
 
         if (model != null)
         {
-            model.timer = 20;
+            /*
+             * timer in ticks when to remove items that are not rendered anymore
+             * 5 should be enough to ensure that even with very low fps the model doesn't get removed unnecessarily
+             */
+            model.timer = 5;
 
             boolean firstPerson = RenderingHandler.itemTransformType == ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND
                 || RenderingHandler.itemTransformType == ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;

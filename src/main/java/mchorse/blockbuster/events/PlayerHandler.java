@@ -16,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -23,12 +24,12 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -224,14 +225,37 @@ public class PlayerHandler
     @SideOnly(Side.CLIENT)
     private void updateClient()
     {
-        for (TileEntityModelItemStackRenderer.TEModel model : TileEntityModelItemStackRenderer.models.values())
+        /* model blocks item update */
+        Iterator<Map.Entry<NBTTagCompound, TileEntityModelItemStackRenderer.TEModel>> iter0 = TileEntityModelItemStackRenderer.models.entrySet().iterator();
+
+        while (iter0.hasNext())
         {
+            TileEntityModelItemStackRenderer.TEModel model = iter0.next().getValue();
+            /* remove invisible models from the rendering cache*/
+            if (model.timer <= 0)
+            {
+                iter0.remove();
+                continue;
+            }
+
             model.model.update();
+            model.timer--;
         }
 
-        for (TileEntityGunItemStackRenderer.GunEntry model : TileEntityGunItemStackRenderer.models.values())
+        /* gun itemstack update */
+        Iterator<Map.Entry<ItemStack, TileEntityGunItemStackRenderer.GunEntry>> iter1 = TileEntityGunItemStackRenderer.models.entrySet().iterator();
+
+        while (iter1.hasNext())
         {
+            TileEntityGunItemStackRenderer.GunEntry model = iter1.next().getValue();
+            if (model.timer <= 0)
+            {
+                iter1.remove();
+                continue;
+            }
+
             model.props.update();
+            model.timer--;
         }
 
         if (this.skinsTimer++ >= 30)
