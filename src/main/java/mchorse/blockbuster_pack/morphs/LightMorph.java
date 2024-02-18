@@ -189,7 +189,7 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
         GL11.glTranslatef(x, y - scale / 2, 0);
         GL11.glScalef(1.5F, -1.5F, 1.5F);
 
-        this.renderPictureTexture(scale, partial);
+        this.renderPictureTexture(new ResourceLocation(Blockbuster.MOD_ID, "textures/light_bulb.png"), scale, partial);
 
         GL11.glPopMatrix();
 
@@ -291,7 +291,7 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
         GlStateManager.disableDepth();
         GlStateManager.disableLighting();
 
-        this.renderPictureTexture(1, partialTicks);
+        this.renderPictureTexture(new ResourceLocation(Blockbuster.MOD_ID, "textures/light_bulb" + this.lightProperties.lightValue + ".png"), 1, partialTicks);
 
         GL11.glPopMatrix();
 
@@ -303,10 +303,8 @@ public class LightMorph extends AbstractMorph implements IAnimationProvider, ISy
     }
 
     @SideOnly(Side.CLIENT)
-    private void renderPictureTexture(float scale, float partialTicks)
+    private void renderPictureTexture(ResourceLocation image, float scale, float partialTicks)
     {
-        ResourceLocation image = new ResourceLocation(Blockbuster.MOD_ID, "textures/light_bulb" + this.lightProperties.lightValue + ".png");
-
         GifTexture.bindTexture(image, 0, partialTicks);
 
         boolean isCulling = GL11.glIsEnabled(GL11.GL_CULL_FACE);
