@@ -29,10 +29,18 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
      * A cache of model TEs
      */
     public static final Map<ItemStack, GunEntry> models = new HashMap<ItemStack, GunEntry>();
+    private static boolean isRendering;
+
+    public static boolean isRendering()
+    {
+        return isRendering;
+    }
 
     @Override
     public void renderByItem(ItemStack stack, float partialTicks)
     {
+        isRendering = true;
+
         /* Thank you Mojang, very cool! */
         partialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
 
@@ -109,6 +117,7 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
 
             this.reset();
         }
+        isRendering = false;
     }
 
     public void reset()
