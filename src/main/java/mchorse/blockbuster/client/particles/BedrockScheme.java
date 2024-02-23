@@ -96,6 +96,10 @@ public class BedrockScheme
         this.parser.register(new Variable("variable.particle_speed.x", 0));
         this.parser.register(new Variable("variable.particle_speed.y", 0));
         this.parser.register(new Variable("variable.particle_speed.z", 0));
+        this.parser.register(new Variable("variable.particle_pos.x", 0));
+        this.parser.register(new Variable("variable.particle_pos.y", 0));
+        this.parser.register(new Variable("variable.particle_pos.z", 0));
+        this.parser.register(new Variable("variable.particle_pos.distance", 0));
         this.parser.register(new Variable("variable.particle_bounces", 0));
 
         this.parser.register(new Variable("variable.emitter_age", 0));

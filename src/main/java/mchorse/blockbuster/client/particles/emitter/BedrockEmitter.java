@@ -56,6 +56,9 @@ public class BedrockEmitter
     public Matrix3f rotation = new Matrix3f(1,0,0,0,1,0,0,0,1);
     public Matrix3f prevRotation = new Matrix3f(1,0,0,0,1,0,0,0,1);
     public Vector3f angularVelocity = new Vector3f();
+    /**
+     * Translation of immediate bodypart
+     */
     public Vector3d translation = new Vector3d();
 
     /* Runtime properties */
@@ -95,6 +98,10 @@ public class BedrockEmitter
     private Variable varSpeedX;
     private Variable varSpeedY;
     private Variable varSpeedZ;
+    private Variable varPosX;
+    private Variable varPosY;
+    private Variable varPosZ;
+    private Variable varPosDistance;
     private Variable varBounces;
 
     private Variable varEmitterAge;
@@ -185,6 +192,10 @@ public class BedrockEmitter
         this.varSpeedX = this.scheme.parser.variables.get("variable.particle_speed.x");
         this.varSpeedY = this.scheme.parser.variables.get("variable.particle_speed.y");
         this.varSpeedZ = this.scheme.parser.variables.get("variable.particle_speed.z");
+        this.varPosX = this.scheme.parser.variables.get("variable.particle_pos.x");
+        this.varPosY = this.scheme.parser.variables.get("variable.particle_pos.y");
+        this.varPosZ = this.scheme.parser.variables.get("variable.particle_pos.z");
+        this.varPosDistance = this.scheme.parser.variables.get("variable.particle_pos.distance");
         this.varBounces = this.scheme.parser.variables.get("variable.particle_bounces");
 
         this.varEmitterAge = this.scheme.parser.variables.get("variable.emitter_age");
@@ -204,6 +215,13 @@ public class BedrockEmitter
         if (this.varRandom3 != null) this.varRandom3.set(particle.random3);
         if (this.varRandom4 != null) this.varRandom4.set(particle.random4);
 
+        Vector3d relativePos = new Vector3d(particle.getGlobalPosition(this));
+        relativePos.sub(this.lastGlobal);
+
+        if (this.varPosDistance != null) this.varPosDistance.set(relativePos.length());
+        if (this.varPosX != null) this.varPosX.set(relativePos.x);
+        if (this.varPosY != null) this.varPosY.set(relativePos.y);
+        if (this.varPosZ != null) this.varPosZ.set(relativePos.z);
         if (this.varSpeedABS != null) this.varSpeedABS.set(particle.speed.length());
         if (this.varSpeedX != null) this.varSpeedX.set(particle.speed.x);
         if (this.varSpeedY != null) this.varSpeedY.set(particle.speed.y);
