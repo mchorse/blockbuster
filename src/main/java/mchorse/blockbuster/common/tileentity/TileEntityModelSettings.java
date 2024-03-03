@@ -57,29 +57,29 @@ public class TileEntityModelSettings implements IByteBufSerializable, INBTSerial
 
     public TileEntityModelSettings()
     {
-        this.serializer.registerNBTValue("Enabled", this.enabled);
-        this.serializer.registerNBTValue("Order", this.order);
-        this.serializer.registerNBTValue("Yaw", this.rotateYawHead);
-        this.serializer.registerNBTValue("Pitch", this.rotatePitch);
-        this.serializer.registerNBTValue("Body", this.rotateBody);
-        this.serializer.registerNBTValue("ShiftX", this.x);
-        this.serializer.registerNBTValue("ShiftY", this.y);
-        this.serializer.registerNBTValue("ShiftZ", this.z);
-        this.serializer.registerNBTValue("RotateX", this.rx);
-        this.serializer.registerNBTValue("RotateY", this.ry);
-        this.serializer.registerNBTValue("RotateZ", this.rz);
-        this.serializer.registerNBTValue("Scale", this.uniform);
-        this.serializer.registerNBTValue("ScaleX", this.sx);
-        this.serializer.registerNBTValue("ScaleY", this.sy);
-        this.serializer.registerNBTValue("ScaleZ", this.sz);
-        this.serializer.registerNBTValue("Shadow", this.shadow);
-        this.serializer.registerNBTValue("Global", this.global);
-        this.serializer.registerNBTValue("Items", this.slots);
-        this.serializer.registerNBTValue("LightValue", this.lightValue);
-        this.serializer.registerNBTValue("RenderLast", this.renderLast);
-        this.serializer.registerNBTValue("RenderAlways", this.renderAlways);
-        this.serializer.registerNBTValue("Hitbox", this.enableBlockHitbox);
-        this.serializer.registerNBTValue("ExcludeResetPlayback", this.excludeResetPlayback);
+        this.serializer.registerValue(this.enabled).serializeNBT("Enabled");
+        this.serializer.registerValue(this.order).serializeNBT("Order");
+        this.serializer.registerValue(this.rotateYawHead).serializeNBT("Yaw");
+        this.serializer.registerValue(this.rotatePitch).serializeNBT("Pitch");
+        this.serializer.registerValue(this.rotateBody).serializeNBT("Body");
+        this.serializer.registerValue(this.x).serializeNBT("ShiftX");
+        this.serializer.registerValue(this.y).serializeNBT("ShiftY");
+        this.serializer.registerValue(this.z).serializeNBT("ShiftZ");
+        this.serializer.registerValue(this.rx).serializeNBT("RotateX");
+        this.serializer.registerValue(this.ry).serializeNBT("RotateY");
+        this.serializer.registerValue(this.rz).serializeNBT("RotateZ");
+        this.serializer.registerValue(this.uniform).serializeNBT("Scale");
+        this.serializer.registerValue(this.sx).serializeNBT("ScaleX");
+        this.serializer.registerValue(this.sy).serializeNBT("ScaleY");
+        this.serializer.registerValue(this.sz).serializeNBT("ScaleZ");
+        this.serializer.registerValue(this.shadow).serializeNBT("Shadow");
+        this.serializer.registerValue(this.global).serializeNBT("Global");
+        this.serializer.registerValue(this.slots).serializeNBT("Items");
+        this.serializer.registerValue(this.lightValue).serializeNBT("LightValue");
+        this.serializer.registerValue(this.renderLast).serializeNBT("RenderLast");
+        this.serializer.registerValue(this.renderAlways).serializeNBT("RenderAlways");
+        this.serializer.registerValue(this.enableBlockHitbox).serializeNBT("Hitbox");
+        this.serializer.registerValue(this.excludeResetPlayback).serializeNBT("ExcludeResetPlayback");
     }
 
     public boolean isBlockHitbox()
@@ -360,29 +360,7 @@ public class TileEntityModelSettings implements IByteBufSerializable, INBTSerial
     @Override
     public void copy(TileEntityModelSettings settings)
     {
-        this.lightValue.copy(settings.lightValue);
-        this.renderLast.copy(settings.renderLast);
-        this.renderAlways.copy(settings.renderAlways);
-        this.enableBlockHitbox.copy(settings.enableBlockHitbox);
-        this.excludeResetPlayback.copy(settings.excludeResetPlayback);
-        this.order.copy(settings.order);
-        this.rotateYawHead.copy(settings.rotateYawHead);
-        this.rotatePitch.copy(settings.rotatePitch);
-        this.rotateBody.copy(settings.rotateBody);
-        this.x.copy(settings.x);
-        this.y.copy(settings.y);
-        this.z.copy(settings.z);
-        this.rx.copy(settings.rx);
-        this.ry.copy(settings.ry);
-        this.rz.copy(settings.rz);
-        this.uniform.copy(settings.uniform);
-        this.sx.copy(settings.sx);
-        this.sy.copy(settings.sy);
-        this.sz.copy(settings.sz);
-        this.shadow.copy(settings.shadow);
-        this.global.copy(settings.global);
-        this.enabled.copy(settings.enabled);
-        this.slots.copy(settings.slots);
+        this.serializer.copyValues(settings.serializer);
     }
 
     @Override
