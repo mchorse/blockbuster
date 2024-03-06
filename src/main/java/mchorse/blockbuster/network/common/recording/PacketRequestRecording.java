@@ -33,7 +33,7 @@ public class PacketRequestRecording implements IMessage
 
     public Optional<Integer> getCallbackID()
     {
-        return Optional.of(this.callbackID == -1 ? null : this.callbackID);
+        return Optional.ofNullable(this.callbackID == -1 ? null : this.callbackID);
     }
 
     @Override
