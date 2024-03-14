@@ -4,6 +4,7 @@ import mchorse.blockbuster.client.particles.components.appearance.BedrockCompone
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentCollisionTinting;
 import mchorse.mclib.math.molang.expressions.MolangExpression;
 import mchorse.mclib.utils.DummyEntity;
+import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.metamorph.api.Morph;
 import net.minecraft.client.Minecraft;
@@ -59,6 +60,10 @@ public class BedrockParticle
     public HashMap<Entity, Vector3f> entityCollisionTime = new HashMap<>();
     public boolean collided;
     public int bounces;
+    /**
+     * Is set by collision component when there is a collision an drag should happen.
+     */
+    public float rotationCollisionDrag = 0;
 
     /**
      * For collision Appearance needed for animation
@@ -88,6 +93,9 @@ public class BedrockParticle
     public Vector3f acceleration = new Vector3f();
     public Vector3f accelerationFactor = new Vector3f(1, 1, 1);
     public float drag = 0;
+    /**
+     * Is set by collision component when there is a collision an drag should happen.
+     */
     public float dragFactor = 0;
 
     /* Color */
@@ -218,11 +226,11 @@ public class BedrockParticle
         {
             //this.position.add(this.offset);
 
-            if (this.realisticCollisionDrag && Math.round(this.speed.x*10000) == 0 && Math.round(this.speed.y*10000) == 0 && Math.round(this.speed.z*10000) == 0)
+            /*if (this.realisticCollisionDrag && Math.round(this.speed.x*10000) == 0 && Math.round(this.speed.y*10000) == 0 && Math.round(this.speed.z*10000) == 0)
             {
                 this.dragFactor = 0;
                 this.speed.scale(0);
-            }
+            }*/
 
             /* lazy fix for transforming from moving intertial system back to global space */
             if (this.entityCollisionTime.isEmpty())
@@ -240,9 +248,14 @@ public class BedrockParticle
                 }
             }
 
-            float rotationAcceleration = this.rotationAcceleration / 20F -this.rotationDrag * this.rotationVelocity;
+            //TODO drag force usually takes velocity^2 -> this cuts off higher velocities much quicker but takes longer with slower velocities. maybe two separate options?
+            float rotationDrag = (this.rotationDrag + this.rotationCollisionDrag) * this.rotationVelocity;
+            float rotationAcceleration = this.rotationAcceleration / 20F;
+            /* clamp drag so it doesn't make rotation velocity explode*/
+            this.rotationVelocity = MathUtils.clamp(this.rotationVelocity - rotationDrag / 20F,
+                    Math.min(this.rotationVelocity, 0), Math.max(this.rotationVelocity, 0));
             this.rotationVelocity += rotationAcceleration / 20F;
-            this.rotation = this.initialRotation + this.rotationVelocity * this.age;
+            this.rotation += this.rotationVelocity;
 
             /* Position */
             if (this.age == 0)
@@ -301,7 +314,7 @@ public class BedrockParticle
             {
                 emitter.rotation.transform(this.acceleration);
             }
-            
+
             Vector3f drag = new Vector3f(this.speed);
 
             drag.scale(-(this.drag + this.dragFactor));
@@ -311,7 +324,14 @@ public class BedrockParticle
                 this.acceleration.y -= 9.81;
             }
 
-            this.acceleration.add(drag);
+            /* apply drag separately and clamp it so with high drag values speed does not accelerate again */
+            drag.scale(1 / 20F);
+            if (this.speed.length() - drag.length() <= 0) {
+                this.speed.scale(0);
+            } else {
+                this.speed.add(drag);
+            }
+
             this.acceleration.scale(1 / 20F);
             this.speed.add(this.acceleration);
 
@@ -324,7 +344,7 @@ public class BedrockParticle
             {
                 this.matrix.transform(speed0);
             }
-            
+
             this.position.x += speed0.x / 20F;
             this.position.y += speed0.y / 20F;
             this.position.z += speed0.z / 20F;
