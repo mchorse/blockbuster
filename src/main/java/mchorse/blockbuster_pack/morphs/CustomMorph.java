@@ -150,8 +150,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAn
     {
         super();
 
-        this.settings = this.settings.copy();
-        this.settings.hands = true;
+        this.getSettings().hands = true;
     }
 
     public static boolean isRenderingOnScreen()
