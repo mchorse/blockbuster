@@ -43,6 +43,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
     public MolangExpression expirationDelay = MolangParser.ZERO;
     public boolean realisticCollision;
     public boolean realisticCollisionDrag;
+    public float rotationCollisionDrag;
 
     /* Runtime options */
     private Vector3d previous = new Vector3d();
@@ -133,6 +134,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
         if (element.has("collision_drag")) this.collisionDrag = element.get("collision_drag").getAsFloat();
         if (element.has("coefficient_of_restitution")) this.bounciness = element.get("coefficient_of_restitution").getAsFloat();
         if (element.has("bounciness_randomness")) this.randomBounciness = element.get("bounciness_randomness").getAsFloat();
+        if (element.has("collision_rotation_drag")) this.rotationCollisionDrag = element.get("collision_rotation_drag").getAsFloat();
         if (element.has("preserveEnergy") && element.get("preserveEnergy").isJsonPrimitive())
         {
             JsonPrimitive energy = element.get("preserveEnergy").getAsJsonPrimitive();
@@ -170,6 +172,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
         if (this.realisticCollisionDrag) object.addProperty("realistic_collision_drag", true);
         if (this.collisionDrag != 0) object.addProperty("collision_drag", this.collisionDrag);
         if (this.bounciness != 1) object.addProperty("coefficient_of_restitution", this.bounciness);
+        if (this.rotationCollisionDrag != 0) object.addProperty("collision_rotation_drag", this.rotationCollisionDrag);
         if (this.randomBounciness != 0) object.addProperty("bounciness_randomness", this.randomBounciness);
         if (this.preserveEnergy) object.addProperty("preserveEnergy", this.preserveEnergy);
         if (this.damp != 0) object.addProperty("damp", this.damp);
@@ -343,6 +346,10 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
             {
                 particle.dragFactor = 0;
             }
+            else
+            {
+                particle.rotationCollisionDrag = 0;
+            }
 
 
             for (HashMap.Entry<Entity, AxisAlignedBB> entry : entityAABBs.entrySet())
@@ -429,6 +436,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
             particle.prevPosition.set(prev);
         }
 
+        particle.rotationCollisionDrag = this.rotationCollisionDrag;
         particle.collided = true;
     }
     
