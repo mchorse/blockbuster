@@ -52,6 +52,8 @@ public class AudioFile
 
     public void pause(boolean pause)
     {
+        if (this.player == null) return;
+
         int state = this.player.getSourceState();
 
         if (!pause && this.wasPaused)
