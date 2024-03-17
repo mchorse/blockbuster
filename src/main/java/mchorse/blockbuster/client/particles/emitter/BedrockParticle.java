@@ -315,16 +315,14 @@ public class BedrockParticle
                 emitter.rotation.transform(this.acceleration);
             }
 
-            Vector3f drag = new Vector3f(this.speed);
-
-            drag.scale(-(this.drag + this.dragFactor));
-
             if (this.gravity)
             {
                 this.acceleration.y -= 9.81;
             }
 
-            /* apply drag separately and clamp it so with high drag values speed does not accelerate again */
+            Vector3f drag = new Vector3f(this.speed);
+            drag.scale(-(this.drag + this.dragFactor));
+            /* apply drag separately so we can clamp it - high drag values shouldn't accelerate particles again */
             drag.scale(1 / 20F);
             if (this.speed.length() - drag.length() <= 0) {
                 this.speed.scale(0);
@@ -366,6 +364,7 @@ public class BedrockParticle
         }
 
         this.age ++;
+        this.acceleration.set(0,0,0);
     }
 
     /**

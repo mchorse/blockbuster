@@ -597,14 +597,17 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
          * prevent particles from accelerating away when randomBounciness is active */
         if (!((this.randomBounciness != 0 || this.realisticCollision) && Math.round(particle.speed.x*10000) == 0 && Math.round(particle.speed.y*10000) == 0 && Math.round(particle.speed.z*10000) == 0))
         {
-            if (this.realisticCollisionDrag)
+            particle.dragFactor = this.collisionDrag;
+            /*if (this.realisticCollisionDrag)
             {
+                //TODO WTF IS THIS
                 particle.dragFactor = 3*this.collisionDrag;
             }
             else
             {
+                //why is it adding it on top of the old drag?
                 particle.dragFactor += this.collisionDrag;
-            }
+            }*/
         }
     }
 
