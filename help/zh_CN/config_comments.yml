@@ -69,3 +69,6 @@ blockbuster.config.comments:
     immersive_editor:
         model_block: 是否为模型方块启用沉浸式编辑器
         record_editor: 当使用 Aperture 相机编辑器时，是否为回放编辑器启用沉浸式编辑器
+
+    better_lights:
+        enable_better_lights: 为所有伪装启用 Better Lights 光源。您需要先安装 Better Lights 模组。

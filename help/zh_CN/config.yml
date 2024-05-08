@@ -108,3 +108,7 @@ blockbuster.config:
 
         model_block: 模型方块
         record_editor: 回放编辑器
+
+    better_lights:
+        title: Better Lights
+        enable_better_lights: 启用 Better Lights 伪装

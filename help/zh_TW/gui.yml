@@ -469,11 +469,15 @@ blockbuster.gui:
             title: 常規
             pick: 選擇材質
 
+            play_playing: 播放中
+            play_paused: 暫停中
+
             identifier: 該粒子效果的標識，可以作為顯示名稱，但在基岩版中，它是粒子效果的 ID
 
             particles_opaque: 不透明度
             particles_alpha: Alpha
             particles_blend: 混合
+            particles_additive: 疊加
 
         particle_morph:
             title: 偽裝
@@ -531,7 +535,7 @@ blockbuster.gui:
 
             active_expression: 負責重啟發射器的表達式，若計算結果為非零數，則重啟發射器
             active_looping: 用於確定在休眠階段之前，單個週期的活動時間的表達式
-            active_once: 表達式，決定了單個週期的時間長短
+            active_once: 表達式，決定了單個週期應處於活動狀態的時間長短
 
             expiration_expression: 負責停止發射器的表達式，若計算結果為非零數，則停止發射器
             sleep_time: 決定發射器在下一個週期之前將休眠多長時間的表達式
@@ -605,13 +609,21 @@ blockbuster.gui:
             camera_facing:
                 label: 朝向模式
 
-                direction_x: 方向 X
-                direction_y: 方向 Y
-                direction_z: 方向 Z
+                direction_x: 朝向 X
+                direction_y: 朝向 Y
+                direction_z: 朝向 Z
+                direction_mode:
+                    motion: 運動
+                    custom: 自定義朝向
+                    direction_x_tooltip: 自定義 X 朝向
+                    direction_y_tooltip: 自定義 Y 朝向
+                    direction_z_tooltip: 自定義 Z 朝向
+                    speed_threshold_tooltip: 速度閾值
                 lookat_xyz: 看向 XYZ
                 lookat_y: 看向 Y
-                rotate_xyz: 旋轉 XYZ
-                rotate_y: 旋轉 Y
+                lookat_direction: 看向朝向
+                rotate_xyz: 轉向 XYZ
+                rotate_y: 轉向 Y
                 emitter_xy: 沿發射器 XY-平面
                 emitter_xz: 沿發射器 XZ-平面
                 emitter_yz: 沿發射器 YZ-平面
@@ -669,6 +681,7 @@ blockbuster.gui:
             realistic_collision_drag: 真實碰撞阻力
             realistic_collision_drag_tooltip: 當粒子停止碰撞時，碰撞阻力將被重置。啟用該選項也會解決粒子在高碰撞阻力值下加速離開的問題。
             drag: 在粒子與世界中的方塊碰撞後，碰撞阻力所增加的阻力（減速）大小
+            rotation_drag: 碰撞時應發生的旋轉阻力。它會減慢紋理旋轉的速度。
             bounciness: 碰撞後粒子的加速度乘以彈性
             random_direction: 隨機方向 - 隨機化方向矢量。該參數不影響速度。
             damping:
@@ -704,19 +717,63 @@ blockbuster.gui:
             title: 名稱
         type:
             title: 類型
-            aperture_tracker: Aperture 偽裝追蹤器
-            minema: Minema 偽裝追蹤器
+            aperture_tracker: 偽裝追蹤器
             apcam: Aperture 調整器
         hidden: 隱藏追蹤器標誌
 
         aperture_tracker:
             combine_tracking: 自動追加
-            combine_tracking_tooltip: 若追蹤器的名稱已被追蹤，本選項將檢查該追蹤器是否會在原追蹤器停止的下一幀開始。若追蹤器在下一幀仍然存在，那麼它就會將追蹤數據附加到原來的數據上。
+            combine_tracking_tooltip: （適用於 Aperture 追蹤）若追蹤器的名稱已被追蹤，本選項將檢查該追蹤器是否會在原追蹤器停止的下一幀開始。若追蹤器在下一幀仍然存在，那麼它就會將追蹤數據附加到原來的數據上。
 
     light_morph:
         name: 光源
         light_value: 光照等級
         light_value_tooltip: 你需要安裝 Optifine，並將動態光源設置為高品質，才能正常使用。拖動滑塊可以選擇發光強度。
+
+    betterlights_morph:
+        name: BetterLights
+        sponsored_title: 由以下成員贊助...
+        sponsored_tooltip: "捐贈讓它得以問世，感謝你們！"
+        enable_always: 始終啟用
+        enable_always_tooltip: 即使 Blockbuster 的配置 {config.better_lights.enable_better_lights} 處於禁用狀態，也會啟用偽裝。
+        not_installed_message: 您需要安裝 BetterLights 模組才能使用此偽裝。
+        mod_page_button: 打開模組頁面
+        #the option keys are derived from the config property names of BetterLights, where spaces are replaced with underscores.
+        #if it's a tooltip, the string "_tooltip" will be attached to the end.
+        #sub categories always have a title
+        #all language keys are converted to lowercase
+        options:
+            enabled: 啟用
+            direction: 方向
+            directionx_tooltip: X
+            directiony_tooltip: Y
+            directionz_tooltip: Z
+            color: 燈光顏色
+            intensity_tooltip: 光照強度
+            distance_tooltip: 光照距離
+            innerangle_tooltip: 內光束夾角
+            outerangle_tooltip: 外光束夾角
+            shadows:
+                title: 陰影
+                enabled: 啟用
+                fov_offset_tooltip: 陰影虛擬相機 FOV 偏移。
+                distance_tooltip: 陰影距離
+            flare_effect:
+                title: 炫光效果
+                enabled: 啟用
+                size_offset_tooltip: 尺寸偏移
+                falloff_distance_tooltip: 衰減距離
+                start_angle_tooltip: 起始角度
+                end_angle_tooltip: 結束角度
+                angle_factor_offset_tooltip: 角度係數偏移
+                intensity_tooltip: 強度
+            volumetric_fog_effect:
+                title: 體積霧效果
+                enabled: 啟用
+                scattering_albedo_tooltip: 散射
+                density_tooltip: 密度
+                anisotropy_tooltip: 各向異性
+                samples_tooltip: 採樣率
 
     texture:
         title: 材質管理器
@@ -739,6 +796,7 @@ blockbuster.gui:
         projectile_props: 炮彈屬性
         impact_props: 撞擊屬性
         transforms: 變換
+        transforms_first_person: 變換（第一人稱）
 
         default_morph: 默認偽裝
         fire_morph: 開火偽裝
@@ -814,7 +872,7 @@ blockbuster.gui:
         shot_delay_tooltip: 每次開火的最小時間間隔（單位為 Tick）
 
         aim_options_second: 高級選項（第 2 頁）
-        destroyed_command: 槍毀壞時的命令 # Evanechecssss: cummands
+        destroyed_command: 槍毀壞時的命令
         melee_command: 近戰攻擊時的命令
         reload_command: 換彈命令
         zoom_on_command: 開鏡瞄準命令
@@ -831,7 +889,7 @@ blockbuster.gui:
         impact_delay: 撞擊延遲
         impact_command: 撞擊時的命令
         impact_entity_command: 撞擊到實體時的命令
-        vanish: 消失 # or Spanish
+        vanish: 消失
         sticks: 附著
         bounce: 反彈
         hits: 反彈次數

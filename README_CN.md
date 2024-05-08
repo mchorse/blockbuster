@@ -66,11 +66,3 @@ Blockbuster Mod 提供了大量的功能来提升你的视频效果：
 ## 许可证
 
 Blockbuster mod 的代码根据 GNU GPL v3.0 许可协议授权, 详情请参阅 [LICENSE](./LICENSE) 文件。
-
-## 开发者请看
-
-语言文件是由 YML（在 `help\` 文件夹）编译成 INI 格式的。
-
-如果您想翻译本 Mod，您得先修改合适的 YML 文件。然后使用 `./gradlew buildLangFiles` 命令来将 YML 转换成 INI 的 `.lang` 文件，到 `src/main/resources/assets/blockbuster/lang` 文件夹。转换完语言文件后，别忘了刷新您的 IDE。
-
-另外您也需要 [Aperture](https://github.com/mchorse/aperture)， [McLib](https://github.com/mchorse/mclib) 和 [Metamorph](https://github.com/mchorse/metamorph) 的开发版构建。构建它们，然后把 `-sources.jar` 和 `-dev.jar` 放在 `run/libs/` 文件夹，之后刷新 IDE。

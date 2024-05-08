@@ -535,7 +535,7 @@ blockbuster.gui:
 
             active_expression: 负责重启发射器的表达式，若计算结果为非零数，则重启发射器
             active_looping: 用于确定在休眠阶段之前，单个周期的活动时间的表达式
-            active_once: 表达式，决定了单个周期的时间长短
+            active_once: 表达式，决定了单个周期应处于活动状态的时间长短
 
             expiration_expression: 负责停止发射器的表达式，若计算结果为非零数，则停止发射器
             sleep_time: 决定发射器在下一个周期之前将休眠多长时间的表达式
@@ -612,6 +612,13 @@ blockbuster.gui:
                 direction_x: 朝向 X
                 direction_y: 朝向 Y
                 direction_z: 朝向 Z
+                direction_mode:
+                    motion: 运动
+                    custom: 自定义朝向
+                    direction_x_tooltip: 自定义 X 朝向
+                    direction_y_tooltip: 自定义 Y 朝向
+                    direction_z_tooltip: 自定义 Z 朝向
+                    speed_threshold_tooltip: 速度阈值
                 lookat_xyz: 看向 XYZ
                 lookat_y: 看向 Y
                 lookat_direction: 看向朝向
@@ -674,6 +681,7 @@ blockbuster.gui:
             realistic_collision_drag: 真实碰撞阻力
             realistic_collision_drag_tooltip: 当粒子停止碰撞时，碰撞阻力将被重置。启用该选项也会解决粒子在高碰撞阻力值下加速离开的问题。
             drag: 在粒子与世界中的方块碰撞后，碰撞阻力所增加的阻力（减速）大小
+            rotation_drag: 碰撞时应发生的旋转阻力。它会减慢纹理旋转的速度。
             bounciness: 碰撞后粒子的加速度乘以弹性
             random_direction: 随机方向 - 随机化方向矢量。该参数不影响速度。
             damping:
@@ -709,19 +717,63 @@ blockbuster.gui:
             title: 名称
         type:
             title: 类型
-            aperture_tracker: Aperture 伪装追踪器
-            minema: Minema 伪装追踪器
+            aperture_tracker: 伪装追踪器
             apcam: Aperture 调整器
         hidden: 隐藏追踪器标志
 
         aperture_tracker:
             combine_tracking: 自动追加
-            combine_tracking_tooltip: 若追踪器的名称已被追踪，本选项将检查该追踪器是否会在原追踪器停止的下一帧开始。若追踪器在下一帧仍然存在，那么它就会将追踪数据附加到原来的数据上。
+            combine_tracking_tooltip: （适用于 Aperture 追踪）若追踪器的名称已被追踪，本选项将检查该追踪器是否会在原追踪器停止的下一帧开始。若追踪器在下一帧仍然存在，那么它就会将追踪数据附加到原来的数据上。
 
     light_morph:
         name: 光源
         light_value: 光照等级
         light_value_tooltip: 你需要安装 Optifine，并将动态光源设置为高品质，才能正常使用。拖动滑块可以选择发光强度。
+
+    betterlights_morph:
+        name: BetterLights
+        sponsored_title: 由以下成员赞助...
+        sponsored_tooltip: "捐赠让它得以问世，感谢你们！"
+        enable_always: 始终启用
+        enable_always_tooltip: 即使 Blockbuster 的配置 {config.better_lights.enable_better_lights} 处于禁用状态，也会启用伪装。
+        not_installed_message: 您需要安装 BetterLights 模组才能使用此伪装。
+        mod_page_button: 打开模组页面
+        #the option keys are derived from the config property names of BetterLights, where spaces are replaced with underscores.
+        #if it's a tooltip, the string "_tooltip" will be attached to the end.
+        #sub categories always have a title
+        #all language keys are converted to lowercase
+        options:
+            enabled: 启用
+            direction: 方向
+            directionx_tooltip: X
+            directiony_tooltip: Y
+            directionz_tooltip: Z
+            color: 灯光颜色
+            intensity_tooltip: 光照强度
+            distance_tooltip: 光照距离
+            innerangle_tooltip: 内光束夹角
+            outerangle_tooltip: 外光束夹角
+            shadows:
+                title: 阴影
+                enabled: 启用
+                fov_offset_tooltip: 阴影虚拟相机 FOV 偏移。
+                distance_tooltip: 阴影距离
+            flare_effect:
+                title: 炫光效果
+                enabled: 启用
+                size_offset_tooltip: 尺寸偏移
+                falloff_distance_tooltip: 衰减距离
+                start_angle_tooltip: 起始角度
+                end_angle_tooltip: 结束角度
+                angle_factor_offset_tooltip: 角度系数偏移
+                intensity_tooltip: 强度
+            volumetric_fog_effect:
+                title: 体积雾效果
+                enabled: 启用
+                scattering_albedo_tooltip: 散射
+                density_tooltip: 密度
+                anisotropy_tooltip: 各向异性
+                samples_tooltip: 采样率
 
     texture:
         title: 材质管理器
@@ -744,6 +796,7 @@ blockbuster.gui:
         projectile_props: 炮弹属性
         impact_props: 撞击属性
         transforms: 变换
+        transforms_first_person: 变换（第一人称）
 
         default_morph: 默认伪装
         fire_morph: 开火伪装
@@ -819,7 +872,7 @@ blockbuster.gui:
         shot_delay_tooltip: 每次开火的最小时间间隔（单位为 Tick）
 
         aim_options_second: 高级选项（第 2 页）
-        destroyed_command: 枪毁坏时的命令 # Evanechecssss: cummands
+        destroyed_command: 枪毁坏时的命令
         melee_command: 近战攻击时的命令
         reload_command: 换弹命令
         zoom_on_command: 开镜瞄准命令
@@ -836,7 +889,7 @@ blockbuster.gui:
         impact_delay: 撞击延迟
         impact_command: 撞击时的命令
         impact_entity_command: 撞击到实体时的命令
-        vanish: 消失 # or Spanish
+        vanish: 消失
         sticks: 附着
         bounce: 反弹
         hits: 反弹次数
