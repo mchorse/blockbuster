@@ -7,8 +7,11 @@ import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.UserListOps;
+import net.minecraft.server.management.UserListOpsEntry;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
@@ -47,7 +50,18 @@ public class CommandAction extends Action
             {
                 ICommandManager manager = server.commandManager;
 
-                manager.executeCommand(new CommandSender(actor), this.command);
+                if (actor instanceof EntityPlayerMP) {
+                    EntityPlayerMP mpActor = (EntityPlayerMP) actor;
+                    /*
+                     * add temporary OP actor so EntityPlayerMP.canUseCommand(...) returns true,
+                     * which would have normally been achieved by using
+                     * the fake CommandAction.CommandSender.canUseCommand(...), which always returns true  */
+                    mpActor.mcServer.getPlayerList().getOppedPlayers().addEntry(new UserListOpsEntry(mpActor.getGameProfile(), 4, true));
+                    manager.executeCommand(actor, this.command);
+                    mpActor.mcServer.getPlayerList().getOppedPlayers().removeEntry(((EntityPlayerMP) actor).getGameProfile());
+                } else {
+                    manager.executeCommand(new CommandSender(actor), this.command);
+                }
             }
         }
     }
