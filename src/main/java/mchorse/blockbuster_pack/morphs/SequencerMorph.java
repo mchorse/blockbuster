@@ -54,6 +54,10 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
      * Index of current cell 
      */
     public int current;
+    /**
+     * If true, do not render the animation length in the UI of this sequencer morph.
+     */
+    public boolean ignoreAnimationLengthUI;
 
     /**
      * Timer on which depends the cycling
@@ -852,6 +856,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             this.offsetCount = morph.offsetCount;
 
             this.keepProgress = morph.keepProgress;
+            this.ignoreAnimationLengthUI = morph.ignoreAnimationLengthUI;
         }
     }
 
@@ -888,6 +893,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             result = result && Objects.deepEquals(this.offset, seq.offset);
             result = result && this.offsetCount == seq.offsetCount;
             result = result && this.keepProgress == seq.keepProgress;
+            result = result && this.ignoreAnimationLengthUI == seq.ignoreAnimationLengthUI;
         }
 
         return result;
@@ -981,6 +987,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         this.offsetCount = 0;
         this.lastUpdate = 0;
         this.keepProgress = false;
+        this.ignoreAnimationLengthUI = false;
     }
 
     @Override
@@ -995,6 +1002,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         tag.setTag("Offset", NBTUtils.writeFloatList(new NBTTagList(), this.offset));
         if (this.offsetCount > 0) tag.setInteger("OffsetCount", this.offsetCount);
         if (this.keepProgress) tag.setBoolean("KeepProgress", this.keepProgress);
+        if (this.ignoreAnimationLengthUI) tag.setBoolean("IgnoreAnimationLengthUI", this.ignoreAnimationLengthUI);
 
         if (!this.morphs.isEmpty())
         {
@@ -1021,6 +1029,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         if (tag.hasKey("Offset")) NBTUtils.readFloatList(tag.getTagList("Offset", 5), this.offset);
         if (tag.hasKey("OffsetCount")) this.offsetCount = tag.getInteger("OffsetCount");
         if (tag.hasKey("KeepProgress")) this.keepProgress = tag.getBoolean("KeepProgress");
+        if (tag.hasKey("IgnoreAnimationLengthUI")) this.ignoreAnimationLengthUI = tag.getBoolean("IgnoreAnimationLengthUI");
 
         if (tag.hasKey("List", NBT.TAG_LIST))
         {

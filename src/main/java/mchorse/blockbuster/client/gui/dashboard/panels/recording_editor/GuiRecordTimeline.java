@@ -1745,7 +1745,7 @@ public class GuiRecordTimeline extends GuiElement
         {
             SequencerMorph sequencerMorph = (SequencerMorph) morph;
 
-            return (int) sequencerMorph.getDuration();
+            return sequencerMorph.ignoreAnimationLengthUI ? 0 : (int) sequencerMorph.getDuration();
         }
 
         return 0;

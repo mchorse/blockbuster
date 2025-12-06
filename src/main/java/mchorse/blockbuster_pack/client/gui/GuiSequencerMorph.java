@@ -111,6 +111,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         private GuiToggleElement randomOrder;
         private GuiToggleElement trulyRandomOrder;
         private GuiToggleElement keepProgress;
+        private GuiToggleElement ignoreAnimationLenthInUI;
 
         public SequenceEntry entry;
 
@@ -322,14 +323,17 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             });
 
             this.keepProgress = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.sequencer.keep_progress"), false, (b) -> this.morph.keepProgress = b.isToggled());
-
+            this.ignoreAnimationLenthInUI = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.sequencer.ignore_animation_length"), false, b -> this.morph.ignoreAnimationLengthUI = b.isToggled());
+            this.ignoreAnimationLenthInUI.tooltip(IKey.lang("blockbuster.gui.sequencer.ignore_animation_length_tooltip"));
             this.addPart.flex().relative(this.area).set(10, 10, 50, 20);
             this.removePart.flex().relative(this.addPart.resizer()).set(55, 0, 50, 20);
-            this.list.flex().relative(this.area).set(10, 50, 105, 0).hTo(this.reverse.area, -5);
+            this.list.flex().relative(this.area).set(10, 50, 105, 0).hTo(this.ignoreAnimationLenthInUI.area, -5);
             this.keepProgress.flex().relative(this).x(10).y(1F, -24).w(105);
+
             this.randomOrder.flex().relative(this.keepProgress).y(-1F, -5).w(1F);
             this.trulyRandomOrder.flex().relative(this.randomOrder).y(-1F, -5).w(1F);
             this.reverse.flex().relative(this.trulyRandomOrder).y(-1F, -5).w(1F);
+            this.ignoreAnimationLenthInUI.flex().relative(this.reverse).y(-1F, -5).w(1F);
 
             /* Playback preview code */
             this.preview = new GuiTrackpadElement(mc, (value) -> this.previewTick(value.floatValue()));
@@ -409,7 +413,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.elements.add(this.pick, this.duration, this.random, this.setDuration, this.endPoint);
             this.elementsTop.add(Elements.label(IKey.lang("blockbuster.config.onion_skin.title")), this.combinElements(this.prevSkins, this.prevColor), this.combinElements(this.nextSkins, this.nextColor), 
                     Elements.label(IKey.lang("blockbuster.gui.sequencer.loop")), this.loop, Elements.label(IKey.lang("blockbuster.gui.sequencer.loop_offset")), this.offsetX, this.offsetY, this.offsetZ, this.combinElements(this.offsetCount, this.loopColor));
-            this.add(this.addPart, this.removePart, this.keepProgress, this.randomOrder, this.trulyRandomOrder, this.reverse, this.list, this.elements, this.elementsTop, this.previewBar, this.generateMorph);
+            this.add(this.addPart, this.removePart, this.keepProgress, this.randomOrder, this.trulyRandomOrder, this.reverse, this.ignoreAnimationLenthInUI, this.list, this.elements, this.elementsTop, this.previewBar, this.generateMorph);
 
             this.keys().register(((LabelTooltip) this.plause.tooltip).label, Keyboard.KEY_SPACE, () -> this.plause.clickItself(GuiBase.getCurrent()))
                 .held(Keyboard.KEY_LSHIFT)
@@ -549,6 +553,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.offsetY.setValue(morph.offset[1]);
             this.offsetZ.setValue(morph.offset[2]);
             this.offsetCount.setValue(morph.offsetCount);
+            this.ignoreAnimationLenthInUI.toggled(morph.ignoreAnimationLengthUI);
 
             this.updatePreviewBar();
         }

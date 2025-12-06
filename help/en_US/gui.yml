@@ -382,6 +382,8 @@ blockbuster.gui:
     sequencer:
         duration: Duration
         random: Random
+        ignore_animation_length: "Ignore in timeline UI"
+        ignore_animation_length_tooltip: "Ignore the length of this sequencer morph when rendering the animation length in the record editor timeline. Useful for very long mouth animation sequencer morphs."
         set_duration: Set duration
         set_duration_tooltip: "When enabled, this option will take the calculated duration and assign it to picked morph that supports \"animates\" property, the actual duration will be set to \"1\""
         reverse: Reverse
