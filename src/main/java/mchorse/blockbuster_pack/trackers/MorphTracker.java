@@ -55,7 +55,7 @@ public class MorphTracker extends BaseTracker
             return;
         }
 
-        if(this.apertureTracker != null && !ReflectionUtils.isOptifineShadowPass() && !this.name.equals(""))
+        if(this.apertureTracker != null && !ReflectionUtils.isOptifineShadowPass())
         {
             this.apertureTracker.track(this);
         }
@@ -145,7 +145,7 @@ public class MorphTracker extends BaseTracker
             {
                 if (tracker.trackingPacket == null)
                 {
-                    CameraExporter.TrackingPacket packet = new CameraExporter.TrackingPacket(tracker.name, tracker.combineTracking);
+                    CameraExporter.TrackingPacket packet = new CameraExporter.TrackingPacket(tracker.name.isEmpty() ? "Unnamed" : tracker.name, tracker.combineTracking);
 
                     if (GuiMinemaPanel.trackingExporter.addTracker(packet))
                     {
