@@ -1,0 +1,19 @@
+blockbuster:
+    parsing:
+        lacks_pose: "\"%s\" adıyla ayrıştırılmış modelde \"%s\" pozsi yok!"
+        lacks_limbs: "\"%s\" adıyla ayrıştırılmış modelde hiçbir kol yok!"
+    recording: "{7}%s{r}'ye kayıt yapılıyor"
+    "yes": Evet
+    "no": Hayır
+    morph_error: Model bulunamadı
+    start_recording: Kayda başlıyor {7}%s{r} içinde {7}%s{r}
+    bye_director_block: Yönetmen blokları kaldırıldı. Bu yönetmen bloğu bir sahneye dönüştürüldü. Bunun yerine sahneleri kullanın.
+    bye_director_block_guide: Daha fazla bilgi edinmek için
+    bye_director_block_guide_watch: bu videoyu izleyin
+    bye_register_item: Yönetmen blokları kaldırıldı. Bu öğe artık işe yaramaz...
+    light: ışık %s
+morph.section.blockbuster: Blockbuster modelleri
+morph.category:
+    blockbuster_extra: Blockbuster ekstra
+    blockbuster_structures: Blockbuster yapıları
+    blockbuster_models: Blockbuster modelleri

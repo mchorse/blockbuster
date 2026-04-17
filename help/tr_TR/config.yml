@@ -1,0 +1,90 @@
+blockbuster.config:
+    title: Blockbuster
+    general:
+        title: Genel
+        tooltip: Blockbuster modunun genel yapılandırma seçenekleri
+        show_first_time_modal: İlk defa açıldığında modal göster
+        extra_wubs: Ekstra Wubs
+        auto_refresh_models: Modelleri ve ciltleri yenile
+        debug_playback_ticks: Hata ayıklama tıklamaları
+        green_screen_sky: Yeşil ekran gökyüzü
+        green_screen_sky_color: Yeşil ekran gökyüzü rengi
+        url_skins_sync_download: Senkranize URL indirmeleri
+        add_utility_blocks: Yardımcı bloklar ekle
+        bb_gun_sync_distance: BB tabancası senkronizasyon mesafesi
+    model_block:
+        title: Model bloğu
+        tooltip: Model bloğu ile ilgili yapılandırma seçenekleri
+        model_block_disable_rendering: Model bloğu renderını devre dışı bırak
+        model_block_disable_item_rendering: Öğe render etmeyi devre dışı bırak
+        model_block_missing_name_rendering: Eksik model yolunu render et
+        model_block_debug_rendering_f1: F1 modunda model bloğu debug renderını yap
+        restore: Model bloklarını geri yükle
+        reset_on_playback: Oynatmada sıfırlama
+    recording:
+        title: Kayıt
+        tooltip: Burada oyuncu kaydı sistemi ile ilgili her şey bulunur
+        recording_countdown: Kayıt geri sayımı
+        record_unload_time: Otomatik kayıt boşaltma süresi
+        record_unload: Otomatik kayıt boşaltma
+        record_sync_rate: Kayıt tık senkronizasyon oranı
+        record_attack_on_swipe: Swipe sırasında saldırı
+        record_commands: Komutları kaydet
+        record_chat_prefix: Sozlu aksiyon öneki
+        record_pause_preview: Gelişmiş önizleme
+        record_render_debug_paths: Debug yollarını render et
+    scenes:
+        title: Sahneler
+        tooltip: Sahne ile ilgili her şey burada
+        save_update: Kaydedildikten sonra sahneyi güncelle
+    actor:
+        title: Aktör
+        tooltip: Aktör varlık yapılandırma seçeneği (sahte oyuncu ile ilgili değil)
+        actor_fall_damage: Aktör düşüş hasarı
+        actor_tracking_range: Aktör izleme mesafesi
+        actor_rendering_range: Aktör render mesafesi
+        actor_always_render: Aktörü her zaman render et
+        actor_always_render_names: Aktör isimlerini her zaman render et
+        actor_swish_swipe: Swipe swish
+        actor_y: Y hareketini düzelt
+        actor_disable_riding: Sürüşü devre dışı bırak
+        actor_playback_body_yaw: Oynatma vücut yaw’ı
+    damage_control:
+        title: Hasar Kontrolü
+        tooltip: Hasar kontrolü, bir aktör kaydedildikten veya sahne oynatması tamamlandıktan sonra blokları geri koyan bir sistemdir
+        damage_control: Hasar kontrolü
+        damage_control_distance: Hasar mesafesi
+        damage_control_message: Hasar kontrol mesajı
+    model_folders:
+        title: Model Klasörleri
+        tooltip: Ek model klasörleri ekleyin
+        path: Ekstra Klasör
+    snowstorm:
+        title: Kar Fırtınası
+        tooltip: Kar Fırtınası, karmaşık parçacıklar oluşturmanıza olanak tanır, burada parçacık sistemi ile ilgili küresel seçenekleri bulabilirsiniz
+        depth_sorting: Parçacık derinlik sıralaması
+    audio:
+        title: Ses
+        tooltip: Oyundaki ses senkronizasyonu özelliği için seçenekler
+        waveform_visible: Ses çubukları görünür
+        waveform_density: Ses dalgası yoğunluğu
+        waveform_width: Ses çubuğu genişliği
+        waveform_height: Ses çubuğunun yüksekliği
+        waveform_filename: Ses çubuğunun dosya adını göster
+        waveform_time: Ses çubuğunun oynatma süresini göster
+        audio_sync: Sunucu ve istemci arasında ses senkronizasyonu
+    onion_skin:
+        title: Soğan cildi
+        seq_prev: Önceki formlar
+        seq_prev_color: Önceki formun rengi
+        seq_next: Sıradaki formlar
+        seq_next_color: Sıradaki formun rengi
+        seq_loop_color: Kaydırma işaretleyicisi
+    immersive_editor:
+        title: Etkileşimli düzenleyici
+        tooltip: Etkileşimli düzenleyici için seçenekler
+        model_block: Model bloğu
+        record_editor: Kayıt düzenleyicisi
+    better_lights:
+        title: Daha İyi Işıklar
+        enable_better_lights: Daha İyi Işıklar Formunu etkinleştir

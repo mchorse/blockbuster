@@ -1,0 +1,66 @@
+blockbuster:
+    commands:
+        scene: "{rSahnenin} oynatımını {7}<name>{r} ile başlatır, durdurur veya geçiş yapar. Ayrıca, {7loop}{r} da vardır, {7}[flag]{r} argümanı ile döngü değiştirmeye olanak tanır ({7true}{r} veya {7false}{r} değerleri)."
+        record:
+            help: "{r}{oKay}ıt komutu{r}. Bu komut, oyuncu kayıt eylemlerini manipüle etmek için birkaç alt komut sağlar."
+            add: "{r}{7}<filename>{r} adlı oyuncu kaydına {7}<tick>{r} tikinde, {7}<data_tag>{r} ile belirtilen ek verileri içeren {7}<action_type>{r} türünde bir eylem ekler."
+            apply: "{rBu} komut, {7}<source>{r}'nın çerçeve listesindeki {7}<properties>{r} (virgülle ayrılabilir) değerlerini {7}<target>{r} oyuncu kaydına uygular. İsteğe bağlı olarak, çerçeve özelliklerinin {7}[relative]{r} olarak mı yoksa tam olarak mı uygulanacağı belirtilebilir ve {7}[from]{r} ile {7}[to]{r} tıkları arasında bir aralık belirtilir.\n\nAyrıca özel türler de vardır, örneğin {7head}"
+            calculate_body_yaw: "{rBu} komut, verilen oyuncu kaydının vücut yaw'ını otomatik olarak hesaplar{r}."
+            camera: "{rBu} komut, sunucu tarafındaki {7}<camera_profile>{r} verilerinden yeni bir oyuncu kaydı oluşturur (veya mevcut kaydı günceller) ve {7}<filename>{r} adıyla kaydeder. Ayrıca, verilen XYZ kaydırma ile pozisyonu kaydırabilirsiniz."
+            clean: "{rBu} komut, {7}<filename>{r} adlı oyuncu kaydında {7}<property>{r} öğesini {7}[from]{r} tikinden {7}[to]{r} tikine (dahil edilmeden) temizler ve değeri, ya {7}[value]{r} argümanında belirtilen değere (göreceli değerleri kabul eder) ya da {7}[from]{r} karesindeki değere veya ilk kareye ayarlar."
+            create: "{rBu} komut, {7}<filename>{r} adlı bir oyuncu kaydını {7}<duration>{r} çerçeve uzunluğunda oluşturur. {7}[x]{r}, {7}[y]{r}, {7}[z]{r}, {7}[yaw]{r} ve {7}[pitch]{r}, mevcut göndericinin pozisyonunu ve rotasını geçersiz kılacak şekilde isteğe bağlı olarak belirtilebilir (göreli {7}~{r} değerleri desteklenir)."
+            cut: "{rBu} komut, {7}<filename>{r} adlı oyuncu kaydındaki tüm eylemleri, {7}<before>{r} öncesi ve {7}<after>{r} sonrası (ön ve son gecikmeler dikkate alınmamalıdır) kaldırır ve {7}<from>{r} ve {7}<to>{r} argümanları verilir."
+            dupe: "{rBu} komut, verilen {7}<filename>{r} oyuncu kaydını, yeni {7}<new_filename>{r} adıyla bir oyuncu kaydı dosyasına kopyalar. Varsayılan olarak {7}[overwrite]{r} değeri {7false}{r} olarak ayarlanmıştır, mevcut bir kaydı geçersiz kılmak isterseniz {7true}{r} olarak belirtin."
+            erase: "{rBu} komut, {7}<count>{r} aksiyonu, {7}<filename>{r} oyuncu kaydında {7}<from>{r} tikinden başlayarak siler."
+            fade: "{rBu} komut, {7}<filename>{r} oyuncu kaydını doğrusal enterpolasyonla ilk kareye doğru solgunlaştırır ve {7}<fade_out>{r} tıklık bir süre kullanır."
+            fill: "{rBu} komut, {7}<filename>{r} adlı oyuncu kaydında {7}[tick]{f} tikinde {7}[count]{f} kare ekler. Eğer {7}[tick]{r} belirtilmemişse, belirtilen oyuncu kaydının uzunluğu kullanılır."
+            flip: "{rBu} komut, {7}<filename>{r} oyuncu kaydındaki çerçeveleri ve aksiyonları belirtilen {7}<axis>{r} ekseninde ve belirtilen {7}<coordinate>{r} noktasında çevirir. Çift blok kalınlığındaki duvar boyunca yansıma yapıyorsanız, {7}[center]{r}'yi {7false}{r} olarak ayarlayın (varsayılan olarak {7true}{r})."
+            get: "{r}{7}<filename>{r} oyuncu kaydında {7}<tick>{r} tikinde bulunan aksiyonun veri etiketini çıktılar."
+            info: "{r}{7}<filename>{r} adlı oyuncu kaydına dair bilgileri, kayıt formatının kaydedilen sürümü, kaydın uzunluğu vb. çıktı olarak verir."
+            merge: "{r}{7}<source>{r} kaynağındaki eylemleri {7}<destination>{r} hedefine birleştirir. {7}[morph_only]{r} değerini {7true}{r} olarak ayarlarsanız, komut sadece dönüşüm eylemlerini birleştirir."
+            origin: "{rBu} komut, oyuncu kaydının kökenini (ilk çerçeve) {7}[x] [y] [z]{r} (üçü de belirtilirse) veya oyuncunun mevcut pozisyonuna göre değiştirir. Ayrıca, oyuncu kaydını Y ekseni etrafında döndürebilirsiniz."
+            process: "{rBu} komut, {7}<filename>{r} oyuncu kaydındaki {7}<property>{r} üzerinde, {7}<from>{r} tikinden {7}<to>{r} tikine kadar işlemi uygular ve verilen {7}<math>{r} ifadesini kullanır. Aşağıdaki değişkenler mevcuttur:\n\n{7initial}{r} - verilen özelliğin ilk değeri\n{7value}{r} - verilen özelliğin mevcut değeri\n{7tick}{r} - şu anda işlenen çerçevenin tıkı\n{7from}{r} - {7}<from>{r} argümanı\n{7to}{r} - {7}<to>{r} argümanı\n{7factor}{r} - işlemenin {7from}{r} ile {7to}{r} arasında ne kadar ilerlediğini gösterir (0..1 arası), formülü ise {7}(tick - from) / (to - from){r} şeklindedir."
+            prolong: "{rBu} komut, verilen {7}<filename>{r} oyuncu kaydına ön ve son gecikmeleri belirtmenize olanak tanır."
+            remove: "{r}{7}<filename>{r} adlı oyuncu kaydında {7}<tick>{r} tikindeki tüm eylemleri kaldırır. Eğer {7}[index]{r} belirtirseniz, komut sadece belirtilen {7}[index]{r}'deki {7}<tick>{r} tikindeki bir eylemi kaldırır. {7}[index]{r} -1 olduğunda {7}<tick>{r} tikindeki tüm eylemleri kaldırır. Eğer {7}[force]{r} değeri true olarak belirlenirse, onay süreci atlanır."
+            remove_modal: Verilen tikteki eylemleri kaldırmak istediğinizden emin misiniz?
+            remove_all: "{r}{7}<filename>{r} ile oyuncu kaydındaki tüm eylemleri kaldırır."
+            remove_all_modal: Kayıt "%s" içindeki tüm eylemleri kaldırmak istediğinizden emin misiniz?
+            delete: "{r}{7}<filename>{r} ile kayıt dosyasını siler. {7}[force]{r} değerini true olarak belirlerseniz, onay sürecini atlarsınız."
+            delete_modal: "{r}\"%s\" kayıt dosyasını silmek istediğinizden emin misiniz?"
+            remove_body_yaw: "{rBelirtilen} oyuncu kaydından gövde yaw özelliklerini kaldırır."
+            rename: "{rBu} komut, {7}<filename>{r} oyuncu kaydını yeni bir ad olan {7}<new_filename>{r} olarak yeniden adlandırır. Ayrıca, geçmişteki {7}<filename>{r} oyuncu kayıtları da yeniden adlandırılır, varsa."
+            restore: "{r}{7}<filename>{r} adlı oyuncu kaydının önceki sürümünü {7}<iteration>{r} ile geri yükler. Örneğin {7}/record restore test 1{r} komutu, {7test}.dat{r} ve {7test}.dat~1{r} dosyalarını yer değiştirir."
+            reverse: "{r}{7}<filename>{r} adlı oyuncu kaydındaki karelerin ve eylemlerin sırasını tersine çevirir."
+            search: "{rBu} komut, belirtilen {7}<action_type>{r} aksiyonlarını arar ve {7}[limit]{r} ile sınırlıysa, {7}<filename>{r} oyuncu kaydında tık ve isteğe bağlı olarak çıktı veri etiketini görüntüler."
+            tp: "{rBu} komut, oyuncuyu {7}<filename>{r} oyuncu kaydının ilk çerçevesine veya belirtilen {7}[tick]{r} çerçevesine ışınlar."
+        model:
+            help: "{r}{oModel} komutu{r}. Bu komut, özel modelleri yönetmek için alt komutlar sağlar."
+            clear: "{rBu} komut, yüklenen Blockbuster cilt dokularından doku önbelleğini temizler. Eğer {7}[path]{r} belirtilmişse, sadece {7}[path]{r} ile başlayan dokular temizlenir."
+            clear_structures: "{rYap}ı formlarının önbelleğini temizler ve tüm yapıların yeniden yüklenmesini sağlar."
+            combine: "{r}{7config}/blockbuster/models/{r} altında belirtilen dokuları {7}<paths...>{r} ile birleştirir ve bunları {7config}/blockbuster/export/{r} yoluna dışa aktarır."
+            convert: "{r}{7steve}|fred{r} modelindeki {7}<skin>{r} (dosya adı uzantısı olmadan) 64x64 ({7fred}{r}) tenini 64x32'ye veya 64x32 ({7steve}{r}) tenini 64x64'e dönüştürür."
+            export: |
+                {rBu} komut, {7}<entity_name>{r} adlı mob renderından bir modeli JSON formatında dışa aktarır. Bu model, Blockbuster'ın yapılandırma klasöründeki export klasörüne kaydedilecektir. İsteğe bağlı olarak, belirli bir veriye sahip bir varlık için model oluşturmak üzere {7}[entity_tag]{r} verilebilir.
+                
+                {r}{lDikkat}{r}: Bu modeller otomatik olarak oluşturulur ve mükemmel değildir. En iyi sonucu almak için bu modelleri McME'de ayarlamanız gerekecektir.
+            export_obj: "{r}{7}<model_name>{r} adlı Blockbuster JSON modelini OBJ formatına dönüştürür (varsayılan doku ile birlikte, varsa, ve MTL dosyasıyla). Dışa aktarılan OBJ modelini Blockbuster'ın yapılandırma {lexport}{r} klasöründe bulabilirsiniz."
+            reload: "{r}İstemci ve sunucunun modelleri yeniden yüklemesini zorlar (yalnızca OP kullanıcıları için sunucu tarafında) ve isteğe bağlı olarak {7}[force]{r} argümanı belirtilirse, bu argüman {7true}{r} olarak ayarlandığında tüm modellerin önbelleğe alınmış, değiştirilmemiş dosya zaman damgalarını geçerek yeniden yüklenmesini sağlar."
+            report: "{rBu} komut, hangi modellerin ve ciltlerin mevcut olduğunu ve hangilerinin Minecraft tarafından yüklendiğini raporlar ve bunu kopyala-yapıştır panosuna kopyalar. Bu komut yalnızca yardımcı amaçlar içindir."
+        action:
+            help: "{r}{oEylem} komutu{r}. Bu komut, oyuncu kayıt eylemlerini yönetmek için birkaç alt komut sağlar."
+            append: "{rMevcut} oyuncudan verilen {7}<filename>{r} kaydına {7}<offset>{r} tik ile bir eylem kaydeder. Bu, verilen ofset tikten sonra belirtilen kareleri geçersiz kılar. Ayrıca isteğe bağlı olarak {7}[scene]{r} adı belirtebilirsiniz. Sahne adı sağlamak, aktörlerin senkronize edilmesine yardımcı olur."
+            cancel: "{rMevcut} kayıt eylemini iptal eder."
+            clear: "{rM}üşteri üzerindeki tüm kayıtları kaldırır (müşteri tarafındaki kayıtları zorla yüklemek için kullanılır)."
+            play: "{rVerilen} {7}<filename>{r} kaydından bir eylemi oynatır. Bu alt komut ayrıca isteğe bağlı olarak {7}[invincibility]{r} bayrağı ({71}{r}, {70}{r}, {7true}{r} veya {7false}{r} değerleri) ve {7}[morph_nbt]{r} (bir form belirtmenize olanak tanır) argümanlarını alabilir."
+            record: "{rBu} komut, mevcut oyuncudan verilen {7}<filename>{r} adına bir aksiyon kaydeder. Ayrıca isteğe bağlı olarak {7}[scene]{r} adı belirtilebilir. Sahne adı vermek, oyuncuların senkronize edilmesine yardımcı olur."
+            request: "{r}{7}<filename>{r} adlı bir eylemin, sunucudan mevcut müşteriye yüklenmesini talep eder."
+            stop: "{rBu} komut, aksiyon kaydını durdurur. Eğer oyuncu herhangi bir şey kaydetmemişse, hiçbir şey olmayacaktır."
+        on_head.help: "{r}{oOn} head komutu{r}. Bu komut, şu anda elde tutulan öğeyi doğrudan baş slotuna yerleştirmenize olanak tanır, NBT veri etiketine gerek kalmadan."
+        item_nbt.help: "{rE}şya NBT komutu, mevcut elde tutulan eşyanın NBT etiketini panoya kopyalamanıza olanak tanır. Eğer {7}<give_command>{r} değerini {7true}{r} veya {71}{r} olarak belirlerseniz, bu öğeyi vermek için uygun bir {7}/give{r} komutunu panoya kopyalar. Bunun için büyük ihtimalle bir komut bloğuna ihtiyacınız olacak..."
+        damage.help: "{r}{7}<entity>{r}'ye {7}<amount>{r} kadar hasar verir. Eğer {7}<amount>{r} negatifse, hedef seçici tarafından eşleşen tüm {7}<entity>{r} iyileştirilir."
+        spectate.help: "{r}{oSpectate} komutu{r}. Bu komut, verilen {7}<player>{r} oyuncusunun, belirtilen {7}<entity>{r} varlığını izleyebilmesini sağlar."
+        mount.help: "{r}{oMount} komutu{r}. Bu komut, verilen {7}<target>{r} varlığını verilen {7}[destination]{r} varlığına bindirir. Eğer {7}[destination]{r} belirtilmemişse, {7}<target>{r} varlığı indirilir.\n\nEmin olun ki sadece bir varlık {7}<target>{r} ve {7}[destination]{r} hedef seçicileri için geçerli olmalıdır!"
+        modelblock:
+            help: "{r}{oModel} blok komutu{r}. Bu komut, model bloklarını komutlar aracılığıyla düzenlemeye olanak tanır."
+            morph: "{r}{7}<x>{r}, {7}<y>{r}, {7}<z>{r} koordinatlarındaki bir model bloğunun formunu {7}[morph_nbt]{r} olarak değiştirir."
+            property: "{rModel} blok özelliğini {7}<property>{r}'yi {7}<value>{r} olarak değiştirir ve {7}<x>{r}, {7}<y>{r}, {7}<z>{r} koordinatlarında bir model bloğu ayarlar."

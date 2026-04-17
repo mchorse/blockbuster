@@ -1,0 +1,10 @@
+key:
+    blockbuster:
+        category: Blockbuster
+        plause_director: Sahneyi oynat/duraklat
+        record_director: Sahne kaydını başlat
+        pause_director: Sahneyi duraklat / Kaydı iptal et
+        open_gun: Silueti yapılandır
+        zoom: Zoom
+        gun_reload: Yenile
+        gun_shoot: Ateş et

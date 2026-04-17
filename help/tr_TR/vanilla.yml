@@ -1,0 +1,56 @@
+blockbuster:
+    info:
+        playback_button: Sahnenin oynatılmasını açıp kapatır
+        playback_profile: "\"{f}{o}%s{r}{7}\" profilini oynatır"
+        playback_play: Kamerayı oynatır
+        playback_scene: Sahneye bağlı {f}%s{r}
+        actor_config: Bir aktörde kullanın
+        register: Oyuncuları yönetmen bloğuna bağlamak için kullanılıyordu. Geçmişin bir hatırası...
+        director_block: Eskiden sahnelerdi, sahnelerden önceydi. Geçmişin bir hatırası...
+        model_block: Formları statik modeller olarak yerleştirmeyi sağlar
+        green_block: "%s chroma bloğu. Chroma keying için kullanılabilir."
+        dim_green_block: Parlamaz.
+    morph:
+        image: Görüntü
+        sequencer: Sekansör
+        record: Kayıt
+        structure: Yapı
+        particle: Parçacık
+itemGroup.blockbuster: Blockbuster
+tile.blockbuster:
+    director.name: Yönetmen bloğu
+    model.name: Model blok
+    green.name: Chroma bloğu
+    dim_green.name: Soluk chroma bloğu
+item:
+    blockbuster:
+        playback.name: Oynatma düğmesi
+        register.name: Kayıt cihazı
+        actor_config.name: Aktör yapılandırma cihazı
+        gun.name: BB tabancası
+        model.name: Model blok
+        model1.name: Model blok ışık 1
+        model2.name: Model blok ışık 2
+        model3.name: Model blok ışık 3
+        model4.name: Model blok ışık 4
+        model5.name: Model blok ışık 5
+        model6.name: Model blok ışık 6
+        model7.name: Model blok ışık 7
+        model8.name: Model blok ışık 8
+        model9.name: Model blok ışık 9
+        model10.name: Model blok ışık 10
+        model11.name: Model blok ışık 11
+        model12.name: Model blok ışık 12
+        model13.name: Model blok ışık 13
+        model14.name: Model blok ışık 14
+        model15.name: Model blok ışık 15
+entity.blockbuster.Actor.name: Aktör
+blockbuster.chroma_blocks:
+    0: Yeşil
+    1: Mavi
+    2: Kırmızı
+    3: Sarı
+    4: Camgöbeği
+    5: Mor
+    6: Beyaz
+    7: Siyah

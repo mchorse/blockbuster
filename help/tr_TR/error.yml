@@ -1,0 +1,55 @@
+blockbuster.error:
+    actor:
+        not_attached: "{fBu} kaydedilen öğe, bir yönetici bloğuna bağlı değil!"
+    commands:
+        load_chunks: Render mesafesinde tüm oluşturulan chunk'lar yüklenemedi! Detaylı hata için loglara bakın.
+        restore_texture: "{f}%s{f} dokusu geri yüklenemedi, çünkü bu komut tarafından değiştirilmemişti."
+        replace_texture: "{f}%s{f} ve %s{f} dokuları yüklenmemiş!"
+        replace_texture_one: "{f}%s{f} dokusu yüklenmemiş!"
+        no_player: "{f}%s{f} oyuncusu bulunamadı!"
+        no_entity: "{fVerilen} hedef seçici %s{f} ile varlık bulunamadı!"
+        convert_model: "{fVerilen} yanlış model %s{f}! Ya {7steve}{f} ya da {7fred}{f} olmalı."
+        convert_skin: "{f}%s{f}/%s{f} cildinin dönüştürülmesi sırasında bir istisna oluştu: %s{f}"
+        convert_skin_size: "{fCildin} boyutu %s{fx}%s{f}, ancak bu, 1:1 veya 2:1 en-boy oranına sahip iki katın bir kuvveti olmalı!"
+        item_nbt_empty: Elinizde hiçbir öğe yok...
+        combining_empty: "{fBelirtilen} {7}[paths...]{r} klasörlerinde hiçbir şey bulunamadı..."
+        combining_folders_empty: "{fBelirtilen} {7}[paths...]{r} klasörlerinde hiçbir doku dosyası bulunamadı..."
+    scene:
+        playing: "{f}%s{f} adıyla bir sahne oynatılıyor!"
+        stopped: "{f}%s{f} adıyla bir sahne durdurulmuş!"
+        no_scene: "{f}%s{f} adıyla bir sahne bulunmamaktadır."
+    model:
+        export:
+            error_save: "{fD}ışa aktarılan model kaydedilemiyor!"
+            wrong_type: "{fModel} %s{f} türü için dışa aktarma yapılamaz (çünkü renderer'ı yok veya yaşam formu renderer'ı değil)."
+            no_model: "{fModel} %s{f} OBJ formatına dışa aktarılamaz, çünkü bulunamadı!"
+            obj: "{fModel} %s{f} dışa aktarılamaz!"
+        reload: Modelleri yeniden yüklemek için OP kullanıcısı olmalısınız!
+    record:
+        no_action: "{f}%s{f} dosyasıyla oyuncu kaydında %s{f} tıkında işlem bulunmuyor!"
+        not_exist: "{f}%s{f} dosyasıyla oyuncu kaydı mevcut değil!"
+        tick_out_range: "{f}%s{f} tıkındaki işlem mevcut değil! {70}{r} ile %s{r} arasında olmalı."
+        index_out_range: "{f}%s{f} indeksi aralık dışında! {70}{r} ile %s{r} arasında olmalı."
+        already_empty: "{f}%s{f} oyuncu kaydında %s{r} indeksinde işlem bulunmuyor!"
+        wrong_action: "{f}%s{f} türünde işlem mevcut değil!"
+        delete_rights: Bu komut için yetersiz kullanıcı hakları!
+        add: "{f}%s{f} türündeki işlem eklenemedi, hata: %s"
+        already_exists: "{f}%s{f} dosyasıyla oyuncu kaydı zaten mevcut!"
+        couldnt_save: "{f}%s{f} adıyla oyuncu kaydı kaydedilemedi!"
+        wrong_clean_property: "{fVerilen} yanlış temizleme özelliği %s{f}!"
+        empty_record: "{fVerilen} %s{f} oyuncu kaydı boş!"
+        not_exist_iteration: "{fVerilen} %s{f} adlı oyuncu kaydının %s{f} yinelemesi mevcut değil!"
+        cant_restore: "{fBir} yineleme geri yüklenemez, çünkü geçici dosya gereksiz yere var..."
+        wrong_axis: "{fVerilen} \"%s{f}\" geçerli bir eksen değil. Ya {7x}{r} ya da {7z}{r} olmalı!"
+        invalid_math_expression: Verilen matematiksel ifade "%s{r}" geçerli bir matematiksel ifade değil!
+        wrong_apply_property: "{fVerilen} yanlış uygulama özellikleri %s{f}!"
+    recording:
+        read: "{f}%s{f} adıyla bir kayıt dosyası oynatma için uygun değil ({7eski} sürüm{f}, {7bozulmu}ş{f} veya {7kay}ıt dosyası{f} değil)."
+        logout: "{f}%s{f} kaydı durduruldu, çünkü oyuncu çıkış yaptı!"
+        not_found: "{f}%s{f} kaydı bulunamadı!"
+        not_recorded: "{f}%s{f} oyuncusunun kaydı henüz yapılmamış!"
+        fill_filename: "{fL}ütfen {7Recording} ID{f} alanını doldurun!"
+        empty_filename: "{fBo}ş bir {7Recording} ID{f} ile oyuncu kaydı yapılamaz."
+        empty_record: "{f}%s{f} kaydını oynatmak mümkün değil, çünkü boş!"
+    modelblock:
+        wrong_property: "{fModel} bloklarında %s{f} özelliği yok!"

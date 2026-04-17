@@ -1,0 +1,808 @@
+blockbuster.gui:
+    done: Tamamlandı
+    next: Sonraki
+    previous: Önceki
+    restore: Varsayılanları geri yükle
+    reset: Sıfırla
+    add: Ekle
+    edit: Düzenle
+    remove: Kaldır
+    record: Kayıt
+    pick: Formu seç
+    duplicate: Çoğalt
+    search: Ara
+    cancel: İptal et
+    select: Seç
+    ok: Tamam
+    billboard: Oyuncuya bak
+    first_time:
+        title: İlk defa mı?
+        welcome: "Blockbuster moduna hoş geldiniz!\n\nEğer bu modu ilk kez kullanıyorsanız, {aBlockbuster} akademisi video eğitimi{r} serisini {cYouTube}{r}'da izlemeyi düşünebilirsiniz."
+        social: Herhangi bir sorunla karşılaşırsanız, yardımcı olmak için {6Discord}{r} sunucuma katılabilirsiniz. Ayrıca, mod güncellemelerini {bTwitter}{r}'da paylaşıyorum, oradan takip edebilirsiniz.
+    morphs:
+        acquire: Formu al
+        pose: Poz
+        sneak: Zıplayarak uygula
+        reset: Pozu sıfırla
+        create: Poz oluştur
+        keys:
+            toggle_gui_model: Editörde model renderını geçiş yap
+    dashboard:
+        main: Kontrol Paneli
+        director: Sahne
+        model: Model bloğu
+        model_editor: Model editörü
+        player_recording: Oyuncu kayıt düzenleyici
+        texture: Doku yöneticisi
+        particle: Parçacık düzenleyici
+    main:
+        resources: Kaynaklar
+        wiki: Viki
+        discord: Discord
+        tutorial: Video eğitimi
+        models: Modelleri aç...
+        skins: Skinleri aç...
+        reset_audio: Ses parçalarını sıfırla
+        open_audio: Ses dosyalarını aç...
+        options: Seçenekler
+    director:
+        config: Genel seçenekler
+        not_selected: Bir sahne seçin...
+        no_replays: Bir tekrar oluştur...
+        add_replay: Bir tekrar ekle
+        dupe_replay: Seçilen tekrar oynatmayı çoğalt
+        remove_replay: Seçilen yeniden oynatmayı kaldır
+        display_title: Başlık göster
+        start_command: Başlangıç komutu
+        stop_command: Durma komutu
+        loops: Döngüler
+        audio: Ses parçası
+        audio_tooltip: Bu sahne ile sesin senkronizasyonu için kullanılacak bir ses parçası seçin
+        audio_shift: Ses kayması
+        audio_shift_tooltip: Sesin ne kadar kaydırılacağı, yani tıklarda ne kadar kısaltılacağı.
+        open_audio_folder: Ses dosyaları klasörünü aç
+        id: Kayıt ID'si
+        name: Ad etiketi
+        name_tooltip: "Aktörün ad etiketi. Komutlar (örneğin, @e[name=Test]) ile bu aktörü hedef alabilir veya sadece adı görüntüleyebilirsiniz.\n\nGösterim adı formatlaması için [ sembolünü kullanabilirsiniz. [cR[aG[1B[r, {cR}{aG}{1B}{r} olur."
+        target: Hedef
+        target_tooltip: "Burada, bu tekrarın oynatılmasında hangi oyuncunun kullanılacağını belirtebilirsiniz.\n\nEkstra hedef seçiciler, oyuncuları kullanıcı adı dışında seçmek için kullanılabilir. @r - rastgele oyuncu, @{nteam}{r} - burada {nteam}{r}, puan tablosu takımının ismidir."
+        playback_xp_food_level: Oynatma XP & yiyecek
+        playback_xp_food_level_enabled: Etkin
+        playback_xp_food_level_tooltip: Kaydedilen deneyim ve yiyecek seviyelerini oynatır. Sorun yaşarsanız veya bu öğelerin dinamik olarak çalışmasını isterseniz, oynatmayı devre dışı bırakın.
+        invincible: Ölümsüz
+        invisible: Görünmez
+        enable_burning: Yanmayı etkinleştir
+        enabled: Etkin
+        fake_player: Sahte oyuncu
+        tp_back: Geriyə teleport ol
+        tp_back_tooltip: Başlangıç pozisyonuna geri teleport et
+        render_last: Son olarak renderla
+        render_last_tooltip: "Bir aktörün son olarak render edilmesini sağlar, bu çoğu durumda opak aktörlerin yarı saydam formları olan aktörlerin arkasında görünmesini düzeltmelidir.\n\nBu seçenek, Aktörleri her zaman render et mod seçeneği etkinleştirilmiş olmalıdır ve bu aktör için sahte oyuncu seçeneği devre dışı bırakılmalıdır."
+        health: Sağlık
+        total_experience: Toplam deneyim
+        food_level: Yiyecek seviyesi
+        edit_record: Kayıt düzenle
+        update_data: Veri güncelle
+        update_data_tooltip: Kayıt dosyasındaki oyuncu verilerini günceller
+        rename_prefix: Önek yeniden adlandır
+        rename_prefix_tooltip: Yeniden oynatma kayıt kimliğini yeni bir önekle yeniden adlandırır
+        rename_replay_dupe_modal: Bu tekrar oynatma ID'si zaten bu sahnede var. Tekrar kullanmak isterseniz tekrar kullanabilirsiniz.
+        rename_prefix_popup: "Yeni bir önek girin:"
+        rotation_filter:
+            title: Dönüşüm filtresi
+            head_yaw: Baş dönüşü
+            head_pitch: Baş eğimi
+            body_yaw: Vücut yaw'ı
+            channel_tooltip: Filtrelenmesi gereken dönüşüm kanalı.
+            to_tooltip: Tike
+            from_tooltip: Tikten
+            execute: Yürüt
+            success: Başarı
+            frame_chunk_error: Kare yazma hatası. Alınan kareler düzgün şekilde eklenemiyor.
+            exception: Başarısızlık, dönüşüm filtresi çalıştırılırken bir istisna meydana geldi.
+            record_save_error: Sunucuda kaydetme sırasında bir hata oluştu.
+            not_enough_frames: Yeterli kare sağlanmadı.
+            record_not_loaded: Kayıt yüklenemedi.
+            empty_filtered_frames: Filtrelenmiş kareler listesi boş.
+        attach: Ekle
+        attach_tooltip: "Bu sahneyi şu anda tutulan oynatma düğmesine ekleyin.\n\nAlternatif olarak, bir oynatma düğmesini tutarak ve sağ tıklayarak ekleyebilirsiniz."
+        camera: Kamerayı düzenle
+        tp: Teleport
+        tp_tooltip: Kendini tekrarın başlangıç pozisyonuna teleport et
+        none: (yok)
+        keys:
+            category: Sahne
+            toggle_list: Sahne listesini aç/kapat
+            toggle_options: Genel seçenekleri değiştir
+    scenes:
+        title: Sahneler
+        add_scene: Bir sahne ekle...
+        dupe_scene: Seçilen sahneyi çoğalt...
+        rename_scene: Seçilen sahneyi yeniden adlandır...
+        remove_scene: Seçilen sahneyi kaldır...
+        add_modal: "Yeni bir sahne için bir isim girin:"
+        dupe_modal: "Kopyalanan sahne için bir ad girin:"
+        dupe_recordings: Kayıtları kopyala
+        dupe_recordings_tooltip: Etkinleştirildiğinde, oyuncu kayıtları yeni isimlerle dosyalar halinde çoğaltılacaktır
+        rename_modal: "Mevcut sahneye yeni bir isim girin:"
+        remove_modal: Bu sahneyi kaldırmak istediğinizden emin misiniz?
+    actor:
+        title: Aktör Yapılandırması
+        default: Varsayılan
+        name: Ad
+        filename: Kayıt ID'si
+        invincible: Öldürülebilir mi?
+        invisible: Görünür mü?
+        attached: Aktöre bağlı
+        yaw: Yaw
+        pitch: Pitch
+    model_block:
+        title: Model blokları
+        not_selected: Bir model bloğu seçin...
+        x: X
+        y: Y
+        z: Z
+        yaw: Dönüş
+        pitch: Eğim
+        body: Vücut dönüşü
+        one: Bir
+        one_tooltip: Bir kaydırıcı ölçeği
+        shadow: Gölge
+        global: Küresel
+        global_tooltip: Chunk kesme sınırlarını aşmayı etkinleştirir
+        enabled: Etkinleştirildi
+        enabled_tooltip: Model bloğu render'ını etkinleştirir
+        render_last: Son olarak renderla
+        render_last_tooltip: Model bloğunun en son render edilmesini sağlar. Bunu yarı saydam model bloklarda kullanın. Bu, çoğu durumda model bloklarının yarı saydam model blokların arkasında render edilmemesini düzeltmelidir.
+        render_always: Her zaman renderla
+        render_always_tooltip: Model bloğunu, Blockbuster yapılandırmasında "Model bloğu render'ını devre dışı bırak" seçeneği etkin olsa bile render eder.
+        exlude_reset_playback: Sıfırlamayı engelle
+        exlude_reset_playback_tooltip: Sahne oynatıldığında ve Blockbuster model bloğu "Oynatma sırasında sıfırlama" yapılandırması etkinleştirildiğinde sıfırlamayı engeller.
+        enable_hitbox: Vuruş kutusunu etkinleştir
+        enable_hitbox_tooltip: Blok hitbox'unu etkinleştir. Bu, standart Minecraft blok hitbox'udur.
+        light_level: Işık değeri
+        light_level_tooltip: Verilen seviyede ışık yayar, Minecraft'ın maksimum ışık değeri 15'tir.
+        look: Sana doğru döndür
+        entity: Varlık
+        translate: Çevir
+        rotate: Dön
+        scale: Ölçek
+    record_editor:
+        title: Kayıtlar
+        directors: Sahne kayıtları
+        not_selected: Bir oyuncu kaydı seçin...
+        action: eylem
+        cut: Eylemleri kes
+        copy: Eylemleri kopyala
+        paste: Eylemleri yapıştır
+        capture: İmleçten kaydet
+        teleport: İmleçteki noktaya teleport ol
+        deselect: Eylemleri seçmeden çıkar
+        select_all: Tüm eylemleri seç
+        drop: Blok bırak
+        damage: Hasar
+        progress: İlerleme
+        mounting: Montaj
+        meta: Meta değeri
+        arrow_charge: Ok şarjı
+        no_fields: Bu eylemin düzenlenebilir alanı yok...
+        actions:
+            chat:
+                title: Sohbet
+                desc: Bu eylem bir sohbet mesajı gönderir
+            swipe:
+                title: Kaydırma
+                desc: Bu işlem, aktörün ana elini sallamasını sağlar
+            drop:
+                title: Öğe düşürme
+                desc: Bir öğeyi yere atar (Q tuşuna basılmış gibi)
+            equip:
+                title: Bir öğe tak
+                desc: Bir öğeyi el veya zırh slotlarından birine yerleştirir
+                none: Hiçbiri
+                main_hand: Ana el
+                feet: Ayaklar
+                legs: Pantolon
+                chest: Gövde
+                head: Baş
+                off_hand: Diğer el
+            shoot_arrow:
+                title: Ok at
+                desc: Verilen güçle normal bir ok atar
+            place_block:
+                title: Blok yerleştir
+                desc: Verilen blok pozisyonuna belirtilen bloğu yerleştirir
+            mounting:
+                title: Montaj
+                desc: Önünde duran bir varlığı monte eder veya söküp çıkarır
+            interact_block:
+                title: Blokla etkileşim
+                desc: Aktörün bir blokla etkileşimde bulunmasını sağlar
+            break_block:
+                title: Blok kır
+                desc: Verilen pozisyondaki bir bloğu kırar
+            morph:
+                title: Form
+                desc: Aktörü seçilen forma dönüştürür
+            attack:
+                title: Saldırı
+                desc: Aktörün önündeki bir varlığa hasar verir (oyuncularla kullanmak istiyorsanız zorluk seviyesini "barışçıl"dan değiştirin)
+            damage:
+                title: Hasar
+                desc: Aktör varlığına hasar verir
+            morph_action:
+                title: Dönüşüm eylemi
+                desc: Aktör dönüştüğünde, dönüşüm eylemini kullanır
+            command:
+                title: Komut
+                desc: Bir komutu aktörle çalıştırır
+            break_animation:
+                title: Blok animasyonunu kes
+                desc: Verilen blok pozisyonunda bir kırılma animasyonu (blok çatlamaları) yapar
+            use_item:
+                title: Öğe kullanımı
+                desc: Verilen elde tutulan öğeyi kullanır
+            use_item_block:
+                title: Item bloğu kullanımı
+                desc: Verilen elde tutulan öğeyi, verilen yön ve vuruş vektörüyle bir bloğa uygular
+                down: Aşağı
+                up: Yukarı
+                north: Kuzey
+                south: Güney
+                west: Batı
+                east: Doğu
+            interact_entity:
+                title: Varlıkla etkileşim
+                desc: Aktörün şu anda baktığı varlıkla etkileşim kurar (isim etiketleri, item çerçeveleri veya modlu varlıklar gibi bazı öğelerle kullanılır)
+            close_container:
+                title: Konteyneri kapat
+                desc: Aktör tarafından açılan konteyneri kapatır, bu genellikle aktörün daha önce etkileşime girdiği sandığı kapatır. (Sadece aktör sahte bir oyuncu ise kullanılabilir)
+            use_gun:
+                title: Silahla ateş et
+                desc: Kaydedilirken aktör tarafından tutulan BB tabancasıyla ateş eder (aktör artık tutmasa bile)
+            hotbar_change:
+                title: Hotbar değişikliği
+                desc: Belirtilen hotbar slotunu belirtilen item yığını ile değiştirir.
+                slot_tooltip: Değiştirilecek slot
+                durability_tooltip: Öğenin dayanıklılığı yüzdelik olarak
+    playback:
+        title: Oynatma yapılandırması
+        camera_mode: Kamera modu
+        profile: Profil dosya adı
+        scene: Sahne
+        nothing: Hiçbir şey yapma
+        play: Yalnızca oyna
+        load_profile: Profili yükle ve oyna
+    builder:
+        pose_editor: Poz düzenleyici
+        body_part: Vücut parçası
+        materials: Malzemeler
+        nbt: NBT
+        pick_model: Model seç
+        pick_skin: Skin seç
+        pose_sneak: Sürünme pozu
+        pose: Poz
+        obj_materials: OBJ malzemeleri
+        pick_texture: Doku seç
+        limbs: Uzuvlar
+        body_parts: Vücut parçaları
+        use_target: Hedefi kullan
+        shape_keys: Şekil anahtarları
+        shape_keys_factor: Şekil anahtarları faktörü
+        shape_keys_factor_tooltip: Bu alan, bir şekil anahtarının ne kadar uygulanacağını belirler (0 = etkisiz, 1 = tam deformasyon)
+        relative: Bağıntılı
+        relative_tooltip: Bu seçenek, dönüşümleri mevcut olanın üzerine göre uygulamayı sağlar
+        context:
+            add: Bir şekil anahtarı ekle...
+            add_to: "\"%s\" şekil anahtarını ekle"
+            remove: Bu şekil anahtarını kaldır
+            children: Çocuklara uygula
+        limb:
+            absolute_brighness: Kesin Parlaklık
+            glow: Üye Parıltısı
+            color: Üye Rengi
+            fixed: Hareketi sabitle
+    image:
+        crop: Kırp
+        left: Sol
+        right: Sağ
+        top: Üst
+        bottom: Alt
+        thickness: Ekstrüzyon
+        thickness_tooltip: Görseli dışa doğru genişlet.
+        resize_crop: Yeniden boyutlandır ve kırp
+        dimensions: Boyut (%spx, %spx)
+        offset_x: X koordinat kayması
+        offset_y: Y koordinat kayması
+        rotation: Koordinat dönüşümü
+        keying: Anahtar çıkarma
+        keying_tooltip: Bu seçenek, bu formun renderlandığı ekran üzerindeki renk verilerini (framebuffer'da) temizler. Bu, Minema'nın 'Alfa kullan' seçeneğiyle anahtarlı görüntü kaydederken dış video düzenleme eklentileri olmadan kullanılabilir.
+        shadow: Gölge
+        shadow_tooltip: Bu görsel formunun Optifine'in gölgeleme modlarıyla gölge verip vermemesi (çok büyükse, görsel formunun kendisinin gölgelendirilmesini düzeltebilir), Optifine yoksa işe yaramaz
+        remove_parent_space_effects: Ana uzay etkilerini kaldır
+        remove_parent_space_effects_tooltip: Bu görselde ana uzayın dönüşümünü ve ölçeğini kaldırır. Devre dışı bırakıldığında, "Oyuncuya bak" seçeneğiyle birlikte garip şekil bozulmalarına yol açabilir.
+    sequencer:
+        duration: Süre
+        random: Rastgele
+        ignore_animation_length: Zaman çizelgesinde yoksay
+        ignore_animation_length_tooltip: "Kayıt düzenleyici zaman çizelgesinde animasyon uzunluğunu render ederken bu sekansör formunun uzunluğunu yoksay. Çok uzun ağız animasyonu sekansör formları için kullanışlıdır."
+        set_duration: Süresini ayarla
+        set_duration_tooltip: Etkinleştirildiğinde, bu seçenek hesaplanan süreyi alır ve "animates" özelliğini destekleyen seçilen forma atar, gerçek süre "1" olarak ayarlanır.
+        reverse: Tersine
+        no_morph: (form yok)
+        morphs: Formlar
+        random_order: Rastgele sıralama
+        truly_random_order: Gerçekten rastgele
+        keep_progress: İlerlemeni koru
+        ticks: Tikler
+        add_part_tooltip: Listeye bir form ekle. Ctrl tuşuna basılı tutarsanız, bu sonraki form olur; aksi takdirde sonuncusu olacaktır.
+        loop: Döngü
+        loop_tooltip: Döngü sayısını ayarla, 0 sonsuz döngü için.
+        loop_offset: Döngü ofseti
+        loop_offset_count: Döngü ofset sayısı
+        end_point: Bitiş noktası
+        end_point_tooltip: Bu sıralayıcı formunun son noktasını ayarlayın, rastgele etkinse, döngü sayısını saymak için de kullanılır.
+        preview_tick: Bu sequencer formunun önizleme tik'i
+        generate_morph: Form oluştur
+        generate_morph_tooltip: Mevcut önizlemeden bir form oluştur
+        keys:
+            toggle: Dönüşüm oynatmayı aç/kapat
+            stop: Sekans oynatmayı durdur
+    particle:
+        tooltip: Genel özellikler
+        emission: Emisyon özellikleri
+        morph: Formu özellikleri
+        vanilla: Vanilla özellikleri
+        common: Ortak özellikler
+        type: Parçacık türü
+        types:
+            vanilla: Vanilla
+            morph: Form
+        pick_type: Tür seç
+        pick_type_tooltip: Form hareket türünü seç
+        particle: Parçacık seç
+        frequency: Frekans
+        dx: X Ofseti
+        dy: Y Ofseti
+        dz: Z Ofseti
+        speed: Hız
+        count: Adet
+        local_rotation: Yerel dönüş
+        local_rotation_tooltip: Vücut parçalarına bağlandığında, vanilya parçacıkları vücut parçasının dönüşüne göre yayımlanır, aksi takdirde dünya ile ilişkilendirilir
+        args: Ek argümanlar
+        fade: Solma
+        maximum: Maksimum
+        cap: Kapasite
+    snowstorm:
+        variables: Değişkenler
+        expression: Matematiksel ifade
+        title: Parçacıklar
+        mode: Mod
+        add_modal: "Yeni boş parçacık efekti için bir isim girin:"
+        dupe_modal: "Mevcut parçacık efektinin kopyası için yeni bir isim girin:"
+        remove_modal: Bu parçacık efektini sonsuza dek kaldırmak istediğinizden emin misiniz?
+        open_tooltip: Parçacık efekti yöneticisi
+        save_tooltip: Mevcut parçacık efektini kaydet
+        add_tooltip: Yeni bir parçacık efekti oluştur
+        dupe_tooltip: Mevcut parçacık efektini çoğalt
+        remove_tooltip: Mevcut parçacık efektini kaldır
+        remove_factory_tooltip: Bir fabrika ön ayarını kaldıramazsınız...
+        folder_tooltip: Parçacık efektlerinin bulunduğu klasörü aç
+        keys:
+            category: Parçacık düzenleyici
+            save: Mevcut parçacık efektini kaydet
+        general:
+            title: Genel
+            pick: Dokuyu seç
+            play_playing: Çalıyor
+            play_paused: Duraklatıldı
+            identifier: Bu parçacık efektinin kimliği, görüntü adı olarak kullanılabilir, ancak Bedrock sürümünde bu, parçacık efektinin kimliğidir.
+            particles_opaque: Opak
+            particles_alpha: Alfa
+            particles_blend: Karışım
+            particles_additive: Eklemeli
+        particle_morph:
+            title: Form
+            enabled: Etkin
+            render_texture: Hala render edilen reklam panosu
+        space:
+            title: Parçacık alanı
+            position: Yerel pozisyon
+            position_tooltip: Parçacıklar, varlık alanında simüle edilecektir.
+            rotation: Yerel dönüş
+            rotation_tooltip: Parçacık dönüşü, varlık alanında simüle edilecektir. Yalnızca yerel pozisyon etkinleştirilmişse çalışır.
+            scale: Yerel ölçek
+            scale_tooltip: Bu, parçacıkları hedefin ölçeğine göre ölçeklendirir. Yerel pozisyon ve dönüş ile en iyi şekilde çalışır. Çarpışma ile iyi çalışmaz!
+            direction: Yerel yön
+            direction_tooltip: Doğrudan bir kez hedefin dönüşümüne göre yön vektörünü döndürür.
+            acceleration: Yerel ivme
+            acceleration_tooltip: Bu, hedefin dönüşüyle birlikte hızlanma vektörünü tüm ömür boyunca döndürür.
+            gravity: Yerçekimi
+            scale_billboard: Doku ölçekle
+            scale_billboard_tooltip: Bu, parçacığın doku boyutunu hedefin ölçeğine göre ölçeklendirir.
+            object_velocity_title: Nesne
+            linear_velocity: Hız
+            linear_velocity_tooltip: Nesnenin parçacıya başlangıç hızı vermesine izin verir. Hız, kar fırtınası formunun pozisyon değişikliği ile hesaplanır, verilen faktörle çarpılır. Bu, parçacığın hızına doğuş zamanında eklenir.
+            angular_velocity: Açısal hız
+            angular_velocity_tooltip: Angular hız, kar fırtınası formunun dönüşüm değişikliğine göre hesaplanır, verilen faktörle çarpılır. Spawntime'da parçacığın hızına eklenir. Yarıçap, kar fırtınası form parçasının çevirisidir.
+        initialization:
+            title: Başlatma ifadeleri
+            emitter_expression_title: Yayıcı ifadeleri (Bedrock Edition)
+            create: Oluşum ifadesi, yayıcı başladığında çalışır
+            update: İfade güncellemesi, her tıkta çalışır
+            particle_expression_title: Parçacık ifadeleri (Blockbuster)
+            particle_update_expression: Parçacık ifadesi, her parçacık için çalışır. Her parçacık için yereldir.
+        rate:
+            title: Doğal hız
+            instant: Anlık
+            steady: Sabit
+            spawn_rate: Yayılma oranı ifadesi, saniyede kaç parçacık yayıldığını belirler
+            max_particles: Aynı anda mevcut olacak parçacık sayısı
+            particles: Bir kerede ne kadar parçacık yayılacak
+        lifetime:
+            title: Vericinin ömrü
+            expression: İfade
+            looping: Dönüşümlü
+            once: Bir defa
+            active_expression: Yayıcıyı yeniden başlatmaktan sorumlu ifade, sonuç sıfır olmayan bir değeri değerlendirirse
+            active_looping: Bir döngünün ne kadar süreyle aktif olacağını belirleyen ifade, uyku aşamasından önce
+            active_once: Tek bir döngünün ne kadar süreyle aktif olacağını belirleyen ifade
+            expiration_expression: Yayıcıyı durdurmak için sorumlu ifade, değerlendirilmiş sonuç sıfırdan farklıysa
+            sleep_time: Vericinin bir sonraki döngü öncesinde ne kadar süreyle uyuyacağını belirleyen ifade
+        shape:
+            title: Yayıcının şekli
+            shape: Şekil
+            point: Nokta
+            box: Kutu
+            sphere: Küre
+            disc: Disk
+            aabb: Varlığın hitbox'ı
+            offset: Ofset
+            direction: Yön
+            direction_outwards: Dışa
+            direction_inwards: İçeri
+            direction_vector: Vektör
+            surface: Yüzey
+            surface_tooltip: Şeklin yüzeyinin etrafında parçacıklar yayılmasını sağlar
+            box_size: Kutu boyutu
+            normal: Normal
+            radius: Yarıçap
+        motion:
+            title: Hareket
+            dynamic: Dinamik
+            parametric: Parametrik
+            position: Konum
+            position_speed: Başlangıç hızı
+            speed: Hız
+            acceleration_title: İvme
+            acceleration_x: X ivmesi
+            acceleration_y: Y ivmesi
+            acceleration_z: Z ivmesi
+            position_drag_title: Hava sürtünmesi
+            position_drag: Hareket sürüklemesi
+            rotation: Dönüşüm
+            rotation_angle: Başlangıç dönüşü
+            rotation_speed: Başlangıç dönüş hızını
+            rotation_acceleration: Dönüşüm ivmesi
+            rotation_drag: Dönme sürüklemesi
+        expiration:
+            title: Parçacığın ömrü
+            expression: İfade
+            expression_tooltip: Bu ifade parçacığı canlı tutar, ifade sıfır olmayan bir sonuca sahip olana kadar
+            max: Maksimum
+            max_tooltip: Bu ifade, parçacığın ömrünü saniye cinsinden tanımlar
+            kill_plane: Öldürme düzlemi
+            kill_plane_tooltip: Bir düzlem belirtilebilir (Ax + By + Cz + D = 0 şeklinde), eğer bir parçacık bu düzlemi geçerse, o zaman süresi dolar
+            in_blocks: Bloklarda sona erme
+            not_in_blocks: Bloklarda sona erme
+        appearance:
+            title: Doku
+            regular: Normal
+            animated: Animasyonlu
+            camera_facing:
+                label: Yüzey modu
+                direction_x: X Yönü
+                direction_y: Y Yönü
+                direction_z: Z Yönü
+                direction_mode:
+                    motion: Hareket
+                    custom: Özel Yön
+                    direction_x_tooltip: Özel X yönü
+                    direction_y_tooltip: Özel Y yönü
+                    direction_z_tooltip: Özel Z yönü
+                    speed_threshold_tooltip: Hız eşiği
+                lookat_xyz: XYZ'ye bak
+                lookat_y: Y'ye bak
+                lookat_direction: Yöne bak
+                rotate_xyz: XYZ Dönüşü
+                rotate_y: Y Dönüşü
+                emitter_xy: Yayıncı XY Düzlemi
+                emitter_xz: Yayıncı XZ Düzlemi
+                emitter_yz: Yayıncı YZ Düzlemi
+            size: Reklam panosu boyutu
+            width: Genişlik
+            height: Yükseklik
+            mapping: UV haritalama
+            uv_x: Doku koordinat X ifadesi
+            uv_y: Doku koordinat Y ifadesi
+            uv_w: Doku kare genişliği
+            uv_h: Doku kare yüksekliği
+            step_x: Her kare için X koordinatı adımı
+            step_y: Her kare için Y koordinatı adımı
+            fps: Animasyon kare hızı
+            max: Animasyonun maksimum kareleri
+            stretch: Germe
+            stretch_tooltip: Parçacığın ömrüne göre doku animasyonunu gerin
+            loop: Döngü
+            loop_tooltip: Animasyon son kareye geldiğinde başa dön
+        lighting:
+            title: Renk ve aydınlatma
+            lighting: Aydınlatma
+            lighting_tooltip: Minecraft gölgesini kullanarak render al. Devre dışı bırakıldığında, parçacıklar ışıldar.
+            solid: Katı
+            expression: İfade
+            gradient: Gradyan
+            interpolant_tooltip: Renk gradyanı interpolanı
+            range_tooltip: Renk gradyanı aralığı
+            red: Kırmızı
+            green: Yeşil
+            blue: Mavi
+            alpha: Alfa
+            context:
+                add_stop: Bir renk gradyanı ekle
+                remove_stop: Bir renk gradyanı kaldır
+        collision:
+            title: Çarpışma
+            enabled: Etkin
+            condition_tooltip: Koşul doğru / sıfır olmayan veya ayarlanmamış olduğunda çarpışmayı etkinleştirir
+            realistic_collision: Gerçekçi çarpışma
+            preserve_energy: Enerjiyi koru
+            preserve_energy_tooltip: Enerjiyi koruma seçeneği, çarpışmadan sonra parçacıkların hızını korur
+            entity_collision: Varlıklarla çarpışma
+            momentum: Varlık çarpışması için momentum
+            realistic_collision_drag: Gerçekçi çarpışma sürüklemesi
+            realistic_collision_drag_tooltip: Çarpışma sürüklemesi, parçacık çarpışmayı durdurduğunda sıfırlanır. Bunu etkinleştirmek, yüksek çarpışma sürüklenme değerleri ile hızlanan parçacıkları düzeltir.
+            drag: Çarpışma sürüklemesi, parçacığın dünyadaki bloklarla çarpıştıktan sonra bir sürüklenme (yavaşlama) ekler
+            rotation_drag: Çarpışma sırasında gerçekleşecek dönüş sürüklemesi. Doku dönüşünü yavaşlatacaktır.
+            bounciness: Çarpışma sonrası parçacığın ivmesini çarpan olarak artırır
+            random_direction: Rastgele Yön - yön vektörünü rastgele yapar. Hızı etkilemez.
+            damping:
+                title: Sönümleme
+                strength: Sönümleme - çarpışma anında hızı azaltma. Geçerli değerler 0 ile 1 arasındadır. 1=En yüksek sönümleme -> Hızı tamamen azaltır
+                randomness: Sönümlemeyi rastgeleleştir
+            split_particle:
+                title: Parçacığı böl
+                count: Çarpışmada parçacığı verilen sayıya böler - hız sayıya bölünür
+                speed_threshold: Yarılma işlemini başlatmak için hız eşiği
+            radius: Parçacığın hitbox'ının yarıçapı
+            expire: Temas ile sona er
+            expiration_delay: Sonlanmayı ertele. Tik cinsinden ölçülür - 20 = 1 saniye
+            appearance:
+                title: Çarpışma üzerindeki doku
+            lighting:
+                title: Çarpışma anında renk ve aydınlatma
+    record_morph:
+        random_skip: Rastgele Atlama
+    structure_morph:
+        lighting: Aydınlatma
+        anchor: Çapa noktası
+    tracker_morph:
+        name: İzleyici
+        label:
+            title: İsim
+        type:
+            title: Tür
+            aperture_tracker: Formu izleme
+            apcam: Lens Değiştirici
+        hidden: İmleci gizle
+        aperture_tracker:
+            combine_tracking: Otomatik ekleme
+            combine_tracking_tooltip: (Aperture izleme için) Eğer izleyicinin adı zaten takip edildiyse, bu izleyici, orijinal izleyicinin durduğu sonraki karede başlayıp başlamadığını kontrol eder. Eğer devam ediyorsa, bu izleme verilerini orijinaline ekler.
+    light_morph:
+        name: Işık
+        light_value: Işık değeri
+        light_value_tooltip: Bu özelliğin çalışabilmesi için Optifine yüklü olmalı ve dinamik ışıklar "Fancy" olarak ayarlanmalıdır. Bu kaydırıcı, ışığın gücünü seçmenizi sağlar.
+    betterlights_morph:
+        name: BetterLights
+        sponsored_title: Tarafından destekleniyor...
+        sponsored_tooltip: Bağışlarla mümkün olmuştur. Teşekkürler!
+        enable_always: Her zaman etkinleştir
+        enable_always_tooltip: Blockbuster yapılandırmasında "Enable Better Lights Morph" devre dışı olsa bile formun her zaman etkinleştirilmesini sağlar.
+        not_installed_message: Bu formun çalışabilmesi için BetterLights modunun yüklü olması gerekir.
+        mod_page_button: Mod sayfasını aç
+        options:
+            enabled: Etkin
+            direction: Yön
+            directionx_tooltip: X
+            directiony_tooltip: Y
+            directionz_tooltip: Z
+            color: Işık rengi
+            intensity_tooltip: Işık yoğunluğu
+            distance_tooltip: Işık mesafesi
+            innerangle_tooltip: İç açı
+            outerangle_tooltip: Dış açı
+            shadows:
+                title: Gölge
+                enabled: Etkin
+                fov_offset_tooltip: Gölge sanal kamera FOV ofseti.
+                distance_tooltip: Gölge mesafesi
+            flare_effect:
+                title: Işık efekti
+                enabled: Etkin
+                size_offset_tooltip: Boyut kayması
+                falloff_distance_tooltip: Düşüş mesafesi
+                start_angle_tooltip: Başlangıç açısı
+                end_angle_tooltip: Bitiş açısı
+                angle_factor_offset_tooltip: Açı faktörü ofseti
+                intensity_tooltip: Yoğunluk
+            volumetric_fog_effect:
+                title: Hacimsel sis efekti
+                enabled: Etkinleştirildi
+                scattering_albedo_tooltip: Saçılma
+                density_tooltip: Yoğunluk
+                anisotropy_tooltip: Anizotropi
+                samples_tooltip: Örnekler
+    texture:
+        title: Doku yöneticisi
+        subtitle: Bu GUI, Minecraft'ın çalışma zamanında yüklediği dokuları görüntülemenizi ve yönetmenizi sağlar
+        linear: Doğrusal
+        linear_tooltip: Etkinleştirildiğinde, doku düzgün görünür
+        mipmap: Mipmap
+        mipmap_tooltip: Etkinleştirildiğinde, uzak mesafelerde daha az gürültülü görünür
+        replace: Değiştir
+        replace_modal: "Değiştirmek istediğiniz {lalready} loaded{r} dokusunun kaynak konumunu yazın:"
+        export: Dokuyu kaydet
+        export_modal: Seçilen doku başarıyla {7}%s{r} olarak seçildi!
+        export_error: Bu doku dışa aktarılamadı... Hata mesajını görmek için günlükleri kontrol edin!
+        open_folder: Dışa aktarma klasörünü aç...
+        copy: Şu anda seçilen dokuyu bir dize olarak kopyala (domain:path)
+    gun:
+        title: Silah yapılandırması
+        fire_props: Ateş özellikleri
+        projectile_props: Projeksiyon özellikleri
+        impact_props: Çarpma özellikleri
+        transforms: Transformasyonlar
+        transforms_first_person: Transformasyonlar (1. kişi)
+        default_morph: Varsayılan form
+        fire_morph: Ateş etme formu
+        fire_command: Ateş etme komutu
+        delay: Gecikme
+        projectiles: Projeksiyonlar
+        scatter: Saçılma
+        scatter_x: Yatay yayılma
+        scatter_y: Dikey yayılma
+        launch: Oyuncuyu fırlat
+        ammo_stack: "Bu seçenek, ateş ederken tükenecek bir öğe belirlemenizi sağlar. Eğer bu tür öğeler yoksa ve sayısı yeterli değilse, hayatta kalma modunda ateşleme gerçekleşmez.\n\nBunu mermi seçeneği olarak düşünebilirsiniz."
+        projectile_morph: Mermi formu
+        tick_command: Tik başına komut
+        ticking: Zamanlayıcı
+        life_span: Ömür
+        yaw: Yaw
+        pitch: Pitch
+        sequencer: Sequencer
+        random: Rastgele
+        hitbox_x: Hitbox X
+        hitbox_y: Hitbox Y
+        speed: Hız
+        friction: Sürtünme
+        gravity: Yerçekimi
+        fade_in: Solma
+        fade_out: Sönme
+        aim_options: Pro seçenekler
+        static_recoil: Statik geri tepme
+        static_recoil_tooltip: "Etkinleştirildiğinde, her seferinde oyuncunun bakış yönüne minimum X ve Y geri tepme eklenir.\n\nAksi takdirde (devre dışı bırakıldığında), minimum ve maksimum alanlar arasından rastgele bir sayı seçilir ve oyuncunun bakış yönüne eklenir."
+        recoil_x: Geri tepme X
+        recoil_y: Geri tepme Y
+        recoil_min: Minimum geri tepme faktörü
+        recoil_max: Maksimum geri tepme faktörü
+        arm_pose: Ateş etme kolu pozu
+        arm_shooting_pose: Ateş etme sırasında etkinleştir
+        arm_shooting_pose_tooltip: Etkinleştirildiğinde ve BB tabancasıyla ateş edildiğinde, karakterin kolları yayla atış pozisyonunda tutulacak
+        arm_shooting_pose_always: Pozu koru
+        arm_shooting_pose_always_tooltip: Etkinleştirildiğinde, kollar her zaman yayla atış pozisyonunda tutulur
+        shooting_offset: Ateşleme ofseti
+        shooting_offset_tooltip: Projelerin nereden fırlayacağını ayarlamak için baş dönüşümüne göre XYZ değerleri
+        shooting_offset_x: Ateş etme ofseti X
+        shooting_offset_y: Ateş etme ofseti Y
+        shooting_offset_z: Ateş etme ofseti Z
+        inventory_morph: Form envanteri
+        crosshair_morph: Nişangah formu
+        hands_morph: Form elleri
+        reload_morph: Formu yeniden yükle
+        overlay_morph: Üst üste bindirme biçimi
+        hide_crosshair_on_zoom: Yakınlaştırmada nişangahı gizle
+        use_inventory_morph: Form etkinleştir
+        hide_hands_on_zoom: Yakınlaştırıldığında elleri gizle
+        use_zoom_overlay_morph: Form etkinleştir
+        zoom_factor: Zoom faktörü
+        zoom_factor_tooltip: Keyfi yakınlaştırma faktörü, sayı ne kadar yüksekse, {70}{r} derece FOV'ye o kadar yakın olur, {70}.5{r} faktörü mevcut FOV'nuzun yaklaşık {750}%%{r}'sidir
+        ammo: Mermi
+        ammo_tooltip: Bir tabancanın yeniden yükleme gerektirmeden önce kaç kez ateş edebileceği (yeniden yükleme etkinse)
+        reloading: Yeniden dolduruluyor
+        use_reloading: Şarjör değiştirmeyi etkinleştir
+        reloading_time_tooltip: Silahı şarj etmek için geçen tik sayısı
+        shooting: Ateş etme
+        shoot_when_held: Tutulduğunda ateş et
+        shot_delay_tooltip: Otomatik ateşleme sırasında atışlar arasındaki gecikme (tikler cinsinden)
+        aim_options_second: Profesyonel seçenekler (sayfa 2)
+        destroyed_command: Silah yok edildiğinde komut
+        melee_command: Yakın dövüş saldırısında komut
+        reload_command: Şarjör değiştirme komutu
+        zoom_on_command: Yakınlaştırmada komut
+        zoom_off_command: Yakınlaştırma kapalı komutu
+        melee_damage: Yakın dövüş hasarı
+        mouse_zoom: Yakınlaştırma sırasında fare yoğunluğu
+        durability: Dayanıklılık
+        prevent_left_click: Sol tıklama ile blok kırmayı engelle
+        prevent_right_click: Sağ tıklamayı engelle
+        prevent_entity_attack: Varlık saldırısını engelle
+        impact_morph: Çarpma formu
+        impact_delay: Çarpışma gecikmesi
+        impact_command: Çarpışma komutu
+        impact_entity_command: Varlık çarpma komutu
+        vanish: Kaybolma
+        bounce: Sıçrama
+        sticks: Dallar
+        hits: Vuruşlar
+        damage: Zarar
+        knockback_horizontal: Yatay geri tepme faktörü, 0 geri tepme yoktur, değeri ne kadar yüksekse, varlık o kadar uzağa fırlatılır
+        knockback_vertical: Dikey geri tepme faktörü, 0 dikey geri tepme yoktur, değer ne kadar yüksekse varlık o kadar yükseğe itilir. Bu seçenek yatay geri tepme 0 ise çalışmaz.
+        bounce_factor: Faktör
+        vanish_command: Kaybolma komutu
+        vanish_delay: Kaybolma gecikmesi
+        penetration: Penetrasyon faktörü - merminin bloğa ne kadar nüfuz edeceği (bu seçenek yalnızca Dallar etkinse çalışır)
+        collision: Çarpışma
+        ignore_blocks: Blokları göz ardı et
+        ignore_blocks_tooltip: Bu seçenek, mermilerin bloklar arasından geçmesini sağlar, sıçramadan, kaymadan veya yapışmadan
+        ignore_entities: Varlıkları görmezden gel
+        ignore_entities_tooltip: Bu seçenek, projeksiyonların varlıklara zarar vermesini, geri tepmesini veya varlık çarpışma komutlarını yürütmesini engeller.
+        gun_transforms: Silah dönüşümleri
+        projectile_transforms: Projeksiyon dönüşümleri
+        category:
+            motion: Hareket
+            hitbox: Hitbox
+            timers: Zamanlayıcılar
+            rotation: Dönüşüm
+            transition: Geçiş
+        keys:
+            cycle: Pano arasında döngü yap
+    immersive_editor:
+        hide_outer_panel: Dış ekranı gizlemek için F1 tuşuna basın
+        keys:
+            category: Etkileşimli editör
+            toggle_outer_panel: Dış ekranı geçiş yap
+    interpolations:
+        linear: Doğrusal
+        quad_in: Kare içeriye doğru
+        quad_out: Kare dışa doğru
+        quad_inout: Karesel İçeri/Çıkışı
+        cubic_in: Kübik İçeri
+        cubic_out: Kübitik Çıkış
+        cubic_inout: Kübik İçeri/Çıkışı
+        exp_in: Üssel İçeri
+        exp_out: Üssel Dışarı
+        exp_inout: Üssel İçeri/Çıkışı
+    aperture:
+        config:
+            title: Sahne
+            detach: Sahneyi ayır
+            reload: Aktörleri yeniden yükle
+            actions: Önizleme eylemleri
+            stop_scene: Sahneyi kapattıktan sonra durdur
+            reload_scene: Sahneyi yeniden yükle
+        keys:
+            category: Oyuncu kayıt editörü
+            toggle_list: Oyuncu kayıt listesine geçiş yap
+            toggle_editor: Oyuncu kayıt editörünü aç/kapat
+            detach_scene: Mevcut sahneyi ayır
+            reload_scene: Mevcut sahneyi yeniden yükle
+            add_morph_action: Formu ekle
+        modifiers:
+            tracker: Takipçi
+            tracker_description: Bu modifikasyon, kamerayı "Aperture Modifier" türündeki bir takipçi formuna bağlar.
+            panels:
+                tracker_tooltip: "\"Aperture Modifier\" türünde bir takipçi formun ismini girin"
+                main_cam: Ana kamera olarak
+                main_cam_tooltip: Bu seçenek etkinleştirildiğinde, bu modifiyerden önceki tüm kamera dönüşümleri bu takipçi alanında yeniden hesaplanır; aksi takdirde, modifiyer sadece koordinat verilerini değiştirecektir.
+                look_at: Bak
+                look_at_tooltip: Takipçi modifiye ediciye bakın. Bu, "Ana kamera olarak" seçeneğini devre dışı bırakır.

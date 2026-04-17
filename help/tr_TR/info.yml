@@ -1,0 +1,35 @@
+blockbuster.info:
+    actor:
+        playing: "{fBu} aktör zaten oynuyor!"
+    scene:
+        looped: "{fVerilen} sahne şimdi döngüye alındı!"
+        unlooped: "{fVerilen} sahne artık döngüsüz hale getirildi!"
+    commands:
+        load_chunks: "{fRender} mesafesinde tüm oluşturulmuş chunk'lar yüklendi."
+        replace_texture: "{fDoku} %s{f}, %s{f} dokusu ile değiştirildi."
+        restore_texture: "{fDoku} %s{f}, orijinal haline geri yüklendi."
+        not_loaded: "{fDoku} %s{f} yüklenmedi."
+        started_combining: "{fCilt} birleştirme başladı: %s{f} cilt..."
+        combined: "{f}%s{f} cilt birleştirildi."
+        finished_combining: "{fCiltleri} birleştirme tamamlandı!"
+    models.loaded: "{fSunucudan} %s{f} özel model ve %s{f} cilt alındı."
+    record:
+        action: "{f}%s{f} tıkkasında aksiyon %s{f}, %s{f} dizininde veri ile: %s"
+        info: |
+            {f}%s{f} adlı oyuncu kaydının bilgisi:
+            
+            {7}*{f} Kayıt sürümü: %s
+            {7}*{f} Kayıt uzunluğu (tık): %s
+            {7}*{f} Boşaltılmadan önceki tık süresi: %s
+        search_type: "{fAksiyon} türü %s{f} ile arama:"
+        search_action: "{fAksiyon} %s{f} tıkkasında %s{f} dizininde bulundu."
+        search_action_data: "{fAksiyon} %s{f} tıkkasında %s{f} dizininde veri ile bulundu: %s"
+    recording:
+        recording: "%s{f} zaten kaydediliyor."
+        dead: "{fOyuncunun} öldüğü için %s{f} kaydını durdurdu."
+        message: "{fBir} aktör kaydına başlamak için %s{f}, %s{f}!"
+        clickhere: buraya tıklayın
+    action:
+        cancel: "{fMevcut} kayıt iptal edildi."
+    damage_control:
+        message: "{fHedef} blok, %s{f} sahnesinin hasar kontrolüyle yönetilmektedir."

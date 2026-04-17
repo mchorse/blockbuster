@@ -1,0 +1,107 @@
+blockbuster.gui.me:
+    keys:
+        category: Blockbuster model editörü
+        save: Mevcut modeli kaydet
+    limbs:
+        title: Kollar
+        size: Kol boyutu
+        size_offset: Boyut ofseti
+        item_scale: Öğe ölçeği
+        texture: Doku ofseti
+        anchor: Referans noktası
+        origin: OBJ/VOX kökeni
+        slot: Zırh yuvası
+        color: Renk
+        opacity: Opasite
+        specular: Spesüler renk (gölgelendiriciler için kullanılır)
+        mirror: Aynalama
+        lighting: Aydınlatma
+        shading: Gölgeleme
+        smooth: Düzgünleştir
+        hold: Tutulan öğe yuvası
+        none: Yok
+        right: Sağ
+        left: Sol
+        appearance: Görünüm
+        animation: Animasyonlar
+        holding: Tutma
+        swiping: Kaydırma
+        looking: Bakıyor
+        swinging: Sallanma
+        idle: Durma
+        invert: Ters çevir
+        wheel: Tekerlek
+        wing: Kanat
+        roll: Dönme
+        cape: Pelerin
+        rename: Yeniden adlandır
+        parent: Ana ebeveyn
+        anchor_modal: "İstenilen referans noktalarını girin (her eksen için 0..1 değerleri):"
+        new_limb: Yeni bir kol için bir isim yazın...
+        last_limb: Son kolu kaldıramazsınız...
+        rename_limb: "Mevcut kolu yeniden adlandırmak için yeni bir isim yazın:"
+        parent_limb: Mevcut kol için ebeveyn kolu seç...
+        parent_limb_transform_correction: Dönüşümü düzelt
+        parent_limb_transform_correction_tooltip: Etkinleştirildiğinde, kolun pozunun küresel konum, dönüşüm ve ölçeğini değiştirmeden ayarlanır.
+        obj_limb: OBJ/VOX dosyasından gelen bir kola işlem yapılamaz...
+        slots:
+            none: Yok
+            head: Kask
+            chest: Zırh göğüs
+            left_shoulder: Sol omuz
+            right_shoulder: Sağ omuz
+            leggings: Vücut bacakları
+            left_leg: Sol bacak
+            right_leg: Sağ bacak
+            left_foot: Sol ayakkabı
+            right_foot: Sağ ayakkabı
+        context:
+            anchor_setup: Referans noktası kurulumunu yap...
+            anchor_move: Referans noktasına yerleştir ve taşı...
+    models:
+        title: Modeller
+        save: Modeli kaydet
+        export: Mobdan model oluştur
+        name: "Model için bir isim girin:"
+        pick: "İhracat yapacağınız mobu seçin:"
+        error: "Hata oluştu, model oluşturulamadı: %s"
+    options:
+        name: Görüntüleme adı
+        texture: Doku boyutu
+        scale: Küresel ölçek
+        scale_gui: GUI ölçeği
+        default: Varsayılan doku
+        skins: Deriler klasörü
+        extrusion: 3D ekstrüzyon
+        extrude_max_factor: 3D ekstrüzyon maksimum faktörü. Bu seçenek, HD derileri için ekstrüzyon yapmak için daha fazla piksel kullanılmasına olanak tanır. Değer ne kadar yüksekse, o kadar fazla ekstrüzyon yapılır.
+        extrude_inwards: İçeriye ekstrüzyon faktörü. Bu seçenek, HD deri parçalarının daha fazla içeriye doğru ekstrüze edilip edilmediğini kontrol etmenizi sağlar, çünkü daha yüksek maksimum faktör, parçaların daha ince olmasına yol açar.
+        provides_obj: OBJ sağlar
+        provides_mtl: MTL sağlar
+        legacy_obj: Eski OBJ yükleme
+        legacy_obj_tooltip: "Etkinleştirildiğinde, OBJ modelleri eski yöntemle yüklenecek, bu da X ekseninde ters dönme gibi tutarsızlıklara yol açabilir.\n\nDevre dışı bırakıldığında, OBJ modelleri yeni yöntemle yüklenecek ve OBJ modelinin beklenen şekilde görünmesi sağlanacaktır."
+        default_texture: Varsayılan dokuyu seç
+    poses:
+        title: Pozlar
+        new_pose: "Yeni bir pose için isim yazın:"
+        paste_pose: "Yapıştırılan poz için bir isim yazın:"
+        import_pose: "Bu alanı yazın, bir poz almak için NBT verisini mevcut pozunuza aktarın:"
+        import_pose_tooltip: NBT etiketiyle poz özelliklerini içe aktar
+        copy_pose: Özellikleri kopyalamak için pose seçin.
+        copy_pose_tooltip: Başka bir pose'dan özellikleri kopyalayın
+        apply_pose: Bu pozun kol pozunu uygulamak istediğiniz pozları seçin.
+        apply_pose_tooltip: Mevcut kol pozunu diğer pozlara uygula
+        rename_pose: "Bu pose için yeni bir isim yazın:"
+        standard: Zorunlu bir pose'u kaldıramazsınız...
+        hitbox: Hitbox boyutu
+        context:
+            copy: Pozu kopyala
+            paste: Pozu yapıştır
+            rename: Pose'u yeniden adlandır
+    tooltips:
+        save: Modeli kaydet
+        swipe: Kol kaydırma önizlemesini geçiş yap
+        running: Koşu animasyonu önizlemesini geçiş yap
+        held_items: Tutulan öğeler önizlemesini geçiş yap
+        hitbox: Hitbox önizlemesini geçiş yap
+        looking: Baş başı önizlemesini geçiş yap
+        skin: Önizleme derisini seç

@@ -1,0 +1,63 @@
+blockbuster.config.comments:
+    general:
+        show_first_time_modal: Dashboard'da ilk defa açıldığında modalın gösterilip gösterilmeyeceği
+        extra_wubs: Bu seçenek kelimenin tam anlamıyla hiçbir şey yapmaz. Ya da belki yapıyordur...?
+        auto_refresh_models: Metamorph veya Blockbuster GUI'lerine girildiğinde modelleri ve ciltleri yenile?
+        debug_playback_ticks: Sahne oynatılırken log dosyasına tıklama yazılmasını sağlar
+        green_screen_sky: Chroma keying amaçları için gökyüzünü düz renk yapar
+        green_screen_sky_color: Chroma sky özelliği için gökyüzü rengini belirtir
+        url_skins_sync_download: URL ciltlerinin senkronize indirilmesi. 3D dış katmanlarla çalışan URL ciltlerini oyun donmasını göze alarak indirir
+        add_utility_blocks: Komut ve yapı blokları gibi yardımcı blokları Blockbuster'ın yaratıcı sekmesine ekleyerek bu öğelere erişimi basitleştirir
+        bb_gun_sync_distance: 0'dan büyükse, bu seçenek BB tabancası mermi senkronizasyonunu etkinleştirir, bu da merminin sunucu ile senkronize olmasını sağlar, ancak titrek teleportasyon pahasına
+    model_block:
+        model_block_disable_rendering: Model bloklarının render edilip edilmeyeceği
+        model_block_disable_item_rendering: Model bloğu öğe renderının devre dışı bırakılıp bırakılmayacağı (bunu kim ister ki?)
+        model_block_missing_name_rendering: Modellerin yolu eksikse, bu yolların render edilip edilmemesi. Her zaman F3 modunda render edilirler.
+        model_block_debug_rendering_f1: F1 modunda, F3 modunun yanında model bloklarının debug küpünü render et
+        restore: Bu seçenek, kazara bozulmuş model bloklarını geri yüklemek için eski hatayı geri getirir.
+        reset_on_playback: Etkinleştirildiğinde, bir sahne oynatılmaya başladığında tüm model blokları sıfırlanır
+    recording:
+        recording_countdown: Kayıt geri sayımı (saniye cinsinden)
+        record_unload_time: Bir kaydın boşaltılmasının ne kadar sürdüğü (tik cinsinden)
+        record_unload: Otomatik kayıt boşaltma etkinleştirilsin mi?
+        record_sync_rate: Bir kaydın sunucu ile ne sıklıkla senkronize olacağı
+        record_attack_on_swipe: Swipe hareketiyle saldırı eyleminin kaydedilip kaydedilmeyeceği
+        record_commands: Kayıt sırasında komut eylemi kaydedilir mi?
+        record_chat_prefix: Gerçek mesajın önüne eklenecek ön ek (%%NAME%% joker karakteri, geçerli aktörün adı için desteklenir)
+        record_pause_preview: Bu seçenek, animasyonlu formlar gibi resim form animasyonlarını, animasyonlu pozları, kayıt formlarını ve sıralayıcıları önizlemeye olanak tanır. Sunucu tarafında performansı etkiler.
+        record_render_debug_paths: Kayıt debug yollarının render edilmesini etkinleştir
+    scenes:
+        save_update: Sahne kaydedildikten sonra, sahnenin güncellenip güncellenmeyeceği
+    actor:
+        actor_fall_damage: Aktörler düşme hasarı alır mı?
+        actor_tracking_range: Aktörlerin ne kadar mesafede takip edileceği? Oyunun yeniden başlatılması gerekir.
+        actor_rendering_range: Aktörlerin ne kadar mesafeye kadar görüleceği
+        actor_always_render: Aktörü her zaman render eder, nerede olduğu ya da hitbox boyutu ne olursa olsun
+        actor_always_render_names: Aktör isim etiketlerinin koşulsuz olarak render edilmesini etkinleştir
+        actor_swish_swipe: Aktörler, swipe hareketiyle swish sesi çıkarır mı?
+        actor_y: Aktörlerin doğru Y değeri kullanmasını sağlar (yüzerlik ve zıplama sorunlarını düzeltir, ancak Y hareketini keskinleştirir)
+        actor_disable_riding: Aktör üzerine tıklayarak binme seçeneğini devre dışı bırakır
+        actor_playback_body_yaw: Kaydedilen yatay vücut rotasının aktör üzerinde oynatılıp oynatılmayacağı (bu, vücut rotasının kaydedildiği gibi tutarlı bir şekilde oynatılmasını garanti eder, sadece Blockbuster 2.1+ ile kaydedilen yeni kayıtlarda çalışır)
+    damage_control:
+        damage_control: Hasar kontrolünün etkin olup olmadığı
+        damage_control_distance: Hasar kontrolü etkisinin yarıçapı
+        damage_control_message: Eğer şu anda gösterilen blok hasar kontrolü tarafından yönetildiyse, bir uyarı gösterir
+    model_folders:
+        path: Ekstra model klasörünün mutlak yolu (Windows'ta sürücü harfini ekleyin)
+    snowstorm:
+        depth_sorting: Etkinleştirildiğinde, diğer yarı saydam parçacıkların arkasında görünen parçacıkları düzeltir. Bu seçenek çok yüksek performans gerektirir, sadece video kaydı yaparken kullanmanız önerilir.
+    audio:
+        waveform_visible: Ses çubuklarının oynatılırken gösterilip gösterilmeyeceği
+        waveform_density: Bir saniyede kaç piksel ses dalga formu gösterileceği
+        waveform_width: Ses çubuğunun genişliği, kayan nokta yüzde değeri (0 ile 1 arasında)
+        waveform_height: Ses çubuğunun yüksekliği (piksel cinsinden)
+        waveform_filename: Ses çubuğunda çalan sesin dosya adının gösterilip gösterilmeyeceği
+        waveform_time: Ses parçasının oynatma süresinin gösterilip gösterilmeyeceği. Ses parçasının oynatma süresinin, sahnenin mevcut oynatma süresiyle doğrudan ilişkili olmayabileceğini unutmayın!
+        audio_sync: Sesin sunucu ve istemci arasında her zaman senkronize edilip edilmeyeceği. Bu, oynatma ve sesli sunucuya tekrar bağlanıldığında senkronizasyonu etkilemez. Bu seçenek, sunucu üzerindeki ses oynatma başlatılmasını hedefler ve sunucu tarafı bir seçenektir.
+    onion_skin:
+        morph_action_color: Düzenleme sırasında önceki formun rengini göster
+    immersive_editor:
+        model_block: Model bloğu için etkileşimli düzenleyicinin kullanılıp kullanılmayacağı
+        record_editor: Aperture kamera düzenleyicisini kullanırken, kayıt düzenleyicisi için etkileşimli düzenleyicinin kullanılıp kullanılmayacağı
+    better_lights:
+        enable_better_lights: Tüm formlarda Better Lights ışık kaynağını etkinleştirir. Hala Better Lights Modunu gerektirir.

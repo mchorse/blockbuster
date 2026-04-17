@@ -1,0 +1,38 @@
+blockbuster.success:
+    commands:
+        mipmaped_texture: "{fDoku} %s{f} başarıyla mipmapped yapıldı!"
+        demipmaped_texture: "{fDoku} mipmapi %s{f} başarıyla silindi!"
+        texture_filter_linear: "{fDokunun} filtresi lineer olarak değiştirildi!"
+        texture_filter_nearest: "{fDokunun} filtresi en yakın komşuya değiştirildi!"
+        convert_skin: "{f}%s{r}/%s{r} skin başarıyla dönüştürüldü!"
+        item_nbt: "{fTutulan} öğenin NBT verisi panoya kopyalandı!"
+        model_report: "{fModel} klasörü raporu başarıyla kopyalandı!"
+    scene:
+        play: "{f}%s{f} adıyla sahne oynatılmaya başlandı!"
+        stop: "{f}%s{f} adıyla sahne durduruldu!"
+    model:
+        export:
+            saved: "{fVarl}ık modeli %s{f} %s{f}'ye başarıyla kaydedildi."
+            obj: "{fModel} %s{f} başarıyla OBJ formatına aktarıldı!"
+        reload: "{fSunucu} modelleri yeniden yükledi!"
+        skin_moved: "{fSkin} %s{f}, %s{f}'nin model deri klasörüne başarıyla taşındı, dosya adı %s{f}!"
+    record:
+        changed_origin: "{fOyuncu} kaydının kökeni başarıyla %s{f}'dan (%s{f}, %s{f}, %s{f}) %s{f}, (%s{f}, %s{f}, %s{f})'ye değiştirildi!"
+        duped: "{fOyuncu} kaydı %s{f} başarıyla %s{f}'ye kopyalandı!"
+        clean: "{fOyuncu} kaydı %s{f}'nin %s{f} özelliği başarıyla temizlendi (%s{f}'dan %s{f}'ye)!"
+        create: "{fOyuncu} kaydı %s{f} başarıyla oluşturuldu!"
+        prolonged: "{fOyuncu} kaydı %s{f} uzatıldı. Ön ve son gecikmeleri sırasıyla: %s{f} ve %s{f}."
+        faded: "{fOyuncu} kaydı %s{f}'nin son %s{f} karesi soldu."
+        flipped: "{fOyuncu} kaydı %s{f} başarıyla %s{f} ekseni boyunca %s{f} koordinatında ters çevrildi!"
+        cut: "{fOyuncu} kaydı %s{f}, %s{f} ile %s{f} kareleri arasında kesildi."
+        restored: "{fOyuncu} kaydı %s{f}'nin %s{f} iterasyonu başarıyla geri yüklendi!"
+        reversed: "{fOyuncu} kaydı %s{f} başarıyla tersine çevrildi!"
+        fill: "{fOyuncu} kaydındaki %s{f} saniye %s{f}'yi %s{f}'deki karelerle başarıyla dolduruldu (son uzunluk %s{f} saniye)!"
+        erase: "{fOyuncu} kaydında %s{f} saniye %s{f}'deki %s{f} kare başarıyla silindi (son uzunluk %s{f} saniye)!"
+        process: "{fOyuncu} kaydı %s{f}'nin %s{f} özelliği başarıyla %s{f} ile %s{f} arasında işlendi!"
+        calculate_body_yaw: "{fOyuncu} kaydı %s{f}'nin vücut yaw'ı başarıyla otomatik olarak hesaplandı!"
+        remove_body_yaw: "{fOyuncu} kaydı %s{f}'nin vücut yaw'ı başarıyla kaldırıldı!"
+        renamed: "{fOyuncu} kaydı %s{f} başarıyla %s{f} olarak yeniden adlandırıldı!"
+        camera: "{fOyuncu} kaydı %s{f}, %s{f} kamera profilinden başarıyla oluşturuldu!"
+        apply: "{fOyuncu} kaydı %s{f}'nin %s{f} özelliği, %s{f} oyuncu kaydından %s{f} özelliklerle başarıyla uygulandı! (%s{f}'dan %s{f}'ye)"
+        merge: "{f}%s{f}'den %s{f}'ye başarıyla eylemler birleştirildi!"
